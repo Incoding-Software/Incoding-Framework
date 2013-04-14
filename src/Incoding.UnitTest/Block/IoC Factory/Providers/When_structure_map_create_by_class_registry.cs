@@ -1,0 +1,49 @@
+namespace Incoding.UnitTest.Block
+{
+    #region << Using >>
+
+    using Incoding.Block.IoC;
+    using Incoding.Block.Logging;
+    using Incoding.Utilities;
+    using Machine.Specifications;using Incoding.MSpecContrib;
+    using StructureMap.Configuration.DSL;
+
+    #endregion
+
+    [Subject(typeof(StructureMapIoCProvider))]
+    public class When_structure_map_create_by_class_registry : Context_IoC_Provider
+    {
+        #region Fake classes
+
+        public class CustomRegistry : Registry
+        {
+            #region Constructors
+
+            public CustomRegistry()
+            {
+                For<IEmailSender>().Use(defaultInstance);
+                For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance);
+
+                Scan(scanner =>
+                         {
+                             scanner.Assembly(typeof(IFakePlugIn).Assembly);
+                             scanner.AddAllTypesOf<IFakePlugIn>();
+                         });
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        Establish establish = () => { ioCProvider = new StructureMapIoCProvider(new CustomRegistry()); };
+
+        Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
+
+        Behaves_like<Behaviors_expected_exception_ioc_provider> verify_expected_exception;
+
+        Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
+
+        Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
+    }
+}

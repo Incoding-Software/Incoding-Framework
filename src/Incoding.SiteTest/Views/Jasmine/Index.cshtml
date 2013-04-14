@@ -1,0 +1,177 @@
+﻿@using Incoding.Extensions
+@model JasmineIndexContainer
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    @Html.Incoding().Css(Url.Content("~/Content/Site.css"))
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/jquery-{0}.min.js".F(Model.JqueryVersion)))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/underscore-min.js"))
+    
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.form.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.blockUI.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.history.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.pnotify.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.validate.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.validate.unobtrusive.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/mustache.js"))    
+    
+
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.url.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.core.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.trace.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.helper.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.engine.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.executable.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.conditional.js"))
+
+    @Html.Incoding().Css(Url.Content("~/Content/css/jasmine.css"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/JSON2.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine-jquery.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine-html.js"))      
+    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jquery.mockjax.js"))  
+    
+    
+    @Html.Incoding().Script(Url.Content("~/Scripts/Test/Helper.js"))   
+    @Html.Incoding().Script(Url.Content("~/Scripts/Test/IncodingSpec.js")) 
+    
+
+    <script type="text/javascript">
+        (function() {
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
+
+            var htmlReporter = new jasmine.HtmlReporter();
+
+            jasmineEnv.addReporter(htmlReporter);
+
+            jasmineEnv.specFilter = function(spec) {
+                return htmlReporter.specFilter(spec);
+            };
+
+            var currentWindowOnload = window.onload;
+
+            window.onload = function() {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                execJasmine();                                           
+            };
+
+            function execJasmine() {
+                jasmineEnv.execute();
+            }
+
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="my-fixture">            
+    </div>
+    @using (Html.Incoding().ScriptTemplate<string>("sandboxScript"))
+    {
+        <div class="form-row">
+            <input type="hidden" name="Input.ValidationProperties[{{Index}}].Value" value="{{Value}}" />
+            <label class="form-label">{{Value}}</label>
+            <input class="form-item input-elastic"  type="text" name="Input.ValidationProperties[{{Index}}].Text" value="{{Text}}" />
+            <span class="tickLabel">{{Title}}</span>
+        </div>
+    }
+        
+    <div id="suportedExectuable">
+        @foreach (var item in Model.AllSupportedMeta)
+        {
+            @Html.Hidden("id", item)
+        }
+    </div>
+    <div id="incSpecialBinds">
+        @foreach (var item in Model.IncSpecialBinds)
+        {
+            @Html.Hidden("id", item)
+        }
+    </div>
+    <div id="supportedConditional">
+        @foreach (var item in Model.AllSupportedConditional)
+        {
+            @Html.Hidden("id", item)
+        }
+    </div>
+        
+
+        
+    <input type="hidden" value="@(new ExecutableDirectAction(string.Empty).Data.ToJsonString())" id="ExecutableDirectAction"/>
+    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Success("data").Data.ToJsonString()).Data.ToJsonString())" id="ExecutableDirectActionWithSucces"/>
+    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Error("data").Data.ToJsonString()).Data.ToJsonString())" id="ExecutableDirectActionWithError"/>
+    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.RedirectTo("redirectTo").Data.ToJsonString()).Data.ToJsonString())" id="ExecutableDirectActionWithRedirect"/>
+    
+
+    <input type="hidden" value="@(new ExecutableEval("newFakeEvalVariable = data;").Data.ToJsonString())" id="ExecutableEval"/>
+
+    <input type="hidden" value="@(new ExecutableRedirect("testUrl?Id=#idValue&Id2=#idValue2").Data.ToJsonString())" id="ExecutableRedirect"/>
+    <input type="hidden" value="@(new ExecutableRedirect(string.Empty).Data.ToJsonString())" id="ExecutableRedirectToSelf"/>
+    
+
+    <input type="hidden" value="@(new ExecutableTrigger("invoke", string.Empty).Data.ToJsonString())" id="ExecutableTrigger"/>
+    <input type="hidden" value="@(new ExecutableTrigger("invoke", "is").Data.ToJsonString())" id="ExecutableTriggerWithProperty"/>
+
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false).Data.ToJsonString())" id="ExecutableInsert"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false).Data.ToJsonString())" id="ExecutableInsertWithProperty"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true).Data.ToJsonString())" id="ExecutableInsertWithPrepare"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false).Data.ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
+
+
+    <input type="hidden" value="@(new ExecutableForm("clear").Data.ToJsonString())" id="ExecutableFormClear"/>
+    <input type="hidden" value="@(new ExecutableForm("reset").Data.ToJsonString())" id="ExecutableFormReset"/>
+    
+    <input type="hidden" value="@(new ExecutableBind("attach", "meta", string.Empty).Data.ToJsonString())" id="ExecutableBindAttach"/>
+    <input type="hidden" value="@(new ExecutableBind("detach", string.Empty, "click").Data.ToJsonString())" id="ExecutableBindDetach"/>
+    <input type="hidden" value="@(new ExecutableBind("detach", string.Empty, string.Empty).Data.ToJsonString())" id="ExecutableBindDetachAll"/>
+
+    <input type="hidden" value="@(new ExecutableStoreFetch("hash", "root").Data.ToJsonString())" id="ExecutableStoreFetch"/>
+    <input type="hidden" value="@(new ExecutableStoreFetch("hash", "search").Data.ToJsonString())" id="ExecutableStoreFetchWithPrefix"/>
+    
+    
+    
+    <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { key = "key", value = "value", } }).Data.ToJsonString())" id="Exec"/>    
+    
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment" id="Target_Increment"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Decrement" id="Target_Decrement"/>    
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_UnBind" id="Target_UnBind"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Remove" id="Target_Remove"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Insert" id="Target_Insert"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Empty" id="Target_Empty"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Wrap" id="Target_Wrap"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_WrapAll" id="Target_WrapAll"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_RemoveClass" id="Target_RemoveClass"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ToggleClass" id="Target_ToggleClass"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_AddClass" id="Target_AddClass"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ToggleProp" id="Target_ToggleProp"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Val" id="Target_Val"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ValFromSelector" id="Target_ValFromSelector"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_SetAttr" id="Target_SetAttr"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_SetProp" id="Target_SetProp"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_SetCss" id="Target_SetCss"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_RemoveAttr" id="Target_RemoveAttr"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_RemoveProp" id="Target_RemoveProp"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Height" id="Target_Height"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ScrollLeft" id="Target_ScrollLeft"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ScrollTop" id="Target_ScrollTop"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Width" id="Target_Width"/>        
+
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_ReplaceWith" id="Target_ReplaceWith"/>    
+
+    <input type="hidden" value="@JavaScriptCodeTemplate.Document_SetTitle" id="Document_SetTitle"/>
+
+    <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_Confirm" id="Conditional_Confirm"/>    
+    <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_Value" id="Conditional_Value"/>    
+    <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_Exists_Jquery_Selector" id="Conditional_Exists_Jquery_Selector"/>  
+    <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_Exists_Incoding_Selector" id="Conditional_Exists_Incoding_Selector"/>  
+    <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_ModernizrSupport" id="Conditional_ModernizrSupport"/>  
+
+    <input type="hidden" value="@JavaScriptCodeTemplate.Window_Alert" id="Window_Alert"/>    
+    <input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>        
+</body>

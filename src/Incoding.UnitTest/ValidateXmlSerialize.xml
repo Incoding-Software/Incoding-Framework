@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<FakeSerializeObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Ignore>Ignore</Ignore>
+  <Name>Name</Name>
+  <Value>Value</Value>
+</FakeSerializeObject>

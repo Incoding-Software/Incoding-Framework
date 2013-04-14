@@ -1,0 +1,127 @@
+namespace Incoding.MSpecContrib
+{
+    #region << Using >>
+
+    using System;
+    using System.Linq.Expressions;
+    using System.Web.Mvc;
+    using Incoding.MvcContrib;
+    using Machine.Specifications;
+
+    #endregion
+
+    public static class ActionResultExtensions
+    {
+        #region Factory constructors
+
+        public static void ShouldBeIncodingData<TData>(this ActionResult actionResult, Action<TData> verify)
+        {
+            ShouldBeIncoding(actionResult, data =>
+                                              {
+                                                  data.data.ShouldBeOfType<TData>();
+                                                  verify((TData)data.data);
+                                              });
+        }
+
+        public static void ShouldBeIncodingData<TData>(this ActionResult actionResult, TData data)
+        {
+            ShouldBeIncodingData<TData>(actionResult, r => ShouldExtensions.ShouldEqualWeak<TData, TData>(r, data));
+        }
+
+        public static void ShouldBeIncodingFail<TData>(this ActionResult actionResult, Action<TData> verify)
+        {
+            ShouldBeIncoding(actionResult, data => data.success.ShouldBeFalse());
+            ShouldBeIncodingData(actionResult, verify);
+        }
+
+        public static void ShouldBeIncodingFail(this ActionResult actionResult)
+        {
+            ShouldBeIncoding(actionResult, data => data.success.ShouldBeFalse());
+        }
+
+        public static void ShouldBeIncodingRedirect(this ActionResult actionResult, string redirectTo)
+        {
+            ShouldBeIncoding(actionResult, data => data.redirectTo.ShouldEqual(redirectTo));
+        }
+
+        public static void ShouldBeIncodingSuccess<TData>(this ActionResult actionResult, Action<TData> verify)
+        {
+            ShouldBeIncoding(actionResult, data => data.success.ShouldBeTrue());
+            ShouldBeIncodingData(actionResult, verify);
+        }
+
+        public static void ShouldBeIncodingSuccess(this ActionResult actionResult)
+        {
+            ShouldBeIncoding(actionResult, data => data.success.ShouldBeTrue());
+        }
+
+        public static void ShouldBeModel<TModel>(this ActionResult actionResult, Action<TModel> expected)
+        {            
+            var viewResult = actionResult as ViewResult;
+            viewResult.ShouldNotBeNull();
+            viewResult.Model.ShouldBeOfType<TModel>();
+            expected((TModel)viewResult.Model);
+        }
+
+        public static void ShouldBeModel<TModel>(this ActionResult actionResult, TModel expected)
+        {
+            ShouldBeModel<TModel>(actionResult, model => ShouldExtensions.ShouldEqualWeak<TModel, TModel>(model, expected));
+        }
+
+        public static void ShouldBeRedirect(this ActionResult actionResult, string url)
+        {
+            var redirectResult = actionResult as RedirectResult;
+            redirectResult.ShouldNotBeNull();
+            redirectResult.Url.ShouldEqual(url);
+        }
+
+        public static void ShouldBeRedirectToAction<TController>(this ActionResult actionResult, Expression<Action<TController>> action) where TController : Controller
+        {
+            var redirectResult = actionResult as RedirectToRouteResult;
+            redirectResult.ShouldNotBeNull();
+            redirectResult.RouteValues["Controller"].ToString().ToLower().ShouldEqual(RoutingName<TController>().ToLower());
+            redirectResult.RouteValues["Action"].ToString().ToLower().ShouldEqual(action.GetMethodBodyName().ToLower());
+        }
+
+        public static void ShouldBeViewName(this ActionResult actionResult, string viewName)
+        {
+            var viewResult = actionResult as ViewResult;
+            viewResult.ShouldNotBeNull();
+            viewResult.ViewName.ShouldEqual(viewName);
+        }
+
+        #endregion
+
+        static void ShouldBeIncoding(this ActionResult actionResult, Action<IncodingResult.JsonData> verify)
+        {
+            Guard.NotNull("verify", verify);
+
+            var incodingResult = actionResult as IncodingResult;
+            incodingResult.ShouldNotBeNull();
+
+            var defaultJsonData = incodingResult.Data as IncodingResult.JsonData;
+            defaultJsonData.ShouldNotBeNull();
+
+            verify(defaultJsonData);
+        }
+
+        static string GetMethodBodyName<TController>(this Expression<Action<TController>> action) where TController : Controller
+        {
+            action.ShouldNotBeNull();
+            action.Body.ShouldBeOfType<MethodCallExpression>();
+            return ((MethodCallExpression)action.Body).Method.Name;
+        }
+
+        static string RoutingName<TController>() where TController : Controller
+        {
+            string controllerName = typeof(TController).Name;
+            controllerName.EndsWith("Controller", StringComparison.OrdinalIgnoreCase).ShouldBeTrue();
+
+            controllerName = controllerName.Substring(0, controllerName.Length - "Controller".Length);
+
+            controllerName.ShouldNotBeEmpty();
+
+            return controllerName;
+        }
+    }
+}

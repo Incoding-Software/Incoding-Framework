@@ -1,0 +1,580 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ECE7EC3C-8D92-40A4-930A-00F541F46C62}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Incoding.UnitTest</RootNamespace>
+    <AssemblyName>Incoding.UnitTest</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CONTRACTS_FULL</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>0</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
+    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
+    <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
+    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
+    <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
+    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
+    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
+    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
+    <CodeContractsEnumObligations>False</CodeContractsEnumObligations>
+    <CodeContractsRedundantAssumptions>False</CodeContractsRedundantAssumptions>
+    <CodeContractsInferRequires>False</CodeContractsInferRequires>
+    <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
+    <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
+    <CodeContractsSuggestAssumptions>False</CodeContractsSuggestAssumptions>
+    <CodeContractsSuggestRequires>True</CodeContractsSuggestRequires>
+    <CodeContractsSuggestEnsures>True</CodeContractsSuggestEnsures>
+    <CodeContractsSuggestObjectInvariants>False</CodeContractsSuggestObjectInvariants>
+    <CodeContractsDisjunctiveRequires>False</CodeContractsDisjunctiveRequires>
+    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
+    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
+    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
+    <CodeContractsEmitXMLDocs>False</CodeContractsEmitXMLDocs>
+    <CodeContractsCustomRewriterAssembly />
+    <CodeContractsCustomRewriterClass />
+    <CodeContractsLibPaths />
+    <CodeContractsExtraRewriteOptions />
+    <CodeContractsExtraAnalysisOptions />
+    <CodeContractsBaseLineFile />
+    <CodeContractsCacheAnalysisResults>True</CodeContractsCacheAnalysisResults>
+    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
+    <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
+    <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>IncFramework.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Lib\NHibernate\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonServiceLocator.NinjectAdapter">
+      <HintPath>..\Lib\Ninject\extensions\CommonServiceLocator.NinjectAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="Enyim.Caching">
+      <HintPath>..\Lib\EnyimCaching\Enyim.Caching.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=1.2.0.712, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\NHibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation, Version=3.3.1.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\FluentValidation-Mvc3\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\NHibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\Lib\NHibernate\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications">
+      <HintPath>..\Lib\MachineSpec\Machine.Specifications.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\Lib\Moq.4.0.10827\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Json.Net\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\NHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Ninject\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions">
+      <HintPath>..\Lib\Ninject\Ninject.Extensions.Conventions.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\Lib\StructureMap\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Block\Caching Factory\Cache Providers\When_mem_cached_provider_init_with_configuration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\Caching Factory\Cache Providers\When_mem_cached_provider_init_with_quick_configuration_protocol_binary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\Caching Factory\Cache Providers\When_mem_cached_provider_init_with_section.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_with_exists_cache_after_reload_caching_factory.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_with_always_expires.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_without_subscriber.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_has_subscriber.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_.cs" />
+    <Compile Include="ExtensionsGroup\When_fetch_specification_extensions.cs" />
+    <Compile Include="FakeSerializeObject.cs" />
+    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_direct.cs" />
+    <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_catch.cs" />
+    <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_wrap.cs" />
+    <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_nothing.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_in_line_initialize.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_modules.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_with_logger.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\when_default_parser_exception.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_connection_string.cs" />
+    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_get_current_session.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\Context_nhibernate_repository_query.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_order_descending_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_paginated_all_where_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbItemEntity.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbEntity.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\Fetch\When_nhibernate_repository_query_with_fetch_join_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\Fetch\When_nhibernate_repository_query_with_fetch_join_many_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_order_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_all_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_paginated_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_where_specification.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\Context_nhibernate_repository.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_delete.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_delete_by_id.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_get_by_id.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_load_by_id.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_load_by_id_with_null.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_save.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_save_or_update.cs" />
+    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_open_session.cs" />
+    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_open_session_with_connection_string.cs" />
+    <Compile Include="DataGroup\Speicifications\When_ad_hoc_fetch_specification_equal.cs" />
+    <Compile Include="DataGroup\Speicifications\When_ad_hoc_order_specification_equal.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_to_csv.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extension.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_as_queryable.cs" />
+    <Compile Include="ExtensionsGroup\When_specification_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_enum_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_string_url_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_expression_equal_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_other_extensions.cs" />
+    <Compile Include="ExtensionsGroup\RouteValueDictionaryGroup\When_route_value_dictionary_helper_from_object.cs" />
+    <Compile Include="DataGroup\Speicifications\When_ad_hoc_specification.cs" />
+    <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\Context_CachingFactoryTestEx.cs" />
+    <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_should_be_delete.cs" />
+    <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_should_be_get.cs" />
+    <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_should_be_set.cs" />
+    <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_stub_get.cs" />
+    <Compile Include="MvcContribGroup\Extensions\When_html_extensions.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control_without_message.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_display_name.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_name.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_bind.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_behaviors.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_with.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_ajax_dsl.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_do_dsl.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_event_dsl.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_submit_dsl.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_as.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_store.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_jquery.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_more_when.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_executable_base_conditionals.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder_binary.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\ConditionalBuilderTestEx.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder_reset_inverse.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_set_filter.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_java_script_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_equal.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_value_extensions.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_cast.cs" />
+    <Compile Include="MvcContribGroup\IncodingHtmlHelper\When_begin_tag.cs" />
+    <Compile Include="CQRSGroup\Common\Query\When_has_entities.cs" />
+    <Compile Include="CQRSGroup\Common\Query\When_has_entities_empty.cs" />
+    <Compile Include="CQRSGroup\Common\Specifications\When_entity_by_id.cs" />
+    <Compile Include="CQRSGroup\Common\Specifications\When_entity_contains_id.cs" />
+    <Compile Include="CQRSGroup\Common\Query\When_get_entities.cs" />
+    <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\Context_default_dispatcher.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_all_commit.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_behavior_exception.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_behavior.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_data_base_instance.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_throw_exception.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_throw_exception_and_re_throw_in_event.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_with_mute_event.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_query.cs" />
+    <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_wrong_assembly_qualified_name.cs" />
+    <Compile Include="CQRSGroup\Common\Query\When_get_entity_by_id.cs" />
+    <Compile Include="DataGroup\Nhibernate\When_nhibernate_unit_of_work_factory_create.cs" />
+    <Compile Include="DataGroup\Nhibernate\UnitOfWork\Context_nhibernate_unit_of_work.cs" />
+    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_commit.cs" />
+    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_disposable_after_commit.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_get_by_id_with_null.cs" />
+    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_disposable.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_join_value_special_value.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_special_source.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_with_collections.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_with_exists_key.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_with_special_value.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_parse.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_parse_special_source.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_parse_with_null_source.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_parse_with_incorrect_source.cs" />
+    <Compile Include="ExtensionsGroup\Maybe\Context_maybe.cs" />
+    <Compile Include="ExtensionsGroup\Maybe\When_maybe_enumerable.cs" />
+    <Compile Include="ExtensionsGroup\Maybe\When_maybe_object.cs" />
+    <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_ninject.cs" />
+    <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_structure_map.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_with_shared_subscriber.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_publish_with_async_handler.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_publish_with_async_handler_and_wait.cs" />
+    <Compile Include="KnowleadgeGroup\When_understand_select_with_empty_collection.cs" />
+    <Compile Include="KnowleadgeGroup\When_understand_behavior_read_only_field_value_type.cs" />
+    <Compile Include="KnowleadgeGroup\When_understand_different_bit_and_bool_operator.cs" />
+    <Compile Include="KnowleadgeGroup\When_understand_different_reference_and_value_type.cs" />
+    <Compile Include="KnowleadgeGroup\When_understand_select_with_null_collection.cs" />
+    <Compile Include="MSpecAssemblyContext.cs" />
+    <Compile Include="Block\Caching Factory\Multi Threaded\When_caching_factory_multi_thread_access_delete_cached.cs" />
+    <Compile Include="Block\Caching Factory\Multi Threaded\When_caching_factory_multi_thread_access_set_cached.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\When_clipboard_logger_log.cs" />
+    <Compile Include="ExtensionsGroup\Dictionary\When_set_value_with_not_exists.cs" />
+    <Compile Include="ExtensionsGroup\Dictionary\When_set_value_with_exists.cs" />
+    <Compile Include="ExtensionsGroup\Dictionary\When_merge_dictionary.cs" />
+    <Compile Include="ExtensionsGroup\RouteValueDictionaryGroup\When_route_value_dictionary_helper_from_dictionary.cs" />
+    <Compile Include="ExtensionsGroup\RouteValueDictionaryGroup\When_route_value_dictionary_helper_from_null.cs" />
+    <Compile Include="ExtensionsGroup\RouteValueDictionaryGroup\When_route_value_dictionary_helper_from_route_value_dictionary.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\When_file_logger_at_once_replace.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\When_file_logger_each_replace.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\When_file_logger_with_concurrency.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\When_file_logger_without_replace.cs" />
+    <Compile Include="Block\Core\When_singleton_and_try_get_instance_from_different_thread.cs" />
+    <Compile Include="ExtensionsGroup\When_extensions_object.cs" />
+    <Compile Include="Block\Caching Factory\Cache Providers\Behaviors_cached_provider.cs" />
+    <Compile Include="Block\Caching Factory\Cache Providers\When_memory_list_cached_provider.cs" />
+    <Compile Include="Block\Caching Factory\Cache Providers\When_net_cached_provider.cs" />
+    <Compile Include="Block\Caching Factory\FakeCacheObject\FakeAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\Caching Factory\FakeCacheObject\FakeCacheCustomHierarchy.cs" />
+    <Compile Include="Block\Caching Factory\FakeCacheObject\FakeCacheCustomHierarchyDerived.cs" />
+    <Compile Include="Block\Caching Factory\FakeCacheObject\FakeCacheKey.cs" />
+    <Compile Include="Block\Caching Factory\Caching Policy\When_caching_policy_never.cs" />
+    <Compile Include="Block\Caching Factory\Caching Policy\When_caching_policy_set_expires.cs" />
+    <Compile Include="Block\Caching Factory\Caching Policy\When_caching_policy_end_absolute.cs" />
+    <Compile Include="Block\Caching Factory\Caching Policy\When_caching_policy_end_sliding.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_delete.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_by_filter_with_expires_always_as_local_policy.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_retrieve_cache_by_hierarchy_with_expires_end_absolute_as_global_policy.cs" />
+    <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_by_deep_derived_with_expires_always_as_global_policy.cs" />
+    <Compile Include="Block\Core\When_satisfied_syntax.cs" />
+    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_catch.cs" />
+    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_retry.cs" />
+    <Compile Include="Block\Exception Handling Factory\When_exception_policy.cs" />
+    <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_without_policy.cs" />
+    <Compile Include="ExtensionsGroup\When_date_time_extensions.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_merge.cs" />
+    <Compile Include="ExtensionsGroup\When_equals_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_reflection_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_string_extensions.cs" />
+    <Compile Include="ExtensionsGroup\When_calculate_percentage.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_success_razor_text.cs" />
+    <Compile Include="When_guard.cs" />
+    <Compile Include="Block\IoC Factory\IFake.cs" />
+    <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_eject_ioc_provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_expected_exception_ioc_provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_forward_ioc_provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_get_ioc_provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\Providers\Context_ioc_provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_class_registry.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_in_line_initialize.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\IoC Factory\When_ioc_factory.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\Context_Logger.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\When_console_logger_log.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\When_event_logger_log.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\Context_file_logger.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\File Logger\When_file_logger_log_with_template.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\When_lambda_logger_log.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\LoggerImpGroup\When_trace_logger_log.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\Context_logging_factory.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Logging Policy\Context_Logging_Policy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_with_in_line.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_exception.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_message.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_for.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_with_wrong_log_type.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_with_parser.cs" />
+    <Compile Include="DataGroup\EntityBase\Context_entity_base.cs" />
+    <Compile Include="DataGroup\EntityBase\When_entities_contain_in_dictionary.cs" />
+    <Compile Include="DataGroup\EntityBase\When_entities_distinct.cs" />
+    <Compile Include="DataGroup\EntityBase\When_entity_equal.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_join_value.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_join_value_in_empty_collection.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_source.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_empty_source.cs" />
+    <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_source_without_split_char.cs" />
+    <Compile Include="EventBroker\Publish\Behaviors_default_event_broker_publish_event.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_publish_event_with_handler_throw_exception.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_success_with_ajax_with_custom.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_error_result_with_custom.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_success.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_with_wrong_model_state.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Context_inc_controller_base.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_with_wrong_model_state_with_ajax.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_success_with_custom.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_with_exception.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_with_exception_with_ajax.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_error_result_with_ajax.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_error_result.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_checkbox_control_unchecked.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_checkbox_control_checked.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_add_meta.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_meta.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_file_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_hidden_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\Context_inc_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_property_name.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_list_box_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_password_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_text_area_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_text_box_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_validation_control.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_to_string.cs" />
+    <Compile Include="MSpecGroup\Extensions\Ioc Factory Extensions\Context_IoC_Factory_TestEx.cs" />
+    <Compile Include="MSpecGroup\Extensions\Ioc Factory Extensions\When_ioc_factory_stub_resolve.cs" />
+    <Compile Include="MSpecGroup\Extensions\Ioc Factory Extensions\When_ioc_factory_stub_try_resolve_by_named.cs" />
+    <Compile Include="MvcContribGroup\ViewModel\When_entity_vm_created.cs" />
+    <Compile Include="MvcContribGroup\Core\When_inc_web_exception.cs" />
+    <Compile Include="MSpecGroup\Extensions\Ioc Factory Extensions\When_ioc_factory_stub_get_all.cs" />
+    <Compile Include="MvcContribGroup\Extensions\When_route_value_dictionary_extensions.cs" />
+    <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_success_with_ajax.cs" />
+    <Compile Include="MvcContribGroup\Template\When_mvc_template.cs" />
+    <Compile Include="MvcContribGroup\ViewModel\When_opt_group_vm_create_by_ctor.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\When_template_mustache_syntax_foreach.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\When_template_mustache_syntax_is.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\When_template_mustache_syntax_not.cs" />
+    <Compile Include="MvcContribGroup\Extensions\When_url_extensions.cs" />
+    <Compile Include="MSpecGroup\Extensions\Ioc Factory Extensions\When_ioc_factory_stub_try_resolve.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\Context_template_mustache.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\When_template_mustache_syntax_negative.cs" />
+    <Compile Include="MvcContribGroup\Template\Mustaches\When_template_mustache_syntax_positive.cs" />
+    <Compile Include="MvcContribGroup\IncodingHtmlHelper\When_mvc_script_template.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_error_with_data.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_error_with_model_state.cs" />
+    <Compile Include="MvcContribGroup\HttpMemoryPostedFile\When_memory_posted_file.cs" />
+    <Compile Include="MvcContribGroup\IncodingHtmlHelper\When_incoding_html_helper_render_select_template.cs" />
+    <Compile Include="MvcContribGroup\HttpMemoryPostedFile\When_memory_posted_file_from_http_posted_file.cs" />
+    <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_create_ctor.cs" />
+    <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_equal.cs" />
+    <Compile Include="MvcContribGroup\Core\When_inc_validation_factory.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\BehaviorsJsonResultSpec.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_collection_to_select_list_with_all_parameter.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_error.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_with_redirect_to.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_success.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_success_with_data.cs" />
+    <Compile Include="MvcContribGroup\IncodingHtmlHelper\When_incoding_html_helper.cs" />
+    <Compile Include="MvcContribGroup\HttpMemoryPostedFile\When_memory_posted_file_with_empty_content.cs" />
+    <Compile Include="MSpecGroup\Extensions\Moq Extensions\When_incoding_moq_extensions_returns.cs" />
+    <Compile Include="MSpecGroup\Extensions\Moq Extensions\When_incoding_moq_extensions_dispatcher.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_should_be_push.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_query.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_request_uri.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_broken_model_state.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_principal.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_disabled_ajax.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_query_string.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\Context_mock_controller.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_url_action.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_throw.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_ctor.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_json.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_partial_view.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_redirect.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_view.cs" />
+    <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_view_without_model.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_double_stub_query.cs" />
+    <Compile Include="MSpecGroup\Mock Message\Context_mock_message_event_broker.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_event_broker_strong.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_event_broker_by_type.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_event_broker_without_stub.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_get_by_id.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_not_empty_query.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_paginated.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_multiple_stub_query.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_date_sql_equality_comparer.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_equality_comparer.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_empty.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_mock_it.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_compare_factory.cs" />
+    <Compile Include="MSpecGroup\Extensions\When_action_result_extensions.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_should_be_repository.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_is_result.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_empty_query.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\Context_invent_factory.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_create.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_duplication_setting.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_empty.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_manipulate.cs" />
+    <Compile Include="MSpecGroup\Extensions\When_should_extensions.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_property_only_read.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_entity.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_object.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_tree_traversal.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\IncodingMetaLanguageDslHelper.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_utilities.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_trigger.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_form.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_on.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_direct_dsl.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_insert.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_ctor.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_show__options.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_conditional_get_data.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_executable_merge.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_incoding_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_add.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options_with_url.cs" />
+    <Compile Include="MvcContribGroup\When_web_enum_convert.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\FakeEnum.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\FakeItemCollection.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_enum_to_select_list.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_enum_to_select_list_with_default.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_enum_to_select_list_with_selected.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_list_key_value_to_select_list_without_any_selected.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_collection_to_select_list.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_list_key_value_to_select_list.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_list_key_value_to_select_list_with_source_collection_empty.cs" />
+    <Compile Include="MvcContribGroup\Extensions\When_view_context_extensions.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_generate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_quick_method.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_typical_options_set.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_to_html_attributes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="IncFramework.pub" />
+    <None Include="IncFramework.PublicKeyOnly.snk" />
+    <None Include="IncFramework.snk" />
+    <None Include="ValidateProtobufSerialize.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Content Include="ValidateJsonSerialize.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ValidateXmlSerialize.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Incoding.MSpecContrib\Incoding.MSpecContrib.csproj">
+      <Project>{D07EC3BB-F2FD-4093-838B-39C73B42140E}</Project>
+      <Name>Incoding.MSpecContrib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Incoding\Incoding.csproj">
+      <Project>{d66ad474-a026-4ab2-b475-6477488443c4}</Project>
+      <Name>Incoding</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UtilitiesGroup\SerializerWrapperGroup\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>IF EXIST  $(ProjectDir)db.config   xcopy  $(ProjectDir)db.config $(TargetDir) /y</PreBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
