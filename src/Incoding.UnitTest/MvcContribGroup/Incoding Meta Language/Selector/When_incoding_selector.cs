@@ -2,7 +2,6 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
-    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -25,10 +24,24 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #endregion
 
+        #region Establish value
+
+        enum FakeEnum
+        {
+            Value = 5
+        }
+
+        #endregion
+
         It should_be_value = () => Selector
                                            .Value(Pleasure.Generator.TheSameString())
                                            .ToString()
                                            .ShouldEqual("'TheSameString'");
+
+        It should_be_value_enum = () => Selector
+                                                .Value(FakeEnum.Value)
+                                                .ToString()
+                                                .ShouldEqual("'5'");
 
         It should_be_hash = () => Selector.Incoding
                                           .HashUrl()
@@ -40,10 +53,6 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                       .ToString()
                                                       .ShouldEqual("'@@@@search@@@@'");
 
-        It should_be_href = () => Selector.Incoding
-                                          .Href()
-                                          .ToString()
-                                          .ShouldEqual("'@@href@@'");
 
         It should_be_query_string = () => Selector.Incoding
                                                   .QueryString<FakeModel>(r => r.Prop)
@@ -79,6 +88,11 @@ namespace Incoding.UnitTest.MvcContribGroup
                                               .AjaxGet(Pleasure.Generator.Url())
                                               .ToString()
                                               .ShouldEqual("'@@@@@@@{\"url\":\"http://sample.com\",\"type\":\"GET\",\"async\":false}@@@@@@@'");
+
+        It should_be_ajax_get_with_data = () => Selector.Incoding
+                                                        .AjaxGet("/Dispatcher/Query?type=IsQuery&id=123")
+                                                        .ToString()
+                                                        .ShouldEqual("'@@@@@@@{\"data\":[{\"name\":\"type\",\"selector\":\"IsQuery\"},{\"name\":\"id\",\"selector\":\"123\"}],\"url\":\"/Dispatcher/Query\",\"type\":\"GET\",\"async\":false}@@@@@@@'");
 
         It should_be_ajax_post = () => Selector.Incoding
                                                .AjaxPost(Pleasure.Generator.Url())

@@ -1,10 +1,14 @@
 ﻿namespace Incoding.UnitTest.ExtensionsGroup
 {
+    #region << Using >>
+
     using System.Collections.Generic;
     using System.Linq;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(EnumerableExtensions))]
     public class When_enumerable_extensions_page_

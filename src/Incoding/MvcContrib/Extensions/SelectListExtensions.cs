@@ -15,6 +15,11 @@ namespace Incoding.MvcContrib
     {
         #region Factory constructors
 
+        public static IEnumerable<KeyValueVm> ToKeyValues(this IEnumerable<SelectListItem> list)
+        {
+            return list.Select(r => new KeyValueVm(r.Value, r.Text, r.Selected));
+        }
+
         public static SelectList ToSelectList(this Type @enum)
         {
             return ToSelectList(@enum, null, null);

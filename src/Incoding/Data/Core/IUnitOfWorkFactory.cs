@@ -8,6 +8,6 @@
 
     public interface IUnitOfWorkFactory
     {
-        IUnitOfWork Create(IsolationLevel level, IDbConnection connection =null);
+        IUnitOfWork Create(IsolationLevel level, IDbConnection connection = null);
     }
 }

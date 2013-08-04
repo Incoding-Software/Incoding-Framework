@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.Block
     #region << Using >>
 
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -16,7 +17,7 @@ namespace Incoding.UnitTest.Block
 
         #endregion
 
-        Establish establish = () => { loggingPolicy = LoggingPolicy.For(Pleasure.Generator.TheSameString()); };
+        Establish establish = () => { loggingPolicy = new LoggingPolicy().For(Pleasure.Generator.TheSameString()); };
 
         Because of = () => { result = loggingPolicy.IsSatisfied(Pleasure.Generator.TheSameString()); };
 

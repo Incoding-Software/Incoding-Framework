@@ -1,11 +1,5 @@
 ﻿namespace Incoding.MvcContrib
 {
-    #region << Using >>
-
-    using System;
-
-    #endregion
-
     ////ncrunch: no coverage start
     public static class SelectorConditionalExtensions
     {

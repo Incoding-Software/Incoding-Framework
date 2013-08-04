@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using Incoding.Block.Caching;
     using Incoding.MSpecContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -21,7 +21,7 @@ namespace Incoding.UnitTest.Block
                          {
                              cachingFactory = new CachingFactory();
                              cachingFactory.Initialize(caching => caching
-                                                                          .RegistryPolicy(CachingPolicy.ForFirstDerived<FakeCacheCustomHierarchy>().EndAbsolute(Pleasure.NowPlush100Milliseconds))
+                                                                          .WithPolicy(r => r.ForFirstDerived<FakeCacheCustomHierarchy>().EndAbsolute(Pleasure.NowPlush100Milliseconds))
                                                                           .WithProvider(new MemoryListCachedProvider()));
                              cachingFactory.Set(new FakeCacheCustomHierarchyDerived(), Pleasure.Generator.Invent<FakeSerializeObject>());
                          };

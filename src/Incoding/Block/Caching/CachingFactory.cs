@@ -57,7 +57,7 @@ namespace Incoding.Block.Caching
 
         public void Delete(ICacheKey key)
         {
-            this.init.CachedProvider.Delete(key);
+            this.init.Provider.Delete(key);
         }
 
         public void Set<TKey, TInstance>(TKey key, TInstance value)
@@ -65,7 +65,7 @@ namespace Incoding.Block.Caching
                 where TKey : class, ICacheKey
         {
             lock (cacheBuffer.GetOrAdd(key.GetName(), key))
-                this.init.CachedProvider.Set(key, value);
+                this.init.Provider.Set(key, value);
         }
 
         public TResult Get<TResult>(ICacheKey key) where TResult : class
@@ -75,7 +75,7 @@ namespace Incoding.Block.Caching
                 if (IsExpires(key))
                     Delete(key);
 
-                return this.init.CachedProvider.Get<TResult>(key);
+                return this.init.Provider.Get<TResult>(key);
             }
         }
 

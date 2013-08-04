@@ -14,7 +14,6 @@ namespace Incoding.ExpressionCombining
     // http://blogs.msdn.com/b/mattwar/archive/2007/07/31/linq-building-an-iqueryable-provider-part-ii.aspx
     // ----------------------------------------------------------------------------------------------------
     ////ncrunch: no coverage start
-
     public abstract class ExpressionVisitor
     {
         protected virtual Expression Visit(Expression exp)
@@ -332,6 +331,5 @@ namespace Incoding.ExpressionCombining
         }
     }
 
-
-////ncrunch: no coverage end
+    ////ncrunch: no coverage end
 }

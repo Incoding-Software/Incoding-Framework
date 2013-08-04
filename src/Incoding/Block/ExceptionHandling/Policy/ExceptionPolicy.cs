@@ -19,6 +19,8 @@ namespace Incoding.Block.ExceptionHandling
 
         #region Constructors
 
+        public ExceptionPolicy() { }
+
         internal ExceptionPolicy(IsSatisfied<Exception> satisfiedByException, Func<Exception, Exception> func)
         {
             Guard.NotNull("satisfiedByException", satisfiedByException);
@@ -52,14 +54,6 @@ namespace Incoding.Block.ExceptionHandling
         /// <summary>
         ///     See <see cref="SatisfiedSyntax" />
         /// </summary>
-        public static IsSatisfied<Exception> ForAll()
-        {
-            return SatisfiedSyntax.Filter<Exception>(exception => true);
-        }
-
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
         public static IsSatisfied<Exception> ForDeepDerived<TException>()
                 where TException : Exception
         {
@@ -77,16 +71,28 @@ namespace Incoding.Block.ExceptionHandling
 
         #endregion
 
-        internal bool IsSatisfied(Exception exception)
+        #region Api Methods
+
+        /// <summary>
+        ///     See <see cref="SatisfiedSyntax" />
+        /// </summary>
+        public IsSatisfied<Exception> ForAll()
         {
-            Guard.NotNull("exception", exception);
-            return this.satisfiedByException.IsSatisfied(exception);
+            return SatisfiedSyntax.Filter<Exception>(exception => true);
         }
 
         public Exception Handle(Exception exception)
         {
             Guard.NotNull("exception", exception);
             return this.func.Invoke(exception);
+        }
+
+        #endregion
+
+        internal bool IsSatisfied(Exception exception)
+        {
+            Guard.NotNull("exception", exception);
+            return this.satisfiedByException.IsSatisfied(exception);
         }
     }
 }

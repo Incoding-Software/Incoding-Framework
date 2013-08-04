@@ -2,8 +2,6 @@
 {
     public enum ConditionalOfType
     {
-        Url, 
-
         Data, 
 
         DataIsId, 

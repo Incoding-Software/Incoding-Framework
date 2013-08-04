@@ -57,6 +57,8 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        #region Api Methods
+
         public virtual RouteValueDictionary Merge(RouteValueDictionary dest)
         {
             const string dataIncodingKey = "incoding";
@@ -100,5 +102,7 @@ namespace Incoding.MvcContrib
 
             return res;
         }
+
+        #endregion
     }
 }

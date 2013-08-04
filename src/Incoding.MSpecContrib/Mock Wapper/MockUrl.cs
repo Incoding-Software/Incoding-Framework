@@ -1,14 +1,12 @@
 namespace Incoding.MSpecContrib
 {
+    #region << Using >>
+
     using System;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Moq;
-
-    #region << Using >>
-
-    
 
     #endregion
 
@@ -39,7 +37,7 @@ namespace Incoding.MSpecContrib
                             name: "Default", 
                             url: "{controller}/{action}/{id}", 
                             defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional });
-            this.Original = new UrlHelper(requestContext, routes);
+            Original = new UrlHelper(requestContext, routes);
         }
 
         #endregion
@@ -60,10 +58,12 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        public MockUrl StubRequestUrl(Uri uri)
+        public MockUrl StubRequest(Action<Mock<HttpRequestBase>> action)
         {
-            this.httpContext.SetupGet(r => r.Request.Url).Returns(uri);
-            this.httpContext.SetupGet(r => r.Request.UrlReferrer).Returns(uri);
+            var request = Pleasure.Mock<HttpRequestBase>();
+            action(request);
+
+            this.httpContext.SetupGet(r => r.Request).Returns(request.Object);
             return this;
         }
 

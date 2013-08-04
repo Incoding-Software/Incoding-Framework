@@ -14,7 +14,7 @@ namespace Incoding.Extensions
         #region Factory constructors
 
         public static IEnumerable<T> ToArrayEnum<T>(this Type value)
-        {            
+        {
             return Enum
                     .GetValues(value)
                     .Cast<int>()

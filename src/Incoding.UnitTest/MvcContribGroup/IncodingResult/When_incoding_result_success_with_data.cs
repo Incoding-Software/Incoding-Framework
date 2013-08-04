@@ -3,7 +3,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

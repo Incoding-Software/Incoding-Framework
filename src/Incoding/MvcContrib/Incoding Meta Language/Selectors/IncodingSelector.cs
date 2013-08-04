@@ -63,12 +63,6 @@
             return QueryString(property.GetMemberName());
         }
 
-        public Selector Href()
-        {
-            AndSelector("@@href@@");
-            return this;
-        }
-
         public Selector Cookie<TModel>(Expression<Func<TModel, object>> property)
         {
             return Cookie(property.GetMemberName());
@@ -93,7 +87,7 @@
         {
             return Ajax(options =>
                             {
-                                options.WithUrl(url);
+                                options.Url = url;
                                 options.Type = HttpVerbs.Get;
                             });
         }
@@ -102,7 +96,7 @@
         {
             return Ajax(options =>
                             {
-                                options.WithUrl(url);
+                                options.Url = url;
                                 options.Type = HttpVerbs.Post;
                             });
         }

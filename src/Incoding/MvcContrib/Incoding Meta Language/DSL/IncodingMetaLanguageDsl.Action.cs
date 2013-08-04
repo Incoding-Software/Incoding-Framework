@@ -49,7 +49,7 @@
             return AjaxHash(options =>
                                 {
                                     if (!string.IsNullOrWhiteSpace(url))
-                                        options.WithUrl(url);
+                                        options.Url = url;
                                     options.Type = HttpVerbs.Get;
                                 }, prefix);
         }
@@ -59,7 +59,7 @@
             return AjaxHash(options =>
                                 {
                                     if (!string.IsNullOrWhiteSpace(url))
-                                        options.WithUrl(url);
+                                        options.Url = url;
                                     options.Type = HttpVerbs.Post;
                                 }, prefix);
         }
@@ -68,7 +68,7 @@
         {
             return Ajax(options =>
                             {
-                                options.WithUrl(url);
+                                options.Url = url;
                                 options.Type = HttpVerbs.Get;
                             });
         }
@@ -77,7 +77,7 @@
         {
             return Ajax(options =>
                             {
-                                options.WithUrl(url);
+                                options.Url = url;
                                 options.Type = HttpVerbs.Post;
                             });
         }

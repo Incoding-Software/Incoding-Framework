@@ -4,8 +4,9 @@ namespace Incoding.UnitTest.MvcContribGroup
 
     using System.Collections.Generic;
     using System.Web.WebPages;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -341,6 +342,15 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                            { "code", "$(this.target).wrapAll(this.tryGetVal('<div>'));" }
                                                                    });
 
+        It should_be_text_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                          .Do().Direct()
+                                          .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Text(string.Empty))
+                                          .GetExecutable<ExecutableEval>()
+                                          .ShouldEqualData(new Dictionary<string, object>
+                                                               {
+                                                                       { "code", "$(this.target).text(this.tryGetVal('').toString());" }
+                                                               });   
+        
         It should_be_text = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                           .Do().Direct()
                                           .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Text(o => new HelperResult(writer => writer.WriteLine("<div>"))))
@@ -350,16 +360,14 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                        { "code", "$(this.target).text(this.tryGetVal('<div>').toString());" }
                                                                });
 
-
-
         It should_be_append = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Do().Direct()
-                                                 .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Append(o => new HelperResult(writer => writer.WriteLine("<div>"))))
-                                                 .GetExecutable<ExecutableEval>()
-                                                 .ShouldEqualData(new Dictionary<string, object>
-                                                                      {
-                                                                              { "code", "$(this.target).append(this.tryGetVal('<div>').toString());" }
-                                                                      });
+                                            .Do().Direct()
+                                            .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Append(o => new HelperResult(writer => writer.WriteLine("<div>"))))
+                                            .GetExecutable<ExecutableEval>()
+                                            .ShouldEqualData(new Dictionary<string, object>
+                                                                 {
+                                                                         { "code", "$(this.target).append(this.tryGetVal('<div>').toString());" }
+                                                                 });
 
         It should_be_prepend = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                              .Do().Direct()

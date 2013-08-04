@@ -45,7 +45,7 @@ namespace Incoding.MvcContrib
         }
 
         public IncodingMetaCallbackTriggerDsl For<TModel>(Expression<Func<TModel, object>> property)
-        {            
+        {
             this.triggerProperty = property.GetMemberName();
             return this;
         }

@@ -5,7 +5,8 @@
     using System.Data;
     using System.Data.SqlClient;
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using NHibernate;
     using NHibernate.Context;

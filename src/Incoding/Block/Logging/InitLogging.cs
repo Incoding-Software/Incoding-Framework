@@ -2,6 +2,7 @@ namespace Incoding.Block.Logging
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -38,17 +39,9 @@ namespace Incoding.Block.Logging
             return this;
         }
 
-        /// <summary>
-        ///     Add global logging <paramref name="policy" />
-        /// </summary>
-        /// <param name="policy">
-        ///     See <see cref="LoggingPolicy" />
-        /// </param>
-        public InitLogging WithPolicy(LoggingPolicy policy)
+        public InitLogging WithPolicy(Func<LoggingPolicy, LoggingPolicy> action)
         {
-            Guard.NotNull("policy", policy);
-
-            this.loggingPolicies.Add(policy);
+            this.loggingPolicies.Add(action(new LoggingPolicy()));
             return this;
         }
 

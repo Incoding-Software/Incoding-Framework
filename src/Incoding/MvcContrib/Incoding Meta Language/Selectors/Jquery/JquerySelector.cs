@@ -18,6 +18,17 @@
 
         #endregion
 
+        #region Factory constructors
+
+        public static string Escaping(string value)
+        {
+            return value
+                    .Replace(".", "\\.")
+                    .Replace("#", "\\#");
+        }
+
+        #endregion
+
         #region Api Methods
 
         public JquerySelectorExtend Custom(string custom)
@@ -28,6 +39,9 @@
 
         /// <summary>
         ///     Selects elements that have the specified <paramref name="attribute" />, with any value.
+        ///     <remarks>
+        ///         Jquery $('[attribute]')
+        ///     </remarks>
         /// </summary>
         public JquerySelectorExtend HasAttribute(string attribute)
         {
@@ -37,6 +51,9 @@
 
         /// <summary>
         ///     Selects elements that have the specified <paramref name="attribute" />, with any value.
+        ///     <remarks>
+        ///         Jquery $('[attribute]')
+        ///     </remarks>
         /// </summary>
         public JquerySelectorExtend HasAttribute(HtmlAttribute attribute)
         {
@@ -45,6 +62,9 @@
 
         /// <summary>
         ///     Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> beginning exactly with a given string.
+        ///     <remarks>
+        ///         $('[attribute^="value"]')
+        ///     </remarks>
         /// </summary>
         public JquerySelectorExtend StartWithAttribute(string attribute, string value)
         {
@@ -145,9 +165,10 @@
         /// <summary>
         ///     Selects all elements with the given <paramref name="classes" />.
         /// </summary>
-        public JquerySelectorExtend Class(params string[] classes)
+        public JquerySelectorExtend Class(string classes)
         {
-            classes.DoEach((@class, index) => OrSelector("." + Escaping(@class)));
+            classes.Split(" ".ToCharArray())
+                   .DoEach((@class, index) => AndSelector("." + Escaping(@class)));
             return new JquerySelectorExtend(this.selector);
         }
 
@@ -201,7 +222,7 @@
         /// </summary>
         public JquerySelectorExtend EqualsAttribute(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute.ToLower(), value, string.Empty));
+            AlsoSelector(FixedAsAttribute(attribute.ToLower(), value, string.Empty));
             return new JquerySelectorExtend(this.selector);
         }
 
@@ -218,13 +239,6 @@
         static string FixedAsAttribute(string attribute, string value, string global)
         {
             return "[{0}{1}=\"{2}\"]".F(attribute.ToLower(), global, value);
-        }
-
-        static string Escaping(string value)
-        {
-            return value
-                    .Replace(".", "\\.")
-                    .Replace("#", "\\#");
         }
     }
 }

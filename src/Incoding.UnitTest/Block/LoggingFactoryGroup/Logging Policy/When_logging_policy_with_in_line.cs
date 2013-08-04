@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.Block
     #region << Using >>
 
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -18,7 +19,7 @@ namespace Incoding.UnitTest.Block
 
         Establish establish = () =>
                                   {
-                                      loggingPolicy = LoggingPolicy
+                                      loggingPolicy = new LoggingPolicy()
                                               .For(LogType.Debug)
                                               .UseInLine(context => { result = true; });
                                   };

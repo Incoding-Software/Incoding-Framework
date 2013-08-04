@@ -11,6 +11,7 @@
     public static class RouteValueDictionaryExtensions
     {
         ////ncrunch: no coverage start
+
         #region Factory constructors
 
         public static BeginTag ToBeginTag(this RouteValueDictionary htmlAttributes, HtmlHelper htmlHelper, HtmlTag tag)
@@ -48,7 +49,7 @@
         public static MvcHtmlString ToInput(this RouteValueDictionary htmlAttributes, HtmlInputType inputType, string value)
         {
             var input = new TagBuilder(HtmlTag.Input.ToStringLower());
-            input.MergeAttribute(HtmlAttribute.Type.ToStringLower(), inputType.ToStringLower());
+            input.MergeAttribute(HtmlAttribute.Type.ToLocalization().ToLower(), inputType.ToStringLower());
             if (!string.IsNullOrWhiteSpace(value))
                 input.MergeAttribute(HtmlAttribute.Value.ToStringLower(), value);
 

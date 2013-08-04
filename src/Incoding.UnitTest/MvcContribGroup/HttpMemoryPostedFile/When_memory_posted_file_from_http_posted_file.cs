@@ -4,8 +4,9 @@ namespace Incoding.UnitTest.MvcContribGroup
 
     using System.IO;
     using System.Web;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

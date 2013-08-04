@@ -1,10 +1,8 @@
 namespace Incoding.MSpecContrib
 {
-    using NHibernate;
-
     #region << Using >>
 
-    
+    using NHibernate;
 
     #endregion
 

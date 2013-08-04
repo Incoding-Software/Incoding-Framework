@@ -1,10 +1,8 @@
 namespace Incoding.MSpecContrib
 {
-    using Moq;
-
     #region << Using >>
 
-    
+    using Moq;
 
     #endregion
 

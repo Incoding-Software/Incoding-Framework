@@ -85,15 +85,14 @@ namespace Incoding.MSpecContrib
         public static void StubPaginated<TEntity>(this Mock<IRepository> repository, PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, IncPaginatedResult<TEntity> result = null)
                 where TEntity : class, IEntity
         {
-            Action<Specification<TEntity>> verifyWhereSpec = r => r.ShouldEqualWeak(whereSpecification, dsl => dsl.IncludeAllFields());
-
-            repository.Setup(r => r.Paginated(paginatedSpecification, orderSpecification, Pleasure.MockIt.Is(verifyWhereSpec), fetchSpecification)).Returns(result);
+            repository.Setup(r => r.Paginated(Pleasure.MockIt.IsStrong(paginatedSpecification), orderSpecification, Pleasure.MockIt.IsStrong(whereSpecification, dsl => dsl.IncludeAllFields()), fetchSpecification))
+                      .Returns(result);
         }
 
         public static void StubQuery<TEntity>(this Mock<IRepository> repository, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null, params TEntity[] entities) where TEntity : class, IEntity
         {
             repository
-                    .Setup(r => r.Query(orderSpecification, Pleasure.MockIt.Is<Specification<TEntity>>(specification => specification.ShouldEqualWeak(whereSpecification, dsl => dsl.IncludeAllFields())), fetchSpecification, paginatedSpecification))
+                    .Setup(r => r.Query(orderSpecification, Pleasure.MockIt.IsStrong(whereSpecification, dsl => dsl.IncludeAllFields()), fetchSpecification, Pleasure.MockIt.IsStrong(paginatedSpecification)))
                     .Returns(Pleasure.ToQueryable(entities));
         }
 

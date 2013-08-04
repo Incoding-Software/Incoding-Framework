@@ -20,10 +20,20 @@
                                             .Height().ToString()
                                             .ShouldEqual("$(this.self).height()");
 
+        It should_be_length = () => Selector.Jquery
+                                            .Self()
+                                            .Length().ToString()
+                                            .ShouldEqual("$(this.self).length");
+
         It should_be_inner_height = () => Selector.Jquery
                                                   .Self()
                                                   .InnerHeight().ToString()
                                                   .ShouldEqual("$(this.self).innerHeight()");
+
+        It should_be_has_class = () => Selector.Jquery
+                                               .Self()
+                                               .HasClass("class class2").ToString()
+                                               .ShouldEqual("$(this.self).hasClass('.class .class2')");
 
         It should_be_inner_width = () => Selector.Jquery
                                                  .Self()

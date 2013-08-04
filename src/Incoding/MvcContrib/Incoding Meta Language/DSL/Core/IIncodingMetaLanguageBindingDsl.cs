@@ -1,6 +1,10 @@
 namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
     using JetBrains.Annotations;
+
+    #endregion
 
     public interface IIncodingMetaLanguageBindingDsl
     {

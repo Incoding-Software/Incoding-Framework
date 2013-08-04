@@ -10,11 +10,11 @@ namespace Incoding.MSpecContrib
     // ReSharper disable UnusedMemberInSuper.Global
     public interface ICompareFactoryDsl<TActual, TExpected>
     {
-        ICompareFactoryDsl<TActual, TExpected> Forward(Expression<Func<TActual, object>> actualProp, Expression<Func<TExpected, object>> expectedProp);
+        ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(Expression<Func<TActual, TValue>> actualProp, Expression<Func<TExpected, TValue>> expectedProp);
 
-        ICompareFactoryDsl<TActual, TExpected> Forward(string actualProp, Expression<Func<TExpected, object>> expectedProp);
+        ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(string actualProp, Expression<Func<TExpected, TValue>> expectedProp);
 
-        ICompareFactoryDsl<TActual, TExpected> ForwardToValue(Expression<Func<TActual, object>> actualProp, object value);
+        ICompareFactoryDsl<TActual, TExpected> ForwardToValue<TValue>(Expression<Func<TActual, TValue>> actualProp, TValue value);
 
         ICompareFactoryDsl<TActual, TExpected> ForwardToValue(string actualProp, object value);
 

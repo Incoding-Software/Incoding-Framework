@@ -6,7 +6,7 @@ namespace Incoding.UnitTest.Block
     using Enyim.Caching.Configuration;
     using Enyim.Caching.Memcached;
     using Incoding.Block.Caching;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

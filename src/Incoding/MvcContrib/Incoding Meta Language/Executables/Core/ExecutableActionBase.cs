@@ -2,7 +2,6 @@
 {
     #region << Using >>
 
-    using System;
     using Incoding.Extensions;
 
     #endregion
@@ -13,7 +12,7 @@
 
         public void SetFilter(ConditionalBase filter)
         {
-            Data.Set("filterResult", filter.GetData());          
+            Data.Set("filterResult", filter.GetData());
         }
 
         #endregion

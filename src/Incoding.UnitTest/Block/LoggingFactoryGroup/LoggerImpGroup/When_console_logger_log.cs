@@ -4,7 +4,8 @@
 
     using System;
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

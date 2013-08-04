@@ -19,6 +19,8 @@ namespace Incoding.Block.Caching
 
         #region Constructors
 
+        public CachingPolicy() { }
+
         internal CachingPolicy(IsSatisfied<ICacheKey> satisfied, IsCacheExpires cacheExpires)
         {
             this.satisfied = satisfied;
@@ -49,7 +51,7 @@ namespace Incoding.Block.Caching
         /// <summary>
         ///     See <see cref="SatisfiedSyntax" />
         /// </summary>
-        public static IsSatisfied<ICacheKey> ForAll()
+        public IsSatisfied<ICacheKey> ForAll()
         {
             return SatisfiedSyntax.Filter<ICacheKey>(key => true);
         }
@@ -57,16 +59,7 @@ namespace Incoding.Block.Caching
         /// <summary>
         ///     See <see cref="SatisfiedSyntax" />
         /// </summary>
-        public static IsSatisfied<ICacheKey> ForDeepDerived<TCacheKey>()
-                where TCacheKey : class, ICacheKey
-        {
-            return SatisfiedSyntax.ForDeepDerived<ICacheKey, TCacheKey>();
-        }
-
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
-        public static IsSatisfied<ICacheKey> ForFirstDerived<TCacheKey>()
+        public IsSatisfied<ICacheKey> ForFirstDerived<TCacheKey>()
                 where TCacheKey : ICacheKey
         {
             return SatisfiedSyntax.ForFirstDerived<ICacheKey, TCacheKey>();
@@ -74,10 +67,23 @@ namespace Incoding.Block.Caching
 
         #endregion
 
+        #region Api Methods
+
+        /// <summary>
+        ///     See <see cref="SatisfiedSyntax" />
+        /// </summary>
+        public IsSatisfied<ICacheKey> ForDeepDerived<TCacheKey>()
+                where TCacheKey : class, ICacheKey
+        {
+            return SatisfiedSyntax.ForDeepDerived<ICacheKey, TCacheKey>();
+        }
+
         public bool IsExpires(ICacheKey cacheKey)
         {
             return this.cacheExpires(cacheKey);
         }
+
+        #endregion
 
         internal bool IsSatisfied(ICacheKey key)
         {

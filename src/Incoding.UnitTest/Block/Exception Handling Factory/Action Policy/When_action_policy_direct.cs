@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.ExceptionHandling;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

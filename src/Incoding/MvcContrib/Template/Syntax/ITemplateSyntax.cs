@@ -17,8 +17,8 @@ namespace Incoding.MvcContrib
         string IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
 
         string NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
-        
-        string IsInline(Expression<Func<TModel, object>> field, Func<object,HelperResult> content);
+
+        string IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
 
         string NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
 

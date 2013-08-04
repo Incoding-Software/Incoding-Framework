@@ -1,9 +1,13 @@
 ﻿namespace Incoding.UnitTest
 {
+    #region << Using >>
+
     using Incoding.Block.IoC;
     using Incoding.EventBroker;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(DefaultEventBroker))]
     public class When_default_event_broker_has_subscriber

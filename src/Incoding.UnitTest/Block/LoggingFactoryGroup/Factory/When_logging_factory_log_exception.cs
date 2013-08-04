@@ -4,7 +4,8 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -15,7 +16,7 @@ namespace Incoding.UnitTest.Block
                                                                   {
                                                                       var mockParse = Pleasure.MockAsObject<IParserException>(mock => mock.Setup(r => r.Parse(Pleasure.MockIt.IsAny<ArgumentException>())).Returns(Pleasure.Generator.TheSameString));
                                                                       logging.WithParser(mockParse);
-                                                                      logging.WithPolicy(LoggingPolicy.For(LogType.Debug).Use(defaultMockLogger.Object));
+                                                                      logging.WithPolicy(r=>r.For(LogType.Debug).Use(defaultMockLogger.Object));
                                                                   });
 
         Because of = () => loggingFactory.LogException(LogType.Debug, new ArgumentException());

@@ -4,8 +4,9 @@
 
     using System;
     using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -31,25 +32,25 @@
 
         It should_be_hash_area = () => new MockUrl()
                                                .StubAction("/Jasmine?area=Area")
-                                               .StubRequestUrl(new Uri("http://localhost:18302/Jasmine/#!existsHash"))
+                                               .StubRequest(mock => mock.SetupGet(r => r.Url).Returns(new Uri("http://localhost:18302/Jasmine/#!existsHash")))
                                                .Original.HashArea("Index", "Jasmine", "Area", new { param = "id", param2 = "id2" })
                                                .ShouldEqual("/Jasmine#!Jasmine?area=Area/param=id/param2=id2");
 
         It should_be_hash_referral_area = () => new MockUrl()
                                                         .StubAction("/Jasmine?area=Area")
-                                                        .StubRequestUrl(new Uri("http://localhost:18302/Jasmine/#!existsHash"))
+                                                        .StubRequest(mock => mock.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://localhost:18302/Jasmine/#!existsHash")))
                                                         .Original.HashReferralArea("Index", "Jasmine", "Area", new { param = "id", param2 = "id2" })
                                                         .ShouldEqual("/Jasmine#!Jasmine?area=Area/param=id/param2=id2");
 
         It should_be_hash = () => new MockUrl()
                                           .StubAction("/Jasmine")
-                                          .StubRequestUrl(new Uri("http://localhost:18302/Jasmine"))
+                                          .StubRequest(mock => mock.SetupGet(r => r.Url).Returns(new Uri("http://localhost:18302/Jasmine")))
                                           .Original.Hash("Index", "Jasmine", new { param = "id" })
                                           .ShouldEqual("/Jasmine#!Jasmine?param=id");
 
         It should_be_hash_referral = () => new MockUrl()
                                                    .StubAction("/Jasmine")
-                                                   .StubRequestUrl(new Uri("http://localhost:18302/Jasmine"))
+                                                   .StubRequest(mock => mock.SetupGet(r => r.UrlReferrer).Returns(new Uri("http://localhost:18302/Jasmine")))
                                                    .Original.HashReferral("Index", "Jasmine", new { param = "id" })
                                                    .ShouldEqual("/Jasmine#!Jasmine?param=id");
 
@@ -58,7 +59,7 @@
                                                          const string hashUrl = "/Jasmine";
                                                          new MockUrl()
                                                                  .StubAction(hashUrl)
-                                                                 .StubRequestUrl(new Uri("http://localhost:18302/Jasmine"))
+                                                                 .StubRequest(mock => mock.SetupGet(r => r.Url).Returns(new Uri("http://localhost:18302/Jasmine")))
                                                                  .Original.Hash("Index", "Jasmine")
                                                                  .ShouldEqual("/Jasmine#!Jasmine?");
                                                      };

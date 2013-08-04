@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.MSpecGroup
     #region << Using >>
 
     using System;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

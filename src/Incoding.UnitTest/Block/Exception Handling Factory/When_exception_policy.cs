@@ -4,14 +4,14 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.ExceptionHandling;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
     [Subject(typeof(ExceptionPolicy))]
     public class When_exception_policy
     {
-        It should_be_mute = () => ExceptionPolicy
+        It should_be_mute = () => new ExceptionPolicy()
                                           .ForAll()
                                           .Mute()
                                           .Handle(new ArgumentException())
@@ -21,7 +21,7 @@ namespace Incoding.UnitTest.Block
                                  {
                                      bool isCatch = false;
 
-                                     ExceptionPolicy
+                                     new ExceptionPolicy()
                                              .ForAll()
                                              .Catch(exception =>
                                                         {
@@ -34,13 +34,13 @@ namespace Incoding.UnitTest.Block
                                      isCatch.ShouldBeTrue();
                                  };
 
-        It should_be_wrap = () => ExceptionPolicy
+        It should_be_wrap = () => new ExceptionPolicy()
                                           .ForAll()
                                           .Wrap(exception => new ApplicationException(string.Empty, exception))
                                           .Handle(new ArgumentException())
                                           .ShouldBeOfType<ApplicationException>();
 
-        It should_be_re_throw = () => ExceptionPolicy
+        It should_be_re_throw = () => new ExceptionPolicy()
                                               .ForAll()
                                               .ReThrow()
                                               .Handle(new ArgumentException());

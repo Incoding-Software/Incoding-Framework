@@ -14,7 +14,7 @@ namespace Incoding.MSpecContrib
         #region IInventFactoryDsl<T> Members
 
         [DebuggerStepThrough]
-        public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, object>> property) where TGenerate : new()
+        public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property) where TGenerate : new()
         {
             return GenerateTo<TGenerate>(property.GetMemberName());
         }
@@ -26,7 +26,7 @@ namespace Incoding.MSpecContrib
         }
 
         [DebuggerStepThrough]
-        public IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, object>> property)
+        public IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, TGenerate>> property)
         {
             return Empty<TGenerate>(property.GetMemberName());
         }
@@ -43,10 +43,10 @@ namespace Incoding.MSpecContrib
         }
 
         [DebuggerStepThrough]
-        public IInventFactoryDsl<T> Tuning(Expression<Func<T, object>> property, object value)
+        public IInventFactoryDsl<T> Tuning<TValue>(Expression<Func<T, TValue>> property, TValue value)
         {
             Guard.NotNull("property", property);
-            return Tuning((string)property.GetMemberName(), value);
+            return Tuning(property.GetMemberName(), value);
         }
 
         [DebuggerStepThrough]
@@ -63,7 +63,7 @@ namespace Incoding.MSpecContrib
         public IInventFactoryDsl<T> Ignore(Expression<Func<T, object>> property, string reason)
         {
             Guard.NotNull("property", property);
-            return Ignore((string)property.GetMemberName(), reason);
+            return Ignore(property.GetMemberName(), reason);
         }
 
         public IInventFactoryDsl<T> IgnoreBecauseAuto(Expression<Func<T, object>> property)
@@ -94,7 +94,7 @@ namespace Incoding.MSpecContrib
         {
             var dictionary = AnonymousHelper.ToDictionary(propertiesMap);
             foreach (var valuePair in dictionary)
-                Tuning((string)valuePair.Key, valuePair.Value);
+                Tuning(valuePair.Key, valuePair.Value);
             return this;
         }
 

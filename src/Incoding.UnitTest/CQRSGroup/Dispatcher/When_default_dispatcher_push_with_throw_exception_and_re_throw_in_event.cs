@@ -9,7 +9,8 @@ namespace Incoding.UnitTest
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.EventBroker;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

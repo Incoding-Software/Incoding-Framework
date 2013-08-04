@@ -24,10 +24,7 @@ namespace Incoding.MvcContrib
         /// <summary>
         ///     <see cref="HtmlAttribute.TabIndex" />
         /// </summary>
-        public int TabIndex
-        {
-            set { this.attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); }
-        }
+        public int TabIndex { set { this.attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
         #endregion
 
@@ -43,23 +40,29 @@ namespace Incoding.MvcContrib
             this.attributes.Set(HtmlAttribute.AutoComplete.ToStringLower(), "off");
         }
 
-        public void AddMeta(RouteValueDictionary meta)
+        public void Attr(object attr)
         {
+            var allAttr = AnonymousHelper.ToDictionary(attr);
+
             const string dataIncodingKey = "incoding";
 
-            Guard.IsConditional("meta", meta.ContainsKey(dataIncodingKey), "Can't add meta without incoding attribute");
-
-            var existsMeta = new List<object>();
-            if (this.attributes.ContainsKey(dataIncodingKey))
+            if (allAttr.ContainsKey(dataIncodingKey))
             {
-                existsMeta = (this.attributes[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer)
-                        .Cast<object>()
-                        .ToList();
+                var meta = new List<object>();
+                if (this.attributes.ContainsKey(dataIncodingKey))
+                {
+                    meta = (this.attributes[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer)
+                            .Cast<object>()
+                            .ToList();
+                }
+
+                var newMeta = (allAttr[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer).Cast<object>().ToList();
+                meta.AddRange(newMeta);
+
+                allAttr.Set(dataIncodingKey, meta.ToJsonString());
             }
 
-            var newMeta = (meta[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer).Cast<object>().ToList();
-            existsMeta.AddRange(newMeta);
-            this.attributes.Set(dataIncodingKey, existsMeta.ToJsonString());
+            this.attributes.Merge(allAttr);
         }
 
         public void AddClass(string @class)

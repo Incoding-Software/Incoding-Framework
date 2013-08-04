@@ -5,8 +5,6 @@
 
 namespace Incoding.EventBroker
 {
-    using Incoding.CQRS;
-
     public interface IEventBroker
     {
         #region Methods
@@ -16,6 +14,5 @@ namespace Incoding.EventBroker
         #endregion
 
         bool HasSubscriber<TEvent>(TEvent onAfterErrorExecuteEvent) where TEvent : IEvent;
-
     }
 }

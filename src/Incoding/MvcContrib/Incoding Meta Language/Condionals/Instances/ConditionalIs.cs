@@ -22,8 +22,8 @@ namespace Incoding.MvcContrib
                         SetMethodCall(expression.Body as MethodCallExpression);
                     else if (expression.Body is BinaryExpression)
                         SetBinary(expression.Body as BinaryExpression);
-                    else if (expression.Body is ConstantExpression)
-                        SetConstant(expression.Body as ConstantExpression);
+                    else if (expression.Body.Type == typeof(Boolean))
+                        SetBoolean(expression.Body);
                     break;
 
                     ////ncrunch: no coverage start
@@ -36,7 +36,7 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        void SetConstant(ConstantExpression expression)
+        void SetBoolean(Expression expression)
         {
             var value = Selector.Value(Expression.Lambda(expression).Compile().DynamicInvoke());
             Set(value, value, ExpressionType.Equal.ToStringLower());

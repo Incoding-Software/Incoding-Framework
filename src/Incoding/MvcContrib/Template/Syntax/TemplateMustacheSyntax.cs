@@ -24,7 +24,7 @@ namespace Incoding.MvcContrib
         #region Constructors
 
         public TemplateMustacheSyntax(HtmlHelper htmlHelper, string property, bool positiveConditional)
-        {    
+        {
             this.htmlHelper = htmlHelper;
             this.property = property;
             string typeConditional = positiveConditional ? "#" : "^";

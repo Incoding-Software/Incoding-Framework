@@ -21,7 +21,6 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        ////ncrunch: no coverage end
         #region Constructors
 
         public JqueryAjaxOptions() { }
@@ -30,8 +29,6 @@ namespace Incoding.MvcContrib
                 : base(@default) { }
 
         #endregion
-
-        ////ncrunch: no coverage start
 
         ////ncrunch: no coverage end
         #region Properties
@@ -110,25 +107,23 @@ namespace Incoding.MvcContrib
             set { Set("timeout", value); }
         }
 
-        #endregion
-
-        #region Api Methods
-
-        public void WithUrl(string url)
+        public string Url
         {
-            int indexQuerySplit = url.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
-            if (indexQuerySplit != -1)
+            set
             {
-                string query = url.Split("?".ToCharArray())[1] ?? string.Empty;
-                var queryString = HttpUtility.ParseQueryString(query);
-                var dictionaryParams = queryString.AllKeys.Select(r => new KeyValuePair<string, object>(r, queryString[r].ToString())).ToDictionary(pair => pair.Key, pair => pair.Value);
-                string data = dictionaryParams.Select(r => new { name = r.Key, selector = r.Value.ToString() }).ToJsonString();
-                Set("data", data);
+                int indexQuerySplit = value.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
+                if (indexQuerySplit != -1)
+                {
+                    string query = value.Split("?".ToCharArray())[1] ?? string.Empty;
+                    var queryString = HttpUtility.ParseQueryString(query);
+                    var dictionaryParams = queryString.AllKeys.Select(r => new KeyValuePair<string, object>(r, queryString[r].ToString())).ToDictionary(pair => pair.Key, pair => pair.Value);                    
+                    Set("data", dictionaryParams.Select(r => new { name = r.Key, selector = r.Value.ToString() }));
 
-                url = url.Substring(0, indexQuerySplit);
+                    value = value.Substring(0, indexQuerySplit);
+                }
+
+                Set("url", value);
             }
-
-            Set("url", url);
         }
 
         #endregion

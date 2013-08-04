@@ -3,8 +3,9 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using System.Collections.Generic;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

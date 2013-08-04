@@ -8,7 +8,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

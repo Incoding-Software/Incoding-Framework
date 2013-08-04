@@ -1,8 +1,12 @@
 namespace Incoding.UnitTest.MvcContribGroup
 {
+    #region << Using >>
+
     using System.Web.WebPages;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(IncodingResult))]
     public class When_incoding_result_success_razor_text : BehaviorsJsonResultSpec

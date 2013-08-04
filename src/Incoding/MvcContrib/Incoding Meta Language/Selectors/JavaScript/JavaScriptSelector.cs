@@ -1,6 +1,6 @@
 ﻿namespace Incoding.MvcContrib
 {
-    public class JavaScriptSelector : Selector
+    public class JavaScriptSelector : Selector, IJavaScriptSelector
     {
         #region Constructors
 
@@ -11,9 +11,20 @@
 
         #region Properties
 
-        public JavaScriptDateTimeSelector DateTime
+        public JSDateTimeSelector DateTime { get { return new JSDateTimeSelector("new Date()"); } }
+
+        public JSLocationSelector Location { get { return new JSLocationSelector("window.location"); } }
+
+        public JSGeolocationSelector Navigator { get { return new JSGeolocationSelector("navigator"); } }
+
+        #endregion
+
+        #region Api Methods
+
+        public ISelector Eval(string code)
         {
-            get { return new JavaScriptDateTimeSelector("new Date()"); }
+            this.selector = code;
+            return this;
         }
 
         #endregion

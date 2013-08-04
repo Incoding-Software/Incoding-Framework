@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.Block
     #region << Using >>
 
     using Incoding.Block.Caching;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

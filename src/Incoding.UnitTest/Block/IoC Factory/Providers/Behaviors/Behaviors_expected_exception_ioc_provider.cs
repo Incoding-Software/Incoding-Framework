@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using System.Collections.Generic;
     using System.Linq;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

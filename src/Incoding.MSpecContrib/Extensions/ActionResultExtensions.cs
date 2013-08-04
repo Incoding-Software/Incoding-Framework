@@ -17,15 +17,20 @@ namespace Incoding.MSpecContrib
         public static void ShouldBeIncodingData<TData>(this ActionResult actionResult, Action<TData> verify)
         {
             ShouldBeIncoding(actionResult, data =>
-                                              {
-                                                  data.data.ShouldBeOfType<TData>();
-                                                  verify((TData)data.data);
-                                              });
+                                               {
+                                                   data.data.ShouldBeOfType<TData>();
+                                                   verify((TData)data.data);
+                                               });
         }
 
         public static void ShouldBeIncodingData<TData>(this ActionResult actionResult, TData data)
         {
-            ShouldBeIncodingData<TData>(actionResult, r => ShouldExtensions.ShouldEqualWeak<TData, TData>(r, data));
+            ShouldBeIncodingData<TData>(actionResult, r => r.ShouldEqualWeak(data));
+        }
+
+        public static void ShouldBeIncodingDataIsNull(this ActionResult actionResult)
+        {
+            ShouldBeIncoding(actionResult, data => data.data.ShouldBeNull());
         }
 
         public static void ShouldBeIncodingFail<TData>(this ActionResult actionResult, Action<TData> verify)
@@ -56,7 +61,7 @@ namespace Incoding.MSpecContrib
         }
 
         public static void ShouldBeModel<TModel>(this ActionResult actionResult, Action<TModel> expected)
-        {            
+        {
             var viewResult = actionResult as ViewResult;
             viewResult.ShouldNotBeNull();
             viewResult.Model.ShouldBeOfType<TModel>();
@@ -65,7 +70,7 @@ namespace Incoding.MSpecContrib
 
         public static void ShouldBeModel<TModel>(this ActionResult actionResult, TModel expected)
         {
-            ShouldBeModel<TModel>(actionResult, model => ShouldExtensions.ShouldEqualWeak<TModel, TModel>(model, expected));
+            ShouldBeModel<TModel>(actionResult, model => model.ShouldEqualWeak(expected));
         }
 
         public static void ShouldBeRedirect(this ActionResult actionResult, string url)

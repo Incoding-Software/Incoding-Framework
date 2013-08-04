@@ -3,7 +3,7 @@
     #region << Using >>
 
     using Incoding.Block.IoC;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

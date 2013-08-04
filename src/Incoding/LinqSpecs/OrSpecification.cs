@@ -39,6 +39,14 @@ namespace Incoding
             var expr1 = this.spec1.IsSatisfiedBy();
             var expr2 = this.spec2.IsSatisfiedBy();
 
+            if (expr1 == null && expr2 == null)
+                return null;
+
+            if (expr1 == null)
+                return expr2;
+            if (expr2 == null)
+                return expr1;
+
             return expr1.OrElse(expr2);
         }
     }

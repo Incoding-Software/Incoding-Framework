@@ -50,8 +50,10 @@ namespace Incoding.MSpecContrib
             while (true)
             {
                 int nextEnum = new Random().Next(min, max);
+                ////ncrunch: no coverage start
                 if (!allEnums.Contains(nextEnum))
                     continue;
+                ////ncrunch: no coverage end
 
                 string enumAsString = allEnums.FirstOrDefault(r => r == nextEnum).ToString();
                 var randomValue = (TEnum)Enum.Parse(typeof(TEnum), enumAsString, true);

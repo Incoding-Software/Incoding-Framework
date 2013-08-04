@@ -4,7 +4,7 @@
 
     using System.Collections.Generic;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

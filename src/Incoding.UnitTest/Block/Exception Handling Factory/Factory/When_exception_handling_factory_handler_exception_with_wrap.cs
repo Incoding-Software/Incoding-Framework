@@ -4,7 +4,8 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.ExceptionHandling;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -22,9 +23,9 @@ namespace Incoding.UnitTest.Block
         Establish establish = () =>
                                   {
                                       exceptionHandling = new ExceptionHandlingFactory();
-                                      exceptionHandling.Initialize(handling => handling.WithPolicy(ExceptionPolicy
-                                                                                                           .ForAll()
-                                                                                                           .Wrap(r => new ApplicationException(Pleasure.Generator.TheSameString(), r))));
+                                      exceptionHandling.Initialize(handling => handling.WithPolicy(policy => policy
+                                                                                                                     .ForAll()
+                                                                                                                     .Wrap(r => new ApplicationException(Pleasure.Generator.TheSameString(), r))));
                                   };
 
         Because of = () => { exception = Catch.Exception(() => exceptionHandling.Handler(new ArgumentException())); };

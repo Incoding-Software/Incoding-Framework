@@ -3,7 +3,8 @@
     #region << Using >>
 
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

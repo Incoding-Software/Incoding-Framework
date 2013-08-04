@@ -2,11 +2,9 @@
 {
     #region << Using >>
 
-    using System;
     using System.Web.Mvc;
-    using System.Web.WebPages;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -28,7 +26,6 @@
 
                                                                 selector.ToString().ShouldEqual("'aws'");
                                                             };
-
 
         It should_be_cast_string_empty_to_selector = () =>
                                                          {

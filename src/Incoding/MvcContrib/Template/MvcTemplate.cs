@@ -29,7 +29,7 @@
         #region Api Methods
 
         public MvcHtmlString Sum(Expression<Func<TModel, object>> property)
-        {            
+        {
             return new MvcHtmlString("{{#IncTemplateSum}}" + property.GetMemberName() + "{{/IncTemplateSum}}");
         }
 

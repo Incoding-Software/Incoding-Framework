@@ -11,7 +11,6 @@ namespace Incoding.Block.IoC
 
     public class IoCFactory : FactoryBase<IoCInit>
     {
-
         #region Static Fields
 
         static readonly object lockObject = new object();
@@ -30,7 +29,7 @@ namespace Incoding.Block.IoC
         #endregion
 
         #region Properties
-        
+
         public static IoCFactory Instance
         {
             ////ncrunch: no coverage start

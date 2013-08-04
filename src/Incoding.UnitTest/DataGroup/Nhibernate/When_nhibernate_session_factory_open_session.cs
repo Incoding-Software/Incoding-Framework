@@ -6,7 +6,7 @@
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using NHibernate;
     using NHibernate.Context;
 

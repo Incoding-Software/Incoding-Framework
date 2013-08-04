@@ -4,8 +4,9 @@
 
     using Incoding.Block.IoC;
     using Incoding.Block.Logging;
+    using Incoding.MSpecContrib;
     using Incoding.Utilities;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

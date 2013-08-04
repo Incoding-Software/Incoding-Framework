@@ -8,9 +8,9 @@ namespace Incoding.UnitTest.ExtensionsGroup
     using System.Management.Instrumentation;
     using Incoding.Block.Logging;
     using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Incoding.UnitTest.Block;
-    using Incoding.Utilities;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Machine.Specifications.Annotations;
 
     #endregion
@@ -98,7 +98,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
         It should_not_be_implement_interface = () => typeof(ClipboardLogger).IsImplement<ICloneable>().ShouldBeFalse();
 
         It should_be_implement_deep = () => typeof(ArgumentException).IsImplement<object>().ShouldBeTrue();
-        
+
         It should_be_implement_generic_1 = () => typeof(GenericSubscriber).IsImplement(typeof(IGenericHandler<GenericType1>)).ShouldBeTrue();
 
         It should_be_implement_generic_2 = () => typeof(GenericSubscriber).IsImplement(typeof(IGenericHandler<GenericType2>)).ShouldBeTrue();

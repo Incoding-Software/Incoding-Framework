@@ -4,7 +4,8 @@ namespace Incoding.UnitTest.MSpecGroup
 
     using Incoding.CQRS;
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

@@ -4,11 +4,14 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using System.Text;
     using FluentValidation.Results;
+    using Incoding.Data;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+    using Machine.Specifications.Annotations;
 
     #endregion
 
@@ -26,6 +29,30 @@
             public string Fake2 { get; set; }
 
             #endregion
+        }
+
+        class FakeSpecification : Specification<IEntity>
+        {
+            #region Fields
+
+            [UsedImplicitly]
+            readonly string id;
+
+            #endregion
+
+            #region Constructors
+
+            public FakeSpecification(string id)
+            {
+                this.id = id;
+            }
+
+            #endregion
+
+            public override Expression<Func<IEntity, bool>> IsSatisfiedBy()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         #endregion
@@ -80,12 +107,11 @@
                                          };
 
         It should_be_date_nullable_with_wrong_has_value = () => Catch.Exception(() =>
-                                                                                      {
-                                                                                          DateTime? leftNullable = DateTime.Now;
-                                                                                          DateTime? rightNullable = null;
-                                                                                          leftNullable.ShouldBeDate(rightNullable);
-                                                                                      }).ShouldBeOfType<SpecificationException>();
-                                                              
+                                                                                    {
+                                                                                        DateTime? leftNullable = DateTime.Now;
+                                                                                        DateTime? rightNullable = null;
+                                                                                        leftNullable.ShouldBeDate(rightNullable);
+                                                                                    }).ShouldBeOfType<SpecificationException>();
 
         It should_be_time_with_time_span = () => new TimeSpan(1, 2, 3).ShouldBeTime(1, 2, 3);
 
@@ -111,6 +137,20 @@
                                                      IDictionary<string, int> right = Pleasure.ToDynamicDictionary<int>(new { value = 2 });
                                                      left.ShouldEqualWeak(right);
                                                  };
+
+        It should_be_equal_weak_specification = () =>
+                                                    {
+                                                        var spec1 = new FakeSpecification(Pleasure.Generator.TheSameString());
+                                                        var spec2 = new FakeSpecification(Pleasure.Generator.TheSameString());
+                                                        spec1.ShouldEqualWeak(spec2);
+                                                    };
+
+        It should_not_be_equal_weak_specification = () =>
+                                                        {
+                                                            var spec1 = new FakeSpecification(Pleasure.Generator.String());
+                                                            var spec2 = new FakeSpecification(Pleasure.Generator.String());
+                                                            spec1.ShouldEqualWeak(spec2);
+                                                        };
 
         It should_be_equal_weak_dual = () =>
                                            {

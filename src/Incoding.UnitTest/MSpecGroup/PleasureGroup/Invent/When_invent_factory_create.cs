@@ -3,7 +3,9 @@ namespace Incoding.UnitTest.MSpecGroup
     #region << Using >>
 
     using System;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Incoding.MvcContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -67,19 +69,35 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_char = () => inventFactory.Create().CharValue.ShouldNotBeNull();
 
+        It should_be_char_nullable = () => inventFactory.Create().CharValueNullable.ShouldNotBeNull();
+
         It should_be_int = () => inventFactory.Create().IntValue.ShouldBeGreaterThan(0);
+
+        It should_be_int_nullable = () => inventFactory.Create().IntValueNullable.ShouldBeGreaterThan(0);
 
         It should_be_object_as_string = () => inventFactory.Create().ObjValue.ShouldBeOfType<string>();
 
         It should_be_double = () => inventFactory.Create().DoubleValue.ShouldBeGreaterThan(0);
 
+        It should_be_double_nullable = () => inventFactory.Create().DoubleValueNullable.ShouldBeGreaterThan(0);
+
         It should_be_float = () => inventFactory.Create().FloatValue.ShouldBeGreaterThan(0);
+
+        It should_be_float_nullable = () => inventFactory.Create().FloatValueNullable.ShouldBeGreaterThan(0);
 
         It should_be_decimal = () => inventFactory.Create().DecimalValue.ShouldBeGreaterThan(0);
 
+        It should_be_decimal_nullable = () => inventFactory.Create().DecimalValueNullable.ShouldBeGreaterThan(0);
+
         It should_be_long = () => inventFactory.Create().LongValue.ShouldBeGreaterThan(0);
 
+        It should_be_long_nullable = () => inventFactory.Create().LongValueNullable.ShouldBeGreaterThan(0);
+
         It should_be_byte = () => inventFactory.Create().ByteValue.ShouldBeGreaterThan(0);
+
+        It should_be_http_post_file = () => new HttpMemoryPostedFile(inventFactory.Create().HttpPostFileValue).ContentAsBytes.ShouldNotBeEmpty();
+
+        It should_be_byte_nullable = () => inventFactory.Create().ByteValueNullable.ShouldBeGreaterThan(0);
 
         It should_be_bytes = () => inventFactory.Create().ByteArray.ShouldNotBeEmpty();
 
@@ -98,5 +116,9 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_time_span = () => inventFactory.Create().TimeSpanValue.ShouldBeGreaterThan(new TimeSpan(0, 0, 0));
 
         It should_be_enum = () => ((int)inventFactory.Create().DayOfWeek).ShouldBeGreaterThan(0);
+
+        It should_be_guid = () => inventFactory.Create().GuidValue.ShouldNotEqual(Guid.Empty);
+
+        It should_be_guid_nullable = () => inventFactory.Create().GuidValueNullable.ShouldNotEqual(Guid.Empty);
     }
 }

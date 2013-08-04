@@ -37,6 +37,7 @@ namespace Incoding.Data
 
             ////ncrunch: no coverage start
             throw new InvalidOperationException("Database access logic cannot be used, if session not opened. Implicitly session usage not allowed now. Please open session explicitly through UnitOfWorkFactory.Create method");
+
             ////ncrunch: no coverage end
         }
 

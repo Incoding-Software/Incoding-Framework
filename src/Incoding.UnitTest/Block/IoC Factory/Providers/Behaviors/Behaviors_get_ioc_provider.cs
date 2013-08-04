@@ -7,7 +7,7 @@ namespace Incoding.UnitTest.Block
     using Incoding.Block.Logging;
     using Incoding.Extensions;
     using Incoding.Utilities;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

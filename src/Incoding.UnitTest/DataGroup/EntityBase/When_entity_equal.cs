@@ -4,7 +4,7 @@ namespace Incoding.UnitTest
 
     using System;
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

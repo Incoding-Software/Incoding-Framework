@@ -4,7 +4,8 @@ namespace Incoding.UnitTest
 
     using System.Data;
     using Incoding.CQRS;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

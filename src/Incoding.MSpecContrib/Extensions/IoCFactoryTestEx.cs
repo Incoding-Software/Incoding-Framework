@@ -50,11 +50,13 @@ namespace Incoding.MSpecContrib
                     mockProvider = Mock.Get(init.Provider);
                     action(mockProvider);
                 }
-                ////ncrunch: no coverage start
+                        
+                        ////ncrunch: no coverage start
                 catch (Exception)
                 {
                     mockProvider = Pleasure.Mock(action);
                 }
+
                 ////ncrunch: no coverage end
             }
 

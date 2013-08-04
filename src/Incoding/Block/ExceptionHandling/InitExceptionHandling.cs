@@ -7,6 +7,7 @@ namespace Incoding.Block.ExceptionHandling
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
 
     #endregion
@@ -27,10 +28,9 @@ namespace Incoding.Block.ExceptionHandling
 
         #region Api Methods
 
-        public void WithPolicy(ExceptionPolicy exceptionPolicy)
-        {
-            Guard.NotNull("exceptionPolicy", exceptionPolicy);
-            this.exceptionPolicies.Add(exceptionPolicy);
+        public void WithPolicy(Func<ExceptionPolicy, ExceptionPolicy> func)
+        {            
+            this.exceptionPolicies.Add(func(new ExceptionPolicy()));
         }
 
         #endregion

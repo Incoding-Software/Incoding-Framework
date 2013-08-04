@@ -17,6 +17,7 @@ namespace Incoding.MvcContrib
             return new IncodingHtmlHelperFor<TModel, TProperty>(htmlHelper, property);
         }
 
+
         public static IncodingHtmlHelperForGroup<TModel, TProperty> ForGroup<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
             return new IncodingHtmlHelperForGroup<TModel, TProperty>(htmlHelper, property);

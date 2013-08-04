@@ -87,7 +87,7 @@ namespace Incoding.Data
         {
             var source = this.session.Value.Query<TEntity>();
 
-            if (whereSpecification != null)
+            if (whereSpecification != null && whereSpecification.IsSatisfiedBy() != null)
                 source = source.Where(whereSpecification.IsSatisfiedBy());
 
             if (orderSpecification != null)

@@ -17,7 +17,7 @@ namespace Incoding.CQRS
         #region IDispatcher Members
 
         public void Push(CommandComposite composite)
-        {            
+        {
             bool hasAtLeastCommand = composite.Parts.Any(r => r.Message is CommandBase);
             var isolationLevel = hasAtLeastCommand ? IsolationLevel.ReadCommitted : IsolationLevel.ReadUncommitted;
             composite.Parts.Last().Setting.Commit = hasAtLeastCommand;
@@ -54,14 +54,12 @@ namespace Incoding.CQRS
                     catch (Exception exception)
                     {
                         part.Setting.OnError(exception);
-                        OnAfterErrorExecuteEvent onAfterErrorExecuteEvent = new OnAfterErrorExecuteEvent(part.Message, exception);
+                        var onAfterErrorExecuteEvent = new OnAfterErrorExecuteEvent(part.Message, exception);
 
                         if (part.Setting.PublishEventOnError && eventBroker.HasSubscriber(onAfterErrorExecuteEvent))
                             eventBroker.Publish(onAfterErrorExecuteEvent);
                         else
-                        {
                             throw;
-                        }
                     }
                     finally
                     {

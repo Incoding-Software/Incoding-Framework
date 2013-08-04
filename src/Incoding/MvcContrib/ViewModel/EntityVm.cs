@@ -21,10 +21,10 @@
 
         #region Properties
 
-        [IgnoreFieldCompare("Base class")]
+        [IgnoreCompare("Base class")]
         public string Id { get; private set; }
 
-        [IgnoreFieldCompare("Base class")]
+        [IgnoreCompare("Base class")]
         public string AssemblyQualifiedName { get; private set; }
 
         #endregion

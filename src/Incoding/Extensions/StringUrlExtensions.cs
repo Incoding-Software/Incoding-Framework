@@ -29,9 +29,11 @@ namespace Incoding.Extensions
             if (!value.Contains("#!"))
                 return AppendTo(value, "/", routes);
 
-            var splitUrl = value.Split("#!".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            string baseUrl = splitUrl[0];
-            string hashUrl = splitUrl[1];
+            var splitUrl = value
+                    .Split("#!".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            string baseUrl = splitUrl.ElementAtOrDefault(0);
+            string hashUrl = splitUrl.ElementAtOrDefault(1);
 
             return baseUrl + "#!" + AppendTo(hashUrl, "/", routes);
         }
@@ -80,7 +82,7 @@ namespace Incoding.Extensions
             if (dictionary.Count == 0)
                 return value;
 
-            bool hasExistsQueryString = value.Contains("?");
+            bool hasExistsQueryString = value.If(r => r.Contains("?")).Has();
             if (hasExistsQueryString)
             {
                 var queryString = HttpUtility.ParseQueryString(value.Split("?".ToCharArray())[1]);
@@ -92,7 +94,9 @@ namespace Incoding.Extensions
                 value = value.Substring(0, value.IndexOf("?", StringComparison.CurrentCultureIgnoreCase));
             }
 
-            return "{0}?{1}".F(value, string.Join(separateChar, dictionary.Select(r => string.Format("{0}={1}", HttpUtility.UrlEncode(r.Key), HttpUtility.UrlEncode(dictionary[r.Key])))));
+            string hashRoutes = string.Join(separateChar, dictionary.Select(r => string.Format("{0}={1}", HttpUtility.UrlEncode(r.Key), dictionary[r.Key])));
+            return value != null ? "{0}?{1}".F(value, hashRoutes)
+                           : hashRoutes;
         }
     }
 }

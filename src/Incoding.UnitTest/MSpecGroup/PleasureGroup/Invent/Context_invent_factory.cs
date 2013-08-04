@@ -5,6 +5,7 @@ namespace Incoding.UnitTest.MSpecGroup
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Web;
 
     #endregion
 
@@ -19,16 +20,28 @@ namespace Incoding.UnitTest.MSpecGroup
             public string StrValue { get; set; }
 
             public bool BoolValue { get; set; }
-
+            
             public int IntValue { get; set; }
+
+            public int? IntValueNullable { get; set; }
 
             public float FloatValue { get; set; }
 
+            public float? FloatValueNullable { get; set; }
+
             public decimal DecimalValue { get; set; }
+
+            public decimal? DecimalValueNullable { get; set; }
 
             public long LongValue { get; set; }
 
+            public long? LongValueNullable { get; set; }
+
             public byte ByteValue { get; set; }
+
+            public HttpPostedFileBase HttpPostFileValue { get; set; }
+
+            public byte? ByteValueNullable { get; set; }
 
             public DateTime DateTimeValue { get; set; }
 
@@ -52,13 +65,21 @@ namespace Incoding.UnitTest.MSpecGroup
 
             public double DoubleValue { get; set; }
 
+            public double? DoubleValueNullable { get; set; }
+
             public char CharValue { get; set; }
+
+            public char? CharValueNullable { get; set; }
 
             public string CallbackValue { get; set; }
 
             public DayOfWeek EnumValue { get; set; }
 
             public object ObjValue { get; set; }
+
+            public Guid GuidValue { get; set; }
+
+            public Guid? GuidValueNullable { get; set; }
 
             #endregion
         }

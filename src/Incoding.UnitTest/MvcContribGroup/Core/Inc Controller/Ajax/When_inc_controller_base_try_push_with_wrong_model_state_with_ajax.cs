@@ -4,9 +4,9 @@
 
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using Incoding.CQRS;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

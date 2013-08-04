@@ -5,7 +5,8 @@
     using System;
     using System.ComponentModel;
     using Incoding.Extensions;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Machine.Specifications.Annotations;
 
     #endregion
@@ -54,11 +55,11 @@
 
         It should_be_to_localization_without_description = () => FakeEnum.Value2
                                                                          .ToLocalization()
-                                                                         .ShouldEqual("Value2");    
-        
+                                                                         .ShouldEqual("Value2");
+
         It should_be_to_localization_with_wrong_enum = () => ((FakeEnum)15)
-                                                                         .ToLocalization()
-                                                                         .ShouldBeEmpty();
+                                                                     .ToLocalization()
+                                                                     .ShouldBeEmpty();
 
         It should_be_to_localization_with_description = () => FakeEnum.Value3
                                                                       .ToLocalization()

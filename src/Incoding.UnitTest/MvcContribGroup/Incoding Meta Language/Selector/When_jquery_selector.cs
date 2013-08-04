@@ -207,9 +207,9 @@
                                          .ShouldEqual("$('#id,#newId')");
 
         It should_be_classes = () => Selector.Jquery
-                                             .Class("id", "class")
+                                             .Class("class class2")
                                              .ToString()
-                                             .ShouldEqual("$('.id,.class')");
+                                             .ShouldEqual("$('.class .class2')");
 
         It should_be_it = () => Selector.Jquery.All()
                                         .It(5).ToString()
@@ -253,5 +253,11 @@
                                         .Also(r => r.Class("next"))
                                         .ToString()
                                         .ShouldEqual("$('.first.next')");
+
+        It should_be_complex_1 = () => Selector.Jquery
+                                               .Self()
+                                               .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
+                                               .ToString()
+                                               .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
     }
 }

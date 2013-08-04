@@ -5,7 +5,8 @@ namespace Incoding.UnitTest.ExtensionsGroup
     using System.Collections.Generic;
     using System.Web.Routing;
     using Incoding.Extensions;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

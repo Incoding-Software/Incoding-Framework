@@ -2,6 +2,7 @@ namespace Incoding.Block.Caching
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -30,11 +31,6 @@ namespace Incoding.Block.Caching
 
         #region Properties
 
-        internal ICachedProvider CachedProvider
-        {
-            get { return this.Provider; }
-        }
-
         public ICachedProvider Provider
         {
             get { return this.cachedProvider; }
@@ -44,11 +40,9 @@ namespace Incoding.Block.Caching
 
         #region Api Methods
 
-        public CachingInit RegistryPolicy(CachingPolicy cachingPolicy)
+        public CachingInit WithPolicy(Func<CachingPolicy, CachingPolicy> cachingPolicy)
         {
-            Guard.NotNull("cachingPolicy", cachingPolicy);
-
-            this.cachingGlobalPolicies.Add(cachingPolicy);
+            this.cachingGlobalPolicies.Add(cachingPolicy(new CachingPolicy()));
             return this;
         }
 

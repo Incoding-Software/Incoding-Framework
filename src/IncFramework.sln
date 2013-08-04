@@ -9,9 +9,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.SiteTest", "Incodi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{506ED6C6-6671-43EC-98A9-5FBF14201B62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet", "Incoding.NuGet\Incoding.NuGet.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.MSpecContrib", "Incoding.MSpecContrib\Incoding.MSpecContrib.csproj", "{D07EC3BB-F2FD-4093-838B-39C73B42140E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Package", "Package", "{6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.Framework", "Incoding.NuGet.Framework\Incoding.NuGet.Framework.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.MetaLanguage", "Incoding.NuGet.MetaLanguage\Incoding.NuGet.MetaLanguage.csproj", "{B517BA49-7E72-4E3B-AFD2-F80D445A6581}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.MSpecContrib", "Incoding.NuGet.MSpecContrib\Incoding.NuGet.MSpecContrib.csproj", "{1E580FAC-0390-4E02-884E-52BB32D94858}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,34 +44,46 @@ Global
 		{FE64E248-A5C7-472A-93E0-68B5EC8A8DA4}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{FE64E248-A5C7-472A-93E0-68B5EC8A8DA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE64E248-A5C7-472A-93E0-68B5EC8A8DA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Publish|Any CPU.ActiveCfg = Release|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Publish|Any CPU.Build.0 = Release|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Publish|Any CPU.ActiveCfg = Release|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E580FAC-0390-4E02-884E-52BB32D94858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E580FAC-0390-4E02-884E-52BB32D94858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E580FAC-0390-4E02-884E-52BB32D94858}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{1E580FAC-0390-4E02-884E-52BB32D94858}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{1E580FAC-0390-4E02-884E-52BB32D94858}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{ECE7EC3C-8D92-40A4-930A-00F541F46C62} = {506ED6C6-6671-43EC-98A9-5FBF14201B62}
 		{D66AD474-A026-4AB2-B475-6477488443C4} = {506ED6C6-6671-43EC-98A9-5FBF14201B62}
 		{D07EC3BB-F2FD-4093-838B-39C73B42140E} = {506ED6C6-6671-43EC-98A9-5FBF14201B62}
-		{ECE7EC3C-8D92-40A4-930A-00F541F46C62} = {506ED6C6-6671-43EC-98A9-5FBF14201B62}
+		{0451BAEF-DF2E-4B98-8644-94EE9415E389} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
+		{B517BA49-7E72-4E3B-AFD2-F80D445A6581} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
+		{1E580FAC-0390-4E02-884E-52BB32D94858} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_BuildVersioningStyle = None.None.None.None
-		BuildVersion_DetectChanges = True
-		BuildVersion_IncrementBeforeBuild = True
-		BuildVersion_BuildAction = ReBuild
-		BuildVersion_UpdateFileVersion = False
 		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_UpdateFileVersion = False
+		BuildVersion_BuildAction = ReBuild
+		BuildVersion_IncrementBeforeBuild = True
+		BuildVersion_DetectChanges = True
+		BuildVersion_BuildVersioningStyle = None.None.None.None
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\IncFramework.ndproj"

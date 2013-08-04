@@ -67,7 +67,7 @@
         /// </param>
         public IExecutableSetting Set(CssStyling key, Selector value)
         {
-            return Set(key.ToStringLower().Replace("_","-"), value);
+            return Set(key.ToStringLower().Replace("_", "-"), value);
         }
 
         /// <summary>

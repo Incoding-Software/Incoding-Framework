@@ -40,16 +40,16 @@
 
         public bool PublishEventOnComplete { get; set; }
 
-        [IgnoreFieldCompare("is not possible")]
+        [IgnoreCompare("is not possible")]
         public Action OnBefore { get; set; }
 
-        [IgnoreFieldCompare("is not possible")]
+        [IgnoreCompare("is not possible")]
         public Action OnComplete { get; set; }
 
-        [IgnoreFieldCompare("is not possible")]
+        [IgnoreCompare("is not possible")]
         public Action OnAfter { get; set; }
 
-        [IgnoreFieldCompare("is not possible")]
+        [IgnoreCompare("is not possible")]
         public Action<Exception> OnError { get; set; }
 
         public bool Commit { get; set; }

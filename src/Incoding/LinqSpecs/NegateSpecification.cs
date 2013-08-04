@@ -25,7 +25,6 @@ namespace Incoding
 
         #endregion
 
-
         public override Expression<Func<T, bool>> IsSatisfiedBy()
         {
             var isSatisfiedBy = this.spec.IsSatisfiedBy();

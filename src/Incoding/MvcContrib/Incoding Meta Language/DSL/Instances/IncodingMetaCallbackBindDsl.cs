@@ -45,7 +45,7 @@
         }
 
         public IExecutableSetting Detach(string bind)
-        {            
+        {
             return this.plugIn.Registry(new ExecutableBind("detach", string.Empty, bind));
         }
 

@@ -24,7 +24,7 @@
             routeValues.Set("area", area);
             return urlHelper.Action(action, controller, routeValues);
         }
-
+        
         public static string Hash(this UrlHelper urlHelper, [AspMvcAction] string action, [AspMvcController] string controller, object routes = null)
         {
             return urlHelper.InternalHash(action, controller, urlHelper.RequestContext.HttpContext.Request.Url, string.Empty, routes);

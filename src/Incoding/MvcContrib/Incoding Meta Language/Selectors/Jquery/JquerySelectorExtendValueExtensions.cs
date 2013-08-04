@@ -5,6 +5,15 @@
         #region Factory constructors
 
         /// <summary>
+        ///     Get the determine whether any of the matched elements are assigned the given class.
+        /// </summary>
+        public static JquerySelectorExtend HasClass(this JquerySelectorExtend selector, string @class)
+        {
+            selector.AddMethod("hasClass", Selector.Jquery.Class(@class).ToSelector());
+            return selector;
+        }
+
+        /// <summary>
         ///     Get the current computed height for the first element in the set of matched elements
         /// </summary>
         public static JquerySelectorExtend Height(this JquerySelectorExtend selector)
@@ -28,6 +37,15 @@
         public static JquerySelectorExtend InnerWidth(this JquerySelectorExtend selector)
         {
             selector.AddMethod("innerWidth");
+            return selector;
+        }
+
+        /// <summary>
+        ///     Get the current count element of matched elements
+        /// </summary>
+        public static JquerySelectorExtend Length(this JquerySelectorExtend selector)
+        {
+            selector.AddProperty("length");
             return selector;
         }
 
@@ -69,20 +87,20 @@
         }
 
         /// <summary>
-        ///     Get the current computed width for the first element in the set of matched elements  the width of every matched element.
-        /// </summary>
-        public static JquerySelectorExtend Width(this JquerySelectorExtend selector)
-        {
-            selector.AddMethod("width");
-            return selector;
-        }    
-        
-        /// <summary>
         ///     Get the combined text contents of each element in the set of matched elements, including their descendants
         /// </summary>
         public static JquerySelectorExtend Text(this JquerySelectorExtend selector)
         {
             selector.AddMethod("text");
+            return selector;
+        }
+
+        /// <summary>
+        ///     Get the current computed width for the first element in the set of matched elements  the width of every matched element.
+        /// </summary>
+        public static JquerySelectorExtend Width(this JquerySelectorExtend selector)
+        {
+            selector.AddMethod("width");
             return selector;
         }
 

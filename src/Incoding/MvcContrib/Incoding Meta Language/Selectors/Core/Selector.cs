@@ -31,6 +31,12 @@
             this.selector = selector;
         }
 
+        protected Selector(Selector selector)
+        {
+            this.selector = selector.selector;
+            this.methods.AddRange(selector.methods);
+        }
+
         #endregion
 
         #region Factory constructors
@@ -44,27 +50,18 @@
 
         public static Selector Value(object value)
         {
-            return new Selector(value.ToString());
+            return value.GetType().IsEnum ? new Selector((int)value) : new Selector(value.ToString());
         }
 
         #endregion
 
         #region Properties
 
-        public static JquerySelector Jquery
-        {
-            get { return new JquerySelector(string.Empty); }
-        }
+        public static JquerySelector Jquery { get { return new JquerySelector(string.Empty); } }
 
-        public static IncodingSelector Incoding
-        {
-            get { return new IncodingSelector(string.Empty); }
-        }
+        public static IncodingSelector Incoding { get { return new IncodingSelector(string.Empty); } }
 
-        public static JavaScriptSelector JavaScript
-        {
-            get { return new JavaScriptSelector(); }
-        }
+        public static JavaScriptSelector JS { get { return new JavaScriptSelector(); } }
 
         #endregion
 
@@ -94,8 +91,8 @@
 
             this.methods.DoEach(s => this.selector += s);
 
-            if (this is JavaScriptDateTimeSelector)
-                return this.selector;
+            if (this is IJavaScriptSelector)
+                return "@@javascript:{0}@@".F(this.selector);
 
             return escaping ? "'{0}'".F(this.selector) : this.selector;
         }
@@ -107,6 +104,11 @@
                 stringArgs = stringArgs.Substring(0, stringArgs.Length - 1);
 
             this.methods.Add(".{0}({1})".F(funcName.Replace("()", string.Empty), stringArgs));
+        }
+
+        public void AddProperty(string propName)
+        {
+            this.methods.Add(".{0}".F(propName));
         }
 
         #endregion

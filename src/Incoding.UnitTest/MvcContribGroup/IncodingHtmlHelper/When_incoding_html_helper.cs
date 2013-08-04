@@ -3,8 +3,9 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -29,7 +30,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .ShouldEqual("<script src=\"Controller/Action\" type=\"text/javascript\"></script>");
 
         It should_be_css = () => incodingHtml
-                                         .Css("Controller/Action")
+                                         .Link("Controller/Action")
                                          .ToHtmlString()
                                          .ShouldEqual("<link href=\"Controller/Action\" rel=\"stylesheet\" type=\"text/css\"></link>");
 
@@ -98,9 +99,9 @@ namespace Incoding.UnitTest.MvcContribGroup
                                          .ToHtmlString()
                                          .ShouldEqual("<button class=\"class\"><p></p></button>");
 
-        It should_be_link = () => incodingHtml
-                                          .Link("url", "Name", new { @class = "class" })
-                                          .ToHtmlString()
-                                          .ShouldEqual("<a class=\"class\" href=\"url\">Name</a>");
+        It should_be_anchor = () => incodingHtml
+                                            .Anchor("url", "Name", new { @class = "class" })
+                                            .ToHtmlString()
+                                            .ShouldEqual("<a class=\"class\" href=\"url\">Name</a>");
     }
 }

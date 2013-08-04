@@ -4,23 +4,12 @@ namespace Incoding.Extensions
 
     using System;
     using System.Diagnostics;
-    using System.Text.RegularExpressions;
     using System.Web.Mvc;
 
     #endregion
 
     public static class StringExtensions
     {
-        #region Static Fields
-
-        static readonly Regex regEmail = new Regex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-
-        static readonly Regex regGuid = new Regex(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$");
-
-        static readonly Regex regUrl = new Regex(@"^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$");
-
-        #endregion
-
         #region Factory constructors
 
         [DebuggerStepThrough]
@@ -39,24 +28,6 @@ namespace Incoding.Extensions
         public static string F(this string format, params object[] param)
         {
             return format.ApplyFormat(param);
-        }
-
-        [DebuggerStepThrough]
-        public static bool IsEmail(this string email)
-        {
-            return regEmail.IsMatch(email);
-        }
-
-        [DebuggerStepThrough]
-        public static bool IsGuid(this string guid)
-        {
-            return regGuid.IsMatch(guid);
-        }
-
-        [DebuggerStepThrough]
-        public static bool IsUrl(this string url)
-        {
-            return regUrl.IsMatch(url);
         }
 
         public static MvcHtmlString ToMvcHtmlString(this string value)

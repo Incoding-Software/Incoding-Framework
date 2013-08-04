@@ -7,7 +7,8 @@ namespace Incoding.UnitTest
     using Incoding.Block.ExceptionHandling;
     using Incoding.Block.IoC;
     using Incoding.EventBroker;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

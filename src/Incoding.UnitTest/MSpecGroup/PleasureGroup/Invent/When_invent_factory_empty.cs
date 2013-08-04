@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.MSpecGroup
     #region << Using >>
 
     using System;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -33,7 +34,7 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_empty_long = () => inventEmpty.LongValue.ShouldEqual(0);
 
         It should_be_empty_bool = () => inventEmpty.BoolValue.ShouldBeFalse();
-
+        
         It should_be_empty_byte = () => inventEmpty.ByteValue.ShouldEqual(new byte());
 
         It should_be_empty_byte_array = () => inventEmpty.ByteArray.ShouldBeEmpty();

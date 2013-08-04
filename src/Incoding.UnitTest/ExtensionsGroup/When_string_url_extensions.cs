@@ -3,20 +3,20 @@
     #region << Using >>
 
     using Incoding.Extensions;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
     [Subject(typeof(StringUrlExtensions))]
     public class When_string_url_extensions
     {
-        It should_be_append_to_query_string = () => "http://domain.com"
-                                                            .AppendToQueryString(new
-                                                                                     {
-                                                                                             Param = "Value1", 
-                                                                                             Param2 = "http://domain.com"
-                                                                                     })
-                                                            .ShouldEqual("http://domain.com?Param=Value1&Param2=http%3a%2f%2fdomain.com");
+        It should_be_append_to_query_string_without_encode = () => "http://domain.com"
+                                                                           .AppendToQueryString(new
+                                                                                                    {
+                                                                                                            Param = "Value1", 
+                                                                                                            Param2 = "http://domain.com"
+                                                                                                    })
+                                                                           .ShouldEqual("http://domain.com?Param=Value1&Param2=http://domain.com");
 
         It should_be_append_to_query_string_with_hash_query = () => "http://domain.com#!/Index?Param=HashValue"
                                                                             .AppendToQueryString(new
@@ -58,13 +58,21 @@
                                                          .SetHash("/hash")
                                                          .ShouldEqual("url#!hash?");
 
-        It should_be_append_to_hash_query_string = () => "http://sample.com#!Index/Home?"
+        It should_be_append_to_hash_query_string = () => "http://sample.com#!"
                                                                  .AppendToHashQueryString(new
                                                                                               {
                                                                                                       param = "value", 
                                                                                                       param2 = "value2"
                                                                                               })
-                                                                 .ShouldEqual("http://sample.com#!Index/Home?param=value/param2=value2");
+                                                                 .ShouldEqual("http://sample.com#!param=value/param2=value2");
+
+        It should_be_append_to_hash_query_string_with_hash_url = () => "http://sample.com#!Index/Home?"
+                                                                               .AppendToHashQueryString(new
+                                                                                                            {
+                                                                                                                    param = "value", 
+                                                                                                                    param2 = "value2"
+                                                                                                            })
+                                                                               .ShouldEqual("http://sample.com#!Index/Home?param=value/param2=value2");
 
         It should_be_append_to_hash_query_string_with_exists = () => "http://sample.com#!Index/Home?param=Value"
                                                                              .AppendToHashQueryString(new { param = "newValue" })

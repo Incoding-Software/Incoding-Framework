@@ -5,7 +5,7 @@ namespace Incoding.UnitTest.Block
     using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.Utilities;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using StructureMap.Configuration.DSL;
 
     #endregion

@@ -4,14 +4,15 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
     [Subject(typeof(LoggingFactory))]
     public class When_logging_factory_log : Context_logging_factory
     {
-        Establish establish = () => loggingFactory.Initialize(logging => logging.WithPolicy(LoggingPolicy.For(LogType.Debug).Use(defaultMockLogger.Object)));
+        Establish establish = () => loggingFactory.Initialize(logging => logging.WithPolicy(r => r.For(LogType.Debug).Use(defaultMockLogger.Object)));
 
         Because of = () => loggingFactory.Log(LogType.Debug, Pleasure.Generator.TheSameString(), Pleasure.Generator.Invent<ArgumentException>(), Pleasure.Generator.The20120406Noon());
 

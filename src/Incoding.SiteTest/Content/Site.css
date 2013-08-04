@@ -1,20 +1,4 @@
-﻿@import url('css/bootstrap.min.css');
-
-@import url('css/bootstrap-responsive.min.css');
-
-@import url('css/jquery-ui-1.8.16.custom.css');
-
-@import url('css/jquery.pnotify.default.css');
-
-.CodeMirror {
-    width: 100%;
-    height: 300px;
-}
-
-.source-panel {
-    margin-top: 20px;
-    border: 2px black groove;
-}
+﻿
 
 #jasmine-fixtures {
     display: block;

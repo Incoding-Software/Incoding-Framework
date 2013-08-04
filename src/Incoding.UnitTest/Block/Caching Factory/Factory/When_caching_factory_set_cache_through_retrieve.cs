@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using Incoding.Block.Caching;
     using Incoding.MSpecContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

@@ -7,7 +7,8 @@
     using Incoding.Data;
     using Incoding.ExpressionCombining;
     using Incoding.Extensions;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 

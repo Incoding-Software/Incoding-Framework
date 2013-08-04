@@ -30,7 +30,7 @@
 
         It should_be_and = () => testCollection
                                          .Where((new AdHocSpecification<string>(n => n.StartsWith("J")) & new AdHocSpecification<string>(n => n.EndsWith("e"))).IsSatisfiedBy())
-                                         .ToList() 
+                                         .ToList()
                                          .Should(list =>
                                                      {
                                                          list.Count.ShouldEqual(1);

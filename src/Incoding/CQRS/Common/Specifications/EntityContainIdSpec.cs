@@ -21,7 +21,7 @@
         #region Constructors
 
         public EntityContainIdSpec(string[] ids)
-        {            
+        {
             this.ids = ids.OfType<object>().ToList();
         }
 

@@ -38,15 +38,15 @@ namespace Incoding.MSpecContrib
         #region ICompareFactoryDsl<TActual,TExpected> Members
 
         [DebuggerStepThrough]
-        public ICompareFactoryDsl<TActual, TExpected> Forward(Expression<Func<TActual, object>> actualProp, Expression<Func<TExpected, object>> expectedProp)
+        public ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(Expression<Func<TActual, TValue>> actualProp, Expression<Func<TExpected, TValue>> expectedProp)
         {
             Guard.NotNull("actualProp", actualProp);
             Guard.NotNull("expectedProp", expectedProp);
 
-            return Forward((string)actualProp.GetMemberName(), expectedProp);
+            return Forward(actualProp.GetMemberName(), expectedProp);
         }
 
-        public ICompareFactoryDsl<TActual, TExpected> Forward(string actualProp, Expression<Func<TExpected, object>> expectedProp)
+        public ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(string actualProp, Expression<Func<TExpected, TValue>> expectedProp)
         {
             Guard.NotNullOrWhiteSpace("actualProp", actualProp);
 
@@ -55,11 +55,10 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
-        public ICompareFactoryDsl<TActual, TExpected> ForwardToValue(Expression<Func<TActual, object>> actualProp, object value)
+        public ICompareFactoryDsl<TActual, TExpected> ForwardToValue<TValue>(Expression<Func<TActual, TValue>> actualProp, TValue value)
         {
             Guard.NotNull("actualProp", actualProp);
-            return ForwardToValue((string)actualProp.GetMemberName(), value);
+            return ForwardToValue(actualProp.GetMemberName(), value);
         }
 
         public ICompareFactoryDsl<TActual, TExpected> ForwardToValue(string actualProp, object value)
@@ -71,11 +70,10 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
         public ICompareFactoryDsl<TActual, TExpected> ForwardToAction(Expression<Func<TActual, object>> actualProp, Action<TActual> predicate)
         {
             Guard.NotNull("actualProp", actualProp);
-            return ForwardToAction((string)actualProp.GetMemberName(), predicate);
+            return ForwardToAction(actualProp.GetMemberName(), predicate);
         }
 
         public ICompareFactoryDsl<TActual, TExpected> ForwardToAction(string actualProp, Action<TActual> predicate)
@@ -87,11 +85,10 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
         public ICompareFactoryDsl<TActual, TExpected> Ignore(Expression<Func<TActual, object>> actualIgnore, string reason)
         {
             Guard.NotNull("actualIgnore", actualIgnore);
-            return Ignore((string)actualIgnore.GetMemberName(), reason);
+            return Ignore(actualIgnore.GetMemberName(), reason);
         }
 
         public ICompareFactoryDsl<TActual, TExpected> IgnoreBecauseNotUse(Expression<Func<TActual, object>> actualIgnore)
@@ -127,6 +124,8 @@ namespace Incoding.MSpecContrib
 
         #endregion
 
+        #region Api Methods
+
         public bool IsCompare()
         {
             return this.differences.Count == 0;
@@ -135,23 +134,6 @@ namespace Incoding.MSpecContrib
         public string GetDifferencesAsString()
         {
             return this.differences.Aggregate(string.Empty, (aggregate, current) => aggregate += current);
-        }
-
-        void VerifyUniqueProperty(string property)
-        {
-            Action throwException = () => { throw new SpecificationException(SpecificationMessageRes.CompareFactory_Has_Many_Configuration.F(property)); };
-
-            if (this.forwards.ContainsKey(property))
-                throwException();
-
-            if (this.forwardsToValue.ContainsKey(property))
-                throwException();
-
-            if (this.ignoreProperties.Contains(property))
-                throwException();
-
-            if (this.forwardsToPredicate.ContainsKey(property))
-                throwException();
         }
 
         public void Compare(TActual actual, TExpected expected)
@@ -181,9 +163,15 @@ namespace Incoding.MSpecContrib
                     .Where(r => r is PropertyInfo || r is FieldInfo)
                     .ToArray();
 
+            if (actualProperties.Length == 0 && actual.GetType() != expected.GetType())
+            {
+                FixedDifferent("Actual type {0} but expected type {1}".F(actual.GetType(), expected.GetType()));
+                return;
+            }
+
             foreach (var actualMember in actualProperties)
             {
-                if (actualMember.HasAttribute<IgnoreFieldCompareAttribute>())
+                if (actualMember.HasAttribute<IgnoreCompareAttribute>())
                     continue;
 
                 if (this.ignoreProperties.Any(r => r.Equals(actualMember.Name, StringComparison.InvariantCultureIgnoreCase)))
@@ -216,6 +204,25 @@ namespace Incoding.MSpecContrib
 
                 InternalShouldEqual(actualValue, expected.TryGetValue(expectedMember.Name), actualMember.Name, expectedPropName);
             }
+        }
+
+        #endregion
+
+        void VerifyUniqueProperty(string property)
+        {
+            Action throwException = () => { throw new SpecificationException(SpecificationMessageRes.CompareFactory_Has_Many_Configuration.F(property)); };
+
+            if (this.forwards.ContainsKey(property))
+                throwException();
+
+            if (this.forwardsToValue.ContainsKey(property))
+                throwException();
+
+            if (this.ignoreProperties.Contains(property))
+                throwException();
+
+            if (this.forwardsToPredicate.ContainsKey(property))
+                throwException();
         }
 
         // ReSharper disable PossibleMultipleEnumeration        
@@ -252,8 +259,13 @@ namespace Incoding.MSpecContrib
 
                     var expectedEnumerator = expectedEnumerable.GetEnumerator();
 
+                    int index = 0;
                     while (actualEnumerator.MoveNext() && expectedEnumerator.MoveNext())
-                        InternalShouldEqual(actualEnumerator.Current, expectedEnumerator.Current, "Item from {0}".F(actualName), "Item from {0}".F(expectedName));
+                    {
+                        InternalShouldEqual(actualEnumerator.Current, expectedEnumerator.Current, "Item {0} from {1}".F(index, actualName), "Item {0} from {1}".F(index, expectedName));
+                        index++;
+                    }
+
                     return;
                 }
 
@@ -274,7 +286,7 @@ namespace Incoding.MSpecContrib
                 Console.WriteLine("Start {0}", actual.GetType());
                 actual.ShouldEqualWeak(expected, dsl =>
                                                      {
-                                                         if (actual.GetType().BaseType.FullName.Contains("LinqSpecs.Specification"))
+                                                         if (actual.GetType().BaseType.FullName.Contains("Incoding.Specification"))
                                                              dsl.IncludeAllFields();
                                                      });
             }

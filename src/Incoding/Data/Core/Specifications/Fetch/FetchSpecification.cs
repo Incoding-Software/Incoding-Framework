@@ -32,6 +32,7 @@ namespace Incoding.Data
             ////ncrunch: no coverage start
             if (!this.IsReferenceEquals(other))
                 return false;
+
             ////ncrunch: no coverage end
             /// 
             var fetchLeft = new AdHocFetchSpecification<TEntity>();

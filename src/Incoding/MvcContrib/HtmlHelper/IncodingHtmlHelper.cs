@@ -7,6 +7,7 @@ namespace Incoding.MvcContrib
     using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -45,7 +46,7 @@ namespace Incoding.MvcContrib
         ////ncrunch: no coverage end
         #region Api Methods
 
-        public MvcHtmlString Script(string src)
+        public MvcHtmlString Script([PathReference] string src)
         {
             var script = CreateScript(string.Empty, HtmlType.TextJavaScript, src, MvcHtmlString.Empty);
             return new MvcHtmlString(script.ToString());
@@ -61,7 +62,7 @@ namespace Incoding.MvcContrib
             return new MvcTemplate<TModel>(this.htmlHelper);
         }
 
-        public MvcHtmlString Css(string href)
+        public MvcHtmlString Link([PathReference] string href)
         {
             var tagBuilder = CreateTag(HtmlTag.Link, MvcHtmlString.Empty, new RouteValueDictionary());
             tagBuilder.MergeAttribute(HtmlAttribute.Href.ToStringLower(), href);
@@ -96,12 +97,12 @@ namespace Incoding.MvcContrib
             return new MvcHtmlString(img.ToString());
         }
 
-        public MvcHtmlString Link(string href, string content, object attributes = null)
+        public MvcHtmlString Anchor(string href, string content, object attributes = null)
         {
-            return Link(href, new MvcHtmlString(content), attributes);
+            return Anchor(href, new MvcHtmlString(content), attributes);
         }
 
-        public MvcHtmlString Link(string href, MvcHtmlString content, object attributes = null)
+        public MvcHtmlString Anchor(string href, MvcHtmlString content, object attributes = null)
         {
             var routeValue = AnonymousHelper.ToDictionary(attributes);
             routeValue.Set("href", href);

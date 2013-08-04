@@ -8,7 +8,8 @@
     using Incoding.Data;
     using Incoding.EventBroker;
     using Incoding.Extensions;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 

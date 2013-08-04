@@ -32,9 +32,7 @@
                 SetMethodCall(expression.Body as MethodCallExpression);
             else if (expression.Body.NodeType == ExpressionType.MemberAccess)
                 SetMemberAccess(expression.Body as MemberExpression);
-            else                                                                                                                                            
-                    
-                    
+            else                                                                                                                                                                                                        
                     ////ncrunch: no coverage start
                 throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(expression.Body.GetType().FullName));
 

@@ -3,7 +3,7 @@
     public static class JavaScriptCodeTemplate
     {
         #region Constants
-        
+
         public const string Target_Increment = "$(this.target).val(parseInt($(this.target).val()) + 1);";
 
         public const string Target_Decrement = "$(this.target).val(parseInt($(this.target).val()) - 1);";

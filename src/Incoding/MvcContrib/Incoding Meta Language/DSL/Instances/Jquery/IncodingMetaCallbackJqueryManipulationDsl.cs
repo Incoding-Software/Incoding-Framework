@@ -73,7 +73,7 @@
         /// </param>
         public IExecutableSetting Html(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("html", selector)));
+            return Insert("html", selector);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@
         /// </param>
         public IExecutableSetting Text(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("text", selector)));
+            return Insert("text", selector);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@
         /// </param>
         public IExecutableSetting Append(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("append", selector)));
+            return Insert("append", selector);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@
         /// </param>
         public IExecutableSetting Prepend(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("prepend", selector)));
+            return Insert("prepend", selector);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@
         /// </param>
         public IExecutableSetting After(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("after", selector)));
+            return Insert("after", selector);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@
         /// </param>
         public IExecutableSetting Before(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Insert.F("before", selector)));
+            return Insert("before", selector);
         }
 
         /// <summary>
@@ -223,5 +223,11 @@
         }
 
         #endregion
+
+        IExecutableSetting Insert(string method, Selector selector)
+        {
+            string code = JavaScriptCodeTemplate.Target_Insert.F(method, string.IsNullOrWhiteSpace(selector) ? "''" : selector.ToString());
+            return this.plugInDsl.Registry(new ExecutableEval(code));
+        }
     }
 }

@@ -4,8 +4,9 @@ namespace Incoding.UnitTest.MvcContribGroup
 
     using System;
     using System.Collections.Generic;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -95,14 +96,14 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                     });
 
         It should_be_insert_with_jquery_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                          .Do().Direct()
-                                                          .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent()).Text())
-                                                          .GetExecutable<ExecutableInsert>()
-                                                          .ShouldEqualData(new Dictionary<string, object>
-                                                                               {
-                                                                                       { "insertType", "text" }, 
-                                                                                       { "template", "$('.new').parent()" }
-                                                                               });
+                                                                 .Do().Direct()
+                                                                 .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent()).Text())
+                                                                 .GetExecutable<ExecutableInsert>()
+                                                                 .ShouldEqualData(new Dictionary<string, object>
+                                                                                      {
+                                                                                              { "insertType", "text" }, 
+                                                                                              { "template", "$('.new').parent()" }
+                                                                                      });
 
         It should_be_insert_with_ajax_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                .Do().Direct()
@@ -111,7 +112,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                     {
                                                                                             { "insertType", "text" }, 
-                                                                                            { "template", "'@@@@@@@{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}@@@@@@@'"} 
+                                                                                            { "template", "'@@@@@@@{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}@@@@@@@'" }
                                                                                     });
 
         It should_be_insert_for = () => new IncodingMetaLanguageDsl(JqueryBind.Click)

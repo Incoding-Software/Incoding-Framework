@@ -4,7 +4,8 @@
 
     using System;
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 
@@ -13,7 +14,7 @@
     [Subject(typeof(LoggingFactory))]
     public class When_logging_factory_log_message : Context_logging_factory
     {
-        Establish establish = () => loggingFactory.Initialize(logging => logging.WithPolicy(LoggingPolicy.For(LogType.Trace).Use(defaultMockLogger.Object)));
+        Establish establish = () => loggingFactory.Initialize(logging => logging.WithPolicy(r => r.For(LogType.Trace).Use(defaultMockLogger.Object)));
 
         Because of = () => loggingFactory.LogMessage(LogType.Trace, Pleasure.Generator.TheSameString());
 

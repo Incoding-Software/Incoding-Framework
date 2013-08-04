@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using FluentNHibernate.Mapping;
     using Incoding.Extensions;
@@ -55,8 +56,19 @@
             return Map(property, "{0}_Col".F(property.GetMemberName()));
         }
 
+        /// <summary>
+        /// See sample
+        /// <code>
+        /// Id(property).CustomType(typeof(string)).GeneratedBy.Custom(typeof(GuidStringGenerator)).Length(36);
+        /// </code>
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1616:ElementReturnValueDocumentationMustHaveText", Justification = "Reviewed. Suppression is OK here.")]
+        // ReSharper disable UnusedMethodReturnValue.Global
         protected IdentityPart IdGenerateByGuid(Expression<Func<TEntity, object>> property)
         {
+            // ReSharper restore UnusedMethodReturnValue.Global
             return Id(property)
                     .CustomType<string>()
                     .GeneratedBy

@@ -84,56 +84,43 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>..\Lib\NHibernate\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="CommonServiceLocator.NinjectAdapter">
-      <HintPath>..\Lib\Ninject\extensions\CommonServiceLocator.NinjectAdapter.dll</HintPath>
-    </Reference>
-    <Reference Include="Enyim.Caching">
-      <HintPath>..\Lib\EnyimCaching\Enyim.Caching.dll</HintPath>
+    <Reference Include="Enyim.Caching, Version=2.12.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.2.0.712, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\NHibernate\FluentNHibernate.dll</HintPath>
+      <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation, Version=3.3.1.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+    <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\FluentValidation-Mvc3\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentValidation-Signed.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Machine.Specifications, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\NHibernate\Iesi.Collections.dll</HintPath>
+      <HintPath>..\packages\Machine.Specifications.0.5.12\lib\net40\Machine.Specifications.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\Lib\NHibernate\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Machine.Specifications">
-      <HintPath>..\Lib\MachineSpec\Machine.Specifications.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\Lib\Moq.4.0.10827\NET40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Json.Net\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=3.1.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\NHibernate\NHibernate.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate.ByteCode.Castle">
-      <HintPath>..\Lib\NHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Ninject\Ninject.dll</HintPath>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="Ninject.Extensions.Conventions">
-      <HintPath>..\Lib\Ninject\Ninject.Extensions.Conventions.dll</HintPath>
+      <HintPath>..\packages\ninject.extensions.conventions.3.0.0.11\lib\net40\Ninject.Extensions.Conventions.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\Lib\StructureMap\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -165,7 +152,15 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_with_exists_cache_after_reload_caching_factory.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_with_always_expires.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
+    <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_without_subscriber.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_paginated.cs" />
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_fetch_join_many_specification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_fetch_join_specification.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EventBroker\When_default_event_broker_has_subscriber.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_.cs" />
     <Compile Include="ExtensionsGroup\When_fetch_specification_extensions.cs" />
@@ -187,8 +182,6 @@
     <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query.cs" />
     <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbItemEntity.cs" />
     <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbEntity.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\Fetch\When_nhibernate_repository_query_with_fetch_join_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\Fetch\When_nhibernate_repository_query_with_fetch_join_many_specification.cs" />
     <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_order_specification.cs" />
     <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_all_specification.cs" />
     <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_paginated_specification.cs" />
@@ -220,12 +213,22 @@
     <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_should_be_get.cs" />
     <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_should_be_set.cs" />
     <Compile Include="MSpecGroup\Extensions\Caching Factory Extensions\When_caching_factor_test_ex_stub_get.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification_wrong.cs" />
+    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_with_wrong.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
+    <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_to_key_values.cs" />
     <Compile Include="MvcContribGroup\Extensions\When_html_extensions.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_attr_attributes.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_optional.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control_without_message.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_display_name.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_name.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Impl\When_conditional_data.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_bind.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_behaviors.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_with.cs" />
@@ -237,14 +240,18 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_store.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_jquery.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_more_when.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Impl\When_conditional_is.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_executable_base_conditionals.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder_binary.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\ConditionalBuilderTestEx.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\Conditional builder\When_conditional_builder_reset_inverse.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_conditional_builder_binary.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\ConditionalBuilderTestEx.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_conditional_builder.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_conditional_builder_reset_inverse.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_set_filter.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_java_script_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_location_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_geolocation_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_date_time_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_equal.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_value_extensions.cs" />
@@ -406,9 +413,9 @@
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_error_result.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_checkbox_control_unchecked.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_checkbox_control_checked.cs" />
-    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_add_meta.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_attr_meta.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control.cs" />
-    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_meta.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_url.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_file_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_hidden_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\Context_inc_control.cs" />
@@ -485,18 +492,17 @@
     <Compile Include="MSpecGroup\PleasureGroup\When_equality_comparer.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_empty.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_mock_it.cs" />
-    <Compile Include="MSpecGroup\PleasureGroup\When_compare_factory.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory.cs" />
     <Compile Include="MSpecGroup\Extensions\When_action_result_extensions.cs" />
     <Compile Include="MSpecGroup\Mock Message\When_mock_message_should_be_repository.cs" />
     <Compile Include="MSpecGroup\Mock Message\When_mock_message_is_result.cs" />
-    <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_empty_query.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\Context_invent_factory.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_create.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_duplication_setting.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_empty.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_manipulate.cs" />
     <Compile Include="MSpecGroup\Extensions\When_should_extensions.cs" />
-    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_property_only_read.cs" />
+    <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_property_only_get.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_entity.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_invent_object.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_tree_traversal.cs" />
@@ -509,7 +515,7 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_insert.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_ctor.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_show__options.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_conditional_get_data.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Impl\When_conditional_base.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Executable\When_executable_merge.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_incoding_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector.cs" />
@@ -538,6 +544,7 @@
     <None Include="IncFramework.pub" />
     <None Include="IncFramework.PublicKeyOnly.snk" />
     <None Include="IncFramework.snk" />
+    <None Include="packages.config" />
     <None Include="ValidateProtobufSerialize.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

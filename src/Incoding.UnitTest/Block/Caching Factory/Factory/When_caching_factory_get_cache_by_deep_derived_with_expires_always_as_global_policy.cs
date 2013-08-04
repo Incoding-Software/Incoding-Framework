@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using Incoding.Block.Caching;
     using Incoding.MSpecContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -22,7 +22,7 @@ namespace Incoding.UnitTest.Block
                                       cachingFactory = new CachingFactory();
                                       cachingFactory.Initialize(caching =>
                                                                 caching
-                                                                        .RegistryPolicy(CachingPolicy.ForDeepDerived<ICacheKey>().NeverExpires())
+                                                                        .WithPolicy(r => r.ForDeepDerived<ICacheKey>().NeverExpires())
                                                                         .WithProvider(new MemoryListCachedProvider()));
                                   };
 

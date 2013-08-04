@@ -7,11 +7,11 @@
     using System.Linq;
     using System.Linq.Expressions;
     using Incoding.Data;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
-    [Subject(typeof(NhibernateRepository))]
+    [Subject(typeof(NhibernateRepository)), Ignore("Nhibernate broken")]
     public class When_nhibernate_repository_query_with_all_specification : Context_nhibernate_repository_query
     {
         #region Fake classes
@@ -55,7 +55,6 @@
                                                        whereSpecification: new FakeWhere(), 
                                                        fetchSpecification: new FakeFetch())
                                                 .ToList();
-                             
                          };
 
         It should_be_count = () => result.Count.ShouldEqual(5);

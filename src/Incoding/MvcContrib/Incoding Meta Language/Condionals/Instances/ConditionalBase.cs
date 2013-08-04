@@ -23,7 +23,11 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        #region Api Methods
+
         public abstract object GetData();
+
+        #endregion
 
         internal bool IsOr()
         {

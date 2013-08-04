@@ -3,7 +3,8 @@
     #region << Using >>
 
     using System;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Machine.Specifications.Annotations;
 
     #endregion
@@ -59,8 +60,8 @@
         It should_be_inverse_int = () => 5.Inverse().ShouldNotEqual(5);
 
         It should_be_inverse_enum = () => Pleasure.Do((i) => FakeEnum.Email
-                                                                       .Inverse<FakeEnum>()
-                                                                       .ShouldNotEqual(FakeEnum.Email),50);
+                                                                     .Inverse<FakeEnum>()
+                                                                     .ShouldNotEqual(FakeEnum.Email), 50);
 
         It should_be_inverse_case = () =>
                                         {

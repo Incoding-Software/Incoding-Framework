@@ -4,39 +4,46 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    @Html.Incoding().Css(Url.Content("~/Content/Site.css"))
-
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/jquery-{0}.min.js".F(Model.JqueryVersion)))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/underscore-min.js"))
-    
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.form.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.blockUI.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.history.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.pnotify.min.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.validate.min.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/jquery.validate.unobtrusive.min.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Plugin/mustache.js"))    
+    @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
     
 
-
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.url.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.core.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.trace.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.helper.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.engine.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.executable.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/Core/incoding.meta.conditional.js"))
-
-    @Html.Incoding().Css(Url.Content("~/Content/css/jasmine.css"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/JSON2.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine-jquery.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jasmine-html.js"))      
-    @Html.Incoding().Script(Url.Content("~/Scripts/Jasmine/jquery.mockjax.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery-{0}.min.js".F(Model.JqueryVersion)))
+    @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
     
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))    
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))    
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))    
     
-    @Html.Incoding().Script(Url.Content("~/Scripts/Test/Helper.js"))   
-    @Html.Incoding().Script(Url.Content("~/Scripts/Test/IncodingSpec.js")) 
+
+        <script src="@Url.Content("~/Scripts/incoding.url.js")" data-cover> </script>
+    <script src="@Url.Content("~/Scripts/incoding.core.js")" data-cover> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")" data-cover> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")" data-cover> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")" data-cover> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")" data-cover> </script>  
+    
+@*    <script src="@Url.Content("~/Scripts/incoding.url.js")" > </script>
+    <script src="@Url.Content("~/Scripts/incoding.core.js")" > </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")" > </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")" > </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")"> </script>*@
+   
+  
+    @Html.Incoding().Script(Url.Content("~/Scripts/JSON2.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-jquery.js"))  
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-html.js"))      
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.mockjax.js"))  
+    
+    <script src="@Url.Content("~/Scripts/blanket.min.js")" data-cover-adapter="@Url.Content("~/Scripts/blanket.jasmine.adapter.js")"> </script>
+         
+    @Html.Incoding().Script(Url.Content("~/Scripts/inc-specifications.js")) 
     
 
     <script type="text/javascript">
@@ -58,7 +65,7 @@
                 if (currentWindowOnload) {
                     currentWindowOnload();
                 }
-                execJasmine();                                           
+                execJasmine();
             };
 
             function execJasmine() {
@@ -173,5 +180,47 @@
     <input type="hidden" value="@JavaScriptCodeTemplate.Conditional_ModernizrSupport" id="Conditional_ModernizrSupport"/>  
 
     <input type="hidden" value="@JavaScriptCodeTemplate.Window_Alert" id="Window_Alert"/>    
-    <input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>       
+    
+    
+    <input type="hidden" value="@Selector.JS.DateTime.GetFullYear()" id="Selector_Js_DateTime_GetFullYear"/> 
+    <input type="hidden" value="@Selector.JS.DateTime.GetDay()" id="Selector_Js_DateTime_GetDay"/> 
+    <input type="hidden" value="@Selector.JS.DateTime.GetTimezoneOffset()" id="Selector_Js_DateTime_GetTimezoneOffset"/> 
+    <input type="hidden" value="@Selector.JS.DateTime.ToDateString()" id="Selector_Js_DateTime_ToDateString"/> 
+    <input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/> 
+    
+    @*        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Accuracy" id="Selector_Js_Navigator_Accuracy"/> 
+        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.AltitudeAccuracy" id="Selector_Js_Navigator_AltitudeAccuracy"/> 
+        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Heading" id="Selector_Js_Navigator_Heading"/> 
+        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Latitude" id="Selector_Js_Navigator_Latitude"/> 
+        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Longitude" id="Selector_Js_Navigator_Longitude"/> 
+        <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Speed" id="Selector_Js_Navigator_Speed"/> *@
+        
+    <input type="hidden" value="@Selector.JS.Location.Href" id="Selector_Js_Location_Href"/> 
+    <input type="hidden" value="@Selector.JS.Location.Host" id="Selector_Js_Location_Host"/> 
+    <input type="hidden" value="@Selector.JS.Location.HostName" id="Selector_Js_Location_HostName"/> 
+    <input type="hidden" value="@Selector.JS.Location.PathName" id="Selector_Js_Location_PathName"/> 
+    <input type="hidden" value="@Selector.JS.Location.Port" id="Selector_Js_Location_Port"/> 
+    <input type="hidden" value="@Selector.JS.Location.Protocol" id="Selector_Js_Location_Protocol"/> 
+    <input type="hidden" value="@Selector.JS.Location.Search" id="Selector_Js_Location_Search"/> 
+
+    <input type="hidden" value="@Selector.Incoding.Cookie("incodingParam")" id="Selector_Incoding_Cookie"/> 
+    <input type="hidden" value="@Selector.Incoding.HashUrl()" id="Selector_Incoding_Hash"/> 
+    
+
+    <input type="hidden" value="@Selector.Incoding.QueryString("incodingParam")" id="Selector_Incoding_QueryString"/> 
+    <input type="hidden" value="@Selector.Incoding.QueryString("incodingParam2")" id="Selector_Incoding_QueryString_Undefined"/> 
+    
+    
+    <input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam")" id="Selector_Incoding_HashQueryString"/> 
+    <input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam2")" id="Selector_Incoding_HashQueryString_Undefined"/> 
+    
+    <input type="hidden" value="@Selector.Incoding.Ajax(options =>
+                                                            {
+                                                                options.Cache = false;
+                                                                options.Url = Url.Action("FetchCountry", "Labs", new
+                                                                                                                     {
+                                                                                                                             Type = Selector.Jquery.Id("sandboxTextBox")
+                                                                                                                     });
+                                                            })" id="Selector_Incoding_Ajax"/> 
 </body>

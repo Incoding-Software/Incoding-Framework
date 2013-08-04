@@ -1,9 +1,13 @@
 ﻿namespace Incoding.UnitTest.ExtensionsGroup
 {
+    #region << Using >>
+
     using System;
     using Incoding.Data;
     using Incoding.Extensions;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(SpecificationException))]
     public class When_fetch_specification_extensions

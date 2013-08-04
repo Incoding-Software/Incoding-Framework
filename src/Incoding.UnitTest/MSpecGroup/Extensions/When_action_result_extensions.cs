@@ -5,8 +5,9 @@ namespace Incoding.UnitTest.MSpecGroup
     using System;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -73,6 +74,10 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_incoding_data = () => IncodingResult
                                                    .Success(Pleasure.Generator.TheSameString())
                                                    .ShouldBeIncodingData(Pleasure.Generator.TheSameString());
+
+        It should_be_incoding_data_null = () => IncodingResult
+                                                        .Success()
+                                                        .ShouldBeIncodingDataIsNull();
 
         It should_be_incoding_data_with_wrong_type = () => Catch
                                                                    .Exception(() => IncodingResult.Success(Pleasure.Generator.TheSameString()).ShouldBeIncodingData<int>(s => s.ShouldBeOfType<int>()))

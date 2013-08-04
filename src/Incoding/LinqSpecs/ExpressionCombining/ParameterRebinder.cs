@@ -12,7 +12,6 @@ namespace Incoding.ExpressionCombining
     // http://blogs.msdn.com/b/meek/archive/2008/05/02/linq-to-entities-combining-predicates.aspx
     // ------------------------------------------------------------------------------------------
     ////ncrunch: no coverage start
-
     public class ParameterRebinder : ExpressionVisitor
     {
         #region Fields
@@ -48,6 +47,5 @@ namespace Incoding.ExpressionCombining
         }
     }
 
-
-////ncrunch: no coverage end
+    ////ncrunch: no coverage end
 }

@@ -16,9 +16,7 @@ namespace Incoding.MvcContrib
         IConditionalBinaryBuilder Confirm(Selector selector);
 
         IConditionalBinaryBuilder Eval(string code);
-
-        IConditionalBinaryBuilder Url(string url, Action<JqueryAjaxOptions> configuration = null);
-
+        
         IConditionalBinaryBuilder Exist(Selector jquerySelector);
 
         IConditionalBinaryBuilder FormIsValid(Func<JquerySelector, JquerySelector> configuration);

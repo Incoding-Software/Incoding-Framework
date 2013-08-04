@@ -56,6 +56,14 @@ namespace Incoding.MvcContrib
                                        {
                                            dsl.Self().Core().Insert.WithTemplate(Template).Html();
 
+                                           if (Optional != null)
+                                           {
+                                               var option = new TagBuilder(HtmlTag.Option.ToStringLower());
+                                               option.SetInnerText(Optional);
+                                               option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), "");
+                                               dsl.Self().Core().JQuery.Manipulation.Prepend(new MvcHtmlString(option.ToString()).ToHtmlString());
+                                           }
+
                                            var selected = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData).Model;
                                            if (selected != null)
                                                dsl.Self().Core().JQuery.Attributes.Val(selected);

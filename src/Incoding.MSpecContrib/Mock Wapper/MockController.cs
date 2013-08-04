@@ -118,7 +118,7 @@ namespace Incoding.MSpecContrib
 
         public MockController<TController> StubQuery<TQuery, TResult>(TQuery query, TResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
         {
-            IncodingMoqExtensions.StubQuery(this.dispatcher, query, result, executeSetting);
+            this.dispatcher.StubQuery(query, result, executeSetting);
             return this;
         }
 
@@ -144,13 +144,13 @@ namespace Incoding.MSpecContrib
 
         public MockController<TController> StubPushAsThrow<TCommand>(TCommand command, Exception exception, MessageExecuteSetting executeSetting = null) where TCommand : CommandBase
         {
-            IncodingMoqExtensions.StubPushAsThrow(this.dispatcher, command, exception, executeSetting);
+            this.dispatcher.StubPushAsThrow(command, exception, executeSetting);
             return this;
         }
 
         public MockController<TController> StubQueryAsThrow<TQuery, TResult>(TQuery query, Exception exception) where TQuery : QueryBase<TResult> where TResult : class
         {
-            IncodingMoqExtensions.StubQueryAsThrow<TQuery, TResult>(this.dispatcher, query, exception);
+            this.dispatcher.StubQueryAsThrow<TQuery, TResult>(query, exception);
             return this;
         }
 
@@ -173,7 +173,7 @@ namespace Incoding.MSpecContrib
 
         public void ShouldBePush<TCommand>(TCommand command, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
         {
-            IncodingMoqExtensions.ShouldBePush(this.dispatcher, command, executeSetting, callCount);
+            this.dispatcher.ShouldBePush(command, executeSetting, callCount);
         }
 
         public void ShouldNotBePush<TCommand>(TCommand command) where TCommand : CommandBase
@@ -183,7 +183,7 @@ namespace Incoding.MSpecContrib
 
         public void ShouldBePush<TCommand>(Action<TCommand> action, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
         {
-            IncodingMoqExtensions.ShouldBePush(this.dispatcher, action, executeSetting, callCount);
+            this.dispatcher.ShouldBePush(action, executeSetting, callCount);
         }
 
         public MockController<TController> BrokenModelState()

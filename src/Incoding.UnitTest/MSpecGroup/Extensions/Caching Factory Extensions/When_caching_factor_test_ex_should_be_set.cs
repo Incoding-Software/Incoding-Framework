@@ -1,8 +1,12 @@
 ﻿namespace Incoding.UnitTest.MSpecGroup
 {
+    #region << Using >>
+
     using Incoding.Block.Caching;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(CachingFactoryTestEx))]
     public class When_caching_factor_test_ex_should_be_set : Context_CachingFactoryTestEx

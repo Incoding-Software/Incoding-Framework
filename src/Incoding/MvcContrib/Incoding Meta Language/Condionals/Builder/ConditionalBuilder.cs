@@ -75,11 +75,6 @@
             return this;
         }
 
-        public IConditionalBinaryBuilder Url(string url, Action<JqueryAjaxOptions> configuration = null)
-        {
-            Registry(new ConditionalUrl(url, configuration, this.and));
-            return this;
-        }
 
         public IConditionalBinaryBuilder Exist(Selector selector)
         {

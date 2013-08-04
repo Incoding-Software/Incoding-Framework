@@ -28,7 +28,7 @@
 
         #region Properties
 
-        [IgnoreFieldCompare("Design fixed")]
+        [IgnoreCompare("Design fixed")]
         protected IRepository Repository
         {
             get
@@ -39,7 +39,7 @@
             }
         }
 
-        [IgnoreFieldCompare("Design fixed")]
+        [IgnoreCompare("Design fixed")]
         protected IEventBroker EventBroker
         {
             get { return IoCFactory.Instance.TryResolve<IEventBroker>(); }
@@ -49,7 +49,7 @@
 
         #region IMessage<TResult> Members
 
-        [IgnoreFieldCompare("Design fixed")]
+        [IgnoreCompare("Design fixed")]
         public virtual TResult Result { get; protected set; }
 
         public abstract void Execute();

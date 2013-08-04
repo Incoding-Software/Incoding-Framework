@@ -4,7 +4,8 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.ExceptionHandling;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 
@@ -29,7 +30,7 @@ namespace Incoding.UnitTest.Block
                                       exceptionHandling.Initialize(handling =>
                                                                        {
                                                                            spy = Pleasure.Spy();
-                                                                           handling.WithPolicy(ExceptionPolicy.ForAll().Catch(exception => spy.Object.Is(exception)));
+                                                                           handling.WithPolicy(r=>r.ForAll().Catch(exception => spy.Object.Is(exception)));
                                                                        });
                                   };
 

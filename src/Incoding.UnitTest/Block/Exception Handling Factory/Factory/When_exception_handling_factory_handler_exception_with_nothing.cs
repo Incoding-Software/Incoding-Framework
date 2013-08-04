@@ -4,7 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using System;
     using Incoding.Block.ExceptionHandling;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Machine.Specifications;
 
     #endregion
 
@@ -22,7 +22,7 @@ namespace Incoding.UnitTest.Block
         Establish establish = () =>
                                   {
                                       exceptionHandling = new ExceptionHandlingFactory();
-                                      exceptionHandling.Initialize(handling => handling.WithPolicy(ExceptionPolicy.ForAll().Mute()));
+                                      exceptionHandling.Initialize(handling => handling.WithPolicy(r=>r.ForAll().Mute()));
                                   };
 
         Because of = () => { exception = Catch.Exception(() => exceptionHandling.Handler(new ArgumentException())); };

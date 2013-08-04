@@ -3,7 +3,8 @@ namespace Incoding.UnitTest.Block
     #region << Using >>
 
     using Incoding.Block.Logging;
-    using Machine.Specifications;using Incoding.MSpecContrib;
+    using Incoding.MSpecContrib;
+    using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
 
@@ -14,7 +15,7 @@ namespace Incoding.UnitTest.Block
     {
         Establish establish = () =>
                                   {
-                                      loggingPolicy = LoggingPolicy
+                                      loggingPolicy = new LoggingPolicy()
                                               .For()
                                               .Use(() => defaultMockLogger.Object);
                                   };
