@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>JetBrains.Annotations</id>
+    <version>7.0</version>
+    <title>ReSharper Annotations Default Implementation</title>
+    <authors>JetBrains</authors>
+    <owners>JetBrains</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Standard JetBrains ReSharper code annotation attributes implementation</description>
+    <releaseNotes />
+    <copyright>Copyright 2007-2012 JetBrains s.r.o.</copyright>
+    <language />
+    <references>
+      <reference file="JetBrains.Annotations.NET.2.0.dll" />
+      <reference file="JetBrains.Annotations.dll" />
+    </references>
+  </metadata>
+</package>
