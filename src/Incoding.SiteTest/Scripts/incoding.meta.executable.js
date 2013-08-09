@@ -222,9 +222,8 @@ function ExecutableAjaxAction() {
 ExecutableAjaxAction.prototype.internalExecute = function(data) {
 
     var current = this;
-
-    var ajaxOptions = {};
-    $.extend(ajaxOptions, this.jsonData.ajax);
+    
+    var ajaxOptions = $.extend(true, {}, this.jsonData.ajax);
 
     if (ExecutableHelper.IsNullOrEmpty(ajaxOptions.data)) {
         ajaxOptions.data = [];

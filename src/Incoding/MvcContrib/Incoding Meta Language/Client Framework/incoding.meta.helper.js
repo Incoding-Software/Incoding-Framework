@@ -202,20 +202,20 @@ function ExecutableHelper() {
 
         var res = selector;
         if (selector.contains("@@@@@@")) {
-            res = $.cookie(selector.replaceAll("'@@@@@@", '').replaceAll("@@@@@@'", ''));
+            res = $.cookie(selector.replaceAll("@@@@@@", ''));
         }
         else if (selector.contains("@@@@@")) {
-            var clearValue = selector.replaceAll("'@@@@@", '').replaceAll("@@@@@'", '');
+            var clearValue = selector.replaceAll("@@@@@", '');
             res = $.url(window.location.href).fparam(clearValue.split(':')[0], clearValue.split(':')[1]);
         }
         else if (selector.contains("@@@@")) {
-            res = $.url(window.location.href).furl(selector.replaceAll("'@@@@", '').replaceAll("@@@@'", ''));
+            res = $.url(window.location.href).furl(selector.replaceAll("@@@@", ''));
         }
         else if (selector.contains("@@@")) {
-            res = $.url(window.location.href).param(selector.replaceAll("'@@@", '').replaceAll("@@@'", ''));
-        }        
+            res = $.url(window.location.href).param(selector.replaceAll("@@@", ''));
+        }
         else if (selector.contains("@@javascript")) {
-            res = eval(selector.replaceAll('@@','').split(":")[1]);
+            res = eval(selector.replaceAll('@@', '').split(":")[1]);
         }
 
         return ExecutableHelper.IsNullOrEmpty(res) ? '' : res;

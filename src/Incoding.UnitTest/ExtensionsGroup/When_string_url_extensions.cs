@@ -25,14 +25,16 @@
                                                                                                      })
                                                                             .ShouldEqual("http://domain.com?Param=Value1#!/Index?Param=HashValue");
 
-        It should_be_append_to_query_string__param_null = () =>
-                                                              {
-                                                                  const string url = "http://domain.com";
-                                                                  string param = null;
-                                                                  url.AppendToQueryString(new { Param = param }).ShouldEqual("http://domain.com");
-                                                              };
+        It should_be_append_to_query_string_param_null = () =>
+                                                             {
+                                                                 const string url = "http://domain.com";
+                                                                 string param = null;
+                                                                 url.AppendToQueryString(new { Param = param }).ShouldEqual("http://domain.com");
+                                                             };
 
-        It should_be_append_to_query_string_with_exists = () => "http://domain.com?Param=AnyValue".AppendToQueryString(new { Param = "Value1" }).ShouldEqual("http://domain.com?Param=Value1");
+        It should_be_append_to_query_string_with_exists = () => "/Dispatcher/Render?type=GetEditCategorySubQuery&incView=~%2FAreas%2FAdmin%2FViews%2FCategory%2FSub%2FEdit.cshtml"
+                                                                        .AppendToQueryString(new { Param = "Value1" })
+                                                                        .ShouldEqual("/Dispatcher/Render?type=GetEditCategorySubQuery&incView=~%2FAreas%2FAdmin%2FViews%2FCategory%2FSub%2FEdit.cshtml&Param=Value1");
 
         It should_be_append_segment_without_slash = () => "Index/Home"
                                                                   .AppendSegment("Add")
@@ -58,6 +60,10 @@
                                                          .SetHash("/hash")
                                                          .ShouldEqual("url#!hash?");
 
+        It should_be_set_hash_with_query_string = () => "url#!"
+                                                                .SetHash("hash?Param=aws&incView=value")
+                                                                .ShouldEqual("url#!hash?Param=aws/incView=value");
+
         It should_be_append_to_hash_query_string = () => "http://sample.com#!"
                                                                  .AppendToHashQueryString(new
                                                                                               {
@@ -74,12 +80,31 @@
                                                                                                             })
                                                                                .ShouldEqual("http://sample.com#!Index/Home?param=value/param2=value2");
 
-        It should_be_append_to_hash_query_string_with_exists = () => "http://sample.com#!Index/Home?param=Value"
-                                                                             .AppendToHashQueryString(new { param = "newValue" })
-                                                                             .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
+        It should_be_append_to_hash_query_string_with_hash_encode_url = () => "http://sample.com#!Dispatcher/Render?incView=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml"
+                                                                                      .AppendToHashQueryString(new
+                                                                                                                   {
+                                                                                                                           OrderId = "value"
+                                                                                                                   })
+                                                                                      .ShouldEqual("http://sample.com#!Dispatcher/Render?incView=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml/OrderId=value");
+
+        It should_be_append_to_hash_query_string_with_exist = () => "http://sample.com#!Index/Home?param=Value"
+                                                                            .AppendToHashQueryString(new { param = "newValue" })
+                                                                            .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
+
+        It should_be_append_to_hash_query_string_with_exist_empty = () => "http://sample.com#!Index/Home?param="
+                                                                                  .AppendToHashQueryString(new { param = "newValue" })
+                                                                                  .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
 
         It should_be_append_to_hash_query_string_with_query_string = () => "http://sample.com?param=queryValue#!Index/Home"
                                                                                    .AppendToHashQueryString(new { param = "hashValue" })
                                                                                    .ShouldEqual("http://sample.com?param=queryValue#!Index/Home?param=hashValue");
+
+        It should_be_append_to_hash_query_string_with_encode_value = () => "http://sample.com#!"
+                                                                                   .AppendToHashQueryString(new
+                                                                                                                {
+                                                                                                                        param = "~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml", 
+                                                                                                                        area = string.Empty
+                                                                                                                })
+                                                                                   .ShouldEqual("http://sample.com#!param=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml/area=");
     }
 }

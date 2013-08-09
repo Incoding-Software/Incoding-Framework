@@ -3,6 +3,7 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Web;
     using Incoding.Maybe;
@@ -57,11 +58,14 @@ namespace Incoding.Extensions
                     .Then()
                     .ReturnOrDefault(r => r.Split("#".ToCharArray())[0], value);
 
+            hash = hash.Contains("?") ? hash.Replace("&", "/") : hash + "?";
+
             hash = hash
                     .If(r => r.Contains("?"))
                     .Then()
                     .Recovery(() => hash + "?");
 
+            
             hash = hash
                     .Not(r => r.StartsWith("/"))
                     .Then()
@@ -85,8 +89,15 @@ namespace Incoding.Extensions
             bool hasExistsQueryString = value.If(r => r.Contains("?")).Has();
             if (hasExistsQueryString)
             {
-                var queryString = HttpUtility.ParseQueryString(value.Split("?".ToCharArray())[1]);
-                var originalQuery = queryString.AllKeys.ToDictionary(r => r, r => queryString[r]);
+                var originalQuery = value.Split("?".ToCharArray())[1]
+                        .Split(separateChar.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                        .Select(r =>
+                                    {
+                                        var pair = r.Split("=".ToCharArray());
+                                        return new KeyValuePair<string, string>(pair.ElementAtOrDefault(0), pair.ElementAtOrDefault(1));
+                                    })
+                        .ToDictionary(r => r.Key, r => r.Value);
+
                 foreach (var newParam in dictionary)
                     originalQuery.Set(newParam);
 
