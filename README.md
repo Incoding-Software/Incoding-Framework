@@ -8,5 +8,5 @@
 <li>Mspec helpers would shorter time spent on unit testing </li>
 </ul>
 <p>Documentation and examples here: <a href="http://incframework.com" target="_blank"> IncFrawework homepage and documentation</a> and <a href="http://blog.incframework.com"> blog</a>.</p>
-<p>We have first open source sample application <a href="https://incmusicstore.codeplex.com/">"IncMusicStore" </a> power by incoding framework&nbsp;</p>
+<p>Sample application <a href="https://github.com/IncodingSoftware/Browsio/">"Browsio" </a> power by incoding framework&nbsp;</p>
 <p>UPD video <a href="https://www.youtube.com/watch?v=T0-hjOMho3c"> tutorial </a> </p>
