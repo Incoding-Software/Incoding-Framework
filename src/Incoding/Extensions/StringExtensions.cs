@@ -3,7 +3,6 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
-    using System.Diagnostics;
     using System.Web.Mvc;
 
     #endregion
@@ -12,27 +11,30 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
-        [DebuggerStepThrough]
-        public static string ApplyFormat(this string format, params object[] param)
-        {
-            return string.Format(format, param);
-        }
-
-        [DebuggerStepThrough]
         public static bool EqualsWithInvariant(this string left, string right)
         {
             return left.Equals(right, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        [DebuggerStepThrough]
         public static string F(this string format, params object[] param)
         {
-            return format.ApplyFormat(param);
+            return string.Format(format, param);
+        }
+
+        public static bool IsGuid(this string value)
+        {
+            Guid outGuid;
+            return Guid.TryParse(value, out outGuid);
         }
 
         public static MvcHtmlString ToMvcHtmlString(this string value)
         {
             return new MvcHtmlString(value);
+        }
+
+        public static string ToSafeJSArgument(this string value)
+        {
+            return value.Replace("'", "\\'");
         }
 
         #endregion

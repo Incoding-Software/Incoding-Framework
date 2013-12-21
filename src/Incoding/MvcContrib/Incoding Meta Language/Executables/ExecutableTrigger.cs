@@ -12,9 +12,9 @@ namespace Incoding.MvcContrib
 
         public ExecutableTrigger(string trigger, string property)
         {
-            Data.Set("trigger", trigger);
+            this.Set("trigger", trigger);
             if (!string.IsNullOrWhiteSpace(property))
-                Data.Set("property", property);
+                this.Set("property", property);
         }
 
         #endregion

@@ -907,10 +907,11 @@ jasmine.Env.prototype.compareObjects_ = function(a, b, mismatchKeys, mismatchVal
     a.__Jasmine_been_here_before__ = b;
     b.__Jasmine_been_here_before__ = a;
 
-    var hasKey = function(obj, keyName) {
+    var hasKey = function (obj, keyName) {
         return obj !== null && obj[keyName] !== jasmine.undefined;
     };
-
+    
+    
     for (var property in b) {
         if (!hasKey(a, property) && hasKey(b, property)) {
             mismatchKeys.push("expected has key '" + property + "', but missing from actual.");

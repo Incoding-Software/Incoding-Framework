@@ -20,7 +20,10 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .File(boxControl => { boxControl.Value = Pleasure.Generator.TheSameString(); })
+                                     .File(boxControl =>
+                                               {
+                                                   boxControl.Value = Pleasure.Generator.TheSameString();
+                                               })
                                      .ToHtmlString();
                          };
 

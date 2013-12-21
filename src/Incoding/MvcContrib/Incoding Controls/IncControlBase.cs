@@ -2,11 +2,13 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Extensions;
+    using Incoding.Maybe;
     using Newtonsoft.Json.Linq;
 
     #endregion
@@ -26,18 +28,40 @@ namespace Incoding.MvcContrib
         /// </summary>
         public int TabIndex { set { this.attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
+        public Action<IIncodingMetaLanguageCallbackBodyDsl> OnEvent { get; set; }
+
+        public Action<IIncodingMetaLanguageCallbackBodyDsl> OnInit { get; set; }
+
+        public Action<IIncodingMetaLanguageCallbackBodyDsl> OnChange { get; set; }
+
         #endregion
 
         #region Api Methods
 
-        public abstract MvcHtmlString Render();
+        public abstract MvcHtmlString ToHtmlString();
 
         /// <summary>
         ///     <see cref="HtmlAttribute.AutoComplete" />
         /// </summary>
         public void DisableAutoComplete()
         {
-            this.attributes.Set(HtmlAttribute.AutoComplete.ToStringLower(), "off");
+            SetAttr(HtmlAttribute.AutoComplete, "off");
+        }
+
+        /// <summary>
+        ///     <see cref="HtmlAttribute.AutoComplete" />
+        /// </summary>
+        public void SetAttr(HtmlAttribute attr, object value)
+        {
+            SetAttr(attr.ToStringLower(), value.With(r => r.ToString()));
+        }
+
+        /// <summary>
+        ///     <see cref="HtmlAttribute.AutoComplete" />
+        /// </summary>
+        public void SetAttr(string attr, object value)
+        {
+            this.attributes.Set(attr.ToLower(), value.With(r => r.ToString()));
         }
 
         public void Attr(object attr)
@@ -75,5 +99,35 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
+
+        protected RouteValueDictionary GetAttributes()
+        {
+            bool isIml = OnInit != null ||
+                         OnChange != null ||
+                         OnEvent != null;
+
+            if (isIml)
+            {
+                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
+                                              .Do()
+                                              .Direct()
+                                              .OnSuccess(dsl =>
+                                                             {
+                                                                 OnInit.Do(action => action(dsl));
+                                                                 OnEvent.Do(action => action(dsl));
+                                                             })
+                                              .When(JqueryBind.Change)
+                                              .Do()
+                                              .Direct()
+                                              .OnSuccess(dsl =>
+                                                             {
+                                                                 OnChange.Do(action => action(dsl));
+                                                                 OnEvent.Do(action => action(dsl));
+                                                             })
+                                              .AsHtmlAttributes());
+            }
+
+            return this.attributes;
+        }
     }
 }

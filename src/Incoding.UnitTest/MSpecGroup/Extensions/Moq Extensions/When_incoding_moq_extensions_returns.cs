@@ -38,14 +38,24 @@
 
         It should_be_returns_invent = () =>
                                           {
-                                              var fake = Pleasure.MockStrictAsObject<IFake>(mock => mock.Setup(r => r.Method()).ReturnsInvent());
-                                              fake.Method().ShouldNotBeNull();
+                                              var fake = Pleasure.MockStrictAsObject<IFake>(mock => mock.Setup(r => r.Method()).ReturnsInvent(dsl => dsl.GenerateTo(r => r.Prop)));
+                                              fake.Method()
+                                                  .Should(@class =>
+                                                              {
+                                                                  @class.ShouldNotBeNull();
+                                                                  @class.Prop.ShouldNotBeNull();
+                                                              });
                                           };
 
         It should_be_return_invent_getter = () =>
                                                 {
-                                                    var fake = Pleasure.MockStrictAsObject<IFake>(mock => mock.SetupGet(r => r.Prop).ReturnsInvent());
-                                                    fake.Prop.ShouldNotBeNull();
+                                                    var fake = Pleasure.MockStrictAsObject<IFake>(mock => mock.SetupGet(r => r.Prop).ReturnsInvent(dsl => dsl.GenerateTo(r => r.Prop)));
+                                                    fake.Prop
+                                                        .Should(@class =>
+                                                                    {
+                                                                        @class.ShouldNotBeNull();
+                                                                        @class.Prop.ShouldNotBeNull();
+                                                                    });
                                                 };
 
         It should_be_returns_null = () =>

@@ -19,6 +19,16 @@ def DeleteFileIfExists(path)
   end
 end
 
+  def minify(files)
+    files.each do |file|
+      cmd = "java -jar tools/yuicompressor-2.4.7.jar #{file} -o #{file}"
+      puts cmd
+      ret = system(cmd)
+      raise "Minification failed for #{file}" if !ret
+    end
+  end
+
+
 
 
 
@@ -32,7 +42,7 @@ Folder =
         :live =>  File.join('deploy' , 'Live'),
         :dev =>  File.join( 'deploy' , 'Dev'),        
         :clientFramework =>  'src/Incoding/MvcContrib/Incoding Meta Language/Client Framework',                
-        :lib => 'src/Lib',
+        :lib => 'src/packages',
 	    :mspecResult =>  File.join('deploy','MspecReport')
     }
 
@@ -69,22 +79,28 @@ mspec do |mspec|
 end
 
 task :combine do
-  File.open(Folder[:clientFramework] + '/incoding.framework.js', 'w') {   |file| 
+  File.open(Folder[:live] + '/incoding.framework.js', 'w') {   |file| 
        file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.meta.helper.js')))
        file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.url.js')))
-       file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.core.js')))
-       file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.meta.trace.js')))
+       file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.core.js')))       
        file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.meta.engine.js')))      	  
        file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.meta.executable.js')))
        file.write(File.read(File.expand_path(Folder[:clientFramework] + '/incoding.meta.conditional.js')))
-   }    
+   }     
 end
 
 
-task :publish =>[:build,:mspec,:combine]  do
-  FileUtils.cp_r(File.expand_path(Folder[:clientFramework] + '/incoding.framework.js'),Folder[:live],:verbose => true)  
+  desc "minify javascript"
+  task :minify =>[:combine] do
+    FileUtils.cp_r(File.expand_path(Folder[:live] + '/incoding.framework.js'),Folder[:live] + '/incoding.framework.min.js',:verbose => true)  
+    minify(FileList[Folder[:live] + '/incoding.framework.min.js'])
+  end
+
+
+task :publish =>[:build,:mspec,:minify]  do    
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.dll'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.pdb'),Folder[:live],:verbose => true)
+  FileUtils.cp_r(File.expand_path(Folder[:clientFramework] + '/incoding.meta.trace.js'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.dll'),Folder[:live],:verbose => true)
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.pdb'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(Folder[:lib],Folder[:live],:verbose => true)

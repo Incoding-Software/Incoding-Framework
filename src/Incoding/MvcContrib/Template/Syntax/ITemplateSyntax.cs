@@ -12,7 +12,17 @@ namespace Incoding.MvcContrib
 
     public interface ITemplateSyntax<TModel> : IDisposable
     {
-        string For(Expression<Func<TModel, object>> property);
+        ITemplateSyntax<TModel> Up();
+
+        string For(Expression<Func<TModel, object>> field);
+
+        string For(Expression<Func<TModel, bool>> field);
+
+        string Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse);
+
+        string IsInline(Expression<Func<TModel, object>> field, string content);
+
+        string NotInline(Expression<Func<TModel, object>> field, string content);
 
         string IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
 

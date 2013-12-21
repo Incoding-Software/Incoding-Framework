@@ -25,9 +25,9 @@ namespace Incoding.MvcContrib
 
         #region Api Methods
 
-        public IExecutableSetting Alert(string message)
+        public IExecutableSetting Alert(Selector message)
         {
-            return this.plugIn.Registry(new ExecutableEval(JavaScriptCodeTemplate.Window_Alert.F(message)));
+            return this.plugIn.Registry(new ExecutableEvalMethod("alert", new[] { message }, "window"));
         }
 
         public IExecutableSetting ClearInterval(string intervalId)

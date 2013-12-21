@@ -6,7 +6,7 @@ namespace Incoding.MvcContrib
 
         public ExecutableDirectAction(string result)
         {
-            Data["result"] = result;
+            this["result"] = result;
         }
 
         #endregion

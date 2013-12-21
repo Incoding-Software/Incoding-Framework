@@ -36,7 +36,7 @@
 
         It should_be_publish_after_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterExecuteEvent>()));
 
-        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()));
+        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.Is<OnCompleteExecuteEvent>(@event => @event.Message.ShouldNotBeNull())));
 
         It should_not_be_publish_after_fail_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()), Times.Never());
     }

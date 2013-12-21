@@ -11,7 +11,7 @@
     #endregion
 
     [Subject(typeof(DefaultEventBroker))]
-    public class When_default_event_broker_with_shared_subscriber
+    public class When_default_event_broker_with_aggregate_subscriber
     {
         #region Fake classes
 

@@ -2,22 +2,22 @@
 {
     #region << Using >>
 
+    using Incoding.Extensions;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
     #endregion
 
-    [Subject(typeof(WebEnumConvertToString))]
+    [Subject(typeof(HtmlType))]
     public class When_web_enum_convert
     {
         It should_be_verify_ToStringHtmlContent = () =>
                                                       {
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextCss).ShouldEqual("text/css");
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextHtml).ShouldEqual("text/html");
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextXml).ShouldEqual("text/xml");
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextJavaScript).ShouldEqual("text/javascript");
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextJqueryTmpl).ShouldEqual("text/x-jquery-tmpl");
-                                                          WebEnumConvertToString.ToHtmlType(HtmlType.TextMustacheTmpl).ShouldEqual("text/x-mustache-tmpl");
+                                                          HtmlType.TextCss.ToLocalization().ShouldEqual("text/css");
+                                                          HtmlType.TextHtml.ToLocalization().ShouldEqual("text/html");
+                                                          HtmlType.TextXml.ToLocalization().ShouldEqual("text/xml");
+                                                          HtmlType.TextJavaScript.ToLocalization().ShouldEqual("text/javascript");
+                                                          HtmlType.TextTemplate.ToLocalization().ShouldEqual("text/template");
                                                       };
     }
 }

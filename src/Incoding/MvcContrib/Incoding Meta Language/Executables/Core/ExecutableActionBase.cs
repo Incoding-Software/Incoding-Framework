@@ -12,7 +12,7 @@
 
         public void SetFilter(ConditionalBase filter)
         {
-            Data.Set("filterResult", filter.GetData());
+            this.Set("filterResult", filter.GetData());
         }
 
         #endregion

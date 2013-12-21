@@ -143,7 +143,7 @@ jasmine.JQuery.matchersClass = {};
             };
         },
 
-        wasTriggered : function(selector, eventName, dataEvent) {
+         wasTriggered : function(selector, eventName, dataEvent) {
             var event = data.spiedEvents[jasmine.spiedEventsKey(selector, eventName)];
             var res = !!(event);
             if (dataEvent != undefined) {

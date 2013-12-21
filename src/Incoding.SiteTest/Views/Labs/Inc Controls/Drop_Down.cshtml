@@ -1,0 +1,20 @@
+﻿        @Html.Incoding().RenderDropDownTemplate()
+        <script>            
+            ExecutableInsert.Template = new IncHandlerbarsTemplate();
+        </script>
+    
+    
+    
+    <body>
+      
+        <label>Drop down ajax</label>
+        @Html.For(r => r.DropId).DropDown(control =>
+                                              {
+                                                  control.Url = Url.Action("FetchForDD", "Labs");
+                                                  control.OnInit = dsl => dsl.Self().Core().JQuery.Css.Width(500);
+                                                  control.OnChange = dsl => dsl.Self().Core().JQuery.Css.Set(CssStyling.Color,"red");
+                                                  control.OnEvent = dsl => dsl.Utilities.Window.Alert("Both");
+                                              }) 
+                                
+           
+    </body>

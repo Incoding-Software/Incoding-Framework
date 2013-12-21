@@ -7,24 +7,16 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public interface IConditionalBuilder : IConditionalPlugInBuilder
+    public interface IConditionalBuilder 
     {
+        [Obsolete("Use method native inversion bool on C#")]
         ConditionalBuilder Not { get; }
 
         IConditionalBinaryBuilder Is(Expression<Func<bool>> expression);
 
-        IConditionalBinaryBuilder Confirm(Selector selector);
-
+        [Obsolete("Use method Selector.JS.Call or Selector.JS.Eval in Is")]
         IConditionalBinaryBuilder Eval(string code);
-        
-        IConditionalBinaryBuilder Exist(Selector jquerySelector);
-
-        IConditionalBinaryBuilder FormIsValid(Func<JquerySelector, JquerySelector> configuration);
-
-        IConditionalBinaryBuilder FormIsValid(JquerySelector jquerySelector);
 
         IConditionalBinaryBuilder Data<TModel>(Expression<Func<TModel, bool>> expression);
-
-        IConditionalBinaryBuilder Support(ModernizrSupport modernizrSupport);
     }
 }

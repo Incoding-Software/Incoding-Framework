@@ -57,7 +57,29 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_model = () => new ViewResult { ViewData = { Model = Pleasure.Generator.TheSameString() } }.ShouldBeModel(Pleasure.Generator.TheSameString());
 
-        It should_be_view_name = () => new ViewResult { ViewName = Pleasure.Generator.TheSameString() }.ShouldBeViewName(Pleasure.Generator.TheSameString());
+        It should_be_file_contnet_result = () =>
+                                               {
+                                                   var fileContents = Pleasure.Generator.Bytes();
+                                                   string contentType = Pleasure.Generator.String();
+                                                   string fileDownloadName = Pleasure.Generator.String();
+
+                                                   new FileContentResult(fileContents, contentType)
+                                                       {
+                                                               FileDownloadName = fileDownloadName
+                                                       }.ShouldBeFileContent(fileContents,
+                                                                             contentType: contentType,
+                                                                             fileDownloadName: fileDownloadName);
+                                               };
+
+        It should_be_view_result_view_model = () => new ViewResult
+                                                        {
+                                                                ViewData = { Model = Pleasure.Generator.TheSameString() }
+                                                        }.ShouldBeView(model: Pleasure.Generator.TheSameString());
+
+
+        It should_be_view_result_view_name = () => new ViewResult { ViewName = Pleasure.Generator.TheSameString() }.ShouldBeView(viewName: Pleasure.Generator.TheSameString());
+
+        It should_be_partial_view_result_view_name = () => new PartialViewResult { ViewName = Pleasure.Generator.TheSameString() }.ShouldBeView(viewName: Pleasure.Generator.TheSameString());
 
         It should_be_model_with_wrong_view_result = () => Catch
                                                                   .Exception(() => new ViewResult().ShouldBeModel<string>(s => s.ShouldBeEmpty()))

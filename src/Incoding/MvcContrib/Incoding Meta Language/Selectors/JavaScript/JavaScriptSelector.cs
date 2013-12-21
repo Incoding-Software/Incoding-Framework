@@ -1,5 +1,11 @@
 ﻿namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
+    using Incoding.Extensions;
+
+    #endregion
+
     public class JavaScriptSelector : Selector, IJavaScriptSelector
     {
         #region Constructors
@@ -21,9 +27,20 @@
 
         #region Api Methods
 
-        public ISelector Eval(string code)
+        public Selector Eval(string code)
         {
             this.selector = code;
+            return this;
+        }
+
+        public Selector Confirm(string message)
+        {
+            return Eval("confirm('{0}')".F(message.ToSafeJSArgument()));
+        }
+
+        public Selector Call(string func, params object[] args)
+        {
+            AddMethod(func, args);
             return this;
         }
 

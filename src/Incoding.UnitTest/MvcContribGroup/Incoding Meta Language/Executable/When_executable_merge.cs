@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
+    using System;
     using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
@@ -28,7 +29,7 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_time_out = () =>
                                     {
                                         var executable = new ExecutableValidationParse();
-                                        executable.TimeOut(10);
+                                        executable.TimeOut(10.Seconds());
                                         executable
                                                 .Merge(new RouteValueDictionary())
                                                 .Should(dictionary =>
@@ -36,7 +37,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                 var incodingData = dictionary["incoding"].ToString().DeserializeFromJson<object>() as JContainer;
                                                                 var dynamicData = ((dynamic)incodingData[0]).data;
 
-                                                                ((int)dynamicData.timeOut).ShouldEqual(10);
+                                                                ((int)dynamicData.timeOut).ShouldEqual(10000);
                                                             });
                                     };
 
@@ -44,7 +45,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                     {
                                         var executable = new ExecutableValidationParse();
                                         string intervalId;
-                                        executable.Interval(10, out intervalId);
+                                        executable.Interval(10.Seconds(), out intervalId);
                                         executable
                                                 .Merge(new RouteValueDictionary())
                                                 .Should(dictionary =>
@@ -54,7 +55,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
                                                                 intervalId.Length.ShouldEqual(36);
                                                                 intervalId.ShouldNotContain("-");
-                                                                ((int)dynamicData.interval).ShouldEqual(10);
+                                                                ((int)dynamicData.interval).ShouldEqual(10000);
                                                                 ((string)dynamicData.intervalId).ShouldEqual(intervalId);
                                                             });
                                     };

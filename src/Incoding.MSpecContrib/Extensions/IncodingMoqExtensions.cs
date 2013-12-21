@@ -92,7 +92,7 @@ namespace Incoding.MSpecContrib
         public static void StubQuery<TEntity>(this Mock<IRepository> repository, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null, params TEntity[] entities) where TEntity : class, IEntity
         {
             repository
-                    .Setup(r => r.Query(orderSpecification, Pleasure.MockIt.IsStrong(whereSpecification, dsl => dsl.IncludeAllFields()), fetchSpecification, Pleasure.MockIt.IsStrong(paginatedSpecification)))
+                    .Setup(r => r.Query(orderSpecification, Pleasure.MockIt.IsStrong(whereSpecification, dsl => dsl.IncludeAllFields()), fetchSpecification, Pleasure.MockIt.IsStrong(paginatedSpecification, dsl => dsl.IncludeAllFields())))
                     .Returns(Pleasure.ToQueryable(entities));
         }
 
@@ -100,18 +100,18 @@ namespace Incoding.MSpecContrib
 
         #region Returns
 
-        public static void ReturnsInvent<TMock, TResult>(this IReturns<TMock, TResult> setup)
+        public static void ReturnsInvent<TMock, TResult>(this IReturns<TMock, TResult> setup, Action<IInventFactoryDsl<TResult>> action = null)
                 where TMock : class
                 where TResult : new()
         {
-            setup.Returns(Pleasure.Generator.Invent<TResult>());
+            setup.Returns(Pleasure.Generator.Invent(action));
         }
 
-        public static void ReturnsInvent<TMock, TResult>(this IReturnsGetter<TMock, TResult> setup)
+        public static void ReturnsInvent<TMock, TResult>(this IReturnsGetter<TMock, TResult> setup, Action<IInventFactoryDsl<TResult>> action = null)
                 where TMock : class
                 where TResult : new()
         {
-            setup.Returns(Pleasure.Generator.Invent<TResult>());
+            setup.Returns(Pleasure.Generator.Invent(action));
         }
 
         public static void ReturnsNull<TMock, TResult>(this IReturns<TMock, TResult> setup)

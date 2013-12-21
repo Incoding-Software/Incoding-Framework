@@ -30,13 +30,6 @@ namespace Incoding.Maybe
             }
         }
 
-        public static IEnumerable<TResult> WithEach<TInput, TResult>(this IEnumerable<TInput> source, Func<TInput, TResult> evaluator)
-        {
-            if (source == null)
-                return null;
-
-            return source.Select(evaluator);
-        }
 
         #endregion
     }

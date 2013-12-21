@@ -11,42 +11,50 @@ namespace Incoding.MvcContrib
 
         #region Api Methods
 
-        public ISelector GetDate()
+        public Selector GetDate()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("getDate");
             return res;
         }
 
-        public ISelector GetDay()
+
+        public Selector GetTime()
+        {
+            var res = new JSDateTimeSelector(this);
+            res.AddMethod("getTime");
+            return res;
+        }
+
+        public Selector GetDay()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("getDay");
             return res;
         }
 
-        public ISelector GetTimezoneOffset()
+        public Selector GetTimezoneOffset()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("getTimezoneOffset");
             return res;
         }
 
-        public ISelector GetFullYear()
+        public Selector GetFullYear()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("getFullYear");
             return res;
         }
 
-        public ISelector ToTimeString()
+        public Selector ToTimeString()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("toTimeString");
             return res;
         }
 
-        public ISelector ToDateString()
+        public Selector ToDateString()
         {
             var res = new JSDateTimeSelector(this);
             res.AddMethod("toDateString");

@@ -4,6 +4,7 @@
 
     using System;
     using Incoding.Extensions;
+    using System.Linq;
 
     #endregion
 
@@ -18,11 +19,6 @@
 
         #region Api Methods
 
-        public JquerySelectorExtend Expression(JqueryExpression expression)
-        {
-            AlsoSelector(":{0}".F(expression.ToJqueryString()));
-            return this;
-        }
 
         public JquerySelectorExtend Also(Func<JquerySelector, JquerySelector> action = null)
         {

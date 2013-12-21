@@ -122,6 +122,30 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
+        public ICompareFactoryDsl<TActual, TExpected> ForwardToDefault<TValue>(Expression<Func<TActual, TValue>> actualProp)
+        {
+            return ForwardToDefault<TValue>(actualProp.GetMemberName());
+        }
+
+        public ICompareFactoryDsl<TActual, TExpected> ForwardToDefault<TValue>(string actualProp)
+        {
+            Guard.NotNullOrWhiteSpace("actualProp", actualProp);
+
+            VerifyUniqueProperty(actualProp);
+            this.forwardsToValue.Set(actualProp, default(TValue));
+            return this;
+        }
+
+        public ICompareFactoryDsl<TActual, TExpected> ForwardToString<TValue>(Expression<Func<TActual, TValue>> actualProp)
+        {
+            return ForwardToString(actualProp.GetMemberName());
+        }
+
+        public ICompareFactoryDsl<TActual, TExpected> ForwardToString(string actualProp)
+        {
+            return ForwardToAction(actualProp, actual => actual.ToString());
+        }
+
         #endregion
 
         #region Api Methods
@@ -171,38 +195,42 @@ namespace Incoding.MSpecContrib
 
             foreach (var actualMember in actualProperties)
             {
-                if (actualMember.HasAttribute<IgnoreCompareAttribute>())
+                string actualMemberName = actualMember.Name;
+                if (actualMember.HasAttribute<IgnoreCompareAttribute>() &&
+                    !this.forwards.Keys.Contains(actualMemberName) &&
+                    !this.forwardsToValue.Keys.Contains(actualMemberName) &&
+                    !this.forwardsToPredicate.Keys.Contains(actualMemberName))
                     continue;
 
-                if (this.ignoreProperties.Any(r => r.Equals(actualMember.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (this.ignoreProperties.Any(r => r.Equals(actualMemberName, StringComparison.InvariantCultureIgnoreCase)))
                     continue;
 
-                if (this.ignoreProperties.Any(r => actualMember.Name.Contains("<{0}>".F(r))))
+                if (this.ignoreProperties.Any(r => actualMemberName.Contains("<{0}>".F(r))))
                     continue;
 
-                if (this.forwardsToPredicate.ContainsKey(actualMember.Name))
+                if (this.forwardsToPredicate.ContainsKey(actualMemberName))
                 {
-                    this.forwardsToPredicate[actualMember.Name].Invoke(actual);
+                    this.forwardsToPredicate[actualMemberName].Invoke(actual);
                     continue;
                 }
 
-                var actualValue = actual.TryGetValue(actualMember.Name);
+                var actualValue = actual.TryGetValue(actualMemberName);
 
-                if (this.forwardsToValue.ContainsKey(actualMember.Name))
+                if (this.forwardsToValue.ContainsKey(actualMemberName))
                 {
-                    InternalShouldEqual(actualValue, this.forwardsToValue[actualMember.Name], actualMember.Name, actualMember.Name);
+                    InternalShouldEqual(actualValue, this.forwardsToValue[actualMemberName], actualMemberName, actualMemberName);
                     continue;
                 }
 
-                string expectedPropName = this.forwards.GetOrDefault(actualMember.Name, actualMember.Name);
+                string expectedPropName = this.forwards.GetOrDefault(actualMemberName, actualMemberName);
                 var expectedMember = expected.GetType().GetMember(expectedPropName, bindingFlags).LastOrDefault();
                 if (expectedMember == null)
                 {
-                    FixedDifferent(SpecificationMessageRes.CompareFactory_Not_Found_Property.F(actualMember.Name, expected.GetType().Name));
+                    FixedDifferent(SpecificationMessageRes.CompareFactory_Not_Found_Property.F(actualMemberName, expected.GetType().Name));
                     continue;
                 }
 
-                InternalShouldEqual(actualValue, expected.TryGetValue(expectedMember.Name), actualMember.Name, expectedPropName);
+                InternalShouldEqual(actualValue, expected.TryGetValue(expectedMember.Name), actualMemberName, expectedPropName);
             }
         }
 
@@ -242,12 +270,6 @@ namespace Incoding.MSpecContrib
                     return;
                 }
 
-                if (actual.GetType() != expected.GetType())
-                {
-                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, "type {0}".F(actual.GetType()), "type {0}".F(expected.GetType())));
-                    return;
-                }
-
                 if (actual is IEnumerable && !actual.GetType().IsAnyEquals(typeof(string)))
                 {
                     var actualEnumerable = actual as IEnumerable;
@@ -266,6 +288,12 @@ namespace Incoding.MSpecContrib
                         index++;
                     }
 
+                    return;
+                }
+
+                if (actual.GetType() != expected.GetType())
+                {
+                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, "type {0}".F(actual.GetType()), "type {0}".F(expected.GetType())));
                     return;
                 }
 

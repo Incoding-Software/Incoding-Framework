@@ -90,6 +90,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -147,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contrib\IncodingSiteBootstrapped.cs" />
+    <Compile Include="Controllers\DispatcherController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
@@ -154,6 +157,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\dust-full-0.3.0.js" />
     <Compile Include="VM\JasmineIndexContainer.cs" />
     <Compile Include="VM\LabsIndexContainer.cs" />
   </ItemGroup>
@@ -181,6 +185,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\blanket.jasmine.adapter.js" />
     <Content Include="Scripts\blanket.min.js" />
+    <Content Include="Scripts\handlebars.js" />
     <Content Include="Scripts\incoding.core.js" />
     <Content Include="Scripts\incoding.meta.conditional.js" />
     <Content Include="Scripts\incoding.meta.engine.js" />
@@ -226,6 +231,13 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\Labs\Index.cshtml" />
+    <Content Include="Views\Labs\Jquery Selector\Expression_As_Flag.cshtml" />
+    <Content Include="Views\Labs\Inc Controls\Drop_Down.cshtml" />
+    <Content Include="Views\Labs\Issue\inc_216.cshtml" />
+    <Content Include="Views\Labs\Issue\inc_233.cshtml" />
+    <Content Include="Views\Labs\Issue\Redirect_To_Selector.cshtml" />
+    <Content Include="Views\Labs\Template\Handlebars_For_Bool.cshtml" />
+    <Content Include="Views\Labs\Bind\Init.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -245,6 +257,9 @@
       <Project>{d66ad474-a026-4ab2-b475-6477488443c4}</Project>
       <Name>Incoding</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

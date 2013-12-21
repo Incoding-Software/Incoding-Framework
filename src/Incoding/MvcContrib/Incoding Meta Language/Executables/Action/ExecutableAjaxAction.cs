@@ -4,11 +4,11 @@ namespace Incoding.MvcContrib
     {
         #region Constructors
 
-        internal ExecutableAjaxAction(bool hash, string prefix, JqueryAjaxOptions ajax)
+        public ExecutableAjaxAction(bool hash, string prefix, JqueryAjaxOptions ajax)
         {
-            Data["ajax"] = ajax.OptionCollections;
-            Data["hash"] = hash;
-            Data["prefix"] = prefix;
+            this["ajax"] = ajax;
+            this["hash"] = hash;
+            this["prefix"] = prefix;
         }
 
         #endregion

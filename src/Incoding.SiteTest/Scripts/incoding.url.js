@@ -48,14 +48,6 @@ function purl(existsUrl) {
         };
 
         this.merge = function(parent, key, val) {
-
-            if (!/^[0-9]+$/.test(key) && _.isArray(parent.base)) {
-                var t = {};
-                for (var k in parent.base) {
-                    t[k] = parent.base[k];
-                }
-                parent.base = t;
-            }
             this.set(parent.base, key, val);
             return parent;
         };
@@ -87,13 +79,7 @@ function purl(existsUrl) {
             var v = obj[key];
             if (undefined === v) {
                 obj[key] = val;
-            }
-            else if (_.isArray(v)) {
-                v.push(val);
-            }
-            else {
-                obj[key] = [v, val];
-            }
+            }           
         };
 
         this.lastBraceInKey = function(str) {
@@ -147,9 +133,8 @@ function purl(existsUrl) {
             if (arguments.length == 0) {
                 return this.data.param.fragment;
             }
-
-            var fullParam = "{0}__{1}".f(prefix, param);
-            return ExecutableHelper.UrlDecode(this.data.param.fragment[fullParam]);
+            var key = "{0}__{1}".f(prefix, param);
+            return this.data.param.fragment.hasOwnProperty(key) ? ExecutableHelper.UrlDecode(this.data.param.fragment[key]) : '';
         },
         
         // set fragment parameters
@@ -173,10 +158,7 @@ function purl(existsUrl) {
 
         fprefixes : function() {
             var uniquePrefixes = ['root'];
-            $.eachProperties(this.fparam(), function() {
-                if (_.isUndefined(this) || _.isEmpty(this)) {
-                    return true;
-                }
+            $.eachProperties(this.fparam(), function() {                
                 var prefixKey = this.split('__')[0];
                 if (uniquePrefixes.contains(prefixKey)) {
                     return true;
@@ -221,7 +203,7 @@ function purl(existsUrl) {
 
             var current = this;
 
-            var hash = '#!';         
+            var hash = '#!';
 
             $.each(current.fprefixes(), function() {
 
@@ -253,13 +235,8 @@ function purl(existsUrl) {
                 }
                 hash += "&";
             });
-
-            hash = hash.trim().cutLastChar();
-            if (hash.charAt(hash.length - 1) == '/') {
-                hash = hash.cutLastChar(); //cut redundant '/'/
-            }
-
-            return current.url() + hash;
+            
+            return current.url() + hash.trim().cutLastChar();
         }
     };
 

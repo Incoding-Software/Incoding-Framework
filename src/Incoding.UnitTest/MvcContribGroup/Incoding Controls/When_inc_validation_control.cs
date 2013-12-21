@@ -15,8 +15,6 @@
     {
         #region Estabilish value
 
-        static string result;
-
         static IncValidationControl control;
 
         #endregion
@@ -33,8 +31,9 @@
                                       control = new IncValidationControl(mockHtmlHelper.Original, expression);
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual("<span class=\"field-validation-valid\" id=\"Prop_validationMessage\"></span>");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual("<span class=\"field-validation-valid\" id=\"Prop_validationMessage\"></span>");
     }
 }

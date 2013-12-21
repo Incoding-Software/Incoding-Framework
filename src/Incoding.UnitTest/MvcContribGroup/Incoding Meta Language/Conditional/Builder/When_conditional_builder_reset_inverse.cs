@@ -2,7 +2,6 @@
 {
     #region << Using >>
 
-    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -32,19 +31,19 @@
 
         Because of = () => builder
                                    .Not
-                                   .Confirm(Selector.Value(confirm1))
+                                   .Eval(confirm1)
                                    .And
-                                   .Confirm(Selector.Value(confirm2));
+                                   .Eval(confirm2);
 
         It should_be_1_and = () => builder
                                            .GetByIndex(0)
                                            .GetData()
                                            .ShouldEqualWeak(new
                                                                 {
-                                                                        type = ConditionalOfType.Eval.ToString(), 
-                                                                        inverse = true, 
-                                                                        and = true, 
-                                                                        code = "window.confirm(this.tryGetVal('{0}'));".F(confirm1)
+                                                                        type = ConditionalOfType.Eval.ToString(),
+                                                                        inverse = true,
+                                                                        and = true,
+                                                                        code = confirm1
                                                                 }, dsl => dsl.IncludeAllFields());
 
         It should_be_2_and = () => builder
@@ -52,10 +51,10 @@
                                            .GetData()
                                            .ShouldEqualWeak(new
                                                                 {
-                                                                        type = ConditionalOfType.Eval.ToString(), 
-                                                                        inverse = false, 
-                                                                        and = true, 
-                                                                        code = "window.confirm(this.tryGetVal('{0}'));".F(confirm2)
+                                                                        type = ConditionalOfType.Eval.ToString(),
+                                                                        inverse = false,
+                                                                        and = true,
+                                                                        code = confirm2
                                                                 }, dsl => dsl.IncludeAllFields());
     }
 }

@@ -1,0 +1,22 @@
+﻿@{
+    string tmplId = Guid.NewGuid().ToString();
+    using (var template = Html.Incoding().ScriptTemplate<KeyValueVm>(tmplId))
+    {
+        using (var each = template.ForEach())
+        {
+            <input type="checkbox" @each.IsInline(r => r.Selected, @<text>checked="checked"</text>)/>
+        }
+    }
+
+}
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Do()
+      .Direct(IncodingResult.Success(new[]
+                                         {
+                                                 new KeyValueVm { Selected = true }, 
+                                                 new KeyValueVm { Selected = false }
+                                         }))
+      .OnSuccess(dsl => dsl.Self().Core().Insert.WithTemplate(Selector.Jquery.Id(tmplId)).Html())
+      .AsHtmlAttributes()
+      .ToDiv())

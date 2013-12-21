@@ -33,14 +33,14 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_throw_exception_if_property_duplicate_in_empty = () => Catch
                                                                                     .Exception(() => inventFactory
-                                                                                                             .Empty<string>(r => r.StrValue)
-                                                                                                             .Empty<string>(r => r.StrValue))
+                                                                                                             .Empty(r => r.StrValue)
+                                                                                                             .Empty(r => r.StrValue))
                                                                                     .ShouldBeOfType<ArgumentException>();
 
         It should_be_throw_exception_if_property_duplicate_in_generate_to = () => Catch
                                                                                           .Exception(() => inventFactory
-                                                                                                                   .GenerateTo<FakeGenerateObject>(r => r.Fake)
-                                                                                                                   .GenerateTo<FakeGenerateObject>(r => r.Fake))
+                                                                                                                   .GenerateTo(r => r.Fake)
+                                                                                                                   .GenerateTo(r => r.Fake))
                                                                                           .ShouldBeOfType<ArgumentException>();
     }
 }

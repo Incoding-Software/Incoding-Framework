@@ -3,29 +3,45 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Web.Mvc;
+    using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Maybe;
     using JetBrains.Annotations;
 
     #endregion
 
-    public abstract class IncControllerBase : AsyncController
+    // ReSharper disable PublicConstructorInAbstractClass
+    public abstract class IncControllerBase : Controller
     {
         #region Fields
 
-        protected readonly IDispatcher dispatcher;
+        readonly Lazy<IDispatcher> _dispatcher;
 
         #endregion
 
         #region Constructors
 
-        protected IncControllerBase(IDispatcher dispatcher)
+        [UsedImplicitly, Obsolete("Please use default ctor without parameters", false), ExcludeFromCodeCoverage]
+        public IncControllerBase(IDispatcher dispatcher)
         {
-            Guard.NotNull("dispatcher", dispatcher);
-            this.dispatcher = dispatcher;
+            ////ncrunch: no coverage start
+            this._dispatcher = new Lazy<IDispatcher>(() => dispatcher);
+            ////ncrunch: no coverage end        
         }
+
+        public IncControllerBase()
+        {
+            this._dispatcher = new Lazy<IDispatcher>(() => IoCFactory.Instance.TryResolve<IDispatcher>());
+        }
+
+        #endregion
+
+        #region Properties
+
+        protected IDispatcher dispatcher { get { return this._dispatcher.Value; } }
 
         #endregion
 
@@ -64,6 +80,7 @@ namespace Incoding.MvcContrib
             return IncodingResult.RedirectTo(Url.Action(action, controller, routes));
         }
 
+        [AspMvcView]
         protected IncodingResult IncView(object model = null)
         {
             return IncPartialView(ControllerContext.RouteData.GetRequiredString("action"), model);
@@ -76,6 +93,11 @@ namespace Incoding.MvcContrib
 
         protected IncodingResult IncPartialView([AspMvcView] string viewName, object model = null)
         {
+            return IncodingResult.Success(RenderToString(viewName, model));
+        }
+
+        protected string RenderToString([AspMvcView] string viewName, object model)
+        {
             Guard.NotNullOrWhiteSpace("viewName", viewName);
             ViewData.Model = model;
             using (var sw = new StringWriter())
@@ -83,7 +105,7 @@ namespace Incoding.MvcContrib
                 var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
                 var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
                 viewResult.View.Render(viewContext, sw);
-                return IncodingResult.Success(sw.GetStringBuilder().ToString());
+                return sw.GetStringBuilder().ToString();
             }
         }
 
@@ -115,11 +137,11 @@ namespace Incoding.MvcContrib
             var error = setting.ErrorResult ?? defaultError;
 
             if (!ModelState.IsValid)
-                return error(IncWebException.Empty);
+                return error(IncWebException.For(string.Empty, string.Empty));
 
             try
             {
-                this.dispatcher.Push(composite);
+                dispatcher.Push(composite);
                 return success();
             }
             catch (IncWebException exception)

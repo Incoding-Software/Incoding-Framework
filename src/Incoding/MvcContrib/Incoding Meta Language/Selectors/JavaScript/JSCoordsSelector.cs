@@ -11,7 +11,7 @@
 
         #region Properties
 
-        public ISelector Latitude
+        public Selector Latitude
         {
             get
             {
@@ -21,7 +21,7 @@
             }
         }
 
-        public ISelector Longitude
+        public Selector Longitude
         {
             get
             {
@@ -31,7 +31,7 @@
             }
         }
 
-        public ISelector Accuracy
+        public Selector Accuracy
         {
             get
             {
@@ -41,7 +41,7 @@
             }
         }
 
-        public ISelector AltitudeAccuracy
+        public Selector AltitudeAccuracy
         {
             get
             {
@@ -51,7 +51,7 @@
             }
         }
 
-        public ISelector Heading
+        public Selector Heading
         {
             get
             {
@@ -61,7 +61,7 @@
             }
         }
 
-        public ISelector Speed
+        public Selector Speed
         {
             get
             {

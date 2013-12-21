@@ -11,7 +11,7 @@ namespace Incoding.MvcContrib
 
         #region Properties
 
-        public ISelector Host
+        public Selector Host
         {
             get
             {
@@ -21,7 +21,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector Href
+        public Selector Href
         {
             get
             {
@@ -31,7 +31,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector HostName
+        public Selector HostName
         {
             get
             {
@@ -41,7 +41,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector PathName
+        public Selector PathName
         {
             get
             {
@@ -51,7 +51,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector Port
+        public Selector Port
         {
             get
             {
@@ -61,7 +61,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector Protocol
+        public Selector Protocol
         {
             get
             {
@@ -71,7 +71,7 @@ namespace Incoding.MvcContrib
             }
         }
 
-        public ISelector Search
+        public Selector Search
         {
             get
             {

@@ -38,17 +38,17 @@ namespace Incoding.MvcContrib
 
         public void Add(ExecutableBase callback)
         {
-            callback.Data.Add("onBind", this.onBind);
-            callback.Data.Add("onStatus", (int)this.onCurrentStatus);
-            callback.Data.Add("target", this.target);
-            callback.Data.Add("onEventStatus", (int)this.onEventStatus);
+            callback.Add("onBind", this.onBind);
+            callback.Add("onStatus", (int)this.onCurrentStatus);
+            callback.Add("target", this.target);
+            callback.Add("onEventStatus", (int)this.onEventStatus);
             this.merges.Add(callback);
         }
 
         public void SetFilter(ConditionalBase filter)
         {
             this.merges
-                .Where(r => r.Data["onBind"].ToString() == this.onBind)
+                .Where(r => r["onBind"].ToString() == this.onBind)
                 .OfType<ExecutableActionBase>()
                 .DoEach(@base => @base.SetFilter(filter));
         }

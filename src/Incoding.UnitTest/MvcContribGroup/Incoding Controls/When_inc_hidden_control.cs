@@ -10,19 +10,13 @@
     [Subject(typeof(IncHiddenControl<,>))]
     public class When_inc_hidden_control : Context_inc_control
     {
-        #region Estabilish value
-
-        static string result;
-
-        #endregion
-
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .Hidden()
-                                     .ToHtmlString();
+                                     .Hidden();
                          };
 
-        It should_be_render = () => result.ShouldEqual("<input id=\"Prop\" name=\"Prop\" type=\"hidden\" value=\"TheSameString\" />");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual("<input id=\"Prop\" name=\"Prop\" type=\"hidden\" value=\"TheSameString\" />");
     }
 }

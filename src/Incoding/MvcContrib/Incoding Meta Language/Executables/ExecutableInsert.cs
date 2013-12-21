@@ -13,15 +13,15 @@ namespace Incoding.MvcContrib
         public ExecutableInsert(string insertType, string property, string template, bool prepare)
         {
             if (!string.IsNullOrWhiteSpace(template))
-                Data.Set("template", template);
+                this.Set("template", template);
 
             if (!string.IsNullOrWhiteSpace(property))
-                Data["property"] = property;
+                this["property"] = property;
 
             if (prepare)
-                Data["prepare"] = true;
+                this["prepare"] = true;
 
-            Data["insertType"] = insertType;
+            this["insertType"] = insertType;
         }
 
         #endregion

@@ -12,25 +12,24 @@
         @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
         @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
         @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))    
+        @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))    
             
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"));
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"));
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"))
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"))        
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"))
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
+        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
     </head>
-    
-
+        
     <body>
-        <span>Text</span>
         @(Html.When(JqueryBind.Click)
               .Do()
               .Direct()
-              .OnSuccess(dsl => dsl.With(r=>r.Tag(HtmlTag.Span)).Core().JQuery.Manipulation.Text(string.Empty))
+              .OnSuccess(dsl => dsl.Utilities.Document.Back())
               .AsHtmlAttributes()
-              .ToButton("Test"))
+              .ToButton("Back"))
     </body>
 
 </html>

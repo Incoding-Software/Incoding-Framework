@@ -31,14 +31,17 @@ namespace Incoding.Data
         #region IRepository Members
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity
-        {
-            Guard.NotNull("entity", entity);
+        {            
             this.session.Value.Save(entity);
         }
 
-        public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public void Flush()
         {
-            Guard.NotNull("entity", entity);
+            this.session.Value.Flush();
+        }
+
+        public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity
+        {         
             this.session.Value.SaveOrUpdate(entity);
         }
 

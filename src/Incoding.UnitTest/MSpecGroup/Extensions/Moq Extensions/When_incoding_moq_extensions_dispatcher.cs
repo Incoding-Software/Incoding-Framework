@@ -2,10 +2,12 @@
 {
     #region << Using >>
 
+    using System;
     using System.Data.SqlClient;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+    using Machine.Specifications.Annotations;
     using Moq;
     using It = Machine.Specifications.It;
 
@@ -95,6 +97,23 @@
                                                       .Exception(() => dispatcher.ShouldBePush(command, callCount: 2, executeSetting: setting))
                                                       .ShouldBeNull();
                                           };
+
+        It should_be_push_composite_different_command = () =>
+                                                    {
+                                                        var dispatcher = Pleasure.Mock<IDispatcher>();
+                                                        var command = Pleasure.Generator.Invent<FakeCommand>();
+                                                        var command2 = Pleasure.Generator.Invent<Fake2Command>();
+                                                        var setting = Pleasure.Generator.Invent<MessageExecuteSetting>();
+
+                                                        dispatcher.Object.Push(composite =>
+                                                                                   {
+                                                                                       composite.Quote(command, setting);
+                                                                                       composite.Quote(command2, setting);
+                                                                                   });
+
+                                                        Catch.Exception(() => dispatcher.ShouldBePush(command, executeSetting: setting)).ShouldBeNull();
+                                                        Catch.Exception(() => dispatcher.ShouldBePush(command2, executeSetting: setting)).ShouldBeNull();
+                                                    };
 
         It should_be_push_composite_without_setting = () =>
                                                           {
@@ -188,5 +207,20 @@
                                                                       .Exception(() => dispatcher.Object.Push(commandComposite))
                                                                       .ShouldBeOfType<IncFakeException>();
                                                           };
+    }
+
+    internal class Fake2Command : CommandBase
+    {
+        #region Properties
+
+        [UsedImplicitly]
+        public string AnotherProp { get; set; }
+
+        #endregion
+
+        public override void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

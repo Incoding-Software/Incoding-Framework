@@ -27,7 +27,7 @@ namespace Incoding.MvcContrib
 
         public IExecutableSetting HistoryGo(int countGo)
         {
-            return this.plugIn.Registry(new ExecutableEval(JavaScriptCodeTemplate.Document_HistoryGo.F(countGo)));
+            return this.plugIn.Registry(new ExecutableEvalMethod("go", new object[] { countGo }, "history"));
         }
 
         public IExecutableSetting Back()
@@ -40,14 +40,14 @@ namespace Incoding.MvcContrib
             return HistoryGo(1);
         }
 
-        public IExecutableSetting RedirectTo(string url)
+        public IExecutableSetting RedirectTo(Selector url)
         {
-            return this.plugIn.Registry(new ExecutableRedirect(url));
+            return this.plugIn.Registry(new ExecutableEvalMethod("RedirectTo", new[] { url }, "ExecutableHelper"));
         }
 
         public IExecutableSetting RedirectToSelf()
         {
-            return RedirectTo(string.Empty);
+            return RedirectTo(Selector.JS.Location.Href);
         }
 
         public IExecutableSetting Reload(bool force = false)
@@ -57,7 +57,7 @@ namespace Incoding.MvcContrib
 
         public IExecutableSetting Title(string title)
         {
-            return this.plugIn.Registry(new ExecutableEval(JavaScriptCodeTemplate.Document_SetTitle.F(title)));
+            return this.plugIn.Registry(new ExecutableEval(JavaScriptCodeTemplate.Document_SetTitle.F(title.ToSafeJSArgument())));
         }
 
         #endregion

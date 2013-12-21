@@ -20,15 +20,16 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         Establish establish = () => { options = new JqueryAjaxOptions(JqueryAjaxOptions.Default); };
 
-        Because of = () => options.Url = "http://controller/action?param1=#id1&param2=#id2";
+        Because of = () => options.Url = "/Dispatcher/Query?type=IsAuthorizeUserQuery&UserId=||cookie*OwnerId||&CustomerId=$('#id')";
 
         It should_be_has_data = () =>
                                     {
-                                        var dataAsCollection = options.OptionCollections["data"] as IEnumerable<object>;
-                                        dataAsCollection.ShouldEqualWeakEach(Pleasure.ToEnumerable<object>(new { name = "param1", selector = "#id1" }, 
-                                                                                                           new { name = "param2", selector = "#id2" }));
+                                        var dataAsCollection = options["data"] as IEnumerable<object>;
+                                        dataAsCollection.ShouldEqualWeakEach(Pleasure.ToEnumerable<object>(new { name = "type", selector = "IsAuthorizeUserQuery" },
+                                                                                                           new { name = "UserId", selector = "||cookie*OwnerId||" },
+                                                                                                           new { name = "CustomerId", selector = "$('#id')" }));
                                     };
 
-        It should_be_clear_url = () => options.OptionCollections["url"].ShouldEqual("http://controller/action");
+        It should_be_clear_url = () => options["url"].ShouldEqual("/Dispatcher/Query");
     }
 }

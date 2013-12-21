@@ -36,6 +36,16 @@ namespace Incoding.MSpecContrib
             action(value);
         }
 
+        public static void ShouldSatisfy<TValue>(this TValue value, Func<TValue,bool> func)
+        {
+            func(value).ShouldBeTrue();
+        }
+        
+        public static void ShouldNotSatisfy<TValue>(this TValue value, Func<TValue,bool> func)
+        {
+            func(value).ShouldBeFalse();
+        }
+
         public static void ShouldBeDate(this DateTime actual, DateTime expected)
         {
             actual.Date.ShouldEqual(expected.Date);
@@ -165,11 +175,6 @@ namespace Incoding.MSpecContrib
         {
             if (source.ContainsKey(key))
                 throw new SpecificationException("Found key {0} in dictionary".F(key));
-        }
-
-        public static void ShouldSatisfy<TValue>(this TValue value, Func<TValue, bool> action)
-        {
-            action(value).ShouldBeTrue();
         }
 
         #endregion

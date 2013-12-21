@@ -17,11 +17,11 @@ namespace Incoding.MvcContrib
 
         #region Constructors
 
-        public MvcScriptTemplate(HtmlHelper htmlHelper, string id, string htmlType)
+        public MvcScriptTemplate(HtmlHelper htmlHelper, string id)
                 : base(htmlHelper)
         {
             this.htmlHelper = htmlHelper;
-            this.htmlHelper.ViewContext.Writer.Write("<script id=\"{0}\" type=\"{1}\">".F(id, htmlType));
+            this.htmlHelper.ViewContext.Writer.Write("<script id=\"{0}\" type=\"{1}\" >".F(id, HtmlType.TextTemplate.ToLocalization()));
         }
 
         #endregion

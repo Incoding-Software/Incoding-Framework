@@ -4,10 +4,13 @@ namespace Incoding.MSpecContrib
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Reflection;
     using FluentNHibernate.Testing;
+    using Incoding.Quality;
     using Machine.Specifications;
+    using Machine.Specifications.Annotations;
 
     #endregion
 
@@ -21,11 +24,8 @@ namespace Incoding.MSpecContrib
 
         #region Fields
 
-        Establish establish = () =>
-                                  {
-                                      if (Session != null)
-                                          persistenceSpecification = new PersistenceSpecification<TEntity>(Session);
-                                  };
+        [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true)]
+        Establish establish = () => { persistenceSpecification = new PersistenceSpecification<TEntity>(Session); };
 
         #endregion
 

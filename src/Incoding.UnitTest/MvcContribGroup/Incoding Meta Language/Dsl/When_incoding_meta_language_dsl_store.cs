@@ -46,14 +46,23 @@
 
         It should_be_store_hash__manipulate = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                             .Do().Direct()
-                                                            .OnSuccess(r => r.Self().Core().Store.Hash.Manipulate(dsl => dsl
-                                                                                                                                 .Remove("removeKey", "removePrefix")
-                                                                                                                                 .Set("setKey", "value", "setPrefix")))
+                                                            .OnSuccess(r => r.Self().Core().Store.Hash.Manipulate(dsl => dsl.Remove("removeKey", "removePrefix")
+                                                                                                                            .Set("setKey", "value", "setPrefix")))
                                                             .GetExecutable<ExecutableStoreManipulate>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                                  {
                                                                                          { "type", "hash" }, 
                                                                                          { "methods", "[{\"verb\":\"remove\",\"key\":\"removeKey\",\"prefix\":\"removePrefix\"},{\"verb\":\"set\",\"key\":\"setKey\",\"value\":\"value\",\"prefix\":\"setPrefix\"}]" }
                                                                                  });
+
+        It should_be_store_hash__manipulate_with_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                          .Do().Direct()
+                                                                          .OnSuccess(r => r.Self().Core().Store.Hash.Manipulate(dsl => dsl.Set("setKey", Selector.Jquery.Id("id"))))
+                                                                          .GetExecutable<ExecutableStoreManipulate>()
+                                                                          .ShouldEqualData(new Dictionary<string, object>
+                                                                                               {
+                                                                                                       { "type", "hash" }, 
+                                                                                                       { "methods", "[{\"verb\":\"set\",\"key\":\"setKey\",\"value\":\"$('#id')\",\"prefix\":\"root\"}]" }
+                                                                                               });
     }
 }

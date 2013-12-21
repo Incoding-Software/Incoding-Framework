@@ -1,16 +1,62 @@
 ﻿namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
+    using System;
+    using Incoding.Extensions;
+
+    #endregion
+
     public static class JquerySelectorExtendValueExtensions
     {
         #region Factory constructors
+
+        /// <summary>
+        ///     Get the value of an attribute for the first element in the set of matched elements every matched element.
+        /// </summary>
+        public static JquerySelectorExtend Attr(this JquerySelectorExtend selector, HtmlAttribute attr)
+        {
+            return selector.Attr(attr.ToJqueryString());
+        }
+
+        /// <summary>
+        ///     Get the value of an attribute for the first element in the set of matched elements every matched element.
+        /// </summary>
+        public static JquerySelectorExtend Attr(this JquerySelectorExtend selector, string attr)
+        {
+            return selector.Method("attr", attr);
+        }
+
+        /// <summary>
+        ///     Get the value of a style property for the first element in the set of matched elements every matched element.
+        /// </summary>
+        public static JquerySelectorExtend Css(this JquerySelectorExtend selector, CssStyling css)
+        {
+            return Css(selector, css.ToJqueryString());
+        }
+
+        /// <summary>
+        ///     Get the value of a style property for the first element in the set of matched elements every matched element.
+        /// </summary>
+        public static JquerySelectorExtend Css(this JquerySelectorExtend selector, string css)
+        {
+            return selector.Method("css", css);
+        }
+
+        /// <summary>
+        ///     Get the value of an attribute for the first element in the set of matched elements every matched element.
+        /// </summary>
+        public static JquerySelectorExtend FormIsValid(this JquerySelectorExtend selector)
+        {
+            return selector.Method("valid");
+        }
 
         /// <summary>
         ///     Get the determine whether any of the matched elements are assigned the given class.
         /// </summary>
         public static JquerySelectorExtend HasClass(this JquerySelectorExtend selector, string @class)
         {
-            selector.AddMethod("hasClass", Selector.Jquery.Class(@class).ToSelector());
-            return selector;
+            return selector.Method("hasClass", Selector.Jquery.Class(@class).ToSelector().Replace(".", string.Empty));
         }
 
         /// <summary>
@@ -18,8 +64,7 @@
         /// </summary>
         public static JquerySelectorExtend Height(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("height");
-            return selector;
+            return selector.Method("height");
         }
 
         /// <summary>
@@ -27,8 +72,7 @@
         /// </summary>
         public static JquerySelectorExtend InnerHeight(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("innerHeight");
-            return selector;
+            return selector.Method("innerHeight");
         }
 
         /// <summary>
@@ -36,16 +80,57 @@
         /// </summary>
         public static JquerySelectorExtend InnerWidth(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("innerWidth");
-            return selector;
+            return selector.Method("innerWidth");
         }
+
+        /// <summary>
+        ///     Check the current matched set of elements against a selector, element and return true
+        /// </summary>
+        public static JquerySelectorExtend Is(this JquerySelectorExtend selector, JquerySelector isSelector)
+        {
+            return selector.Method("is", isSelector);
+        }
+
+        /// <summary>
+        ///     Check the current matched set of elements against a expression, element and return true
+        /// </summary>
+        public static JquerySelectorExtend Is(this JquerySelectorExtend selector, JqueryExpression expression)
+        {
+            return selector.Is(r => r.Expression(expression));
+        }
+
+        /// <summary>
+        ///     Check the current matched set of elements against a tag, element and return true
+        /// </summary>
+        public static JquerySelectorExtend Is(this JquerySelectorExtend selector, HtmlTag tag)
+        {
+            return selector.Is(r => r.Tag(tag));
+        }
+
+        /// <summary>
+        ///     Check the current matched set of elements against a selector, element and return true
+        /// </summary>
+        public static JquerySelectorExtend Is(this JquerySelectorExtend selector, Func<JquerySelector, JquerySelector> evaluated)
+        {
+            var isSelector = evaluated(Selector.Jquery);
+            return selector.Is(isSelector);
+        }
+
 
         /// <summary>
         ///     Get the current count element of matched elements
         /// </summary>
         public static JquerySelectorExtend Length(this JquerySelectorExtend selector)
         {
-            selector.AddProperty("length");
+            return selector.Property("length");
+        }
+
+        /// <summary>
+        ///     Call method
+        /// </summary>
+        public static JquerySelectorExtend Method(this JquerySelectorExtend selector, string method, params object[] args)
+        {
+            selector.AddMethod(method, args);
             return selector;
         }
 
@@ -55,8 +140,7 @@
         /// </summary>
         public static JquerySelectorExtend OuterHeight(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("outerHeight");
-            return selector;
+            return selector.Method("outerHeight");
         }
 
         /// <summary>
@@ -64,7 +148,15 @@
         /// </summary>
         public static JquerySelectorExtend OuterWidth(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("outerWidth");
+            return selector.Method("outerWidth");
+        }
+
+        /// <summary>
+        ///     Get property
+        /// </summary>
+        public static JquerySelectorExtend Property(this JquerySelectorExtend selector, string prop)
+        {
+            selector.AddProperty(prop);
             return selector;
         }
 
@@ -73,8 +165,7 @@
         /// </summary>
         public static JquerySelectorExtend ScrollLeft(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("scrollLeft");
-            return selector;
+            return selector.Method("scrollLeft");
         }
 
         /// <summary>
@@ -82,8 +173,7 @@
         /// </summary>
         public static JquerySelectorExtend ScrollTop(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("scrollTop");
-            return selector;
+            return selector.Method("scrollTop");
         }
 
         /// <summary>
@@ -91,8 +181,7 @@
         /// </summary>
         public static JquerySelectorExtend Text(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("text");
-            return selector;
+            return selector.Method("text");
         }
 
         /// <summary>
@@ -100,8 +189,7 @@
         /// </summary>
         public static JquerySelectorExtend Width(this JquerySelectorExtend selector)
         {
-            selector.AddMethod("width");
-            return selector;
+            return selector.Method("width");
         }
 
         #endregion

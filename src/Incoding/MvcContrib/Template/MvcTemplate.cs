@@ -3,14 +3,19 @@
     #region << Using >>
 
     using System;
-    using System.Linq.Expressions;
     using System.Web.Mvc;
-    using Incoding.Extensions;
+    using Incoding.Block.IoC;
 
     #endregion
 
     public class MvcTemplate<TModel> : IDisposable
     {
+        #region Static Fields
+
+        static readonly Lazy<ITemplateFactory> factory = new Lazy<ITemplateFactory>(() => IoCFactory.Instance.TryResolve<ITemplateFactory>());
+
+        #endregion
+
         #region Fields
 
         readonly HtmlHelper htmlHelper;
@@ -28,54 +33,14 @@
 
         #region Api Methods
 
-        public MvcHtmlString Sum(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateSum}}" + property.GetMemberName() + "{{/IncTemplateSum}}");
-        }
-
-        public MvcHtmlString Max(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateMax}}" + property.GetMemberName() + "{{/IncTemplateMax}}");
-        }
-
-        public MvcHtmlString Min(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateMin}}" + property.GetMemberName() + "{{/IncTemplateMin}}");
-        }
-
-        public MvcHtmlString First(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateFirst}}" + property.GetMemberName() + "{{/IncTemplateFirst}}");
-        }
-
-        public MvcHtmlString Last(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateLast}}" + property.GetMemberName() + "{{/IncTemplateLast}}");
-        }
-
-        public MvcHtmlString Index()
-        {
-            return new MvcHtmlString("{{IncTemplateIndex}}");
-        }
-
-        public MvcHtmlString Average(Expression<Func<TModel, object>> property)
-        {
-            return new MvcHtmlString("{{#IncTemplateAverage}}" + property.GetMemberName() + "{{/IncTemplateAverage}}");
-        }
-
         public ITemplateSyntax<TModel> ForEach()
         {
-            return new TemplateMustacheSyntax<TModel>(this.htmlHelper, "data", true);
+            return factory.Value.ForEach<TModel>(this.htmlHelper);
         }
 
         public ITemplateSyntax<TModel> NotEach()
         {
-            return new TemplateMustacheSyntax<TModel>(this.htmlHelper, "data", false);
-        }
-
-        public MvcHtmlString Count()
-        {
-            return new MvcHtmlString("{{#IncTemplateCount}}Count{{/IncTemplateCount}}");
+            return factory.Value.NotEach<TModel>(this.htmlHelper);
         }
 
         #endregion

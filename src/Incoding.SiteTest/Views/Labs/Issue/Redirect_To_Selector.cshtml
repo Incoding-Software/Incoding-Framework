@@ -1,0 +1,10 @@
+﻿    @{
+        string id = Guid.NewGuid().ToString();
+    }
+    <input type="text" id="@id"/>
+    @(Html.When(JqueryBind.Click)
+          .Do()
+          .Direct()
+          .OnSuccess(dsl => dsl.Utilities.Document.RedirectTo(Selector.Incoding.BuildUrl(Url.Action("Submit", "Labs", new { Value = Selector.Jquery.Id(id) }))))
+          .AsHtmlAttributes()
+          .ToButton("Redirect to selector"))    

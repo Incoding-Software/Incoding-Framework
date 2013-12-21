@@ -6,8 +6,8 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Web.Mvc;
-    using Incoding.Data;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.Quality;
@@ -75,6 +75,18 @@
 
             public string Result { get; set; }
 
+            [IgnoreCompare("Test")]
+            public string IgnoreValueByAttr { get; set; }
+
+            #endregion
+        }
+
+        class FakeCompareWithStructure
+        {
+            #region Properties
+
+            public int Result { get; set; }
+
             #endregion
         }
 
@@ -134,6 +146,16 @@
 
         class FakeCompareWithoutField { }
 
+        class FakeNextCompareWithoutField { }
+
+        class FakeCompareWithGuid
+        {
+            #region Properties
+
+            public Guid Result { get; set; }
+
+            #endregion
+        }
 
         #endregion
 
@@ -152,7 +174,7 @@
                                                compare.IsCompare().ShouldBeTrue();
                                            };
 
-        It should_be_compare_generic_wrong = () =>
+        It should_be_compare_generic_false = () =>
                                                  {
                                                      var compare = new CompareFactory<FakeCompareGeneric<string>, FakeCompareGeneric<int>>();
                                                      compare.Compare(new FakeCompareGeneric<string>(), new FakeCompareGeneric<int>());
@@ -179,7 +201,7 @@
                                                                       compare.IsCompare().ShouldBeTrue();
                                                                   };
 
-        It should_be_compare_with_private_field_ienumerable_with_wrong = () =>
+        It should_be_compare_with_private_field_ienumerable_with_false = () =>
                                                                              {
                                                                                  var compare = new CompareFactory<FakeCompareWithPrivateFieldWithIEnumerable, FakeCompareWithPrivateFieldWithIEnumerable>();
                                                                                  compare.IncludeAllFields();
@@ -238,21 +260,49 @@
                                                        compare.IsCompare().ShouldBeTrue();
                                                    };
 
+        It should_be_compare_class_with_enumerable_left_different_type = () =>
+                                                                             {
+                                                                                 var compare = new CompareFactory<FakeCompareWithEnumerable, FakeCompareWithEnumerable>();
+                                                                                 var bytes = Pleasure.Generator.Bytes();
+                                                                                 compare.Compare(new FakeCompareWithEnumerable
+                                                                                                     {
+                                                                                                             Bytes = bytes.ToArray()
+                                                                                                     }, new FakeCompareWithEnumerable
+                                                                                                            {
+                                                                                                                    Bytes = bytes
+                                                                                                            });
+                                                                                 compare.IsCompare().ShouldBeTrue();
+                                                                             };
+
+        It should_be_compare_class_with_enumerable_right_different_type = () =>
+                                                                              {
+                                                                                  var compare = new CompareFactory<FakeCompareWithEnumerable, FakeCompareWithEnumerable>();
+                                                                                  var bytes = Pleasure.Generator.Bytes();
+                                                                                  compare.Compare(new FakeCompareWithEnumerable
+                                                                                                      {
+                                                                                                              Bytes = bytes
+                                                                                                      }, new FakeCompareWithEnumerable
+                                                                                                             {
+                                                                                                                     Bytes = bytes.ToArray()
+                                                                                                             });
+                                                                                  compare.IsCompare().ShouldBeTrue();
+                                                                              };
+
         It should_be_not_compare_with_enumerable = () =>
                                                        {
                                                            var compare = new CompareFactory<FakeCompareWithEnumerable, FakeCompareWithEnumerable>();
                                                            compare.Compare(new FakeCompareWithEnumerable { Bytes = Pleasure.Generator.Bytes() }, new FakeCompareWithEnumerable { Bytes = Pleasure.Generator.Bytes() });
-                                                           compare.IsCompare().ShouldBeFalse();                                                           
-                                                       };
-        
-        It should_be_not_compare_with_enumerable_by_index = () =>
-                                                       {
-                                                           var compare = new CompareFactory<FakeCompareWithEnumerable, FakeCompareWithEnumerable>();
-                                                           byte existsByte = (byte)Pleasure.Generator.PositiveNumber();
-                                                           compare.Compare(new FakeCompareWithEnumerable { Bytes = new[] { existsByte, (byte)Pleasure.Generator.PositiveNumber() } }, new FakeCompareWithEnumerable { Bytes = new[] { existsByte, (byte)Pleasure.Generator.PositiveNumber() } });
                                                            compare.IsCompare().ShouldBeFalse();
-                                                           compare.GetDifferencesAsString().ShouldContain("Compare  Item 1 from Bytes with Item 1 from Bytes");                                                           
                                                        };
+
+        It should_be_not_compare_with_enumerable_by_index = () =>
+                                                                {
+                                                                    var compare = new CompareFactory<FakeCompareWithEnumerable, FakeCompareWithEnumerable>();
+                                                                    byte existsByte = (byte)Pleasure.Generator.PositiveNumber();
+                                                                    compare.Compare(new FakeCompareWithEnumerable { Bytes = new[] { existsByte, (byte)Pleasure.Generator.PositiveNumber() } }, new FakeCompareWithEnumerable { Bytes = new[] { existsByte, (byte)Pleasure.Generator.PositiveNumber() } });
+                                                                    compare.IsCompare().ShouldBeFalse();
+                                                                    compare.GetDifferencesAsString().ShouldContain("Compare  Item 1 from Bytes with Item 1 from Bytes");
+                                                                };
 
         It should_be_not_compare_with_enumerable_different_count = () =>
                                                                        {
@@ -326,6 +376,20 @@
                                                            compare.IsCompare().ShouldBeTrue();
                                                        };
 
+        It should_be_compare_class_without_field_false = () =>
+                                                             {
+                                                                 var compare = new CompareFactory<FakeCompareWithoutField, FakeNextCompareWithoutField>();
+                                                                 compare.Compare(new FakeCompareWithoutField(), new FakeNextCompareWithoutField());
+                                                                 compare.IsCompare().ShouldBeFalse();
+                                                             };
+
+        It should_be_compare_class_without_field_and_include_all_fields = () =>
+                                                                              {
+                                                                                  var compare = new CompareFactory<FakeCompareWithoutField, FakeCompareWithoutField>();
+                                                                                  compare.IncludeAllFields();
+                                                                                  compare.Compare(new FakeCompareWithoutField(), new FakeCompareWithoutField());
+                                                                                  compare.IsCompare().ShouldBeTrue();
+                                                                              };
 
         #region Primitive, Collection, Special
 
@@ -446,6 +510,13 @@
                                                                        compare.IsCompare().ShouldBeTrue();
                                                                    };
 
+        It should_be_compare_with_ignore_attribute = () =>
+                                                         {
+                                                             var compare = new CompareFactory<FakeCompare, FakeCompare>();
+                                                             compare.Compare(new FakeCompare { IgnoreValueByAttr = Pleasure.Generator.String() }, new FakeCompare { IgnoreValueByAttr = Pleasure.Generator.String() });
+                                                             compare.IsCompare().ShouldBeTrue();
+                                                         };
+
         It should_be_compare_with_forward = () =>
                                                 {
                                                     var compare = new CompareFactory<FakeCompare, FakeCompare2>();
@@ -454,6 +525,14 @@
                                                     compare.IsCompare().ShouldBeTrue();
                                                 };
 
+        It should_be_compare_with_forward_cover_ignore_attribute = () =>
+                                                                       {
+                                                                           var compare = new CompareFactory<FakeCompare, FakeCompare>();
+                                                                           compare.Forward(r => r.IgnoreValueByAttr, r => r.IgnoreValueByAttr);
+                                                                           compare.Compare(new FakeCompare { IgnoreValueByAttr = Pleasure.Generator.String() }, new FakeCompare { IgnoreValueByAttr = Pleasure.Generator.TheSameString() });
+                                                                           compare.IsCompare().ShouldBeFalse();
+                                                                       };
+
         It should_be_compare_with_forward_to_value = () =>
                                                          {
                                                              var compare = new CompareFactory<FakeCompare, FakeCompare2>();
@@ -461,6 +540,39 @@
                                                              compare.Compare(new FakeCompare { Result = Pleasure.Generator.TheSameString() }, new FakeCompare2 { Result2 = Pleasure.Generator.TheSameString() });
                                                              compare.IsCompare().ShouldBeTrue();
                                                          };
+
+        It should_be_compare_with_forward_to_value_cover_ignore_attribute = () =>
+                                                                                {
+                                                                                    var compare = new CompareFactory<FakeCompare, FakeCompare>();
+                                                                                    compare.ForwardToValue(r => r.Result, Pleasure.Generator.String());
+                                                                                    compare.Compare(new FakeCompare { Result = Pleasure.Generator.TheSameString() }, new FakeCompare { Result = Pleasure.Generator.TheSameString() });
+                                                                                    compare.IsCompare().ShouldBeFalse();
+                                                                                };
+
+        It should_be_compare_with_forward_to_string = () =>
+                                                          {
+                                                              var compare = new CompareFactory<FakeCompare, FakeCompareWithGuid>();
+                                                              compare.ForwardToString(r => r.Result);
+                                                              var theSameGuid = Pleasure.Generator.TheSameGuid();
+                                                              compare.Compare(new FakeCompare { Result = theSameGuid.ToString() }, new FakeCompareWithGuid { Result = theSameGuid });
+                                                              compare.IsCompare().ShouldBeTrue();
+                                                          };
+
+        It should_be_compare_with_forward_to_default_class = () =>
+                                                                 {
+                                                                     var compare = new CompareFactory<FakeCompare, FakeCompare>();
+                                                                     compare.ForwardToDefault(r => r.Result);
+                                                                     compare.Compare(new FakeCompare(), new FakeCompare { Result = Pleasure.Generator.String() });
+                                                                     compare.IsCompare().ShouldBeTrue();
+                                                                 };
+
+        It should_be_compare_with_forward_to_default_structure = () =>
+                                                                     {
+                                                                         var compare = new CompareFactory<FakeCompareWithStructure, FakeCompareWithStructure>();
+                                                                         compare.ForwardToDefault(r => r.Result);
+                                                                         compare.Compare(new FakeCompareWithStructure(), new FakeCompareWithStructure { Result = Pleasure.Generator.PositiveNumber() });
+                                                                         compare.IsCompare().ShouldBeTrue();
+                                                                     };
 
         It should_be_compare_with_forward_to_action = () =>
                                                           {

@@ -24,7 +24,7 @@
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
                                                                          { "type", "attach" }, 
-                                                                         { "meta", "[{\"type\":\"ExecutableDirectAction\",\"data\":{\"result\":\"\",\"onBind\":\"click incoding\",\"onStatus\":0,\"target\":null,\"onEventStatus\":1}},{\"type\":\"ExecutableEval\",\"data\":{\"code\":\"window.alert('message');\",\"onBind\":\"click incoding\",\"onStatus\":2,\"target\":null,\"onEventStatus\":1}}]" }
+                                                                         { "meta", @"[{""type"":""ExecutableDirectAction"",""data"":{""result"":"""",""onBind"":""click incoding"",""onStatus"":0,""target"":null,""onEventStatus"":1}},{""type"":""ExecutableEvalMethod"",""data"":{""method"":""alert"",""args"":[""message""],""context"":""window"",""onBind"":""click incoding"",""onStatus"":2,""target"":null,""onEventStatus"":1}}]" }
                                                                  });
 
         It should_be_detach = () => new IncodingMetaLanguageDsl(JqueryBind.Click)

@@ -10,12 +10,6 @@
 
     public class HomeController : IncControllerBase
     {
-        #region Constructors
-
-        public HomeController(IDispatcher dispatcher)
-                : base(dispatcher) { }
-
-        #endregion
 
         #region Api Methods
 

@@ -10,11 +10,6 @@
 
     public class IncWebException : Exception
     {
-        #region Static Fields
-
-        public static readonly IncWebException Empty = new IncWebException(string.Empty, string.Empty);
-
-        #endregion
 
         #region Constructors
 

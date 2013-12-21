@@ -7,7 +7,7 @@
 	using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
 
-
+	////ncrunch: no coverage start	
     public class MSpecAssemblyContext : IAssemblyContext
     {
         #region IAssemblyContext Members
@@ -31,5 +31,5 @@
 
         #endregion
     }
-
+    ////ncrunch: no coverage end
 }

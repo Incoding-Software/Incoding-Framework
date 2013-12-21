@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System.Collections.Generic;
+    using System.Linq;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -40,5 +41,12 @@
                                                                              vm.Title.ShouldBeNull();
                                                                              vm.Items.ShouldEqualWeakEach(items);
                                                                          });
+
+        It should_be_to_opt_group_vm = () => items.ToOptGroup(Pleasure.Generator.TheSameString())
+                                                  .Should(vm =>
+                                                              {
+                                                                  vm.Items.Count().ShouldEqual(1);
+                                                                  vm.Title = Pleasure.Generator.TheSameString();
+                                                              });
     }
 }

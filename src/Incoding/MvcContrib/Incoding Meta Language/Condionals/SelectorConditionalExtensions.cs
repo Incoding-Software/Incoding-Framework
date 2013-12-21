@@ -5,7 +5,13 @@
     {
         #region Factory constructors
 
-        public static bool Contains(this Selector selector, Selector value)
+        public static bool IsContains(this Selector selector, Selector value)
+        {
+            return true;
+        }
+
+
+        public static bool IsContains(this string selector, Selector value)
         {
             return true;
         }

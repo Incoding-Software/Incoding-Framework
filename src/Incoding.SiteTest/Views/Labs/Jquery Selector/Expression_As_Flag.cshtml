@@ -1,0 +1,13 @@
+﻿<input type="text" disabled="disabled" value="disabled"/>
+<input type="text" value="no disabled"/>
+<input type="text" id="test"/>        
+@(Html.When(JqueryBind.InitIncoding | JqueryBind.Click)
+      .Do()
+      .Direct()
+      .OnSuccess(dsl =>
+                     {
+                         var set = Selector.Jquery.Expression(JqueryExpression.Input | JqueryExpression.Disabled);
+                         dsl.With(r => r.Id("test")).Core().JQuery.Attributes.Val(set);
+                     })
+      .AsHtmlAttributes()
+      .ToButton("Test"))

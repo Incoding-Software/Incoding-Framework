@@ -3,9 +3,7 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
     using Incoding.Extensions;
     using JetBrains.Annotations;
@@ -23,10 +21,10 @@ namespace Incoding.MvcContrib
 
         #region Constructors
 
-        public JqueryAjaxOptions() { }
-
         public JqueryAjaxOptions(MetaTypicalOptions @default)
                 : base(@default) { }
+
+        public JqueryAjaxOptions() { }
 
         #endregion
 
@@ -41,20 +39,14 @@ namespace Incoding.MvcContrib
         ///         Note that synchronous requests may temporarily <c>lock</c> the browser, disabling any actions <c>while</c> the request is active.
         ///     </remarks>
         /// </summary>
-        public bool Async
-        {
-            set { Set("async", value); }
-        }
+        public bool Async { set { this.Set("async", value); } }
 
         /// <summary>
         ///     Default: <c>true</c>
         ///     If set to <c>false</c>, it will force requested pages not to be cached by the browser. Setting cache to <c>false</c> also appends a query string parameter, "_=[TIMESTAMP]", to the URL.
         /// </summary>
         [UsedImplicitly]
-        public bool Cache
-        {
-            set { Set("cache", value); }
-        }
+        public bool Cache { set { this.Set("cache", value); } }
 
         /// <summary>
         ///     Default: <c>true</c> for same-domain requests, <c>true</c> for cross-domain requests
@@ -62,10 +54,7 @@ namespace Incoding.MvcContrib
         ///     This allows, for example, server-side redirection to another domain.
         /// </summary>
         [UsedImplicitly]
-        public bool CrossDomain
-        {
-            set { Set("crossDomain", value); }
-        }
+        public bool CrossDomain { set { this.Set("crossDomain", value); } }
 
         /// <summary>
         ///     Default: <c>true</c>.
@@ -74,58 +63,55 @@ namespace Incoding.MvcContrib
         ///     This can be used to control various Ajax Events.
         /// </summary>
         [UsedImplicitly]
-        public bool Global
-        {
-            set { Set("global", value); }
-        }
+        public bool Global { set { this.Set("global", value); } }
 
         /// <summary>
         ///     Default:<c>true</c>. Set <c>this</c> to <c>true</c> if you wish to use the traditional style of param serialization.
         /// </summary>
         [UsedImplicitly]
-        public bool Traditional
-        {
-            set { Set("traditional", value); }
-        }
+        public bool Traditional { set { this.Set("traditional", value); } }
 
         /// <summary>
         ///     Default: <see cref="HttpVerbs.Get" />. The type of request to make ("POST" or "GET"), default is "GET".
         ///     Note: Other HTTP request methods, such as PUT and DELETE, can also be used here, but they are not supported by all browsers.
         /// </summary>
         [UsedImplicitly]
-        public HttpVerbs Type
-        {
-            set { Set("type", value.ToString().ToUpper()); }
-        }
+        public HttpVerbs Type { set { this.Set("type", value.ToString().ToUpper()); } }
 
         /// <summary>
         ///     Set a timeout (in milliseconds) for the request.
         /// </summary>
         [UsedImplicitly]
-        public int Timeout
-        {
-            set { Set("timeout", value); }
-        }
+        public int Timeout { set { this.Set("timeout", value); } }
 
         public string Url
         {
             set
             {
-                int indexQuerySplit = value.IndexOf("?", StringComparison.InvariantCultureIgnoreCase);
-                if (indexQuerySplit != -1)
+                var routes = value.SelectQueryString();
+                if (routes.Any())
                 {
-                    string query = value.Split("?".ToCharArray())[1] ?? string.Empty;
-                    var queryString = HttpUtility.ParseQueryString(query);
-                    var dictionaryParams = queryString.AllKeys.Select(r => new KeyValuePair<string, object>(r, queryString[r].ToString())).ToDictionary(pair => pair.Key, pair => pair.Value);                    
-                    Set("data", dictionaryParams.Select(r => new { name = r.Key, selector = r.Value.ToString() }));
-
-                    value = value.Substring(0, indexQuerySplit);
+                    this.Set("data", routes.Select(r => new { name = r.Key, selector = r.Value.ToString() }));
+                    this.Set("url", value.Split('?')[0]);
                 }
-
-                Set("url", value);
+                else
+                    this.Set("url", value);
             }
         }
 
         #endregion
+
+        ////ncrunch: no coverage start
+        #region Api Methods
+
+        [Obsolete("Method is deprecated. Use property Url to set url"), UsedImplicitly]
+        public void WithUrl(string url)
+        {
+            Url = url;
+        }
+
+        #endregion
+
+        ////ncrunch: no coverage end      
     }
 }

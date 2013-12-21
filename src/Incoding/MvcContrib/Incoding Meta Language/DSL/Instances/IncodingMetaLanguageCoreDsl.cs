@@ -1,5 +1,11 @@
 ﻿namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
+    using System;
+
+    #endregion
+
     public class IncodingMetaLanguageCoreDsl
     {
         #region Fields
@@ -19,48 +25,35 @@
 
         #region Properties
 
-        public IncodingMetaCallbackBindDsl Bind
-        {
-            get { return new IncodingMetaCallbackBindDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackBindDsl Bind { get { return new IncodingMetaCallbackBindDsl(this.plugIn); } }
 
-        public IncodingMetaCallbackInsertDsl Insert
-        {
-            get { return new IncodingMetaCallbackInsertDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackInsertDsl Insert { get { return new IncodingMetaCallbackInsertDsl(this.plugIn); } }
 
-        public IExecutableSetting Break
-        {
-            get { return this.plugIn.Registry(new ExecutableBreak()); }
-        }
+        public IExecutableSetting Break { get { return this.plugIn.Registry(new ExecutableBreak()); } }
 
-        public IncodingMetaCallbackJqueryDsl JQuery
-        {
-            get { return new IncodingMetaCallbackJqueryDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackJqueryDsl JQuery { get { return new IncodingMetaCallbackJqueryDsl(this.plugIn); } }
 
-        public IncodingMetaCallbackStoreApiDsl Store
-        {
-            get { return new IncodingMetaCallbackStoreApiDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackFuncDsl Func { get { return new IncodingMetaCallbackFuncDsl(this.plugIn); } }
 
-        public IncodingMetaCallbackTriggerDsl Trigger
-        {
-            get { return new IncodingMetaCallbackTriggerDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackStoreApiDsl Store { get { return new IncodingMetaCallbackStoreApiDsl(this.plugIn); } }
 
-        public IncodingMetaCallbackFormApiDsl Form
-        {
-            get { return new IncodingMetaCallbackFormApiDsl(this.plugIn); }
-        }
+        public IncodingMetaCallbackTriggerDsl Trigger { get { return new IncodingMetaCallbackTriggerDsl(this.plugIn); } }
+
+        public IncodingMetaCallbackFormApiDsl Form { get { return new IncodingMetaCallbackFormApiDsl(this.plugIn); } }
 
         #endregion
 
         #region Api Methods
 
+        [Obsolete("Use method Call instead")]
         public IExecutableSetting Eval(string code)
         {
             return this.plugIn.Registry(new ExecutableEval(code));
+        }
+
+        public IExecutableSetting Call(string funcName, params object[] args)
+        {
+            return this.plugIn.Registry(new ExecutableEvalMethod(funcName, args, string.Empty));
         }
 
         #endregion

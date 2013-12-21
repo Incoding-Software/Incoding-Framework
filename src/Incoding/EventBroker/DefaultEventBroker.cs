@@ -67,22 +67,10 @@ namespace Incoding.EventBroker
                                              }
                                          };
 
-                var descriptionAttribute = handleMethod.FirstOrDefaultAttribute<HandlerDescriptionAttribute>();
-                bool isSync = descriptionAttribute == null || !descriptionAttribute.IsAsync;
-                if (isSync)
-                    this.defaultActionPolicy.Do(handleEvent.Invoke);
+                if (handleMethod.HasAttribute<HandlerAsyncAttribute>())
+                    this.defaultActionPolicy.Do(() => handleEvent.BeginInvoke(null, handleEvent));
                 else
-                {
-                    this.defaultActionPolicy.Do(() =>
-                                                    {
-                                                        var asyncResult = handleEvent.BeginInvoke(null, handleEvent);
-                                                        if (descriptionAttribute.IsWait)
-                                                        {
-                                                            asyncResult.AsyncWaitHandle.WaitOne();
-                                                            asyncResult.AsyncWaitHandle.Close();
-                                                        }
-                                                    });
-                }
+                    this.defaultActionPolicy.Do(handleEvent.Invoke);
             }
         }
 

@@ -16,8 +16,7 @@
                                           .Direct()
                                           .OnSuccess(r => r.Self().Core().Form.Validation.Parse())
                                           .GetActions<ExecutableValidationParse>()
-                                          .First()
-                                          .Data["target"]
+                                          .First()["target"]
                                           .ShouldEqual("$(this.self)");
 
         It should_be_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -25,8 +24,7 @@
                                           .Direct()
                                           .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                           .GetActions<ExecutableValidationParse>()
-                                          .First()
-                                          .Data["target"]
+                                          .First()["target"]
                                           .ShouldEqual("$(this.self).closest('tr')");
 
         It should_be_with_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -34,8 +32,7 @@
                                                  .Direct()
                                                  .OnSuccess(dsl => dsl.With(r => r.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                                  .GetActions<ExecutableValidationParse>()
-                                                 .First()
-                                                 .Data["target"]
+                                                 .First()["target"]
                                                  .ShouldEqual("$(this.self).closest('tr')");
     }
 }

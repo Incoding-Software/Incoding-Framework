@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System.ComponentModel;
+    using System.Web.Mvc;
     using Incoding.MSpecContrib;
 
     #endregion
@@ -20,6 +21,9 @@
             [DisplayName("NameDisplay")]
             public string DisplayName { get; set; }
 
+
+            public FakeEnum EnumValue { get; set; }
+
             #endregion
         }
 
@@ -29,6 +33,7 @@
 
         protected static MockHtmlHelper<FakeModel> mockHtmlHelper;
 
+        protected static MvcHtmlString result;
         #endregion
 
         #region Constructors

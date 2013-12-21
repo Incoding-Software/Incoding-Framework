@@ -55,7 +55,7 @@ namespace Incoding.MSpecContrib
             Guard.NotNull("property", property);
 
             VerifyUniqueProperty(property);
-            this.tuning.Set(property, () => value);
+            this.tunings.Set(property, () => value);
             return this;
         }
 

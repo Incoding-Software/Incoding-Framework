@@ -79,20 +79,36 @@
 
         void SetBinary(BinaryExpression expression)
         {
-            var left = Expression.Lambda(expression.Right).Compile().DynamicInvoke();
-            string propertyName = ((MemberExpression)expression.Left).Member.Name;
-            Set(propertyName, left, expression.NodeType.ToStringLower());
+            string propertyName = string.Empty;
+            string invokeValue = string.Empty;
+            if (expression.Left.NodeType == ExpressionType.MemberAccess)
+                propertyName = ((MemberExpression)expression.Left).Member.Name;
+            else if (expression.Right.NodeType == ExpressionType.MemberAccess)
+                propertyName = ((MemberExpression)expression.Right).Member.Name;
+
+            invokeValue = expression.Left.NodeType.IsAnyEquals(ExpressionType.Constant, ExpressionType.Call)
+                                  ? GetValue(expression.Left).ToString()
+                                  : GetValue(expression.Right).ToString();
+
+            Set(propertyName, invokeValue, expression.NodeType.ToStringLower());
+        }
+
+        object GetValue(Expression expression)
+        {
+            return expression.NodeType == ExpressionType.Convert
+                           ? Expression.Lambda((expression as UnaryExpression).Operand).Compile().DynamicInvoke()
+                           : Expression.Lambda(expression).Compile().DynamicInvoke();
         }
 
         public override object GetData()
         {
             return new
                        {
-                               this.type, 
-                               this.property, 
-                               this.inverse, 
-                               this.method, 
-                               this.value, 
+                               this.type,
+                               this.property,
+                               this.inverse,
+                               this.method,
+                               this.value,
                                this.and
                        };
         }

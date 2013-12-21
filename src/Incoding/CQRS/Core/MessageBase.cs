@@ -9,7 +9,7 @@
 
     #endregion
 
-    public abstract class MessageBase<TResult> : IMessage<TResult> where TResult : class
+    public abstract class MessageBase<TResult> : IMessage<TResult>
     {
         #region Fields
 
@@ -28,7 +28,7 @@
 
         #region Properties
 
-        [IgnoreCompare("Design fixed")]
+        [IgnoreCompare("System")]
         protected IRepository Repository
         {
             get
@@ -39,7 +39,7 @@
             }
         }
 
-        [IgnoreCompare("Design fixed")]
+        [IgnoreCompare("System")]
         protected IEventBroker EventBroker
         {
             get { return IoCFactory.Instance.TryResolve<IEventBroker>(); }

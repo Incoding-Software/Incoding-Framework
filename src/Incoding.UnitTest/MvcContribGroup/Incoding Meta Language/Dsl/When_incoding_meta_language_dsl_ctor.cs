@@ -16,7 +16,7 @@
                                                     .Direct()
                                                     .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
                                                     .GetActions<ExecutableDirectAction>()
-                                                    .First().Data["onBind"]
+                                                    .First()["onBind"]
                                                     .ShouldEqual("click incoding");
 
         It should_be_init_incoding = () => new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
@@ -24,7 +24,7 @@
                                                    .Direct()
                                                    .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
                                                    .GetActions<ExecutableDirectAction>()
-                                                   .First().Data["onBind"]
+                                                   .First()["onBind"]
                                                    .ShouldEqual("initincoding incoding");
 
         It should_be_combine_flag = () => new IncodingMetaLanguageDsl(JqueryBind.InitIncoding | JqueryBind.IncChangeUrl)
@@ -32,7 +32,7 @@
                                                   .Direct()
                                                   .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
                                                   .GetActions<ExecutableDirectAction>()
-                                                  .First().Data["onBind"]
+                                                  .First()["onBind"]
                                                   .ShouldEqual("initincoding incchangeurl incoding");
 
         It should_not_be_duplicate_incoding = () => new IncodingMetaLanguageDsl("incoding")
@@ -40,7 +40,7 @@
                                                             .Direct()
                                                             .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
                                                             .GetActions<ExecutableDirectAction>()
-                                                            .First().Data["onBind"]
+                                                            .First()["onBind"]
                                                             .ShouldEqual("incoding");
 
         It should_be_always_lower = () => new IncodingMetaLanguageDsl("aBcD")
@@ -48,7 +48,7 @@
                                                   .Direct()
                                                   .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
                                                   .GetActions<ExecutableDirectAction>()
-                                                  .First().Data["onBind"]
+                                                  .First()["onBind"]
                                                   .ShouldEqual("abcd incoding");
     }
 }

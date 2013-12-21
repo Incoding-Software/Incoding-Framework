@@ -17,7 +17,7 @@
 
         public OptGroupVm(string title, IEnumerable<KeyValueVm> items)
         {
-            Items = items;
+            Items = items.ToList();
             Title = string.IsNullOrWhiteSpace(title) ? null : title;
         }
 
@@ -25,7 +25,7 @@
 
         #region Properties
 
-        public IEnumerable<KeyValueVm> Items { get; set; }
+        public IList<KeyValueVm> Items { get; set; }
 
         public string Title { get; set; }
 

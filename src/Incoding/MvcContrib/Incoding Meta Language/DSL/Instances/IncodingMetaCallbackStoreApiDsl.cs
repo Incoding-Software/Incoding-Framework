@@ -26,10 +26,7 @@
 
         #region Properties
 
-        public IncodingMetaCallbackStoreDsl Hash
-        {
-            get { return new IncodingMetaCallbackStoreDsl("hash", this.plugIn); }
-        }
+        public IncodingMetaCallbackStoreDsl Hash { get { return new IncodingMetaCallbackStoreDsl("hash", this.plugIn); } }
 
         #endregion
 
@@ -101,7 +98,7 @@
 
                 public IncodingMetaCallbackStoreManipulateDsl Set(string key, Selector value, string prefix = "root")
                 {
-                    this.methods.Add(new { verb = "set", key, value = value.ToString(false), prefix });
+                    this.methods.Add(new { verb = "set", key, value = value.ToString(), prefix });
                     return this;
                 }
 

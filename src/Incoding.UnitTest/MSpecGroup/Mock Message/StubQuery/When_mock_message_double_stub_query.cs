@@ -17,7 +17,10 @@
     {
         #region Fake classes
 
-        public class FakeEntity : IncEntityBase { }
+        public class FakeEntity : IncEntityBase
+        {
+            public string Value { get; set; }
+        }
 
         public class FakeFetchSpecification : FetchSpecification<FakeEntity>
         {
@@ -67,10 +70,14 @@
 
             #endregion
 
+            ////ncrunch: no coverage start
+
             public override Expression<Func<FakeEntity, bool>> IsSatisfiedBy()
             {
                 return r => r.Id == this.param;
             }
+
+            ////ncrunch: no coverage end       
         }
 
         #endregion

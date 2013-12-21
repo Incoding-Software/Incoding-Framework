@@ -12,6 +12,8 @@ namespace Incoding.MvcContrib
 
         string Value { get; set; }
 
+        string CssClass { get; set; }
+
         #endregion
     }
 }

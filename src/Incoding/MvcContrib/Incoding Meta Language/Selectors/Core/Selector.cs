@@ -11,10 +11,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     An HTML snippet, action expression, jQuery object, or DOM element specifying the structure to wrap around the matched elements.
-    /// </summary>
-    public partial class Selector : ISelector
+    public partial class Selector 
     {
         #region Fields
 
@@ -41,13 +38,7 @@
 
         #region Factory constructors
 
-        public static Selector FromHelperResult(Func<object, HelperResult> text)
-        {
-            return text.Invoke(null)
-                       .ToHtmlString()
-                       .Replace(Environment.NewLine, string.Empty);
-        }
-
+        [Obsolete("Use native element without wrapp", false)]
         public static Selector Value(object value)
         {
             return value.GetType().IsEnum ? new Selector((int)value) : new Selector(value.ToString());
@@ -76,42 +67,45 @@
 
         #region Api Methods
 
-        public string ToString(bool escaping)
+     
+        #endregion
+
+        internal static Selector FromHelperResult(Func<object, HelperResult> text)
         {
-            if (string.IsNullOrWhiteSpace(this.selector))
-                return string.Empty;
-
-            if (this is JquerySelector || this is JquerySelectorExtend)
-            {
-                bool isVariable = this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector();
-                string evalJquerySelector = isVariable ? "$({0})".F(this.selector) : "$('{0}')".F(this.selector);
-                this.methods.DoEach(s => evalJquerySelector += s);
-                return evalJquerySelector;
-            }
-
-            this.methods.DoEach(s => this.selector += s);
-
-            if (this is IJavaScriptSelector)
-                return "@@javascript:{0}@@".F(this.selector);
-
-            return escaping ? "'{0}'".F(this.selector) : this.selector;
+            return text.Invoke(null)
+                       .ToHtmlString()
+                       .Replace(Environment.NewLine, string.Empty);
         }
 
-        public void AddMethod(string funcName, params object[] args)
+        internal static string GetMethodSignature(string funcName, params object[] args)
         {
-            string stringArgs = args.Aggregate(string.Empty, (res, orig) => res += "'{0}',".F(orig.ToString()));
+            string stringArgs = args.Aggregate(string.Empty, (res, orig) =>
+                                                                 {
+                                                                     if (orig is Selector)
+                                                                         res += "{0},".F((orig as Selector).ToString());
+                                                                     else if (orig is string)
+                                                                         res += "'{0}',".F(orig.ToString());
+                                                                     else
+                                                                         res += "{0},".F(orig.ToString());
+
+                                                                     return res;
+                                                                 });
+
             if (stringArgs.EndsWith(","))
                 stringArgs = stringArgs.Substring(0, stringArgs.Length - 1);
 
-            this.methods.Add(".{0}({1})".F(funcName.Replace("()", string.Empty), stringArgs));
+            return "{0}({1})".F(funcName.Replace("()", string.Empty), stringArgs);
         }
 
-        public void AddProperty(string propName)
+        internal void AddMethod(string funcName, params object[] args)
         {
-            this.methods.Add(".{0}".F(propName));
+            this.methods.Add(GetMethodSignature(funcName, args));
         }
 
-        #endregion
+        internal void AddProperty(string propName)
+        {
+            this.methods.Add("{0}".F(propName));
+        }
 
         protected void AndSelector(string value)
         {
@@ -136,7 +130,29 @@
 
         public override string ToString()
         {
-            return ToString(true);
+            if (string.IsNullOrWhiteSpace(this.selector) && !this.methods.Any())
+                return string.Empty;
+
+            if (this is JquerySelector || this is JquerySelectorExtend)
+            {
+                bool isVariable = this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector();
+                string evalJquerySelector = isVariable ? "$({0})".F(this.selector) : "$('{0}')".F(this.selector);
+                this.methods.DoEach(s => evalJquerySelector += "." + s);
+                return evalJquerySelector;
+            }
+
+            this.methods.DoEach(s =>
+                                    {
+                                        if (string.IsNullOrWhiteSpace(this.selector))
+                                            this.selector += s;
+                                        else
+                                            this.selector += "." + s;
+                                    });
+
+            if (this is IJavaScriptSelector)
+                return "||javascript*{0}||".F(this.selector);
+
+            return this.selector;
         }
     }
 }

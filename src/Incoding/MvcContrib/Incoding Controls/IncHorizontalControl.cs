@@ -16,6 +16,7 @@ namespace Incoding.MvcContrib
         public IncHorizontalControl(IncLabelControl label, TInput input, IncControlBase validation)
         {
             Label = label;
+            Label.AddClass("control-label");
             Input = input;
             Validation = validation;
             HelpBlock = new IncHelpBlockControl();
@@ -36,17 +37,17 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append(Label.Render());
+            stringBuilder.Append(Label.ToHtmlString());
 
-            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.Render(), new RouteValueDictionary(new { @class = "controls" }));
+            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), new RouteValueDictionary(new { @class = "controls" }));
             stringBuilder.Append(controlContainer);
 
-            stringBuilder.Append(Validation.Render());
-            stringBuilder.Append(HelpBlock.Render());
+            stringBuilder.Append(Validation.ToHtmlString());
+            stringBuilder.Append(HelpBlock.ToHtmlString());
 
             var controlGroup = IncodingHtmlHelper.CreateTag(HtmlTag.Div, new MvcHtmlString(stringBuilder.ToString()), AnonymousHelper.ToDictionary(this.attributes));
             return new MvcHtmlString(controlGroup.ToString());

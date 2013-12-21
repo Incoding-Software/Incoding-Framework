@@ -16,8 +16,6 @@
 
         static IncLabelControl control;
 
-        static string result;
-
         #endregion
 
         Establish establish = () =>
@@ -26,8 +24,9 @@
                                       control = new IncLabelControl(mockHtmlHelper.Original, expression);
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual("<label class=\"control-label\" for=\"DisplayName\">NameDisplay</label>");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual("<label for=\"DisplayName\">NameDisplay</label>");
     }
 }

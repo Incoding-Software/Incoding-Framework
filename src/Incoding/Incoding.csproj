@@ -213,7 +213,7 @@
     <Compile Include="Block\Caching\Providers\ICachedProvider.cs" />
     <Compile Include="Block\Caching\Providers\MemCachedProvider.cs" />
     <Compile Include="Block\Caching\Providers\MemoryListCachedProvider.cs" />
-    <Compile Include="Block\Caching\Providers\MockCachedProvider.cs" />
+    <Compile Include="Block\Caching\Providers\EmptyCachedProvider.cs" />
     <Compile Include="Block\Caching\Providers\NetCachedProvider.cs" />
     <Compile Include="Block\Core\FactoryBase.cs" />
     <Compile Include="Block\Core\IsSatisfied.cs" />
@@ -300,9 +300,7 @@
     <Compile Include="EventBroker\Core\IEventBroker.cs" />
     <Compile Include="EventBroker\Core\IEventSubscriber.cs" />
     <Compile Include="EventBroker\DefaultEventBroker.cs" />
-    <Compile Include="EventBroker\HandlerAsyncWaitAttribute.cs" />
     <Compile Include="EventBroker\HandlerAsyncAttribute.cs" />
-    <Compile Include="EventBroker\HandlerDescriptionAttribute.cs" />
     <Compile Include="Extensions\AnonymousHelper.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -312,6 +310,7 @@
     <Compile Include="Extensions\ExpressionEqualExtensions.cs" />
     <Compile Include="Extensions\MathHelper.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\SelectorExtensions.cs" />
     <Compile Include="LinqSpecs\AdHocSpecification.cs" />
     <Compile Include="LinqSpecs\AndSpecification.cs" />
     <Compile Include="LinqSpecs\ExpressionCombining\ExpressionVisitor.cs" />
@@ -338,7 +337,7 @@
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
     <Compile Include="MvcContrib\Extensions\BeginTag.cs" />
     <Compile Include="MvcContrib\Incoding Controls\IncHelpBlockControl.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\IConditionalPlugInBuilder.cs" />
+    <Compile Include="MvcContrib\Incoding Controls\IncRadioButtonControl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Instances\ConditionalIs.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\IConditionalBinaryBuilder.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\IConditionalBuilder.cs" />
@@ -357,15 +356,15 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\ConditionalBuilder.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackJqueryAttributesDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackJqueryCssDsl.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackJqueryFuncDsl.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackFuncDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackJqueryManipulationDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableBind.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableEvalMethod.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableForm.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableStoreManipulate.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryEasing.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\JqueryShowOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JuqeryEffect.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\Selectors\Core\ISelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\IJavaScriptSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\JSCoordsSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\JSDateTimeSelector.cs" />
@@ -379,7 +378,14 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\Jquery\JquerySelectorExtendExtensions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\Jquery\JquerySelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\SelectorConditionalExtensions.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Selectors\SelectorHelper.cs" />
+    <Compile Include="MvcContrib\MVD\IncMvdException.cs" />
+    <Compile Include="MvcContrib\MVD\UrlDispatcher.cs" />
     <Compile Include="MvcContrib\Primitive\HtmlInputType.cs" />
+    <Compile Include="MvcContrib\Template\Factory\ITemplateFactory.cs" />
+    <Compile Include="MvcContrib\Template\Factory\TemplateHandlebarsFactory.cs" />
+    <Compile Include="MvcContrib\Template\Factory\TemplateMustacheFactory.cs" />
+    <Compile Include="MvcContrib\Template\Syntax\TemplateHandlebarsSyntax.cs" />
     <Compile Include="MvcContrib\Template\Syntax\ITemplateSyntax.cs" />
     <Compile Include="MvcContrib\Template\MvcTemplate.cs" />
     <Compile Include="MvcContrib\Extensions\RouteValueDictionaryExtensions.cs" />
@@ -425,7 +431,6 @@
     <Compile Include="MvcContrib\ViewModel\EntityVm.cs" />
     <Compile Include="MvcContrib\ViewModel\IKeyValueVM.cs" />
     <Compile Include="MvcContrib\ViewModel\KeyValueVM.cs" />
-    <Compile Include="MvcContrib\WebEnumConvertToString.cs" />
     <Compile Include="MvcContrib\Extensions\HtmlExtensions.cs" />
     <Compile Include="MvcContrib\Core\IncodingResult.cs" />
     <Compile Include="MvcContrib\HtmlHelper\IncodingHtmlHelper.cs" />
@@ -452,7 +457,6 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\Action\ExecutableAjaxAction.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\Action\ExecutableSubmitAction.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableInsert.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableRedirect.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableTrigger.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\Jquery\IncodingMetaCallbackJqueryDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaCallbackTriggerDsl.cs" />
@@ -473,6 +477,7 @@
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryBind.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\MetaTypicalOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\Core\Selector.cs" />
+    <Compile Include="MvcContrib\MVD\DispatcherControllerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quality\IgnoreCompareAttribute.cs" />
     <Compile Include="Quality\IgnoreInventAttribute.cs" />
@@ -509,6 +514,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Block\Counter\" />
     <Folder Include="Data\Provider\EF\" />
     <Folder Include="Data\Provider\MongoDb\" />
     <Folder Include="Data\Provider\RavenDb\" />
@@ -545,7 +551,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

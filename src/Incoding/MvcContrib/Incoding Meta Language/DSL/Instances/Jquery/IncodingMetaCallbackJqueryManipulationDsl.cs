@@ -4,7 +4,6 @@
 
     using System;
     using System.Web.WebPages;
-    using Incoding.Extensions;
 
     #endregion
 
@@ -35,7 +34,7 @@
         /// </param>
         public IExecutableSetting Wrap(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Wrap.F(selector)));
+            return this.plugInDsl.Core().JQuery.Call("wrap", selector);
         }
 
         /// <summary>
@@ -54,7 +53,7 @@
         /// </param>
         public IExecutableSetting WrapAll(Selector selector)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_WrapAll.F(selector)));
+            return this.plugInDsl.Core().JQuery.Call("wrapAll", selector);
         }
 
         /// <summary>
@@ -187,7 +186,7 @@
         /// </param>
         public IExecutableSetting ReplaceWith(Selector newContent)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_ReplaceWith.F(newContent)));
+            return this.plugInDsl.Core().JQuery.Call("replaceWith", newContent);
         }
 
         /// <summary>
@@ -203,7 +202,7 @@
         /// </summary>
         public IExecutableSetting Remove()
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Remove));
+            return this.plugInDsl.Core().JQuery.Call("remove");
         }
 
         /// <summary>
@@ -211,7 +210,7 @@
         /// </summary>
         public IExecutableSetting Empty()
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Empty));
+            return this.plugInDsl.Core().JQuery.Call("empty");
         }
 
         /// <summary>
@@ -219,15 +218,14 @@
         /// </summary>
         public IExecutableSetting Detach()
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Detach));
+            return this.plugInDsl.Core().JQuery.Call("detach");
         }
 
         #endregion
 
         IExecutableSetting Insert(string method, Selector selector)
         {
-            string code = JavaScriptCodeTemplate.Target_Insert.F(method, string.IsNullOrWhiteSpace(selector) ? "''" : selector.ToString());
-            return this.plugInDsl.Registry(new ExecutableEval(code));
+            return this.plugInDsl.Core().JQuery.Call(method, selector);
         }
     }
 }

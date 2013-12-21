@@ -4,6 +4,8 @@
 
     using System;
     using System.Web.Mvc;
+    using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -68,6 +70,13 @@
                                                       .Id<FakeForm>(r => r.Prop)
                                                       .ToString().ShouldEqual("$('#Prop')");
 
+        It should_be_to_id_helper = () => MockHtmlHelper<FakeForm>
+                                                  .When()
+                                                  .Original
+                                                  .Selector()
+                                                  .Id(r => r.Prop)
+                                                  .ToString().ShouldEqual("$('#Prop')");
+
         It should_be_to_id_nullable_expression = () => Selector.Jquery
                                                                .Id<FakeForm>(r => r.Input.HealthCareSystemId)
                                                                .ToString().ShouldEqual("$('#Input_HealthCareSystemId')");
@@ -84,6 +93,10 @@
                                                                  .Id<FakeForm>(r => r.Input.ArrayIds[0]).ToString()
                                                                  .ShouldEqual("$('#Input_ArrayIds[0]')");
 
+        It should_be_string_to_id = () => "id".ToId()
+                                              .ToString()
+                                              .ShouldEqual("$('#id')");
+
         #endregion
 
         #region Name
@@ -92,9 +105,20 @@
                                              .Name("CountryId").ToString()
                                              .ShouldEqual("$('[name=\"CountryId\"]')");
 
+        It should_be_to_name_extensions = () => "CountryId".ToName()
+                                                           .ToString()
+                                                           .ShouldEqual("$('[name=\"CountryId\"]')");
+
         It should_be_to_name_expression = () => Selector.Jquery
                                                         .Name<FakeForm>(r => r.Prop).ToString()
                                                         .ShouldEqual("$('[name=\"Prop\"]')");
+
+        It should_be_to_name_helper = () => MockHtmlHelper<FakeForm>
+                                                    .When()
+                                                    .Original
+                                                    .Selector()
+                                                    .Name(r => r.Prop).ToString()
+                                                    .ShouldEqual("$('[name=\"Prop\"]')");
 
         It should_be_to_name_nullable_expression = () => Selector.Jquery
                                                                  .Name<FakeForm>(r => r.Input.HealthCareSystemId).ToString()
@@ -123,6 +147,10 @@
                                                             .Class(".class")
                                                             .ToString()
                                                             .ShouldEqual("$('.\\.class')");
+
+        It should_be_string_to_class = () => "class".ToClass()
+                                            .ToString()
+                                            .ShouldEqual("$('.class')");
 
         It should_be_to_self = () => Selector.Jquery
                                              .Self()
@@ -161,6 +189,12 @@
                                                 .Expression(JqueryExpression.Last_Child)
                                                 .ToString()
                                                 .ShouldEqual("$('div:last_child')");
+
+        It should_be_expression_as_flag = () => Selector.Jquery
+                                                        .Tag(HtmlTag.Div)
+                                                        .Expression(JqueryExpression.Last_Child | JqueryExpression.Checked)
+                                                        .ToString()
+                                                        .ShouldEqual("$('div:checked:last_child')");
 
         It should_be_to_contains_attribute = () => Selector.Jquery
                                                            .ContainsAttribute(HtmlAttribute.Type, InputType.Text.ToString())
@@ -206,10 +240,21 @@
                                          .ToString()
                                          .ShouldEqual("$('#id,#newId')");
 
+        It should_be_classes_on_string = () => Selector.Jquery
+                                                       .Class("class")
+                                                       .Class("class2")
+                                                       .ToString()
+                                                       .ShouldEqual("$('.class .class2')");
+
         It should_be_classes = () => Selector.Jquery
-                                             .Class("class class2")
+                                             .Class("class", "class2")
                                              .ToString()
-                                             .ShouldEqual("$('.class .class2')");
+                                             .ShouldEqual("$('.class,.class2')");
+
+        It should_be_class_trim = () => Selector.Jquery
+                                                .Class("  class   ")
+                                                .ToString()
+                                                .ShouldEqual("$('.class')");
 
         It should_be_it = () => Selector.Jquery.All()
                                         .It(5).ToString()
@@ -254,10 +299,12 @@
                                         .ToString()
                                         .ShouldEqual("$('.first.next')");
 
-        It should_be_complex_1 = () => Selector.Jquery
-                                               .Self()
-                                               .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
-                                               .ToString()
-                                               .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
+        It should_be_complex = () => Selector.Jquery
+                                             .Self()
+                                             .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
+                                             .ToString()
+                                             .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
+
+
     }
 }

@@ -14,30 +14,30 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                 .Do().Direct()
                                                 .OnSuccess(r => r.Self().Core().Form.Validation.Parse())
                                                 .GetExecutable<ExecutableValidationParse>()
-                                                .Data["onStatus"].ShouldEqual(2);
+                                                ["onStatus"].ShouldEqual(2);
 
         It should_be_on_before = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
                                                .OnBegin(r => r.Self().Core().Form.Validation.Parse())
                                                .GetExecutable<ExecutableValidationParse>()
-                                               .Data["onStatus"].ShouldEqual(1);
+                                               ["onStatus"].ShouldEqual(1);
 
         It should_be_on_error = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                               .Do().Direct()
                                               .OnError(r => r.Self().Core().Form.Validation.Parse())
                                               .GetExecutable<ExecutableValidationParse>()
-                                              .Data["onStatus"].ShouldEqual(3);
+                                              ["onStatus"].ShouldEqual(3);
 
         It should_be_on_complete = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do().Direct()
                                                  .OnComplete(r => r.Self().Core().Form.Validation.Parse())
                                                  .GetExecutable<ExecutableValidationParse>()
-                                                 .Data["onStatus"].ShouldEqual(4);
+                                                 ["onStatus"].ShouldEqual(4);
 
         It should_be_on_break = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                               .Do().Direct()
                                               .OnBreak(r => r.Self().Core().Form.Validation.Parse())
                                               .GetExecutable<ExecutableValidationParse>()
-                                              .Data["onStatus"].ShouldEqual(5);
+                                              ["onStatus"].ShouldEqual(5);
     }
 }

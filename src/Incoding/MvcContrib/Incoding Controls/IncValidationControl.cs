@@ -29,7 +29,7 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             return this.htmlHelper.ValidationMessage(this.property, this.attributes);
         }

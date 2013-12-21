@@ -47,8 +47,10 @@ namespace Incoding.MSpecContrib
             }
             catch (Exception e)
             {
+                ////ncrunch: no coverage start
                 Clipboard.SetText("Exception in  build configuration {0}".F(e));
                 return null;
+                ////ncrunch: no coverage end           
             }
         }
     }

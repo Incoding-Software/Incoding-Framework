@@ -15,14 +15,13 @@
 
         static IncHelpBlockControl control;
 
-        static string result;
-
         #endregion
 
         Establish establish = () => { control = new IncHelpBlockControl(); };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual(MvcHtmlString.Empty.ToHtmlString());
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual(MvcHtmlString.Empty.ToHtmlString());
     }
 }

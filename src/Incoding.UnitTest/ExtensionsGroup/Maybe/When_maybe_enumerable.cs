@@ -4,8 +4,8 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
     using System.Collections.Generic;
     using System.Linq;
-    using Incoding.Maybe;
     using Incoding.MSpecContrib;
+    using Incoding.Maybe;
     using Machine.Specifications;
 
     #endregion
@@ -40,11 +40,5 @@ namespace Incoding.UnitTest.ExtensionsGroup
                                                            nullCollection.DoEach(r => doForEach++);
                                                            doForEach.ShouldEqual(0);
                                                        };
-
-        It should_be_with_each_for_collection = () => collection.WithEach(r => r.Prop).Count().ShouldEqual(2);
-
-        It should_be_with_each_for_null_collection = () => nullCollection.WithEach(r => r.Prop).ShouldBeNull();
-
-        It should_be_with_each_for_empty_collection = () => Pleasure.ToEnumerable<FakeMaybe>().WithEach(r => r.Prop).Count().ShouldEqual(0);
     }
 }

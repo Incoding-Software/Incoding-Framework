@@ -101,7 +101,7 @@ namespace Incoding.Block.Caching
 
         public override void UnInitialize()
         {
-            this.init = new CachingInit(new MockCachedProvider());
+            this.init = new CachingInit(new EmptyCachedProvider());
         }
     }
 }

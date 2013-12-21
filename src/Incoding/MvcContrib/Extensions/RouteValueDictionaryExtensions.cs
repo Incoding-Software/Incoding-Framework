@@ -59,8 +59,13 @@
 
         public static MvcHtmlString ToLink(this RouteValueDictionary htmlAttributes, string content)
         {
+            return htmlAttributes.ToLink(new MvcHtmlString(content));
+        }
+
+        public static MvcHtmlString ToLink(this RouteValueDictionary htmlAttributes, MvcHtmlString content)
+        {
             var tagBuilder = new TagBuilder(HtmlTag.A.ToStringLower());
-            tagBuilder.SetInnerText(content);
+            tagBuilder.InnerHtml = content.ToHtmlString();
             tagBuilder.MergeAttribute(HtmlAttribute.Href.ToStringLower(), "javascript:void(0);", false);
 
             tagBuilder.MergeAttributes(htmlAttributes, true);

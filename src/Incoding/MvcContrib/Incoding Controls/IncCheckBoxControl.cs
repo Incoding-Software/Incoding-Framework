@@ -6,7 +6,6 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
-    using Incoding.Extensions;
 
     #endregion
 
@@ -18,6 +17,8 @@ namespace Incoding.MvcContrib
 
         readonly Expression<Func<TModel, TProperty>> property;
 
+        readonly IncLabelControl label;
+
         #endregion
 
         #region Constructors
@@ -26,30 +27,30 @@ namespace Incoding.MvcContrib
         {
             this.htmlHelper = htmlHelper;
             this.property = property;
+            this.label = new IncLabelControl(htmlHelper, property);
+            this.label.AddClass("checkbox");
         }
 
         #endregion
 
         #region Properties
+        
+        public IncLabelControl Label { get { return this.label; } }
 
-        public string Name { get; set; }
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             var metadata = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData);
             bool? isChecked = null;
             bool result;
             if (metadata.Model != null && bool.TryParse(metadata.Model.ToString(), out result))
                 isChecked = result;
-            var checkBox = this.htmlHelper.CheckBox(ExpressionHelper.GetExpressionText(this.property), isChecked ?? false, this.attributes);
+            var checkBox = this.htmlHelper.CheckBox(ExpressionHelper.GetExpressionText(this.property), isChecked ?? false, GetAttributes());
 
-            var tagLabel = new TagBuilder(HtmlTag.Label.ToStringLower());
-            tagLabel.AddCssClass("checkbox");
-            tagLabel.InnerHtml = checkBox.ToHtmlString() + " " + Name;
-
-            return new MvcHtmlString(tagLabel.ToString());
+            this.label.Name = checkBox.ToHtmlString() + this.label.Name;
+            return this.label.ToHtmlString();
         }
     }
 }

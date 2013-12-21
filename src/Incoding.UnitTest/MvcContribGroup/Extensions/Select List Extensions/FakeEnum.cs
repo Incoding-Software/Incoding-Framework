@@ -7,7 +7,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
     #endregion
 
-    internal enum FakeEnum
+    public enum FakeEnum
     {
         [UsedImplicitly]
         En1 = 1, 

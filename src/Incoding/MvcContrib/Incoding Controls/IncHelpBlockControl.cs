@@ -15,7 +15,7 @@
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             if (string.IsNullOrWhiteSpace(Message))
                 return MvcHtmlString.Empty;

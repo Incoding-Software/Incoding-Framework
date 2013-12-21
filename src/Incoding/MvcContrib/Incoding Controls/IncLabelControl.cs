@@ -24,8 +24,7 @@ namespace Incoding.MvcContrib
         public IncLabelControl(HtmlHelper htmlHelper, LambdaExpression property)
         {
             this.htmlHelper = htmlHelper;
-            this.property = property.GetMemberName().Split(".".ToCharArray()).LastOrDefault();
-            AddClass("control-label");
+            this.property = property.GetMemberName().Split(".".ToCharArray()).LastOrDefault();            
         }
 
         #endregion
@@ -36,14 +35,14 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             var tagBuilder = new TagBuilder("label");
             tagBuilder.Attributes.Add("for", TagBuilder.CreateSanitizedId(this.htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(this.property)));
 
             var metadata = ModelMetadata.FromStringExpression(this.property, this.htmlHelper.ViewData);
             string innerText = Name ?? metadata.DisplayName ?? this.property;
-            tagBuilder.SetInnerText(innerText);
+            tagBuilder.InnerHtml = innerText;
 
             tagBuilder.MergeAttributes(this.attributes, true);
             return new MvcHtmlString(tagBuilder.ToString(TagRenderMode.Normal));

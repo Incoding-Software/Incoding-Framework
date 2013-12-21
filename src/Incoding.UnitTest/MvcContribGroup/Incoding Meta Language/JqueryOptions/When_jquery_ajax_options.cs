@@ -44,6 +44,6 @@ namespace Incoding.UnitTest.MvcContribGroup
                              }
                          };
 
-        It should_be_compare = () => options.OptionCollections.ShouldEqualWeak(originalOptions);
+        It should_be_compare = () => options.ShouldEqualWeakEach(originalOptions);
     }
 }

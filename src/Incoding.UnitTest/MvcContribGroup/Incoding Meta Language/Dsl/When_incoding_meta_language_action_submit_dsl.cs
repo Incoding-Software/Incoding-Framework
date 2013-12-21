@@ -17,17 +17,17 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableSubmitAction>()
                                             .Should(action =>
                                                         {
-                                                            action.Data["formSelector"].ShouldEqual(Selector.Jquery.Self().ToString());
-                                                            action.Data["options"].ShouldBeOfType<Dictionary<string, object>>();
+                                                            action["formSelector"].ShouldEqual(Selector.Jquery.Self().ToString());
+                                                            action["options"].ShouldBeOfType<Dictionary<string, object>>();
                                                         });
 
         It should_be_submit_on = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                               .Do().SubmitOn(selector => selector.Id("id").Parent())
+                                               .Do().SubmitOn(selector => selector.Id("id").Parent(HtmlTag.Abbr))
                                                .GetExecutable<ExecutableSubmitAction>()
                                                .Should(action =>
                                                            {
-                                                               action.Data["formSelector"].ShouldEqual("$('#id').parent()");
-                                                               action.Data["options"].ShouldBeOfType<Dictionary<string, object>>();
+                                                               action["formSelector"].ShouldEqual("$('#id').parent('abbr')");
+                                                               action["options"].ShouldBeOfType<Dictionary<string, object>>();
                                                            });
     }
 }

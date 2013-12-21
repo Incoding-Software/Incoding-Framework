@@ -58,6 +58,7 @@
     <Compile Include="Invent\InventFactory.cs" />
     <Compile Include="Invent\InventFactory.Dsl.cs" />
     <Compile Include="Extensions\IoCFactoryTestEx.cs" />
+    <Compile Include="Nhibernate\NhibenratePersistenceSpecificationExtensions.cs" />
     <Compile Include="Spy\ISpy.cs" />
     <Compile Include="Manipulate.cs" />
     <Compile Include="Mock Wapper\MockCommand.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Mock Wapper\MockMessage.cs" />
     <Compile Include="Mock Wapper\MockQuery.cs" />
     <Compile Include="Mock Wapper\MockUrl.cs" />
-    <Compile Include="Nhibernate\NHibernateMspecExtensions.cs" />
+    <Compile Include="Nhibernate\NHibernateSessionExtensions.cs" />
     <Compile Include="Nhibernate\NHibernatePleasure.cs" />
     <Compile Include="Nhibernate\SpecWithNHibernateSession.cs" />
     <Compile Include="Nhibernate\SpecWithPersistenceSpecification.cs" />
@@ -144,7 +145,7 @@
   </Target>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_IncrementBeforeBuild="False" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="False" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

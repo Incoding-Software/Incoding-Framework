@@ -13,8 +13,8 @@
 
         public ExecutableStoreManipulate(string type, List<object> methods)
         {
-            Data.Add("type", type);
-            Data.Add("methods", methods.ToJsonString());
+            this.Add("type", type);
+            this.Add("methods", methods.ToJsonString());
         }
 
         #endregion

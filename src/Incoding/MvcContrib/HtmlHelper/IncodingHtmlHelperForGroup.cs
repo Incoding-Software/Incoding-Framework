@@ -36,7 +36,7 @@
         {
             var hidden = new IncHiddenControl<TModel, TProperty>(this.htmlHelper, this.property);
             configuration.Do(r => r(hidden));
-            return hidden.Render();
+            return hidden.ToHtmlString();
         }
 
         public MvcHtmlString CheckBox(Action<IncHorizontalControl<IncCheckBoxControl<TModel, TProperty>>> configuration = null)
@@ -79,11 +79,12 @@
         MvcHtmlString Group<TInput>(TInput input, Action<IncHorizontalControl<TInput>> configuration) where TInput : IncControlBase
         {
             var label = new IncLabelControl(this.htmlHelper, this.property);
+            label.AddClass("control-label");
             var validation = new IncValidationControl(this.htmlHelper, this.property);
             var horizontal = new IncHorizontalControl<TInput>(label, input, validation);
             configuration.Do(r => r(horizontal));
 
-            return horizontal.Render();
+            return horizontal.ToHtmlString();
         }
 
         ////ncrunch: no coverage end

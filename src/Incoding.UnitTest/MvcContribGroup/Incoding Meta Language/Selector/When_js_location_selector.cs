@@ -20,30 +20,30 @@
 
         It should_be_host = () => location.Host
                                           .ToString()
-                                          .ShouldEqual("@@javascript:window.location.host@@");
+                                          .ShouldEqual("||javascript*window.location.host||");
 
         It should_be_href = () => location.Href
                                           .ToString()
-                                          .ShouldEqual("@@javascript:window.location.href@@");
+                                          .ShouldEqual("||javascript*window.location.href||");
 
         It should_be_host_name = () => location.HostName
                                                .ToString()
-                                               .ShouldEqual("@@javascript:window.location.hostname@@");
+                                               .ShouldEqual("||javascript*window.location.hostname||");
 
         It should_be_path_name = () => location.PathName
                                                .ToString()
-                                               .ShouldEqual("@@javascript:window.location.pathname@@");
+                                               .ShouldEqual("||javascript*window.location.pathname||");
 
         It should_be_port = () => location.Port
                                           .ToString()
-                                          .ShouldEqual("@@javascript:window.location.port@@");
+                                          .ShouldEqual("||javascript*window.location.port||");
 
         It should_be_protocol = () => location.Protocol
                                               .ToString()
-                                              .ShouldEqual("@@javascript:window.location.protocol@@");
+                                              .ShouldEqual("||javascript*window.location.protocol||");
 
         It should_be_search = () => location.Search
                                             .ToString()
-                                            .ShouldEqual("@@javascript:window.location.search@@");
+                                            .ShouldEqual("||javascript*window.location.search||");
     }
 }

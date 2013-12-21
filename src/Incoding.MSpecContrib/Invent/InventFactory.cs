@@ -19,7 +19,7 @@ namespace Incoding.MSpecContrib
     {
         #region Fields
 
-        readonly Dictionary<string, Func<object>> tuning = new Dictionary<string, Func<object>>();
+        readonly Dictionary<string, Func<object>> tunings = new Dictionary<string, Func<object>>();
 
         readonly List<string> ignoreProperties = new List<string>();
 
@@ -48,7 +48,7 @@ namespace Incoding.MSpecContrib
             const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
             var members = typeof(T)
                     .GetMembers(bindingFlags)
-                    .Where(r => !r.HasAttribute<IgnoreInventAttribute>())
+                    .Where(r => !r.HasAttribute<IgnoreInventAttribute>() || this.tunings.Keys.Contains(r.Name))
                     .Where(r =>
                                {
                                    var prop = r as PropertyInfo;
@@ -87,8 +87,8 @@ namespace Incoding.MSpecContrib
                 object value = null;
                 var type = member is PropertyInfo ? ((PropertyInfo)member).PropertyType : ((FieldInfo)member).FieldType;
 
-                if (this.tuning.ContainsKey(member.Name))
-                    value = this.tuning[member.Name].Invoke();
+                if (this.tunings.ContainsKey(member.Name))
+                    value = this.tunings[member.Name].Invoke();
 
                 if (this.empties.Contains(member.Name))
                 {
@@ -97,7 +97,7 @@ namespace Incoding.MSpecContrib
                         throw new ArgumentException("Can't found empty value for type {0} by field {1}".F(type, member.Name));
                 }
 
-                if (value == null && !this.tuning.ContainsKey(member.Name) && !this.empties.Contains(member.Name))
+                if (value == null && !this.tunings.ContainsKey(member.Name) && !this.empties.Contains(member.Name))
                     value = GenerateValueOrEmpty(type, false);
 
                 instance.SetValue(member.Name, value);
@@ -113,7 +113,7 @@ namespace Incoding.MSpecContrib
         {
             Action throwException = () => { throw new ArgumentException("Property should be unique in all dictionary", property); };
 
-            if (this.tuning.ContainsKey(property))
+            if (this.tunings.ContainsKey(property))
                 throwException();
 
             if (this.ignoreProperties.Contains(property))
@@ -130,8 +130,10 @@ namespace Incoding.MSpecContrib
             else if (propertyType.IsAnyEquals(typeof(string), typeof(object)))
                 value = isEmpty ? string.Empty : Pleasure.Generator.String();
             else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
+
                     // ReSharper disable SimplifyConditionalTernaryExpression
                 value = isEmpty ? false : Pleasure.Generator.Bool();                                                                                
+                    
                     // ReSharper restore SimplifyConditionalTernaryExpression
             else if (propertyType.IsAnyEquals(typeof(int), typeof(int?)))
                 value = isEmpty ? default(int) : Pleasure.Generator.PositiveNumber(1);
@@ -142,7 +144,7 @@ namespace Incoding.MSpecContrib
             else if (propertyType.IsAnyEquals(typeof(decimal), typeof(decimal?)))
                 value = isEmpty ? default(decimal) : Pleasure.Generator.PositiveDecimal();
             else if (propertyType.IsAnyEquals(typeof(double), typeof(double?)))
-                value = isEmpty ? default(double) : (double)Pleasure.Generator.PositiveFloating();
+                value = isEmpty ? default(double) : Pleasure.Generator.PositiveDouble();
             else if (propertyType == typeof(byte) || propertyType == typeof(byte?))
                 value = isEmpty ? default(byte) : (byte)Pleasure.Generator.PositiveNumber();
             else if (propertyType == typeof(char) || propertyType == typeof(char?))

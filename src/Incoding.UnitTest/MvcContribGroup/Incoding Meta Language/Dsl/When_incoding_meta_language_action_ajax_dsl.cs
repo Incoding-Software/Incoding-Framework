@@ -18,16 +18,16 @@
 
         internal static void VerifyAjax(ExecutableActionBase incodingAjaxAction, string type, bool hash, string prefix)
         {
-            var ajaxOptions = incodingAjaxAction.Data["ajax"] as Dictionary<string, object>;
+            var ajaxOptions = incodingAjaxAction["ajax"] as Dictionary<string, object>;
             ajaxOptions.ShouldNotBeNull();
             ajaxOptions["url"].ShouldEqual(url);
             ajaxOptions["type"].ShouldEqual(type);
 
-            incodingAjaxAction.Data["hash"].ShouldEqual(hash);
-            incodingAjaxAction.Data["prefix"].ShouldEqual(prefix);
-            incodingAjaxAction.Data["onBind"].ShouldEqual("click incoding");
+            incodingAjaxAction["hash"].ShouldEqual(hash);
+            incodingAjaxAction["prefix"].ShouldEqual(prefix);
+            incodingAjaxAction["onBind"].ShouldEqual("click incoding");
 
-            var filterResult = incodingAjaxAction.Data["filterResult"];
+            var filterResult = incodingAjaxAction["filterResult"];
             (filterResult.TryGetValue("property") as string).ShouldEqual("Message");
             (filterResult.TryGetValue("method") as string).ShouldEqual("equal");
             (filterResult.TryGetValue("value") as string).ShouldEqual("message");

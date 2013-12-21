@@ -26,20 +26,38 @@ namespace Incoding.Extensions
         public static string ToJqueryString(this Enum value)
         {
             return value
-                    .ToString().Replace(",", string.Empty)
+                    .ToLocalization().Replace(",", string.Empty)
                     .ToLowerInvariant();
         }
 
         public static string ToLocalization(this Enum value)
         {
-            var memberEnum = value.GetType().GetMember(value.ToString());
-            if (memberEnum.Length == 0)
-                return string.Empty;
+            var enumType = value.GetType();
 
-            var description = memberEnum[0].FirstOrDefaultAttribute<DescriptionAttribute>();
-            return description != null
-                           ? description.Description
-                           : value.ToString();
+            Func<Enum, string> getDescription = (current) =>
+                                                    {
+                                                        var memberEnum = enumType.GetMember(current.ToString());
+                                                        if (memberEnum.Length == 0)
+                                                            return string.Empty;
+
+                                                        var description = memberEnum[0].FirstOrDefaultAttribute<DescriptionAttribute>();
+                                                        return description != null
+                                                                       ? description.Description
+                                                                       : current.ToString();
+                                                    };
+
+            if (enumType.HasAttribute<FlagsAttribute>())
+            {
+                var all = Enum.GetValues(enumType)
+                              .Cast<Enum>()
+                              .Where(value.HasFlag)
+                              .Select(getDescription)
+                              .ToList();
+
+                return string.Join(" ", all);
+            }
+
+            return getDescription(value);
         }
 
         public static string ToStringInt(this Enum value)

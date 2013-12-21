@@ -31,7 +31,7 @@
         public static void ShouldEqualData(this ExecutableBase executable, Dictionary<string, object> data)
         {
             var ignore = new[] { "onBind", "target", "onStatus", "onEventStatus" };
-            foreach (var keyValue in executable.Data)
+            foreach (var keyValue in executable)
             {
                 if (ignore.Contains(keyValue.Key))
                     continue;
@@ -40,7 +40,7 @@
             }
 
             foreach (var keyValue in data)
-                executable.Data.ShouldBeKeyValue(keyValue.Key, keyValue.Value);
+                executable.ShouldBeKeyValue(keyValue.Key, keyValue.Value);
         }
 
         #endregion

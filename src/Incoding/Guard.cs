@@ -3,9 +3,7 @@ namespace Incoding
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.Contracts;
-    using System.Linq;
     using Incoding.Extensions;
     using JetBrains.Annotations;
 
@@ -24,17 +22,9 @@ namespace Incoding
         }
 
         [ContractArgumentValidator]
-        public static void NotNull<T>(string argument, [UsedImplicitly] T value, string errorMessage = "Value {0} can't be null")
+        public static void NotNull<T>(string argument, [UsedImplicitly] T value, string errorMessage = "Argument {0} can't be null")
         {
             if (value == null)
-                throw new ArgumentException(errorMessage.F(argument), argument);
-            Contract.EndContractBlock();
-        }
-
-        [ContractArgumentValidator]
-        public static void NotNullOrEmpty<T>(string argument, [UsedImplicitly] IEnumerable<T> value, string errorMessage = "Collections {0} can't be null or empty")
-        {
-            if (value == null || !value.Any())
                 throw new ArgumentException(errorMessage.F(argument), argument);
             Contract.EndContractBlock();
         }

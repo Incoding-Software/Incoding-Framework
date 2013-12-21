@@ -23,14 +23,7 @@
 
         #endregion
 
-        It should_be_empty = () => IncWebException
-                                           .Empty
-                                           .Should(exception =>
-                                                       {
-                                                           exception.Message.ShouldBeEmpty();
-                                                           exception.Property.ShouldBeEmpty();
-                                                       });
-
+  
         It should_be_for = () => IncWebException
                                          .For<FakeModel>(r => r.Prop, Pleasure.Generator.TheSameString())
                                          .Should(exception =>

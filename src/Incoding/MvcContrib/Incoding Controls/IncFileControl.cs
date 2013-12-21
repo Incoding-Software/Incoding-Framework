@@ -34,7 +34,7 @@
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
             return this.htmlHelper.Incoding().File(Value, this.attributes);
         }

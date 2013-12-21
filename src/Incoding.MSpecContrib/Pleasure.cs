@@ -237,10 +237,9 @@ namespace Incoding.MSpecContrib
             [DebuggerStepThrough]
             public static byte[] Bytes(int size = 100)
             {
-                var random = new Random(GetSeed());
                 var bytes = new byte[size];
                 for (int index = 0; index < bytes.Length; ++index)
-                    bytes[index] = (byte)random.Next();
+                    bytes[index] = (byte)GetRandom().Next();
 
                 return bytes;
             }
@@ -248,10 +247,9 @@ namespace Incoding.MSpecContrib
             [DebuggerStepThrough]
             public static DateTime DateTime()
             {
-                var random = new Random(GetSeed());
-                int year = random.Next(1800, 2100);
-                int months = random.Next(1, 12);
-                int days = random.Next(1, 25);
+                int year = GetRandom().Next(1800, 2100);
+                int months = GetRandom().Next(1, 12);
+                int days = GetRandom().Next(1, 25);
 
                 var timeSpan = TimeSpan();
                 return new DateTime(year, months, days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
@@ -351,30 +349,28 @@ namespace Incoding.MSpecContrib
             }
 
             [DebuggerStepThrough]
-            public static decimal PositiveDecimal()
+            public static decimal PositiveDecimal(byte? scale = null)
             {
-                var rng = new Random(GetSeed());
-
-                decimal positiveDecimal = Math.Round(new decimal(rng.Next(999999999), 0, 0, false, (byte)rng.Next(2)) * (decimal)0.5, 2);
+                decimal positiveDecimal = Math.Round(new decimal(GetRandom().Next(999999999), 0, 0, false, scale ?? (byte)GetRandom().Next(2)) * (decimal)0.5, 2);
                 return positiveDecimal < 0 ? -positiveDecimal : positiveDecimal;
             }
 
             public static double PositiveDouble()
             {
-                double positiveDouble = new Random(GetSeed()).NextDouble() * 1.8;
+                double positiveDouble = GetRandom().NextDouble() * 1.8;
                 return positiveDouble < 0 ? -positiveDouble : positiveDouble;
             }
 
             public static float PositiveFloating()
             {
-                float positiveFloating = (float)(new Random(GetSeed()).NextDouble() * 1.8);
+                float positiveFloating = (float)(GetRandom().NextDouble() * 1.8);
                 return positiveFloating < 0 ? -positiveFloating : positiveFloating;
             }
 
             [DebuggerStepThrough]
             public static int PositiveNumber(int minValue = 0, int maxValue = int.MaxValue)
             {
-                int positiveNumber = new Random(GetSeed()).Next(minValue, maxValue);
+                int positiveNumber = GetRandom().Next(minValue, maxValue);
                 return positiveNumber < 0 ? -positiveNumber : positiveNumber;
             }
 
@@ -440,9 +436,14 @@ namespace Incoding.MSpecContrib
 
             #endregion
 
-            static int GetSeed()
+            static Random GetRandom()
             {
-                return Guid.NewGuid().GetHashCode();
+                return new Random(Guid.NewGuid().GetHashCode());
+            }
+
+            public static Guid TheSameGuid()
+            {
+                return new Guid("DD2D6D88-D2E9-40E2-A60D-0E58CCD8235D");
             }
         }
 

@@ -14,19 +14,17 @@
 
         static IncDropDownControl<FakeModel, string> control;
 
-        static string result;
-
         #endregion
 
         Establish establish = () =>
                                   {
                                       control = new IncDropDownControl<FakeModel, string>(mockHtmlHelper.Original, model => model.Prop);
                                       control.Url = "Url";
-                                      control.Dependency = Selector.Jquery.Id("dependencySelector");
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual(@"<select id=""Prop"" incoding=""[{&quot;type&quot;:&quot;ExecutableAjaxAction&quot;,&quot;data&quot;:{&quot;ajax&quot;:{&quot;url&quot;:&quot;Url&quot;,&quot;type&quot;:&quot;GET&quot;},&quot;hash&quot;:false,&quot;prefix&quot;:&quot;&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:0,&quot;target&quot;:null,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableInsert&quot;,&quot;data&quot;:{&quot;template&quot;:&quot;$(&#39;#incodingDropDownTemplate&#39;)&quot;,&quot;insertType&quot;:&quot;html&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableEval&quot;,&quot;data&quot;:{&quot;code&quot;:&quot;$(this.target).val(\&quot;TheSameString\&quot;);&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableTrigger&quot;,&quot;data&quot;:{&quot;trigger&quot;:&quot;change&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableDirectAction&quot;,&quot;data&quot;:{&quot;result&quot;:&quot;&quot;,&quot;onBind&quot;:&quot;change incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableTrigger&quot;,&quot;data&quot;:{&quot;trigger&quot;:&quot;incoding&quot;,&quot;onBind&quot;:&quot;change incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(&#39;#dependencySelector&#39;)&quot;,&quot;onEventStatus&quot;:1}}]"" name=""Prop""></select>");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual(@"<select id=""Prop"" incoding=""[{&quot;type&quot;:&quot;ExecutableAjaxAction&quot;,&quot;data&quot;:{&quot;ajax&quot;:{&quot;url&quot;:&quot;Url&quot;,&quot;type&quot;:&quot;GET&quot;},&quot;hash&quot;:false,&quot;prefix&quot;:&quot;&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:0,&quot;target&quot;:null,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableInsert&quot;,&quot;data&quot;:{&quot;template&quot;:&quot;$(&#39;#incodingDropDownTemplate&#39;)&quot;,&quot;insertType&quot;:&quot;html&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableEval&quot;,&quot;data&quot;:{&quot;code&quot;:&quot;$(this.target).val(\&quot;TheSameString\&quot;);&quot;,&quot;onBind&quot;:&quot;initincoding incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}},{&quot;type&quot;:&quot;ExecutableDirectAction&quot;,&quot;data&quot;:{&quot;result&quot;:&quot;&quot;,&quot;onBind&quot;:&quot;change incoding&quot;,&quot;onStatus&quot;:2,&quot;target&quot;:&quot;$(this.self)&quot;,&quot;onEventStatus&quot;:1}}]"" name=""Prop""></select>");
     }
 }

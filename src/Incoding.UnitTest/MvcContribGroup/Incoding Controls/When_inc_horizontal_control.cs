@@ -15,9 +15,7 @@
         #region Estabilish value
 
         static IncHorizontalControl<IncHiddenControl<FakeModel, object>> control;
-
-        static string result;
-
+        
         #endregion
 
         Establish establish = () =>
@@ -29,8 +27,9 @@
                                       control = new IncHorizontalControl<IncHiddenControl<FakeModel, object>>(label, input, validation);
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual("<div class=\"control-group\"><label class=\"control-label\" for=\"Prop\">Prop</label><div class=\"controls\"><input id=\"Prop\" name=\"Prop\" type=\"hidden\" value=\"TheSameString\" /></div></div>");
+        It should_be_render = () => result.ToString()
+            .ShouldEqual("<div class=\"control-group\"><label class=\"control-label\" for=\"Prop\">Prop</label><div class=\"controls\"><input id=\"Prop\" name=\"Prop\" type=\"hidden\" value=\"TheSameString\" /></div></div>");
     }
 }

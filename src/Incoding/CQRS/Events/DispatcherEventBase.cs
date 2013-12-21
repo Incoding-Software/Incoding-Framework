@@ -8,20 +8,18 @@
 
     public abstract class DispatcherEventBase : IEvent
     {
-        // ReSharper disable NotAccessedField.Local
-        #region Fields
-
-        readonly object message;
-
-        #endregion
-
-        // ReSharper restore NotAccessedField.Local
         #region Constructors
 
         protected DispatcherEventBase(object message)
         {
-            this.message = message;
+            Message = message;
         }
+
+        #endregion
+
+        #region Properties
+
+        public object Message { get; private set; }
 
         #endregion
     }

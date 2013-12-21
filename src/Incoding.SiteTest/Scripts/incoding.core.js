@@ -32,19 +32,22 @@ function InitGps() {
     }
 }
 
+
+
+
+
+
+
 $.extend(String.prototype, {
     replaceAll : function(find, replace) {
         return this.split(find).join(replace);
-    },
-
+    },    
     endWith : function(suffix) {
         return (this.substr(this.length - suffix.length) === suffix);
     },
-
     startsWith : function(prefix) {
         return (this.substr(0, prefix.length) === prefix);
     },
-
     trim : function() {
         return this.replace(/^\s\s*|\s\s*$/g, '');
     },
@@ -76,6 +79,11 @@ $.extend(String.prototype, {
 $.extend(Array.prototype, {
     contains : function(findValue) {
         return $.inArray(findValue, this) != -1;
+    },
+    remove: function (from, to) {
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
     },
     sum : function() {
         var sum = 0;
@@ -129,7 +137,7 @@ $.fn.extend({
             var cur = parseInt($(this).css('z-index'));
             zMax = cur > zMax ? cur : zMax;
         });
-        
+
         return this.each(function() {
             zMax += def.inc;
             $(this).css({ "z-index" : zMax });
@@ -139,7 +147,8 @@ $.fn.extend({
     toggleProp : function(key) {
         if (this.prop(key)) {
             $(this).prop(key, false);
-        } else {
+        }
+        else {
             $(this).prop(key, true);
         }
         return this;
@@ -147,7 +156,8 @@ $.fn.extend({
     toggleAttr : function(key) {
         if (this.attr(key)) {
             $(this).removeAttr(key);
-        } else {
+        }
+        else {
             this.attr(key, key);
         }
         return this;
@@ -162,6 +172,20 @@ $.extend({
                 evaluated.call(property);
             }
         }
+    },  
+    eachFormElements : function(ob, evaluated) {
+        var inputTag = 'input,select';
+        var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
+        var targets;
+        if ($(ob).is('input,select')) {
+            targets = ob.length > 1 ? ob : [ob];
+        }
+        else {
+            var allInput = $(ob).find(inputTag).not(ignoreInputType);
+            targets = allInput.length > 1 ? allInput : [allInput];
+        }
+
+        $(targets).each(evaluated);
     },
     url : function(url) {
         return purl(url);
@@ -173,10 +197,6 @@ $.extend({
 (function($, document) {
 
     var pluses = /\+/g;
-
-    function raw(s) {
-        return s;
-    }
 
     function decoded(s) {
         return decodeURIComponent(s.replace(pluses, ' '));
@@ -200,7 +220,7 @@ $.extend({
             value = config.json ? JSON.stringify(value) : String(value);
 
             return (document.cookie = [
-                encodeURIComponent(key), '=', config.raw ? value : encodeURIComponent(value),
+                encodeURIComponent(key), '=', encodeURIComponent(value),
                 options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
                 options.path ? '; path=' + options.path : '',
                 options.domain ? '; domain=' + options.domain : '',
@@ -209,7 +229,7 @@ $.extend({
         }
 
         // read
-        var decode = config.raw ? raw : decoded;
+        var decode = decoded;
         var cookies = document.cookie.split('; ');
         for (var i = 0, l = cookies.length; i < l; i++) {
             var parts = cookies[i].split('=');
@@ -233,5 +253,15 @@ $.extend({
     };
 
 })(jQuery, document);
+
+navigator.Ie8 = (function () {
+    var N = navigator.appName, ua = navigator.userAgent, tem;
+    var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+    if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {
+        M[2] = tem[1];
+    }
+    M = M ? [M[1], M[2]] : [N, navigator.appVersion, '-?'];
+    return M.contains('MSIE') && M.contains('8.0');
+})();
 
 //#endregion

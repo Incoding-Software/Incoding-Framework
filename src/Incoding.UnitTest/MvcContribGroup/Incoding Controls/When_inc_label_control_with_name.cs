@@ -17,8 +17,6 @@
 
         static IncLabelControl control;
 
-        static string result;
-
         #endregion
 
         Establish establish = () =>
@@ -28,8 +26,9 @@
                                       control.Name = Pleasure.Generator.TheSameString();
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual("<label class=\"control-label\" for=\"Prop\">TheSameString</label>");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual("<label for=\"Prop\">TheSameString</label>");
     }
 }

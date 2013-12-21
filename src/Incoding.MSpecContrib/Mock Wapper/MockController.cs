@@ -3,13 +3,14 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Linq;
     using System.Security.Principal;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MvcContrib;
@@ -65,11 +66,9 @@ namespace Incoding.MSpecContrib
         public static MockController<TController> When(params object[] ctorArgs)
         {
             var dispatcher = Pleasure.Mock<IDispatcher>();
-            var listCtors = new List<object> { dispatcher.Object };
-            if (ctorArgs.Length > 0)
-                listCtors.AddRange(ctorArgs);
+            IoCFactory.Instance.StubTryResolve(dispatcher.Object);
 
-            var controller = (TController)Activator.CreateInstance(typeof(TController), listCtors.ToArray());
+            var controller = (TController)Activator.CreateInstance(typeof(TController), ctorArgs.ToArray());
             var res = new MockController<TController>(controller, dispatcher);
             res.httpContext.SetupGet(r => r.Request.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
 
@@ -80,10 +79,7 @@ namespace Incoding.MSpecContrib
 
         #region Properties
 
-        public TController Original
-        {
-            get { return this.originalController; }
-        }
+        public TController Original { get { return this.originalController; } }
 
         #endregion
 
@@ -91,29 +87,40 @@ namespace Incoding.MSpecContrib
 
         public MockController<TController> DisableAjax()
         {
-            this.httpContext.SetupGet(r => r.Request.Headers).Returns(new NameValueCollection());
-            return this;
+            return SetupHttpContext(mock => mock.SetupGet(r => r.Request.Headers).Returns(new NameValueCollection()));
         }
 
         public MockController<TController> StubRequestUrl(Uri requestUri)
         {
-            this.httpContext.SetupGet(r => r.Request.Url).Returns(requestUri);
-            this.httpContext.SetupGet(r => r.Request.UrlReferrer).Returns(requestUri);
+            return SetupHttpContext(mock =>
+                                        {
+                                            mock.SetupGet(r => r.Request.Url).Returns(requestUri);
+                                            mock.SetupGet(r => r.Request.UrlReferrer).Returns(requestUri);
+                                        });
+        }
+
+        public MockController<TController> SetupHttpContext(Action<Mock<HttpContextBase>> action)
+        {
+            action(this.httpContext);
             return this;
         }
 
         public MockController<TController> StubUrlAction(string expectedRoute)
         {
-            this.httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(expectedRoute))).Returns(expectedRoute);
-            this.httpContext.Setup(r => r.Request.ApplicationPath).Returns("/");
-            return this;
+            return SetupHttpContext(mock =>
+                                        {
+                                            mock.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(expectedRoute))).Returns(expectedRoute);
+                                            mock.Setup(r => r.Request.ApplicationPath).Returns("/");
+                                        });
         }
 
         public MockController<TController> StubUrlAction(Action<string> verifyRoutes, string expectedRoute)
         {
-            this.httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.Is(verifyRoutes))).Returns(expectedRoute);
-            this.httpContext.Setup(r => r.Request.ApplicationPath).Returns("/");
-            return this;
+            return SetupHttpContext(mock =>
+                                        {
+                                            mock.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.Is(verifyRoutes))).Returns(expectedRoute);
+                                            mock.Setup(r => r.Request.ApplicationPath).Returns("/");
+                                        });
         }
 
         public MockController<TController> StubQuery<TQuery, TResult>(TQuery query, TResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
@@ -124,8 +131,7 @@ namespace Incoding.MSpecContrib
 
         public MockController<TController> StubPrincipal(IPrincipal principal)
         {
-            this.httpContext.Setup(r => r.User).Returns(principal);
-            return this;
+            return SetupHttpContext(mock => mock.Setup(r => r.User).Returns(principal));
         }
 
         public MockController<TController> StubQueryString(object values)

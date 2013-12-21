@@ -1,0 +1,33 @@
+﻿    @{
+        string tmplId = Guid.NewGuid().ToString();
+        using (var template = Html.Incoding().ScriptTemplate<FakeModel>(tmplId))
+        {
+            using (var each = template.ForEach())
+            {
+                <div>Root value: @each.For(r => r.Value)</div>
+                using (var innerEach = each.ForEach(r => r.Inners))
+                {
+                    <div>Root value: @each.Up().For(r => r.Value)</div>
+                    <div>Inner value:@innerEach.For(r => r.Value)</div>
+                }
+                
+             
+                <div>Last root value: @each.For(r => r.Value)</div>
+            }
+        }
+    }
+    
+    @(Html.When(JqueryBind.InitIncoding)
+          .Do()
+          .Direct(IncodingResult.Success(new FakeModel
+                                             {
+                                                     Value = "Root",
+                                                     Inners = new List<FakeModel>
+                                                                  {
+                                                                          new FakeModel { Value = "Inner 1" },
+                                                                          new FakeModel { Value = "Inner 2" },
+                                                                  }
+                                             }))
+          .OnSuccess(dsl => dsl.Self().Core().Insert.WithTemplate(Selector.Jquery.Id(tmplId)).Html())
+          .AsHtmlAttributes()
+          .ToDiv())

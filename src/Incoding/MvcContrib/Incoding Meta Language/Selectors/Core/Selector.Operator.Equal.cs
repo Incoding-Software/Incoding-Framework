@@ -1,5 +1,11 @@
 ﻿namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
+    using System;
+
+    #endregion
+
     public partial class Selector
     {
         ////ncrunch: no coverage start
@@ -21,26 +27,6 @@
         public static bool operator >(Selector left, Selector right)
         {
             return true;
-        }
-
-        public static bool operator ==(bool left, Selector right)
-        {
-            return true;
-        }
-
-        public static bool operator !=(bool left, Selector right)
-        {
-            return !(left == right);
-        }
-
-        public static bool operator ==(Selector left, bool right)
-        {
-            return true;
-        }
-
-        public static bool operator !=(Selector left, bool right)
-        {
-            return !(left == right);
         }
 
         public static bool operator ==(int left, Selector right)
@@ -119,6 +105,46 @@
         }
 
         public static bool operator !=(Selector left, decimal right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(Guid left, Selector right)
+        {
+            return true;
+        }
+
+        public static bool operator !=(Guid left, Selector right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(Selector left, Guid right)
+        {
+            return true;
+        }
+
+        public static bool operator !=(Selector left, Guid right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(DateTime left, Selector right)
+        {
+            return true;
+        }
+
+        public static bool operator !=(DateTime left, Selector right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator ==(Selector left, DateTime right)
+        {
+            return true;
+        }
+
+        public static bool operator !=(Selector left, DateTime right)
         {
             return !(left == right);
         }

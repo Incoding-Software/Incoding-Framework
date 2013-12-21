@@ -26,9 +26,9 @@ namespace Incoding.UnitTest.MvcContribGroup
                                   {
                                       originalOptions = new Dictionary<string, object>
                                                             {
-                                                                    { "forceSync", Pleasure.Generator.Bool() }, 
-                                                                    { "type", Pleasure.Generator.Enum<FormMethod>() }, 
-                                                                    { "semantic", Pleasure.Generator.Bool() }, 
+                                                                    { "forceSync", Pleasure.Generator.Bool() },
+                                                                    { "type", "Post" },
+                                                                    { "semantic", Pleasure.Generator.Bool() },
                                                                     { "url", Pleasure.Generator.String() }
                                                             };
                                       options = new JqueryAjaxFormOptions();
@@ -38,11 +38,16 @@ namespace Incoding.UnitTest.MvcContribGroup
                          {
                              foreach (var option in originalOptions)
                              {
+                                 if (option.Key == "type")
+                                 {
+                                     options.Type = HttpVerbs.Post;
+                                     continue;
+                                 }
                                  string property = "{0}{1}".F(option.Key.ToCharArray()[0].ToString().ToUpper(), option.Key.Substring(1, option.Key.Length - 1));
                                  options.SetValue(property, option.Value);
                              }
                          };
 
-        It should_be_compare = () => options.OptionCollections.ShouldEqualWeak(originalOptions);
+        It should_be_compare = () => options.ShouldEqualWeakEach(originalOptions);
     }
 }

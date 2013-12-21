@@ -2,9 +2,9 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Incoding.Extensions;
+    using Incoding.Maybe;
     using Incoding.Quality;
     using JetBrains.Annotations;
 
@@ -15,19 +15,29 @@ namespace Incoding.MvcContrib
         ////ncrunch: no coverage start
         #region Constructors
 
-        [Obsolete(ObsoleteMessage.SerializeConstructor, true), ExcludeFromCodeCoverage, UsedImplicitly]
+        [ExcludeFromCodeCoverage, UsedImplicitly]
         public KeyValueVm() { }
 
         ////ncrunch: no coverage end
-        public KeyValueVm(object value, string text, bool selected = false)
+        public KeyValueVm(object value, string text, bool selected)
         {
-            Value = value.ToString();
+            Value = value.With(r => r.ToString());
             Text = text;
             Selected = selected;
         }
 
+        public KeyValueVm(object value, string text)
+                : this(value, text, false) { }
+
         public KeyValueVm(object value)
                 : this(value, value.ToString()) { }
+
+        #endregion
+
+        #region Properties
+
+        [IgnoreCompare("Optional")]
+        public string CssClass { get; set; }
 
         #endregion
 
@@ -37,8 +47,10 @@ namespace Incoding.MvcContrib
 
         public string Text { get; set; }
 
+        [IgnoreCompare("Optional")]
         public bool Selected { get; set; }
 
+        [IgnoreCompare("Optional")]
         public string Title { get; set; }
 
         #endregion

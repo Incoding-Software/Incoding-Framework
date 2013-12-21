@@ -12,7 +12,7 @@
 
         public ExecutableForm(string method)
         {
-            Data.Set("method", method);
+            this.Set("method", method);
         }
 
         #endregion

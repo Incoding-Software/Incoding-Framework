@@ -3,9 +3,6 @@
     #region << Using >>
 
     using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.Maybe;
 
@@ -43,7 +40,7 @@
         /// </summary>
         public IExecutableSetting Toggle(string attribute)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_ToggleProp.F(attribute)));
+            return this.plugInDsl.Core().JQuery.Call("toggleProp", attribute);
         }
 
         /// <summary>
@@ -78,7 +75,7 @@
         /// </param>
         public IExecutableSetting ToggleClass(string @class)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_ToggleClass.F(@class)));
+            return this.plugInDsl.Core().JQuery.Call("toggleClass", @class);
         }
 
         /// <summary>
@@ -87,7 +84,7 @@
         /// <param name="class"> One or more space-separated classes to be removed from the class attribute of each matched element. </param>
         public IExecutableSetting RemoveClass(string @class)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_RemoveClass.F(@class)));
+            return this.plugInDsl.Core().JQuery.Call("removeClass", @class);
         }
 
         /// <summary>
@@ -96,7 +93,7 @@
         /// <param name="key">Html attributes</param>
         public IExecutableSetting RemoveAttr(string key)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_RemoveAttr.F(key.ToLower())));
+            return this.plugInDsl.Core().JQuery.Call("removeAttr", key.ToLower());
         }
 
         /// <summary>
@@ -109,19 +106,6 @@
         }
 
         /// <summary>
-        ///     Set  attributes for every matched element in context.
-        /// </summary>
-        /// <param name="attr">Html attributes</param>
-        public IExecutableSetting SetAttr(object attr)
-        {
-            var codes = AnonymousHelper
-                    .ToDictionary(attr)
-                    .Select(valuePair => JavaScriptCodeTemplate.Target_SetAttr.F(valuePair.Key.ToLower(), Selector.FromObject(valuePair.Value)))
-                    .ToList();
-            return this.plugInDsl.Registry(new ExecutableEval(codes));
-        }
-
-        /// <summary>
         ///     Set one attributes for every matched element in context.
         /// </summary>
         /// <param name="key">Html attributes</param>
@@ -130,10 +114,7 @@
         /// </param>
         public IExecutableSetting SetAttr(string key, Selector value = null)
         {
-            return SetAttr(new RouteValueDictionary(new Dictionary<string, object>
-                                                        {
-                                                                { key, value ?? key }
-                                                        }));
+            return this.plugInDsl.Core().JQuery.Call("attr", key, value ?? key);
         }
 
         /// <summary>
@@ -154,7 +135,7 @@
         /// <param name="key">Html attributes</param>
         public IExecutableSetting RemoveProp(string key)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_RemoveProp.F(key.ToLower())));
+            return this.plugInDsl.Core().JQuery.Call("removeProp", key);
         }
 
         /// <summary>
@@ -167,19 +148,6 @@
         }
 
         /// <summary>
-        ///     Set properties for every matched element in context.
-        /// </summary>
-        /// <param name="attr">Html attributes</param>
-        public IExecutableSetting SetProp(object attr)
-        {
-            var codes = AnonymousHelper
-                    .ToDictionary(attr)
-                    .Select(valuePair => JavaScriptCodeTemplate.Target_SetProp.F(valuePair.Key.ToLower(), Selector.FromObject(valuePair.Value)))
-                    .ToList();
-            return this.plugInDsl.Registry(new ExecutableEval(codes));
-        }
-
-        /// <summary>
         ///     Set one properties for every matched element in context.
         /// </summary>
         /// <param name="key">Html attributes</param>
@@ -188,10 +156,7 @@
         /// </param>
         public IExecutableSetting SetProp(string key, Selector value = null)
         {
-            return SetProp(new RouteValueDictionary(new Dictionary<string, object>
-                                                        {
-                                                                { key, value ?? key }
-                                                        }));
+            return this.plugInDsl.Core().JQuery.Call("prop", key, value ?? key);
         }
 
         /// <summary>
@@ -212,15 +177,10 @@
         /// <param name="value"> A string of text or an array of strings corresponding to the value of each matched element to set as selected </param>
         public IExecutableSetting Val(object value)
         {
-            if (value is Selector)
-                return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_ValFromSelector.F(value)));
+            if (value is IEnumerable)
+                return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Val.F(value.ToJsonString())));
 
-            string val = value
-                    .If(r => r is IEnumerable)
-                    .Then()
-                    .ReturnOrDefault(r => r.ToJsonString(), "'{0}'".F(value));
-
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Val.F(val)));
+            return this.plugInDsl.Core().JQuery.Call("val", value.Recovery(string.Empty));
         }
 
         /// <summary>
@@ -231,7 +191,7 @@
         /// </param>
         public IExecutableSetting AddClass(string @class)
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_AddClass.F(@class)));
+            return this.plugInDsl.Core().JQuery.Call("addClass", @class);
         }
 
         #endregion

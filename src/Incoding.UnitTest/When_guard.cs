@@ -27,9 +27,7 @@ namespace Incoding.UnitTest
         It should_be_not_null = () => Catch.Exception(() => Guard.NotNull<When_guard>("Argument", null)).ShouldBeOfType<ArgumentException>();
 
         It should_be_not_null_or_empty_string = () => Catch.Exception(() => Guard.NotNullOrEmpty("Argument", string.Empty)).ShouldBeOfType<ArgumentException>();
-
-        It should_be_not_null_or_empty_collection_with_empty_collection = () => Catch.Exception(() => Guard.NotNullOrEmpty("ArrayArgument", Pleasure.ToEnumerable<string>())).ShouldBeOfType<ArgumentException>();
-
+      
         It should_be_not_null_or_empty_collection_with_null_collection = () => Catch.Exception(() => Guard.NotNullOrEmpty("ArrayArgument", null)).ShouldBeOfType<ArgumentException>();
     }
 }

@@ -1,6 +1,6 @@
 namespace Incoding.CQRS
 {
-    public abstract class QueryBase<TResult> : MessageBase<TResult> where TResult : class
+    public abstract class QueryBase<TResult> : MessageBase<TResult>
     {
         #region Override
 

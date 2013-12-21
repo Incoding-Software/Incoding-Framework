@@ -34,7 +34,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_append = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do().Direct()
-                                                 .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Append())
+                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Append())
                                                  .GetExecutable<ExecutableInsert>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
@@ -43,7 +43,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_prepend = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   .Do().Direct()
-                                                  .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Prepend())
+                                                  .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Prepend())
                                                   .GetExecutable<ExecutableInsert>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                        {
@@ -52,7 +52,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_after = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()
-                                                .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.After())
+                                                .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.After())
                                                 .GetExecutable<ExecutableInsert>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
@@ -61,7 +61,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_before = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do().Direct()
-                                                 .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Before())
+                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Before())
                                                  .GetExecutable<ExecutableInsert>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
@@ -70,7 +70,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_val = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                               .Do().Direct()
-                                              .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Val())
+                                              .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Val())
                                               .GetExecutable<ExecutableInsert>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                    {
@@ -79,7 +79,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_html = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
-                                               .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Html())
+                                               .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Html())
                                                .GetExecutable<ExecutableInsert>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                     {
@@ -88,7 +88,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_with_text = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
-                                               .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Text())
+                                               .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Text())
                                                .GetExecutable<ExecutableInsert>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                     {
@@ -97,41 +97,41 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_insert_with_jquery_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                  .Do().Direct()
-                                                                 .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent()).Text())
+                                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent(HtmlTag.Area)).Text())
                                                                  .GetExecutable<ExecutableInsert>()
                                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                                       {
-                                                                                              { "insertType", "text" }, 
-                                                                                              { "template", "$('.new').parent()" }
+                                                                                              { "insertType", "text" },
+                                                                                              { "template", "$('.new').parent('area')" }
                                                                                       });
 
         It should_be_insert_with_ajax_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                .Do().Direct()
-                                                               .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Incoding.AjaxGet(Pleasure.Generator.TheSameString())).Text())
+                                                               .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Incoding.AjaxGet(Pleasure.Generator.TheSameString())).Text())
                                                                .GetExecutable<ExecutableInsert>()
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                     {
-                                                                                            { "insertType", "text" }, 
-                                                                                            { "template", "'@@@@@@@{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}@@@@@@@'" }
+                                                                                            { "insertType", "text" },
+                                                                                            { "template", "||ajax*{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}||" }
                                                                                     });
 
         It should_be_insert_for = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()
-                                                .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.For<FakeInsertModel>(model => model.Prop1).Text())
+                                                .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.For<FakeInsertModel>(model => model.Prop1).Text())
                                                 .GetExecutable<ExecutableInsert>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "insertType", "text" }, 
+                                                                             { "insertType", "text" },
                                                                              { "property", "Prop1" }
                                                                      });
 
         It should_be_insert_prepair = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                     .Do().Direct()
-                                                    .OnSuccess(callbackDsl => callbackDsl.With(targetSelector).Core().Insert.Prepare().Text())
+                                                    .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.Prepare().Text())
                                                     .GetExecutable<ExecutableInsert>()
                                                     .ShouldEqualData(new Dictionary<string, object>
                                                                          {
-                                                                                 { "insertType", "text" }, 
+                                                                                 { "insertType", "text" },
                                                                                  { "prepare", true }
                                                                          });
     }

@@ -35,16 +35,13 @@ namespace Incoding.MvcContrib
         /// <summary>
         ///     <see cref="HtmlAttribute.Placeholder" />
         /// </summary>
-        public string Placeholder
-        {
-            set { this.attributes.Set(HtmlAttribute.Placeholder.ToStringLower(), value); }
-        }
+        public string Placeholder { set { this.attributes.Set(HtmlAttribute.Placeholder.ToStringLower(), value); } }
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
-            return this.htmlHelper.TextBoxFor(this.property, this.attributes);
+            return this.htmlHelper.TextBoxFor(this.property, GetAttributes());
         }
     }
 }

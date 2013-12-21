@@ -61,8 +61,8 @@
                                                          .ShouldEqual("url#!hash?");
 
         It should_be_set_hash_with_query_string = () => "url#!"
-                                                                .SetHash("hash?Param=aws&incView=value")
-                                                                .ShouldEqual("url#!hash?Param=aws/incView=value");
+                                                                .SetHash("/Dispatcher/Render?TypeOfCategory=Kitchen&type=CategoriesTmpl&incView=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FOrder_Details.cshtml&OrderId=value")
+                                                                .ShouldEqual("url#!Dispatcher/Render?TypeOfCategory=Kitchen/type=CategoriesTmpl/incView=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FOrder_Details.cshtml/OrderId=value");
 
         It should_be_append_to_hash_query_string = () => "http://sample.com#!"
                                                                  .AppendToHashQueryString(new
@@ -90,7 +90,7 @@
         It should_be_append_to_hash_query_string_with_exist = () => "http://sample.com#!Index/Home?param=Value"
                                                                             .AppendToHashQueryString(new { param = "newValue" })
                                                                             .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
-
+   
         It should_be_append_to_hash_query_string_with_exist_empty = () => "http://sample.com#!Index/Home?param="
                                                                                   .AppendToHashQueryString(new { param = "newValue" })
                                                                                   .ShouldEqual("http://sample.com#!Index/Home?param=newValue");

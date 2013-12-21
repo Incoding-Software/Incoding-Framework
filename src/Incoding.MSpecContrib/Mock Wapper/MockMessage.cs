@@ -66,6 +66,11 @@ namespace Incoding.MSpecContrib
             this.repository.Verify(r => r.Save(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
         }
 
+        public void ShouldBeFlush(int callCount = 1)
+        {
+            this.repository.Verify(r => r.Flush(), Times.Exactly(callCount));
+        }
+
         public void ShouldBeSave<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity
         {
             ShouldBeSave<TEntity>(r => r.ShouldEqualWeak(entity), callCount);
@@ -140,6 +145,12 @@ namespace Incoding.MSpecContrib
         public MockMessage<TMessage, TResult> StubQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null, params TEntity[] entities) where TEntity : class, IEntity
         {
             return Stub(message => message.repository.StubQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification, entities));
+        }
+
+
+        public MockMessage<TMessage, TResult> StubEmptyQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity
+        {
+            return Stub(message => message.repository.StubQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification, Pleasure.ToArray<TEntity>()));
         }
 
         public MockMessage<TMessage, TResult> StubPaginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, IncPaginatedResult<TEntity> result = null) where TEntity : class, IEntity

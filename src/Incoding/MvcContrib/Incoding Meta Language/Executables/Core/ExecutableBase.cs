@@ -10,26 +10,11 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public abstract class ExecutableBase : IExecutableSetting
+    public abstract class ExecutableBase : Dictionary<string, object>, IExecutableSetting
     {
         #region Fields
 
         readonly List<ConditionalBase> conditionals = new List<ConditionalBase>();
-
-        #endregion
-
-        #region Constructors
-
-        protected ExecutableBase()
-        {
-            Data = new Dictionary<string, object>();
-        }
-
-        #endregion
-
-        #region Properties
-
-        public Dictionary<string, object> Data { get; set; }
 
         #endregion
 
@@ -45,14 +30,24 @@ namespace Incoding.MvcContrib
 
         public void TimeOut(double millisecond)
         {
-            Data.Set("timeOut", millisecond);
+            this.Set("timeOut", millisecond);
+        }
+
+        public void TimeOut(TimeSpan millisecond)
+        {
+            TimeOut(millisecond.TotalMilliseconds);
         }
 
         public void Interval(double millisecond, out string intervalId)
         {
             intervalId = Guid.NewGuid().ToString().Replace("-", "_");
-            Data.Set("interval", millisecond);
-            Data.Set("intervalId", intervalId);
+            this.Set("interval", millisecond);
+            this.Set("intervalId", intervalId);
+        }
+
+        public void Interval(TimeSpan millisecond, out string intervalId)
+        {
+            Interval(millisecond.TotalMilliseconds, out intervalId);
         }
 
         #endregion
@@ -80,15 +75,15 @@ namespace Incoding.MvcContrib
                         ands.Add(key, new List<object> { conditional.GetData() });
                 }
 
-                Data["ands"] = ands
+                this["ands"] = ands
                         .Select(r => r.Value)
                         .ToList();
             }
 
             var newCallback = new
                                   {
-                                          type = GetType().Name, 
-                                          data = Data
+                                          type = GetType().Name,
+                                          data = this
                                   };
 
             if (!dest.ContainsKey(dataIncodingKey))

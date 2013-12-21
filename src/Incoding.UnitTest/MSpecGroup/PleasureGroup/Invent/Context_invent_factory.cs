@@ -6,6 +6,7 @@ namespace Incoding.UnitTest.MSpecGroup
     using System.Collections.Generic;
     using System.IO;
     using System.Web;
+    using Incoding.Quality;
 
     #endregion
 
@@ -16,6 +17,9 @@ namespace Incoding.UnitTest.MSpecGroup
         protected class FakeGenerateObject
         {
             #region Properties
+
+            [IgnoreInvent("Test")]
+            public string IgnoreValueByAttr { get; set; }
 
             public string StrValue { get; set; }
 

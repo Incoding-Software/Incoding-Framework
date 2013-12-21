@@ -26,10 +26,11 @@
 
         public virtual int Value2 { get; set; }
 
-        public virtual ReadOnlyCollection<RealDbItemEntity> Items
-        {
-            get { return new ReadOnlyCollection<RealDbItemEntity>(this.items); }
-        }
+        public virtual string ValueStr { get; set; }
+
+        public virtual int? ValueNullable { get; set; }
+
+        public virtual ReadOnlyCollection<RealDbItemEntity> Items { get { return new ReadOnlyCollection<RealDbItemEntity>(this.items); } }
 
         public virtual RealDbItemEntity Reference { get; set; }
 
@@ -57,6 +58,8 @@
                 IdGenerateByGuid(r => r.Id);
                 Map(r => r.Value);
                 Map(r => r.Value2);
+                Map(r => r.ValueStr);
+                Map(r => r.ValueNullable);
                 DefaultHasMany(r => r.Items);
                 DefaultReference(r => r.Reference);
             }

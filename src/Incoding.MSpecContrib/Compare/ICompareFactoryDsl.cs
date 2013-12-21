@@ -14,6 +14,14 @@ namespace Incoding.MSpecContrib
 
         ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(string actualProp, Expression<Func<TExpected, TValue>> expectedProp);
 
+        ICompareFactoryDsl<TActual, TExpected> ForwardToString(string actualProp);
+
+        ICompareFactoryDsl<TActual, TExpected> ForwardToString<TValue>(Expression<Func<TActual, TValue>> actualProp);
+
+        ICompareFactoryDsl<TActual, TExpected> ForwardToDefault<TValue>(Expression<Func<TActual, TValue>> actualProp);
+
+        ICompareFactoryDsl<TActual, TExpected> ForwardToDefault<TValue>(string actualProp);
+
         ICompareFactoryDsl<TActual, TExpected> ForwardToValue<TValue>(Expression<Func<TActual, TValue>> actualProp, TValue value);
 
         ICompareFactoryDsl<TActual, TExpected> ForwardToValue(string actualProp, object value);

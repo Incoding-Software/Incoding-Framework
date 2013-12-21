@@ -1,0 +1,18 @@
+﻿        @using (Html.When(JqueryBind.InitIncoding)
+                    .Do()
+                    .Direct()
+                    .OnSuccess(dsl => dsl.Utilities.Window.Alert("Root Init"))
+                    .AsHtmlAttributes()
+                    .ToBeginTag(Html, HtmlTag.Div))
+        {
+            @(Html.When(JqueryBind.InitIncoding)
+                  .Do()
+                  .Direct()
+                  .OnSuccess(dsl => dsl.Utilities.Window.Alert("Init event"))
+                  .When(JqueryBind.Click)
+                  .Do()
+                  .Direct()
+                  .OnSuccess(dsl => dsl.Self().Core().Trigger.Invoke(JqueryBind.InitIncoding))
+                  .AsHtmlAttributes()
+                  .ToButton("Click"))
+        }

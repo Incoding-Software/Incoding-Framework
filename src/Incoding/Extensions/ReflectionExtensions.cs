@@ -96,7 +96,7 @@ namespace Incoding.Extensions
         {
             var memberInfo = GetMemberInfo(ob, property, BindingFlags.SetField | BindingFlags.SetProperty);
             if (memberInfo == null)
-                throw new InstanceNotFoundException("Not found property or field {0}".ApplyFormat(property));
+                throw new InstanceNotFoundException("Not found property or field {0}".F(property));
 
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)

@@ -8,6 +8,7 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using Incoding.Extensions;
+    using Incoding.Maybe;
 
     #endregion
 
@@ -15,19 +16,36 @@ namespace Incoding.MvcContrib
     {
         #region Factory constructors
 
+        public static IEnumerable<KeyValueVm> ToKeyValueVm<TItem>(this IEnumerable<TItem> source, Func<TItem, object> value, Func<TItem, object> text)
+        {
+            return source.Select(item => new KeyValueVm(value(item), text(item).With(r => r.ToString())));
+        }
+
+        public static IEnumerable<KeyValueVm> ToKeyValueVm<TItem>(this IEnumerable<TItem> source, Func<TItem, object> value)
+        {
+            return source.ToKeyValueVm(value, value);
+        }
+
+        public static IEnumerable<KeyValueVm> ToKeyValueVm(this Type typeEnum, Enum selectedValue = null)
+        {
+            Guard.IsConditional("typeEnum", typeEnum.IsEnum, "Type should be Enum");
+
+            var items = Enum
+                    .GetValues(typeEnum)
+                    .Cast<Enum>()
+                    .Select(@enum => new KeyValueVm(@enum, @enum.ToLocalization(), @enum.ToString("d") == selectedValue.With(r => r.ToString("d"))))
+                    .ToList();
+            return items;
+        }
+
         public static IEnumerable<KeyValueVm> ToKeyValues(this IEnumerable<SelectListItem> list)
         {
             return list.Select(r => new KeyValueVm(r.Value, r.Text, r.Selected));
         }
 
-        public static SelectList ToSelectList(this Type @enum)
+        public static OptGroupVm ToOptGroup(this IEnumerable<KeyValueVm> source, string title = "")
         {
-            return ToSelectList(@enum, null, null);
-        }
-
-        public static SelectList ToSelectList(this Type @enum, int selectedValue, string defaultOption = null)
-        {
-            return ToSelectList(@enum, selectedValue, !string.IsNullOrWhiteSpace(defaultOption) ? new KeyValueVm(defaultOption, defaultOption) : null);
+            return new OptGroupVm(title, source);
         }
 
         public static SelectList ToSelectList<TItem>(this IEnumerable<TItem> source, Expression<Func<TItem, object>> value, Expression<Func<TItem, object>> text, object selected, TItem defaultOption = null)
@@ -60,16 +78,12 @@ namespace Incoding.MvcContrib
             return ItemToSelectList(source, value, text, selectedValue, null);
         }
 
-        #endregion
-
-        static SelectList ToSelectList(Type typeEnum, int? selectedValue, KeyValueVm defaultOption)
+        public static SelectList ToSelectList(this Type typeEnum, Enum selectedValue = null, KeyValueVm defaultOption = null)
         {
-            var enumCollection = Enum
-                    .GetValues(typeEnum)
-                    .Cast<Enum>()
-                    .Select(r => new KeyValueVm(r.ToString("d"), r.ToLocalization(), selectedValue.HasValue));
-            return ItemToSelectList(enumCollection, "Value", "Text", selectedValue.HasValue ? selectedValue.ToString() : string.Empty, defaultOption);
+            return ItemToSelectList(typeEnum.ToKeyValueVm(), "Value", "Text", selectedValue.With(r => r.ToString()), defaultOption);
         }
+
+        #endregion
 
         static SelectList ItemToSelectList<TItem>(IEnumerable<TItem> source, string value, string text, string selectedValue, object defaultValue)
         {

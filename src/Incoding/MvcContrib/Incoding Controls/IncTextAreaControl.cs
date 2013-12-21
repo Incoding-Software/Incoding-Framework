@@ -50,9 +50,9 @@
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
-            return this.htmlHelper.TextAreaFor(this.property, this.attributes);
+            return this.htmlHelper.TextAreaFor(this.property, GetAttributes());
         }
     }
 }

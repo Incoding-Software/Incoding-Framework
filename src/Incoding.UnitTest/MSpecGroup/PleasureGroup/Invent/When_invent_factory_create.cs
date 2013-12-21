@@ -28,6 +28,14 @@ namespace Incoding.UnitTest.MSpecGroup
                                       inventFactory.Create().StrValue.ShouldEqual(tuningValue);
                                   };
 
+
+        It should_be_ignore_by_attribute = () =>
+                                  {
+                                      inventFactory = new InventFactory<FakeGenerateObject>();                                      
+                                      inventFactory.Create().IgnoreValueByAttr.ShouldBeNull();
+                                  };
+        
+ 
         It should_be_tuning_null = () =>
                                        {
                                            inventFactory = new InventFactory<FakeGenerateObject>();
@@ -41,6 +49,14 @@ namespace Incoding.UnitTest.MSpecGroup
                                               inventFactory.Tuning(r => r.StrValue, default(string));
                                               inventFactory.Create().StrValue.ShouldBeNull();
                                           };
+
+        It should_be_tuning_cover_ignore_by_attribute = () =>
+                                                            {
+                                                                inventFactory = new InventFactory<FakeGenerateObject>();
+                                                                inventFactory.Tuning(r => r.IgnoreValueByAttr, Pleasure.Generator.TheSameString());
+                                                                inventFactory.Create().IgnoreValueByAttr.ShouldBeTheSameString();
+                                                            };
+
 
         It should_be_tunings = () =>
                                    {

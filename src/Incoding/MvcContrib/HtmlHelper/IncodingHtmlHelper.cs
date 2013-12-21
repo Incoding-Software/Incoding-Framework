@@ -2,9 +2,10 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
-    using System.Text;
+    using System;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.Block.IoC;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using JetBrains.Annotations;
@@ -52,9 +53,9 @@ namespace Incoding.MvcContrib
             return new MvcHtmlString(script.ToString());
         }
 
-        public MvcScriptTemplate<TModel> ScriptTemplate<TModel>(string id, HtmlType htmlType = HtmlType.TextMustacheTmpl)
+        public MvcScriptTemplate<TModel> ScriptTemplate<TModel>(string id)
         {
-            return new MvcScriptTemplate<TModel>(this.htmlHelper, id, WebEnumConvertToString.ToHtmlType(htmlType));
+            return new MvcScriptTemplate<TModel>(this.htmlHelper, id);
         }
 
         public MvcTemplate<TModel> Template<TModel>()
@@ -67,7 +68,7 @@ namespace Incoding.MvcContrib
             var tagBuilder = CreateTag(HtmlTag.Link, MvcHtmlString.Empty, new RouteValueDictionary());
             tagBuilder.MergeAttribute(HtmlAttribute.Href.ToStringLower(), href);
             tagBuilder.MergeAttribute(HtmlAttribute.Rel.ToStringLower(), "stylesheet");
-            tagBuilder.MergeAttribute(HtmlAttribute.Type.ToStringLower(), WebEnumConvertToString.ToHtmlType(HtmlType.TextCss));
+            tagBuilder.MergeAttribute(HtmlAttribute.Type.ToStringLower(), HtmlType.TextCss.ToLocalization());
 
             return new MvcHtmlString(tagBuilder.ToString());
         }
@@ -195,24 +196,16 @@ namespace Incoding.MvcContrib
 
         public MvcHtmlString RenderDropDownTemplate()
         {
-            var sb = new StringBuilder();
-            const string mustachesDropDownTemplate = "{{#data}}{{#Title}} <optgroup label=\"{{Title}}\">" +
-                                                     "{{#Items}} <option {{#Selected}}selected=\"selected\"{{/Selected}} value=\"{{Value}}\">{{Text}}</option>" +
-                                                     "{{/Items}} </optgroup>" +
-                                                     "{{/Title}}{{^Title}}{{#Items}} <option {{#Selected}}selected=\"selected\"{{/Selected}} value=\"{{Value}}\">{{Text}}</option>" +
-                                                     "{{/Items}}{{/Title}}{{/data}}";
-
-            var template = CreateScript(DropDownTemplateId, HtmlType.TextMustacheTmpl, string.Empty, new MvcHtmlString(mustachesDropDownTemplate));
-            sb.AppendLine(template.ToString());
-
-            return new MvcHtmlString(sb.ToString());
+            string template = IoCFactory.Instance.TryResolve<ITemplateFactory>().GetDropDownTemplate();
+            return new MvcHtmlString(CreateScript(DropDownTemplateId, HtmlType.TextTemplate, string.Empty, new MvcHtmlString(template)).ToString());
         }
 
         #endregion
 
+
         static TagBuilder CreateScript(string id, HtmlType type, string src, MvcHtmlString content)
         {
-            var routeValueDictionary = new RouteValueDictionary(new { type = WebEnumConvertToString.ToHtmlType(type) });
+            var routeValueDictionary = new RouteValueDictionary(new { type = type.ToLocalization() });
             if (!string.IsNullOrWhiteSpace(src))
                 routeValueDictionary.Merge(new { src });
             if (!string.IsNullOrWhiteSpace(id))

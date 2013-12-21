@@ -15,8 +15,6 @@
 
         static IncHelpBlockControl control;
 
-        static string result;
-
         #endregion
 
         Establish establish = () =>
@@ -25,8 +23,9 @@
                                       control.Message = Pleasure.Generator.TheSameString();
                                   };
 
-        Because of = () => { result = control.Render().ToHtmlString(); };
+        Because of = () => { result = control.ToHtmlString(); };
 
-        It should_be_render = () => result.ShouldEqual("<p class=\"help-block\">TheSameString</p>");
+        It should_be_render = () => result.ToString()
+                                          .ShouldEqual("<p class=\"help-block\">TheSameString</p>");
     }
 }

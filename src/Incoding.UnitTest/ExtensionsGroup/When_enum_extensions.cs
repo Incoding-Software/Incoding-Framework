@@ -32,11 +32,12 @@
         [Flags]
         enum FlagFakeEnum
         {
-            Value, 
+            Value = 1, 
 
-            Value2, 
+            Value2 = 2, 
 
-            Value3
+            [Description("Value 3")]
+            Value3 = 4
         }
 
         #endregion
@@ -51,11 +52,19 @@
 
         It should_be_to_jquery_string = () => (FlagFakeEnum.Value2 | FlagFakeEnum.Value3)
                                                       .ToJqueryString()
-                                                      .ShouldEqual("value2 value3");
+                                                      .ShouldEqual("value2 value 3");
 
         It should_be_to_localization_without_description = () => FakeEnum.Value2
                                                                          .ToLocalization()
                                                                          .ShouldEqual("Value2");
+
+        It should_be_to_localization_flag = () => FlagFakeEnum.Value2
+                                                              .ToLocalization()
+                                                              .ShouldEqual("Value2");
+
+        It should_be_to_localization_flag_multiple = () => (FlagFakeEnum.Value2 | FlagFakeEnum.Value3)
+                                                                   .ToLocalization()
+                                                                   .ShouldEqual("Value2 Value 3");
 
         It should_be_to_localization_with_wrong_enum = () => ((FakeEnum)15)
                                                                      .ToLocalization()

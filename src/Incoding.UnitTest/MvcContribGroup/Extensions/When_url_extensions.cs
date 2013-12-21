@@ -16,11 +16,15 @@
     [Subject(typeof(UrlExtensions))]
     public class When_url_extensions
     {
+        It should_be_url_dispatcher = () => new MockUrl().Original
+                                                         .Dispatcher()
+                                                         .Should(dispatcher => dispatcher.TryGetValue("urlHelper").ShouldNotBeNull());
+
         It should_be_action_area = () =>
                                        {
                                            string expected = "/Jasmine".AppendToQueryString(new
                                                                                                 {
-                                                                                                        param = "id", 
+                                                                                                        param = "id",
                                                                                                         area = "Area"
                                                                                                 });
 

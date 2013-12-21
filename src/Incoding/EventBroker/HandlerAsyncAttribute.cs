@@ -7,13 +7,5 @@ namespace Incoding.EventBroker
     #endregion
 
     [AttributeUsage(AttributeTargets.Method)]
-    public sealed class HandlerAsyncAttribute : HandlerDescriptionAttribute
-    {
-        #region Constructors
-
-        public HandlerAsyncAttribute()
-                : base(true, false) { }
-
-        #endregion
-    }
+    public sealed class HandlerAsyncAttribute : Attribute { }
 }

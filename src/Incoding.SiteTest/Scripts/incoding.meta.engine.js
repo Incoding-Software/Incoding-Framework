@@ -30,7 +30,6 @@ function IncodingMetaElement(element) {
     this.element = element;
     this.runner = tryGetData(element, keyIncodingRunner);
     this.executables = !ExecutableHelper.IsNullOrEmpty(tryGetData(element, 'incoding')) ? $.parseJSON(tryGetData(element, 'incoding')) : '';
-
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
@@ -73,7 +72,6 @@ function IncodingMetaElement(element) {
             return true;
         });
     };
-
     this.invoke = function(e, result) {
         if (!ExecutableHelper.IsNullOrEmpty(this.runner)) {
             this.runner.DoIt(e, result);
@@ -82,10 +80,6 @@ function IncodingMetaElement(element) {
 
     this.flushRunner = function(runner) {
         $.data(this.element, keyIncodingRunner, runner);
-    };
-
-    this.IsNew = function() {
-        return !ExecutableHelper.IsNullOrEmpty(this.executables) && ExecutableHelper.IsNullOrEmpty(this.runner);
     };
 
 }
@@ -100,7 +94,7 @@ function IncodingRunner() {
     this.success = [];
     this.error = [];
     this.complete = [];
-    this.breakes = [];
+    this.breakes = [];    
 }
 
 IncodingRunner.prototype = {
@@ -125,23 +119,22 @@ IncodingRunner.prototype = {
 
             return isHas;
         };
-
+   
         try {
             $($.grep(this.before, filterFunc)).each(function() {
                 this.execute();
             });
-        } catch(e) {
-
+        }
+        catch(e) {
             if (e instanceof IncClientException) {
                 $($.grep(this.breakes, filterFunc)).each(function() {
                     this.execute(e);
                 });
                 return;
-            }
-            new DefaultIncodingInstrumentation().fireUnHandleException(e);
+            }            
             throw e;
         }
-
+        
         $($.grep(this.actions, filterFunc)).each(function() {
             this.execute(
                 {
@@ -151,14 +144,15 @@ IncodingRunner.prototype = {
                     breakes : $.grep(current.breakes, filterFunc),
                     eventResult : result
                 });
-        });
+        });        
     },
 
     Registry : function(metaType, onStatus, instance) {
 
         if (metaType.contains('Action')) {
             this.actions.push(instance);
-        } else {
+        }
+        else {
 
             switch (onStatus) {
                 case 1:
@@ -181,7 +175,7 @@ IncodingRunner.prototype = {
             }
 
         }
-    }
+    }        
 };
 
 //#endregion
@@ -205,7 +199,8 @@ function IncodingResult(result) {
                 throw new 'Not valid json result';
             }
             return res;
-        } catch(e) {
+        }
+        catch(e) {
             console.log('fail parse result:{0}'.f(json));
             console.log('with exception:{0}'.f(e));
             return '';
@@ -224,7 +219,6 @@ function IncodingResult(result) {
 
     this.data = this.isValid() ? this.parseJson.data : '';
 
-
 }
 
 IncodingResult.Empty = new IncodingResult({ data : '', redirectTo : '', success : true });
@@ -234,54 +228,55 @@ IncodingResult.Empty = new IncodingResult({ data : '', redirectTo : '', success 
 //#region class IncodingEngine
 
 function IncodingEngine() {
-
+    
     this.parse = function(context) {
 
-        var allIncodingElements = $(context).add($('*', context)).filter(function() {
-            return new IncodingMetaElement(this).IsNew();
-        });
+        var incSelector = '[incoding]';
 
-        $(allIncodingElements).each(function() {
+        $(incSelector, context)
+            .add($(context).is(incSelector) ? context : '')
+            .each(function() {
 
-            var incodingMetaElement = new IncodingMetaElement(this);
+                var incodingMetaElement = new IncodingMetaElement(this);
 
-            var runner = new IncodingRunner();
-            var wasAddBinds = [];
+                var runner = new IncodingRunner();
+                var wasAddBinds = [];
 
-            $(incodingMetaElement.executables).each(function() {
-                var metaData = this;
+                $(incodingMetaElement.executables).each(function() {
+                    var metaData = this;
 
-                var jsonData = _.isObject(metaData.data) ? metaData.data : $.parseJSON(metaData.data);
+                    var jsonData = _.isObject(metaData.data) ? metaData.data : $.parseJSON(metaData.data);
 
-                var executableInstance = ExecutableFactory.Create(metaData.type, jsonData, incodingMetaElement.element);
-                runner.Registry(metaData.type, jsonData.onStatus, executableInstance);
+                    var executableInstance = ExecutableFactory.Create(metaData.type, jsonData, incodingMetaElement.element);
+                    runner.Registry(metaData.type, jsonData.onStatus, executableInstance);
 
-                var bindName = jsonData.onBind.toString();
-                if (wasAddBinds.contains(bindName)) {
-                    return true;
+                    var bindName = jsonData.onBind.toString();
+                    if (wasAddBinds.contains(bindName)) {
+                        return true;
+                    }
+
+                    wasAddBinds.push(bindName);
+
+                    bindName = bindName
+                        .toString()
+                        .replaceAll(IncSpecialBinds.InitIncoding, '').trim()
+                        .toString();
+
+                    var onEventStatus = ExecutableHelper.IsNullOrEmpty(metaData.data.onEventStatus) ? '1' : metaData.data.onEventStatus;
+                    incodingMetaElement.bind(bindName, onEventStatus.toString());
+                });
+                incodingMetaElement.flushRunner(runner);
+
+                var hasInitIncoding = $.grep(wasAddBinds, function(r) {
+                    return r.contains(IncSpecialBinds.InitIncoding);
+                }).length != 0;
+
+                if (hasInitIncoding) {
+                    incodingMetaElement.bind(IncSpecialBinds.InitIncoding, '4');
+                    new  IncodingMetaElement(this).invoke(jQuery.Event(IncSpecialBinds.InitIncoding));
                 }
-
-                wasAddBinds.push(bindName);
-
-                bindName = bindName
-                    .toString()
-                    .replaceAll(IncSpecialBinds.InitIncoding, '').trim()
-                    .toString();
-
-                var onEventStatus = ExecutableHelper.IsNullOrEmpty(metaData.data.onEventStatus) ? '1' : metaData.data.onEventStatus;
-                incodingMetaElement.bind(bindName, onEventStatus.toString());
+                $(this).removeAttr('incoding');
             });
-            incodingMetaElement.flushRunner(runner);
-
-            var hasInitIncoding = $.grep(wasAddBinds, function(r) {
-                return r.contains(IncSpecialBinds.InitIncoding);
-            }).length != 0;
-
-            if (hasInitIncoding) {
-                new  IncodingMetaElement(this).invoke(jQuery.Event(IncSpecialBinds.InitIncoding));
-            }
-
-        });
 
     };
 

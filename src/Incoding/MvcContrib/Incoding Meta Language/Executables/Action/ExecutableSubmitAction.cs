@@ -4,10 +4,10 @@ namespace Incoding.MvcContrib
     {
         #region Constructors
 
-        internal ExecutableSubmitAction(string formSelector, JqueryAjaxFormOptions ajaxForm)
+        public ExecutableSubmitAction(string formSelector, JqueryAjaxFormOptions ajaxForm)
         {
-            Data.Add("options", ajaxForm.OptionCollections);
-            Data.Add("formSelector", formSelector);
+            this.Add("options", ajaxForm);
+            this.Add("formSelector", formSelector);
         }
 
         #endregion

@@ -6,6 +6,8 @@
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using Incoding.Extensions;
+    using Incoding.Maybe;
 
     #endregion
 
@@ -29,9 +31,9 @@
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
-            return this.htmlHelper.HiddenFor(this.property, this.attributes);
+            return this.htmlHelper.HiddenFor(this.property, GetAttributes());
         }
     }
 }

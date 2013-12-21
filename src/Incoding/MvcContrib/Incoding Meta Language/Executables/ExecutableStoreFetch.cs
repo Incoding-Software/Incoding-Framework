@@ -12,8 +12,8 @@
 
         public ExecutableStoreFetch(string type, string prefix)
         {
-            Data.Set("type", type);
-            Data.Set("prefix", prefix);
+            this.Set("type", type);
+            this.Set("prefix", prefix);
         }
 
         #endregion

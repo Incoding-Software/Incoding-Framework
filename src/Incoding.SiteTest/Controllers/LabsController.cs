@@ -4,7 +4,7 @@
 
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using Incoding.CQRS;
+    using Incoding.Extensions;
     using Incoding.MvcContrib;
     using Incoding.SiteTest.VM;
 
@@ -12,13 +12,6 @@
 
     public class LabsController : IncControllerBase
     {
-        #region Constructors
-
-        public LabsController(IDispatcher dispatcher)
-                : base(dispatcher) { }
-
-        #endregion
-
         #region Http action
 
         [HttpGet]
@@ -34,12 +27,36 @@
         [HttpGet]
         public ActionResult Index()
         {
-            return View(new LabsIndexContainer()
+            return View(new LabsIndexContainer
                             {
-                                    DropId = "USA"
+                                    DropId = LabsIndexContainer.TestEnum.Value2
                             });
         }
 
+        [HttpPost]
+        public ActionResult Submit(string value, string optional)
+        {
+            return IncJson(new KeyValueVm());
+        }
+
         #endregion
+
+        #region Api Methods
+
+        public ActionResult FetchForDd()
+        {
+            var optGroupVm = typeof(LabsIndexContainer.TestEnum)
+                    .ToKeyValueVm()
+                    .ToOptGroup();
+            return IncJson(optGroupVm);
+        }
+
+        public ActionResult GetVal(string original)
+        {
+            return IncJson(original + original);
+        }
+
+        #endregion
+
     }
 }

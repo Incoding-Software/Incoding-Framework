@@ -2,9 +2,6 @@
 {
     #region << Using >>
 
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Routing;
     using Incoding.Extensions;
 
     #endregion
@@ -37,23 +34,7 @@
         /// </param>
         public IExecutableSetting Set(string key, Selector value)
         {
-            Guard.NotNullOrWhiteSpace("key", key);
-            Guard.NotNull("value", value);
-
-            return Set(new RouteValueDictionary(new Dictionary<string, object>
-                                                    {
-                                                            { key, value }
-                                                    }));
-        }
-
-        public IExecutableSetting Set(object styles)
-        {
-            var codes = AnonymousHelper
-                    .ToDictionary(styles)
-                    .Select(r => JavaScriptCodeTemplate.Target_SetCss.F(r.Key.ToLower(), Selector.FromObject(r.Value)))
-                    .ToList();
-
-            return this.plugInDsl.Registry(new ExecutableEval(codes));
+            return this.plugInDsl.Core().JQuery.Call("css", key, value);
         }
 
         /// <summary>
@@ -67,7 +48,7 @@
         /// </param>
         public IExecutableSetting Set(CssStyling key, Selector value)
         {
-            return Set(key.ToStringLower().Replace("_", "-"), value);
+            return Set(key.ToJqueryString(), value);
         }
 
         /// <summary>
@@ -78,8 +59,7 @@
         /// </param>
         public IExecutableSetting Height(Selector value)
         {
-            string code = JavaScriptCodeTemplate.Target_Height.F(value);
-            return this.plugInDsl.Registry(new ExecutableEval(code));
+            return this.plugInDsl.Core().JQuery.Call("height", value);
         }
 
         /// <summary>
@@ -90,8 +70,7 @@
         /// </param>
         public IExecutableSetting ScrollLeft(Selector value)
         {
-            string code = JavaScriptCodeTemplate.Target_ScrollLeft.F(value);
-            return this.plugInDsl.Registry(new ExecutableEval(code));
+            return this.plugInDsl.Core().JQuery.Call("scrollLeft", value);
         }
 
         /// <summary>
@@ -102,8 +81,7 @@
         /// </param>
         public IExecutableSetting ScrollTop(Selector value)
         {
-            string code = JavaScriptCodeTemplate.Target_ScrollTop.F(value);
-            return this.plugInDsl.Registry(new ExecutableEval(code));
+            return this.plugInDsl.Core().JQuery.Call("scrollTop", value);
         }
 
         /// <summary>
@@ -114,8 +92,7 @@
         /// </param>
         public IExecutableSetting Width(Selector value)
         {
-            string code = JavaScriptCodeTemplate.Target_Width.F(value);
-            return this.plugInDsl.Registry(new ExecutableEval(code));
+            return this.plugInDsl.Core().JQuery.Call("width", value);
         }
 
         #endregion

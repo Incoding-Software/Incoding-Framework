@@ -31,7 +31,7 @@ namespace Incoding.UnitTest.MvcContribGroup
             arrayMeta[1].Should(token =>
                                     {
                                         dynamic o = token;
-                                        (o.type.Value as string).ShouldEqual("ExecutableRedirect");
+                                        (o.type.Value as string).ShouldEqual("ExecutableEvalMethod");
                                     });
         }
 
@@ -43,7 +43,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                   {
                                       incodingMetaContainer = new IncodingMetaContainer();
                                       incodingMetaContainer.Add(new ExecutableDirectAction(Pleasure.Generator.String()));
-                                      incodingMetaContainer.Add(new ExecutableRedirect("redirectTo"));
+                                      incodingMetaContainer.Add(new ExecutableEvalMethod("redirectTo",new []{""},string.Empty));
                                   };
 
         It should_be_with_anonymous_attributes = () =>

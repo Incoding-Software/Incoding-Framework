@@ -14,11 +14,11 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_direct = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                             .Do().Direct()
                                             .GetExecutable<ExecutableDirectAction>()
-                                            .Should(action => action.Data["result"].ShouldNotBeNull());
+                                            .Should(action => action["result"].ShouldNotBeNull());
 
         It should_be_direct_with_data = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                       .Do().Direct(IncodingResult.Success(Pleasure.Generator.TheSameString()))
                                                       .GetExecutable<ExecutableDirectAction>()
-                                                      .Should(action => action.Data["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\"}"));
+                                                      .Should(action => action["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\"}"));
     }
 }

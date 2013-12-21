@@ -62,7 +62,7 @@ namespace Incoding.MvcContrib
         }
 
         public IncodingMetaCallbackInsertDsl WithTemplate(Selector selector)
-        {
+        {            
             this.insertTemplateSelector = selector;
             return this;
         }

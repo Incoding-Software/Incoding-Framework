@@ -1,6 +1,6 @@
 ﻿namespace Incoding.CQRS
 {
-    public interface IMessage<out TResult> where TResult : class
+    public interface IMessage<out TResult>
     {
         TResult Result { get; }
 

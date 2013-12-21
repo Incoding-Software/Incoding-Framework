@@ -7,6 +7,7 @@
     using System.Web.Mvc;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using Incoding.MvcContrib.MVD;
     using JetBrains.Annotations;
 
     #endregion
@@ -24,7 +25,12 @@
             routeValues.Set("area", area);
             return urlHelper.Action(action, controller, routeValues);
         }
-        
+
+        public static UrlDispatcher Dispatcher(this UrlHelper urlHelper)
+        {
+            return new UrlDispatcher(urlHelper);
+        }
+
         public static string Hash(this UrlHelper urlHelper, [AspMvcAction] string action, [AspMvcController] string controller, object routes = null)
         {
             return urlHelper.InternalHash(action, controller, urlHelper.RequestContext.HttpContext.Request.Url, string.Empty, routes);

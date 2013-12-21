@@ -34,7 +34,6 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_have_action = () => ((List<ExecutableBase>)meta.TryGetValue("merges"))
                                                  .OfType<ExecutableBreak>()
                                                  .FirstOrDefault()
-                                                 .Data
                                                  .Should(objects =>
                                                              {
                                                                  objects.ShouldBeKeyValue("onBind", meta.onBind);

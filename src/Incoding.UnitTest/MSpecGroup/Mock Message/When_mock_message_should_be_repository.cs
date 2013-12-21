@@ -27,6 +27,7 @@
             #endregion
 
             // ReSharper disable MemberCanBePrivate.Local
+
             #region Properties
 
             public string Field { get; set; }
@@ -50,6 +51,9 @@
 
                 Repository.Delete<FakeEntity>(Pleasure.Generator.TheSameString());
                 Repository.Delete<FakeEntity>(Pleasure.Generator.TheSameString());
+
+                Repository.Flush();
+                Repository.Flush();
             }
         }
 
@@ -74,6 +78,8 @@
         It should_be_save_entity = () => mockMessage.ShouldBeSave(new FakeEntity(Pleasure.Generator.TheSameString()));
 
         It should_be_save = () => mockMessage.ShouldBeSave<FakeEntity>(entity => entity.ShouldNotBeNull(), 2);
+
+        It should_be_flush = () => mockMessage.ShouldBeFlush(2);
 
         It should_be_save_or_update_with_times = () => mockMessage.ShouldBeSaveOrUpdate<FakeEntity>(entity => entity.ShouldNotBeNull(), 2);
 

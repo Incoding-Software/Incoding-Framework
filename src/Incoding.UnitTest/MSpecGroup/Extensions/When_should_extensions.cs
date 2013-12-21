@@ -99,6 +99,10 @@
 
         It should_be_date = () => DateTime.Now.ShouldBeDate(DateTime.Now.AddMinutes(2));
 
+        It should_be_satisfy = () => DateTime.Now.ShouldSatisfy(time => time.Date == DateTime.Now.Date);
+
+        It should_be_not_satisfy = () => DateTime.Now.ShouldNotSatisfy(time => time.Date != DateTime.Now.Date);
+
         It should_be_date_nullable = () =>
                                          {
                                              DateTime? leftNullable = DateTime.Now;
@@ -203,7 +207,7 @@
                                              {
                                                  var valResult = new ValidationResult(new List<ValidationFailure>
                                                                                           {
-                                                                                                  new ValidationFailure("Property", Pleasure.Generator.TheSameString()), 
+                                                                                                  new ValidationFailure("Property", Pleasure.Generator.TheSameString()),
                                                                                                   new ValidationFailure("Property", Pleasure.Generator.String())
                                                                                           });
                                                  Catch.Exception(() => valResult.ShouldNotBeFailure<When_should_extensions>(r => r.Property)).ShouldBeOfType<SpecificationException>();

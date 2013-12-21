@@ -46,9 +46,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="content\Controllers\DispatcherController.cs.pp" />
+    <None Include="content\Controllers\HomeController.cs.pp" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="content\Views\Home\Index.cshtml" />
+    <None Include="content\Views\Shared\_Layout.cshtml" />
+    <None Include="content\web.config.transform" />
     <None Include="NuGetPackage.ps1" />
     <None Include="NuGetSetup.ps1" />
     <None Include="NuGet.exe" />
@@ -61,6 +66,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="content\Scripts\incoding.framework.js" />
+    <Content Include="content\Scripts\incoding.framework.min.js" />
     <Content Include="content\Scripts\jquery.history.js" />
     <Content Include="lib\net40\Incoding.dll" />
   </ItemGroup>

@@ -35,11 +35,11 @@
         Because of = () => meta.SetFilter(conditional);
 
         It should_be_not_set_filter_for_change = () => ((List<ExecutableBase>)meta.TryGetValue("merges"))
-                                                               [0].Data.ShouldNotBeKey("filterResult");
+                                                               [0].ShouldNotBeKey("filterResult");
 
         It should_be_set_filter_for_click = () => ((List<ExecutableBase>)meta
                                                                                  .TryGetValue("merges"))[1]
-                                                          .Data["filterResult"]
+                                                          ["filterResult"]
                                                           .ShouldEqualWeak(conditional.GetData());
     }
 }

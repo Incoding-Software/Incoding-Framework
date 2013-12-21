@@ -24,6 +24,12 @@
             return s.ToString();
         }
 
+
+        public static implicit operator bool(Selector s)
+        {
+            return true;
+        }
+
         public static implicit operator Selector(string s)
         {
             return Value(s);

@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
+    using Incoding.Block.IoC;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
@@ -103,5 +104,15 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .Anchor("url", "Name", new { @class = "class" })
                                             .ToHtmlString()
                                             .ShouldEqual("<a class=\"class\" href=\"url\">Name</a>");
+
+        It should_be_render_drop_down_template = () =>
+                                                     {
+                                                         var factory = Pleasure.MockAsObject<ITemplateFactory>(mock => mock.Setup(r => r.GetDropDownTemplate()).Returns(Pleasure.Generator.TheSameString()));
+                                                         IoCFactory.Instance.StubTryResolve(factory);
+                                                         incodingHtml
+                                                                 .RenderDropDownTemplate()
+                                                                 .ToHtmlString()
+                                                                 .ShouldEqual("<script id=\"incodingDropDownTemplate\" type=\"text/template\">TheSameString</script>");
+                                                     };
     }
 }

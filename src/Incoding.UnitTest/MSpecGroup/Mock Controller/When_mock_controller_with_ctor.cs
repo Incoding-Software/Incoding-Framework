@@ -26,8 +26,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
             #region Constructors
 
-            public FakeController(IDispatcher dispatcher, IFakeInterface fakeInterface)
-                    : base(dispatcher)
+            public FakeController(IFakeInterface fakeInterface)
             {
                 this.fakeInterface = fakeInterface;
             }
@@ -38,7 +37,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
             public void FakeMethod()
             {
-                this.dispatcher.Push(new FakeCommand());
+                dispatcher.Push(new FakeCommand());
                 this.fakeInterface.FakeMethod();
             }
 

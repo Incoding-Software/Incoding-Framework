@@ -12,13 +12,18 @@
     {
         It should_be_children_without_selector = () => Selector.Jquery
                                                                .Self()
-                                                               .Children().ToString()
-                                                               .ShouldEqual("$(this.self).children()");
+                                                               .Children(HtmlTag.A).ToString()
+                                                               .ShouldEqual("$(this.self).children('a')");
 
         It should_be_children = () => Selector.Jquery
                                               .Self()
                                               .Children(selector => selector.Tag(HtmlTag.Area)).ToString()
-                                              .ShouldEqual("$(this.self).children('area')");
+                                              .ShouldEqual("$(this.self).children('area')");   
+        
+        It should_be_children_with_null = () => Selector.Jquery
+                                              .Self()
+                                              .Children().ToString()
+                                              .ShouldEqual("$(this.self).children()");
 
         It should_be_closest = () => Selector.Jquery
                                              .Self()
@@ -27,8 +32,8 @@
 
         It should_be_closest_without_selector = () => Selector.Jquery
                                                               .Self()
-                                                              .Closest().ToString()
-                                                              .ShouldEqual("$(this.self).closest()");
+                                                              .Closest(HtmlTag.Abbr).ToString()
+                                                              .ShouldEqual("$(this.self).closest('abbr')");
 
         It should_be_find = () => Selector.Jquery
                                           .Self()
@@ -37,8 +42,8 @@
 
         It should_be_find_without_selector = () => Selector.Jquery
                                                            .Self()
-                                                           .Find().ToString()
-                                                           .ShouldEqual("$(this.self).find()");
+                                                           .Find(HtmlTag.Area).ToString()
+                                                           .ShouldEqual("$(this.self).find('area')");
 
         It should_be_filter = () => Selector.Jquery
                                             .Self()
@@ -47,8 +52,8 @@
 
         It should_be_filter_without_selector = () => Selector.Jquery
                                                              .Self()
-                                                             .Filter().ToString()
-                                                             .ShouldEqual("$(this.self).filter()");
+                                                             .Filter(HtmlTag.Article).ToString()
+                                                             .ShouldEqual("$(this.self).filter('article')");
 
         It should_be_next = () => Selector.Jquery
                                           .Self()
@@ -92,12 +97,13 @@
 
         It should_be_parent_without_selector = () => Selector.Jquery
                                                              .Self()
-                                                             .Parent().ToString()
+                                                             .Parent()
+                                                             .ToString()
                                                              .ShouldEqual("$(this.self).parent()");
 
         It should_be_parents = () => Selector.Jquery
                                              .Self()
-                                             .Parents(selector => selector.Tag(HtmlTag.Area)).ToString()
+                                             .Parents(HtmlTag.Area).ToString()
                                              .ShouldEqual("$(this.self).parents('area')");
 
         It should_be_parents_without_selector = () => Selector.Jquery

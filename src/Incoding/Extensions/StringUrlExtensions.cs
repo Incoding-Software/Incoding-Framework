@@ -14,6 +14,19 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
+        public static Dictionary<string, object> SelectQueryString(this string url)
+        {
+            if (!url.Contains("?"))
+                return new Dictionary<string, object>();
+
+            string query = url.Split("?".ToCharArray())[1] ?? string.Empty;
+            var queryString = HttpUtility.ParseQueryString(query);
+            return queryString.AllKeys
+                              .Select(r => new KeyValuePair<string, object>(r, queryString[r].ToString()))
+                              .ToDictionary(pair => pair.Key, pair => pair.Value);
+
+        }
+
         public static string AppendSegment(this string root, string segment)
         {
             if (!segment.StartsWith("/"))
@@ -65,7 +78,6 @@ namespace Incoding.Extensions
                     .Then()
                     .Recovery(() => hash + "?");
 
-            
             hash = hash
                     .Not(r => r.StartsWith("/"))
                     .Then()

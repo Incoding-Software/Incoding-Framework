@@ -1,5 +1,15 @@
 "use strict";
 
+var testEvalResult;
+
+function testEvalMethod(arg1, arg2, arg3) {
+    testEvalResult = {
+        arg1 : arg1,
+        arg2 : arg2,
+        arg3 : arg3
+    };
+}
+
 function TestHelper() {
 
     this.SandboxSubmit = function() {
@@ -438,7 +448,13 @@ describe('Incoding', function() {
                         expect(expected).toEqual([5, 10]);
                     });
 
-                    it('Should be count', function() {
+                    it('Should be remove', function() {
+                        var expected = [5, 10, 25];
+                        expected.remove(1, 1);
+                        expect(expected).toEqual([5,25]);
+                    });
+
+                    it('Should be count', function () {
                         var expected = [5, 10, 25].count();
                         expect(expected).toEqual(3);
                     });
@@ -509,7 +525,12 @@ describe('Incoding', function() {
                             expect(url.toHref()).toEqual(options.href);
                         };
 
-                        it('Should be parse absolute url', function() {
+                        it('Should be fparam without key', function() {                            
+                            var url = $.url('http://sample.com/Home/Index');
+                            expect(url.fparam('key', 'root')).toEqual('');
+                        });
+
+                        it('Should be parse absolute url', function () {
                             var href = 'http://sample.com/Home/Index?param=value&param2=value2#!Manager/Office?param=fragmentValue/param2=fragmentValue2&SearchUrl:Search/Index?param=value/param2=value2';
                             var url = $.url(href);
                             verify(url, {
@@ -585,6 +606,13 @@ describe('Incoding', function() {
                             expect(url.fparam('value[1]', 'root')).toEqual('val2');
                         });
 
+                        it('Should be parse hash query decode fparam', function() {
+                            var href = 'Home/Index#!value=12%2F12%2F12';
+
+                            var url = $.url(href);
+                            expect(url.fparam('value', 'root')).toEqual('12/12/12');
+                        });
+
                         it('Should be to href with encode hash query string', function() {
                             spyOn(ExecutableHelper, "UrlEncode").andCallFake(function(value) {
                                 if (value == 'val') {
@@ -629,7 +657,7 @@ describe('Incoding', function() {
 
                             url.removeFparam('param2', 'root');
 
-                            expect(url.fparam('param2', 'root')).toEqual('undefined');
+                            expect(url.fparam('param2', 'root')).toEqual('');
                         });
 
                         it('Should be set new hash parameter', function() {
@@ -639,6 +667,24 @@ describe('Incoding', function() {
                             url.setFparam('newParam', newFragmentValue, 'root');
 
                             expect(url.fparam('newParam', 'root')).toEqual(newFragmentValue);
+                        });
+
+                        it('Should be set new hash parameter without hash', function() {
+                            var url = $.url('http://sample.com/Home');
+
+                            var newFragmentValue = 'newFragmentValue';
+                            url.setFparam('newParam', newFragmentValue, 'root');
+
+                            expect(url.fparam('newParam', 'root')).toEqual(newFragmentValue);
+                        });
+
+                        it('Should be set new hash parameter with decode', function() {
+                            var url = $.url('http://sample.com/Home#!Value=1');
+
+                            var newFragmentValue = '12/12/12/';
+                            url.setFparam('value', newFragmentValue, 'root');
+
+                            expect(url.fparam('value', 'root')).toEqual(newFragmentValue);
                         });
 
                         it('Should be clear hash parameter', function() {
@@ -724,6 +770,8 @@ describe('Incoding', function() {
 
                 });
 
+
+
             });
 
             describe('When IncodingMetaElement', function() {
@@ -745,21 +793,6 @@ describe('Incoding', function() {
 
                 it('Should be element', function() {
                     expect(new IncodingMetaElement(instanceSandBox).element).toEqual(instanceSandBox);
-                });
-
-                it('Should not be is new', function() {
-                    instanceSandBox.data('incoding-runner', true);
-                    instanceSandBox.data('incoding', '[{}]');
-                    expect(new IncodingMetaElement(instanceSandBox).IsNew()).toBeFalsy();
-                });
-
-                it('Should not be is new without runner', function() {
-                    expect(new IncodingMetaElement(instanceSandBox).IsNew()).toBeFalsy();
-                });
-
-                it('Should be is new without runner', function() {
-                    instanceSandBox.data('incoding', '[{}]');
-                    expect(new IncodingMetaElement(instanceSandBox).IsNew()).toBeTruthy();
                 });
 
                 it('Should be executables', function() {
@@ -1119,8 +1152,7 @@ describe('Incoding', function() {
                         var stubMetaBind = function(bind) {
 
                             $(instanceSandBox).removeData('incoding-runner');
-                            instanceSandBox = $('#sandbox')
-                                .attr('incoding', '[{ "type" : "ExecutableDirectAction", "data" : { "onBind" : "' + bind + '" } }]');
+                            instanceSandBox = $('#sandbox').attr('incoding', '[{ "type" : "ExecutableDirectAction", "data" : { "onBind" : "' + bind + '" } }]');
 
                             var fakeExecute = new ExecutableDirectAction();
                             fakeExecute.onBind = bind;
@@ -1172,8 +1204,7 @@ describe('Incoding', function() {
 
                     it('Should be parse only once', function() {
 
-                        $(instanceSandBox)
-                            .data('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur" } }]');
+                        $(instanceSandBox).attr('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur" } }]');
 
                         spyOn(ExecutableFactory, 'Create');
 
@@ -1216,14 +1247,12 @@ describe('Incoding', function() {
 
                 describe('When request', function() {
 
-                    var isCallback, fakeUrl, ajaxOptions, expectData;
+                    var fakeUrl, ajaxOptions;
 
                     beforeEach(function() {
-                        isCallback = false;
+
                         fakeUrl = 'url';
-
                         ajaxOptions = TestHelper.Instance.GetAjaxOptions({ url : fakeUrl, data : [{ name : 'element', selector : 'val' }] });
-
                         $.mockjax({
                             url : ajaxOptions.url,
                             type : ajaxOptions.type,
@@ -1237,11 +1266,9 @@ describe('Incoding', function() {
                     });
 
                     it('Should be request', function() {
-
+                        var isCallback = false;
                         runs(function() {
-                            var closureOptions = {};
-                            $.extend(closureOptions, ajaxOptions);
-                            adapter.request(closureOptions, function(data) {
+                            adapter.request($.extend({}, ajaxOptions, true), function(data) {
                                 expect(data instanceof IncodingResult).toBeTruthy();
                                 isCallback = true;
                             });
@@ -1252,6 +1279,63 @@ describe('Incoding', function() {
                         runs(function() {
                             expect(isCallback).toBeTruthy();
                         });
+                    });
+
+                    describe('When special events', function() {
+
+                        var isSuccess, isError, isBefore, isComplete;
+
+                        beforeEach(function() {
+                            isSuccess = false;
+                            isError = false;
+                            isBefore = false;
+                            isComplete = false;
+
+                            $(document).bind(IncSpecialBinds.IncAjaxBefore, function() {
+                                isBefore = true;
+                            });
+                            $(document).bind(IncSpecialBinds.IncAjaxSuccess, function() {
+                                isSuccess = true;
+                            });
+                            $(document).bind(IncSpecialBinds.IncAjaxComplete, function() {
+                                isComplete = true;
+                            });
+                            $(document).bind(IncSpecialBinds.IncAjaxError, function() {
+                                isError = true;
+                            });
+                        });
+
+                        it('Should be success', function() {
+
+                            runs(function() {
+                                adapter.request($.extend({}, ajaxOptions, true), function() {
+                                });
+                            });
+                            waits(500);
+                            runs(function() {
+                                expect(isBefore).toBeTruthy();
+                                expect(isComplete).toBeTruthy();
+                                expect(isSuccess).toBeTruthy();
+                                expect(isError).toBeFalsy();
+                            });
+                        });
+
+                        it('Should be error', function() {
+                            runs(function() {
+                                var extend = $.extend({}, ajaxOptions, true);
+                                extend.url = "bad url";
+                                adapter.request(extend, function() {
+                                });
+                            });
+                            waits(500);
+                            runs(function() {
+                                expect(isBefore).toBeTruthy();
+                                expect(isComplete).toBeTruthy();
+                                expect(isSuccess).toBeFalsy();
+                                expect(isError).toBeTruthy();
+                            });
+                        });
+
                     });
 
                 });
@@ -1436,6 +1520,28 @@ describe('Incoding', function() {
                         expect($(element).val()).toEqual(data);
                     });
 
+                    it('Should be set val to hidden', function () {
+                        var element = TestHelper.Instance.SandboxHidden();
+                        var data = 'Data';
+
+                        ExecutableHelper.Instance.TrySetValue(element, data);
+
+                        expect($(element).val()).toEqual(data);
+                    });
+
+                    it('Should be set val to hidden with checkbox', function () {
+                        appendSetFixtures($('<input>').attr({
+                            type : 'checkbox',
+                            name : 'sandboxHidden'
+                        }));
+                        var element = TestHelper.Instance.SandboxHidden();
+                        var data = 'Data';
+
+                        ExecutableHelper.Instance.TrySetValue(element, data);
+
+                        expect($(element).val()).toEqual('');
+                    });
+
                     it('Should be set radio', function() {
                         var data = 'aws';
                         var elementWithData = TestHelper.Instance.SandboxRadioButton(false, data);
@@ -1555,10 +1661,27 @@ describe('Incoding', function() {
 
                 describe('When ExecutableHelper TryGetVal', function() {
 
-                    describe('When Common', function() {
+                    describe('When common', function() {
+
+                        it('Should be empty', function() {
+                            var val = ExecutableHelper.Instance.TryGetVal('');
+                            expect(val).toEqual('');
+                        });
+
+                        it('Should be null object', function() {
+                            var val = ExecutableHelper.Instance.TryGetVal({});
+                            expect(val).toEqual({});
+                        });
 
                         it('Should be value', function() {
                             var selector = '{{item}},{value]}}}{{{';
+                            var val = ExecutableHelper.Instance.TryGetVal(selector);
+
+                            expect(val).toEqual(selector);
+                        });
+
+                        it('Should be value as tag', function() {
+                            var selector = 'select';
                             var val = ExecutableHelper.Instance.TryGetVal(selector);
 
                             expect(val).toEqual(selector);
@@ -1635,7 +1758,7 @@ describe('Incoding', function() {
 
                     });
 
-                    describe('When DOM', function() {
+                    describe('When Jquery', function() {
 
                         it('Should be script', function() {
                             var val = ExecutableHelper.Instance.TryGetVal($("#sandboxScript"));
@@ -1650,6 +1773,20 @@ describe('Incoding', function() {
 
                         });
 
+                        it('Should be not found element', function() {                            
+                            var val = ExecutableHelper.Instance.TryGetVal('$("[name=123sandboxTextBox123]")');
+                            expect(val).toEqual('');
+                        });
+
+                        it('Should be textbox with comma', function () {
+                            var original = 'aws,qwerty';
+                            TestHelper.Instance.SandboxTextBox({ value : original });
+
+                            var val = ExecutableHelper.Instance.TryGetVal('$("[name=sandboxTextBox]")');
+                            expect(val).toEqual(original);
+
+                        });
+
                         it('Should be checkbox true', function() {
                             appendSetFixtures($('<input>').attr({
                                 id : 'sandboxCheckbox',
@@ -1659,7 +1796,7 @@ describe('Incoding', function() {
                             }));
                             TestHelper.Instance.SandboxCheckBox(true, true);
 
-                            var val = ExecutableHelper.Instance.TryGetVal('$("[name=sandboxCheckbox]"');
+                            var val = ExecutableHelper.Instance.TryGetVal('$("[name=sandboxCheckbox]")');
                             expect(val).toBeTruthy();
                         });
 
@@ -1739,13 +1876,30 @@ describe('Incoding', function() {
                             expect(val).toEqual(expectData);
                         });
 
+                        it('Should be property', function() {                            
+                            var val = ExecutableHelper.Instance.TryGetVal("$('#my-fixture').length");
+                            expect(val).toEqual(1);                            
+                        });
+
+                        it('Should be method', function () {
+                            var val = ExecutableHelper.Instance.TryGetVal("$('#my-fixture').is('div')");
+                            expect(val).toEqual(true);                            
+                        });
+
                     });
 
-                    describe('When Incoding', function() {
+                    describe('When special', function() {
 
-                        it('Should be query string', function() {
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString').val());
-                            expect(val).toEqual('incValue');
+                        it('Should be double special', function() {
+                            var cookiesVal = 'cookiesVal';
+                            $.cookie('*abc', cookiesVal);
+                            var val = ExecutableHelper.Instance.TryGetVal('||cookie**abc||');
+                            expect(val).toEqual(cookiesVal);
+                        });
+
+                        it('Should be query string', function () {
+                            var  val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString').val());
+                            expect(val).toEqual('incValue');           
                         });
 
                         it('Should be query string with undefined', function() {
@@ -1757,7 +1911,7 @@ describe('Incoding', function() {
                             window.location.hash = "!Index/Home?incodingParam=aws";
 
                             var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_HashQueryString').val());
-                            expect(val).toEqual('aws');
+                            expect(val).toEqual('aws');               
                         });
 
                         it('Should be hash query string with undefined', function() {
@@ -1781,16 +1935,23 @@ describe('Incoding', function() {
                             var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Cookie').val());
                             expect(val).toEqual(cookiesVal);
                         });
-
+                
                         it('Should be ajax', function() {
-                            spyOn(AjaxAdapter.Instance, 'request');
-                            TestHelper.Instance.SandboxTextBox({ value : 'typeValue' });
+                            var actualvalue = 'actualValue';
+                            TestHelper.Instance.SandboxTextBox({ value : actualvalue });
 
-                            ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Ajax').val());
-
-                            expect(AjaxAdapter.Instance.request).toHaveBeenCalledWith({ cache : false, data : [{ name : 'Type', selector : 'typeValue' }], url : '/Labs/FetchCountry', async : false }, function() {
-                            });
+                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Ajax').val());
+                            expect(val).toEqual(actualvalue);
                         });
+
+
+                        it('Should be build url', function () {
+                            var actualvalue = 'actualValue';
+                            TestHelper.Instance.SandboxTextBox({ value : actualvalue });
+
+                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Build_Url').val());
+                            expect(val).toEqual('/Jasmine/GetValue?Value=actualValue');
+                        }); 
 
                     });
 
@@ -2007,11 +2168,11 @@ describe('Incoding', function() {
                     describe('Contains', function() {
 
                         it('Should be contains true', function() {
-                            expect(ExecutableHelper.Compare('Vlad', 'ad', 'contains')).toBeTruthy();
+                            expect(ExecutableHelper.Compare('Vlad', 'ad', 'iscontains')).toBeTruthy();
                         });
 
                         it('Should be contains false', function() {
-                            expect(ExecutableHelper.Compare('Vlad', 'sd', 'contains')).toBeFalsy();
+                            expect(ExecutableHelper.Compare('Vlad', 'sd', 'iscontains')).toBeFalsy();
                         });
 
                     });
@@ -2236,98 +2397,125 @@ describe('Incoding', function() {
 
         });
 
+        describe('When TemplateFactory', function() {
+
+            var builder, evaluatedSelector, compile, item, selectorKey;
+
+            beforeEach(function() {
+                evaluatedSelector = function() {
+                    return 'selector';
+                };
+                compile = 'compile';
+                item = { id : 1 };
+                selectorKey = 'selectorKey';
+                builder = new IncMustacheTemplate();
+                spyOn(builder, 'render');
+                spyOn(builder, 'compile').andReturn(compile);
+
+                TemplateFactory.Version = '';
+                localStorage.removeItem(selectorKey);
+            });
+
+            it('Should be ToHtml item', function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, item);
+                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+            });
+
+            it('Should be ToHtml empty', function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, '');
+                expect(builder.render).toHaveBeenCalledWith(compile, { data : '' });
+            });
+
+            it('Should be ToHtml null', function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, {});
+                expect(builder.render).toHaveBeenCalledWith(compile, { data : {} });
+            });
+
+            it('Should be ToHtml items', function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [item]);
+                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+            });
+
+            it('Should be ToHtml compile from local storage', function() {
+                localStorage.setItem(selectorKey, 1);
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+            });
+
+            it('Should be ToHtml compile from local storage with version', function() {
+                localStorage.setItem(selectorKey + 'aws', 1);
+                TemplateFactory.Version = 'aws';
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+            });
+
+        });
+
         describe('Template', function() {
 
-            describe('When special template', function() {
+            var item, items, compileTemplate, engine;
 
-                var data;
-                beforeEach(function() {
-                    data = [{ price : 20 }, { price : 30 }];
-                });
-
-                it('Should be sum', function() {
-                    var sumTemplate = 'Summary price : {{#IncTemplateSum}}price{{/IncTemplateSum}}';
-
-                    var view = new IncMustacheTemplate(data, sumTemplate).render();
-                    expect(view).toEqual('Summary price : 50');
-
-                });
-
-                it('Should be sum with empty', function() {
-                    var sumTemplate = 'Summary price : {{#IncTemplateSum}}price{{/IncTemplateSum}}';
-
-                    var view = new IncMustacheTemplate([], sumTemplate).render();
-                    expect(view).toEqual('Summary price : 0');
-
-                });
-
-                it('Should be count', function() {
-                    var template = 'Count: {{#IncTemplateCount}}{{/IncTemplateCount}}';
-
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual('Count: 2');
-
-                });
-
-                it('Should be min', function() {
-                    var template = 'Min: {{#IncTemplateMin}}price{{/IncTemplateMin}}';
-
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual('Min: 20');
-
-                });
-
-                it('Should be max', function() {
-                    var template = 'Max: {{#IncTemplateMax}}price{{/IncTemplateMax}}';
-
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual('Max: 30');
-
-                });
-
-                it('Should be first', function() {
-                    var template = 'First: {{#IncTemplateFirst}}price{{/IncTemplateFirst}}';
-
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual('First: 20');
-
-                });
-
-                it('Should be last', function() {
-                    var template = 'Last: {{#IncTemplateLast}}price{{/IncTemplateLast}}';
-
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual('Last: 30');
-
-                });
-
+            beforeEach(function() {
+                item = { data : { title : "Joe" } };
+                items = { data : [{ title : "Joe" }, { title : "Joe" }] };
             });
 
             describe('When Mustaches', function() {
 
-                var data, template;
-
                 beforeEach(function() {
-                    data = {
-                        title : "Joe",
-                        calc : function() {
-                            return 2 + 4;
-                        }
-                    };
-                    template = '{{#data}} {{title}} "spends" {{calc}} {{/data}}';
+                    engine = new IncMustacheTemplate();
+                    compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
+                });
+
+                it('Should be render from localStorage', function() {
+
+                    localStorage.setItem('tempMustache', compileTemplate);
+                    var view = engine.render(localStorage.getItem('tempMustache'), item);
+                    expect(view).toEqual(' Joe "spends" ');
+
                 });
 
                 it('Should be render item', function() {
 
-                    var view = new IncMustacheTemplate(data, template).render();
-                    expect(view).toEqual(' Joe "spends" 6 ');
+                    var view = engine.render(compileTemplate, item);
+                    expect(view).toEqual(' Joe "spends" ');
 
                 });
 
                 it('Should be render array item', function() {
 
-                    var view = new IncMustacheTemplate([data, data], template).render();
-                    expect(view).toEqual(' Joe "spends" 6  Joe "spends" 6 ');
+                    var view = engine.render(compileTemplate, items);
+                    expect(view).toEqual(' Joe "spends"  Joe "spends" ');
+                });
+
+            });
+
+            describe('When Handlebars', function() {
+
+                beforeEach(function() {
+                    engine = new IncHandlerbarsTemplate();
+                    compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
+                });
+
+                it('Should be render item', function() {
+
+                    var view = engine.render(compileTemplate, item);
+                    expect(view).toEqual(' Joe "spends" ');
+
+                });
+
+                it('Should be render from localStorage', function() {
+
+                    localStorage.setItem('tempHanldebars', compileTemplate);
+                    var view = engine.render(localStorage.getItem('tempHanldebars'), item);
+                    expect(view).toEqual(' Joe "spends" ');
+
+                });
+
+                it('Should be render array item', function() {
+
+                    var view = engine.render(compileTemplate, items);
+                    expect(view).toEqual(' Joe "spends"  Joe "spends" ');
                 });
 
             });
@@ -2769,7 +2957,6 @@ describe('Incoding', function() {
                     it('Should be success', function() {
 
                         var jsonData = { data : 'aws', redirectTo : '', success : true };
-
                         var eventState = { eventResult : new IncodingResult(jsonData) };
 
                         $.extend(eventState, state);
@@ -2794,21 +2981,21 @@ describe('Incoding', function() {
                         fakeUrl = 'Url/Test';
 
                         action = new ExecutableAjaxAction();
-                        action.jsonData = { target : '', ajax : TestHelper.Instance.GetAjaxOptions({ url : fakeUrl, data : [{ "name" : "Name", "selector" : "selector" }] }) };
                         action.self = instanceSandBox;
                         action.target = instanceSandBox;
-                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('Value');
                     });
 
-                    it('Should be execute without ajax options', function() {
+                    it('Should be execute without data', function() {
+
+                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithoutData').val());
+                        $.mockjax({
+                            url : fakeUrl,
+                            data : [],
+                            type : 'GET',
+                            responseText : { data : 'Success', success : true, redirectTo : '' }
+                        });
 
                         runs(function() {
-                            $.mockjax({
-                                url : fakeUrl,
-                                data : [],
-                                type : 'GET',
-                                responseText : { data : 'Success', success : true, redirectTo : '' }
-                            });
                             action.jsonData.ajax.data = [];
                             action.internalExecute(state);
                         });
@@ -2821,14 +3008,21 @@ describe('Incoding', function() {
                     });
 
                     it('Should be execute', function() {
+                        var valBy = 'Value';
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
+                            if (value == valBy) {
+                                return valBy;
+                            }
+                        });
+                        action.jsonData = $.parseJSON($('#ExecutableAjaxAction').val());
+                        $.mockjax({
+                            url : fakeUrl,
+                            data : [{ Name : valBy }],
+                            type : 'GET',
+                            responseText : { data : 'Success', success : true, redirectTo : '' }
+                        });
 
                         runs(function() {
-                            $.mockjax({
-                                url : fakeUrl,
-                                data : [{ Name : 'Value' }],
-                                type : 'GET',
-                                responseText : { data : 'Success', success : true, redirectTo : '' }
-                            });
                             action.internalExecute(state);
                         });
 
@@ -2838,28 +3032,31 @@ describe('Incoding', function() {
                             expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
                             expect(fakeComplete.execute).toHaveBeenCalledWith('Success');
                             expect(fakeError.execute).not.toHaveBeenCalled();
-                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith("selector");
+                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
                         });
                     });
 
-                    it('Should be execute with url from hash', function() {
+                    it('Should be execute with hash', function() {
+                        var valBy = 'Value';
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
+                            if (value == valBy) {
+                                return valBy;
+                            }
+                        });
+                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithHash').val());
+                        $.mockjax({
+                            url : 'hash/fakeUrl',
+                            data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
+                            type : 'GET',
+                            responseText : {
+                                data : 'WithUrlFromHash',
+                                success : true,
+                                redirectTo : ''
+                            }
+                        });
 
                         runs(function() {
-                            $.mockjax({
-                                url : 'hash/fakeUrl',
-                                data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
-                                type : 'GET',
-                                responseText : {
-                                    data : 'WithUrlFromHash',
-                                    success : true,
-                                    redirectTo : ''
-                                }
-                            });
                             window.location.hash = 'hash/fakeUrl?Name2=Value2/Name3=Value3';
-                            action.jsonData.hash = true;
-                            action.jsonData.prefix = 'root';
-                            action.jsonData.ajax.url = '';
-
                             action.internalExecute(state);
                         });
 
@@ -2869,28 +3066,26 @@ describe('Incoding', function() {
                             expect(fakeSuccess.execute).toHaveBeenCalledWith('WithUrlFromHash');
                             expect(fakeComplete.execute).toHaveBeenCalledWith('WithUrlFromHash');
                             expect(fakeError.execute).not.toHaveBeenCalled();
-                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('selector');
+                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
                         });
 
                     });
 
-                    it('Should be execute with query string hash', function() {
-
+                    it('Should be execute with only query string hash', function() {
+                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithOnlyQueryStringHash').val());
+                        $.mockjax({
+                            url : fakeUrl,
+                            data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
+                            type : 'GET',
+                            responseText : {
+                                data : 'WithQueryStringHash',
+                                success : true,
+                                redirectTo : ''
+                            }
+                        });
                         runs(function() {
-                            $.mockjax({
-                                url : fakeUrl,
-                                data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
-                                type : 'GET',
-                                responseText : {
-                                    data : 'WithQueryStringHash',
-                                    success : true,
-                                    redirectTo : ''
-                                }
-                            });
-                            window.location.hash = 'Name2=Value2/Name3=Value3';
-                            action.jsonData.hash = true;
-                            action.jsonData.prefix = 'root';
 
+                            window.location.hash = 'Name2=Value2/Name3=Value3';
                             action.internalExecute(state);
                         });
 
@@ -2900,7 +3095,6 @@ describe('Incoding', function() {
                             expect(fakeSuccess.execute).toHaveBeenCalledWith('WithQueryStringHash');
                             expect(fakeComplete.execute).toHaveBeenCalledWith('WithQueryStringHash');
                             expect(fakeError.execute).not.toHaveBeenCalled();
-                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('selector');
                         });
 
                     });
@@ -2911,11 +3105,9 @@ describe('Incoding', function() {
 
                     var form, inputField, submitButton, action;
 
-                    var fakeUrl = 'http://localhost:64225/Url/Test';
-
                     var setAjaxMock = function(response) {
                         $.mockjax({
-                            url : fakeUrl,
+                            url : 'http://localhost:64225/Url/Test',
                             data : 'name=value',
                             type : 'POST',
                             responseText : response
@@ -2925,19 +3117,19 @@ describe('Incoding', function() {
 
                     beforeEach(function() {
 
-                        form = $('<form>').attr({ action : fakeUrl, method : 'POST', id : 'formSubmit' });
+                        form = $('<form>').attr({ action : 'http://localhost:64225/Url/Test', method : 'POST', id : 'formSubmit' });
                         inputField = $('<input>').attr({ type : 'textbox', id : 'id', name : 'name', value : 'value' });
                         submitButton = $('<input>').attr({ type : 'submit' });
                         form.append(inputField).append(submitButton);
                         appendSetFixtures(form);
 
                         action = new ExecutableSubmitAction();
-                        action.jsonData = { formSelector : '$(this.self)', options : TestHelper.Instance.GetAjaxSubmitOptions() };
                         action.self = submitButton;
                         action.target = submitButton;
                     });
 
                     it('Should be result success', function() {
+                        action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
 
                         runs(function() {
                             setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
@@ -2954,11 +3146,33 @@ describe('Incoding', function() {
 
                     });
 
+                    it('Should be result success with url', function() {
+                        action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithUrl').val());
+                        $('<form>').removeAttr('action');
+
+                        runs(function() {
+                            $.mockjax({
+                                url : 'http://localhost:64225/Submit/Get?name=value&CustomParam=123',
+                                type : 'GET',
+                                responseText : { data : 'Message', success : true, redirectTo : '' }
+                            });
+
+                            action.internalExecute(state);
+                        });
+
+                        waits(500);
+
+                        runs(function() {
+                            expect(fakeSuccess.execute).toHaveBeenCalled();
+                        });
+
+                    });
+
                     it('Should be result success with form', function() {
+                        action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithForm').val());
+
                         runs(function() {
                             setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
-
-                            action.jsonData.formSelector = "$('#formSubmit')";
                             action.internalExecute(state);
                         });
 
@@ -2973,8 +3187,10 @@ describe('Incoding', function() {
                     });
 
                     it('Should be broken validate', function() {
-
+                        action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
                         spyOn($.fn, 'valid').andReturn(false);
+                        var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
+                        spyOn($.fn, 'validate').andReturn(validate);
 
                         runs(function() {
                             setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
@@ -2985,6 +3201,8 @@ describe('Incoding', function() {
 
                         runs(function() {
                             expect($.fn.valid).toHaveBeenCalled();
+                            expect(validate.focusInvalid).toHaveBeenCalled();
+
                             expect(fakeSuccess.execute).not.toHaveBeenCalled();
                             expect(fakeComplete.execute).not.toHaveBeenCalled();
                             expect(fakeError.execute).not.toHaveBeenCalled();
@@ -3116,29 +3334,41 @@ describe('Incoding', function() {
                         var incTemplate;
 
                         beforeEach(function() {
-                            incTemplate = {
-                                render : function() {
-                                }
-                            };
-                            spyOn(incTemplate, 'render').andReturn('renderContent');
-                            spyOn(TemplateFactory, 'Create').andReturn(incTemplate);
+                            incTemplate = 'renderContent';
+                            spyOn(TemplateFactory, 'ToHtml').andReturn(incTemplate);
                         });
 
-                        it('Should be template selector', function() {
+                        it('Should be template selector', function () {
+                            insert.tryGetVal = function (value) {
+                                return value;
+                            };
+                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateSelector').val());
+                            insert.internalExecute({ item : 1 });
 
+                            expect(instanceSandBox).toHaveHtml(incTemplate);
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('selectorId');
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('selectorId');
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
+                        });
+
+                        it('Should be template ajax', function () {
                             insert.tryGetVal = function(value) {
-                                if (value == 'selectorId') {
+                                if (value.startsWith('||buildurl*')) {
+                                    return 'isKey';
+                                }
+                                else {
                                     return value;
                                 }
-
-                                throw 'Incorect value {0}'.f(value);
                             };
+                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateAjax').val());
+                            insert.internalExecute({ item : 1 });
 
-                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateSelector').val());
-                            insert.internalExecute([{ item : 1 }, { item : 2 }]);
-
-                            expect(instanceSandBox).toHaveHtml('renderContent');
-                            expect(TemplateFactory.Create).toHaveBeenCalledWith('Mustache', [{ item : 1 }, { item : 2 }], 'selectorId');
+                            expect(instanceSandBox).toHaveHtml(incTemplate);
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('isKey');
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('||ajax*{"data":[{"name":"Value","selector":"$(\'#sandboxTextBox\')"}],"url":"/Jasmine/GetValue","type":"GET","async":false}||');
+                            expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
                         });
 
                     });
@@ -3290,29 +3520,30 @@ describe('Incoding', function() {
                         input = $('<input>').attr({ name : 'Input.Email' });
                         span = $('<span>').attr('data-valmsg-for', 'input.Email');
 
-                        form = $('<from>')
+                        form = $('<form>')
                             .append(input)
                             .append(span);
 
                         appendSetFixtures(form);
 
-                        validationRefresh = new ExecutableValidationRefresh();
-                        validationRefresh.self = form;
+                        validationRefresh = new ExecutableValidationRefresh();                        
                         validationRefresh.target = form;
 
                     });
 
                     it('Should be is not valid', function() {
-
+                        var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
+                        spyOn($.fn, 'validate').andReturn(validate);
                         $(span).addClass(messageValidClass);
 
-                        validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : 'errroMessage', isValid : false }]);
+                        validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : '<b>errroMessage</b>', isValid : false }]);
 
                         expect(input).toHaveClass(inputErrorClass);
-                        expect(span).toHaveClass(messageErrorClass);
-                        expect(span).toHaveText('errroMessage');
 
+                        expect(span).toHaveClass(messageErrorClass);
+                        expect(span).toHaveHtml('<b>errroMessage</b>');
                         expect(span).not.toHaveClass(messageValidClass);
+                        expect(validate.focusInvalid).toHaveBeenCalled();
                     });
 
                     it('Should be is valid', function() {
@@ -3320,7 +3551,7 @@ describe('Incoding', function() {
                         $(span).addClass(messageErrorClass);
                         $(input).addClass(inputErrorClass);
 
-                        validationRefresh.internalExecute([{ name : input.prop('name'), errorMessage : 'errroMessage', isValid : true }]);
+                        validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : 'errroMessage', isValid : true }]);
 
                         expect(input).not.toHaveClass(inputErrorClass);
                         expect(span).not.toHaveClass(messageErrorClass);
@@ -3334,46 +3565,35 @@ describe('Incoding', function() {
 
                 });
 
-                describe('When ExecutableRedirect', function() {
-                    var redirect;
-                    beforeEach(function() {
-                        redirect = new ExecutableRedirect();
-                        redirect.self = instanceSandBox;
-                        redirect.target = instanceSandBox;
-
-                        spyOn(ExecutableHelper, 'RedirectTo');
-                    });
-
-                    it('Should be redirect to', function() {
-                        redirect.jsonData = $.parseJSON($('#ExecutableRedirect').val());
-
-                        redirect.internalExecute();
-
-                        expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith('testUrl?Id=#idValue&Id2=#idValue2');
-                    });
-
-                    it('Should be redirect to self', function() {
-                        redirect.jsonData = $.parseJSON($('#ExecutableRedirectToSelf').val());
-
-                        redirect.internalExecute();
-
-                        expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith(document.location.href);
-                    });
-
-                });
-
                 describe('When ExecutableEval', function() {
                     var evalEx;
                     beforeEach(function() {
                         evalEx = new ExecutableEval();
-                        evalEx.jsonData = $.parseJSON($('#ExecutableEval').val());
-                        evalEx.self = instanceSandBox;
+                        evalEx.jsonData = $.parseJSON($('#ExecutableEval').val());                        
                         evalEx.target = instanceSandBox;
                     });
 
                     it('Should be eval', function() {
                         evalEx.internalExecute('data');
                         expect(newFakeEvalVariable).toEqual('data');
+                    });
+                });
+
+                describe('When ExecutableEvalMethod', function() {
+                    var evalEx;
+                    beforeEach(function() {
+                        evalEx = new ExecutableEvalMethod();
+                        evalEx.jsonData = $.parseJSON($('#ExecutableEvalMethod').val());
+                        evalEx.self = instanceSandBox;
+                        evalEx.target = instanceSandBox;
+                    });
+
+                    it('Should be eval', function() {                      
+                        evalEx.internalExecute('data');
+                        
+                        expect(testEvalResult.arg1).toEqual('arg1');
+                        expect(testEvalResult.arg2).toEqual('arg2');
+                        expect(testEvalResult.arg3).toEqual('arg3');
                     });
                 });
 
@@ -3402,12 +3622,9 @@ describe('Incoding', function() {
 
                     beforeEach(function() {
                         hashInsert = new ExecutableStoreInsert();
-                        hashInsert.jsonData = { replace : 'false', prefix : 'root' };
-                        hashInsert.self = instanceSandBox;
-                        hashInsert.target = instanceSandBox;
                     });
 
-                    describe('When in container', function() {
+                    describe('When container', function() {
 
                         var valueInput, valueSelect;
 
@@ -3424,11 +3641,11 @@ describe('Incoding', function() {
                             valueSelect = 'select';
 
                             spyOn(ExecutableHelper, 'RedirectTo');
-                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(selector) {
-                                if (selector === '[name=sandboxTextBox]') {
+                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(jObject) {
+                                if (jObject.selector === '[name=sandboxTextBox]') {
                                     return valueInput;
                                 }
-                                if (selector === '[name=sandboxSelect]') {
+                                if (jObject.selector === '[name=sandboxSelect]') {
                                     return valueSelect;
                                 }
 
@@ -3439,38 +3656,55 @@ describe('Incoding', function() {
                         });
 
                         it('Should be insert', function() {
-
+                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                            hashInsert.target = instanceSandBox;
+                            
                             hashInsert.internalExecute();
 
                             var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
                             expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
                             expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('@@input');
+                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
+                            expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
+                        });
+                        
+                        it('Should be insert with multiple', function() {
+                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                            hashInsert.target = $('[name=sandboxTextBox],[name=sandboxSelect]');
+                            
+                            hashInsert.internalExecute();
+
+                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                            expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
+                            expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
+                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
                             expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
                         });
 
-                        it('Should be update by prefix', function() {
-
-                            hashInsert.jsonData.prefix = 'search';
+                        it('Should be insert by prefix', function () {
+                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithPrefix').val());
+                            hashInsert.target = instanceSandBox;
+                            
                             hashInsert.internalExecute();
 
                             var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
                             expect(redirectUrl.fparam().hasOwnProperty('aws__search')).toBeFalsy();
                             expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
-                            expect(redirectUrl.fparam('sandboxTextBox', 'search')).toEqual('@@input');
+                            expect(redirectUrl.fparam('sandboxTextBox', 'search')).toEqual(valueInput);
                             expect(redirectUrl.fparam('sandboxSelect', 'search')).toEqual(valueSelect);
 
                         });
 
-                        it('Should be update with replace', function() {
-
-                            hashInsert.jsonData.replace = 'true';
+                        it('Should be insert with replace', function () {
+                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithReplace').val());
+                            hashInsert.target = instanceSandBox;
+                            
                             hashInsert.internalExecute();
 
                             var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
                             expect(redirectUrl.fparam().hasOwnProperty('aws__root')).toBeFalsy();
                             expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('@@input');
+                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
                             expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
                         });
 
@@ -3480,16 +3714,16 @@ describe('Incoding', function() {
 
                     });
 
-                    describe('When self ', function() {
+                    describe('When element ', function() {
 
                         beforeEach(function() {
                             spyOn(ExecutableHelper, 'RedirectTo');
+                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
                             var textBox = TestHelper.Instance.SandboxTextBox();
-                            hashInsert.self = textBox;
                             hashInsert.target = textBox;
                         });
 
-                        it('Should be update self', function() {
+                        it('Should be insert', function() {
                             spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('value');
 
                             hashInsert.internalExecute();
@@ -3498,13 +3732,13 @@ describe('Incoding', function() {
                             expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('value');
                         });
 
-                        it('Should be update with ignore empty', function() {
+                        it('Should be insert with ignore empty', function() {
                             spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('');
 
                             hashInsert.internalExecute();
 
                             var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam().hasOwnProperty('sandboxTextBox__root')).toBeFalsy();
+                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
                         });
 
                         it('Should be remove hash if empty', function() {
@@ -3514,7 +3748,7 @@ describe('Incoding', function() {
                             hashInsert.internalExecute();
 
                             var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam().hasOwnProperty('sandboxTextBox__root')).toBeFalsy();
+                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
                         });
 
                         afterEach(function() {
@@ -3535,48 +3769,18 @@ describe('Incoding', function() {
 
                         hashFetch = new ExecutableStoreFetch();
                         hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetch').val());
-                        hashFetch.self = instanceSandBox;
-                        hashFetch.target = element;
                     });
 
-                    it('Should be fetch', function() {
+                    it('Should be fetch element', function() {
+                        hashFetch.target = element;
                         window.location.hash = "sandboxTextBox=@Test";
 
                         hashFetch.internalExecute();
 
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(element).get(0), '@Test');
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '@Test');
                     });
 
-                    it('Should be fetch  with decode', function() {
-                        window.location.hash = "sandboxTextBox=%26TestÐóññêèå Áóêâû";
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(element).get(0), '&TestÐóññêèå Áóêâû');
-                    });
-
-                    it('Should be fetch by prefix', function() {
-                        window.location.hash = "sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
-                        hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetchWithPrefix').val());
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(element).get(0), 'ValueFromPrefix');
-                    });
-
-                    it('Should be fetch container', function() {
-
-                        $(instanceSandBox).append(element);
-                        hashFetch.target = instanceSandBox;
-                        window.location.hash = "sandboxTextBox=Test";
-
-                        hashFetch.internalExecute();
-
-                        expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[0][0]).attr('name')).toEqual($(element).attr('name'));
-                        expect(ExecutableHelper.Instance.TrySetValue.argsForCall[0][1]).toEqual('Test');
-                    });
-
-                    it('Should be fetch selector', function() {
+                    it('Should be fetch elements', function() {
                         var textBox = TestHelper.Instance.SandboxTextBox().addClass('fetch');
                         var select = TestHelper.Instance.SandboxSelect([{ value : 'selectValue', selected : true }]).addClass('fetch');
                         $(instanceSandBox).append(textBox).append(select);
@@ -3586,12 +3790,67 @@ describe('Incoding', function() {
 
                         hashFetch.internalExecute();
 
-                        expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[0][0]).attr('name')).toEqual($(textBox).attr('name'));
-                        expect(ExecutableHelper.Instance.TrySetValue.argsForCall[0][1]).toEqual('TextBoxValue');
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(textBox).get(0), 'TextBoxValue');
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(select).get(0), 'SelectValue');
+                    });                    
 
-                        expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[1][0]).attr('name')).toEqual($(select).attr('name'));
-                        expect(ExecutableHelper.Instance.TrySetValue.argsForCall[1][1]).toEqual('SelectValue');
+                    it('Should be fetch element without value', function() {
+                        hashFetch.target = element;
+                        window.location.hash = "";
+
+                        hashFetch.internalExecute();
+
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '');
                     });
+
+                    it('Should be fetch element with decode', function() {
+                        hashFetch.target = element;
+                        window.location.hash = "sandboxTextBox=%26TestÐóññêèå Áóêâû";
+
+                        hashFetch.internalExecute();
+
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '&TestÐóññêèå Áóêâû');
+                    });
+
+                    it('Should be fetch element by prefix', function() {
+                        window.location.hash = "sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
+                        hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetchWithPrefix').val());
+                        hashFetch.target = element;
+
+                        hashFetch.internalExecute();
+
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, 'ValueFromPrefix');
+                    });
+
+                    it('Should be fetch container', function() {
+                        $(instanceSandBox).append(element);
+                        hashFetch.target = instanceSandBox;
+                        window.location.hash = "sandboxTextBox=Test";
+
+                        hashFetch.internalExecute();
+
+                        expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[0][0]).attr('name')).toEqual('sandboxTextBox');
+                        expect(ExecutableHelper.Instance.TrySetValue.argsForCall[0][1]).toEqual('Test');
+                        expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(1);
+                    });
+
+                    it('Should be fetch container with multiple', function() {
+                        var textBox = TestHelper.Instance.SandboxTextBox();
+                        var button = TestHelper.Instance.SandboxInputButton();
+                        var radioButton = TestHelper.Instance.SandboxRadioButton(true, 'value');
+                        $(instanceSandBox)
+                            .append(textBox)
+                            .append(button)
+                            .append(radioButton);
+                        hashFetch.target = instanceSandBox;
+                        window.location.hash = "sandboxTextBox=Test&sandboxRadiobutton=value";
+
+                        hashFetch.internalExecute();
+
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(textBox).get(0), 'Test');
+                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(radioButton).get(0), 'value');
+                        expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(2);
+                    });        
 
                 });
 
@@ -3599,13 +3858,44 @@ describe('Incoding', function() {
 
                     var executable;
 
-                    beforeEach(function() {
-                        executable = new ExecutableStoreManipulate();
-                        executable.jsonData = $('#');
+                    beforeEach(function () {
+                        spyOn(ExecutableHelper, 'RedirectTo');
+                        executable = new ExecutableStoreManipulate();                        
                     });
 
-                    it('Should be ', function() {
+                    it('Should be remove', function() {
+                        window.location.hash = "IncHash=Test";
+                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemove').val());
 
+                        executable.internalExecute();
+
+                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(url.fparam('IncHash', 'root')).toEqual('');
+                    });
+                    
+
+                    it('Should be remove with prefix', function() {
+                        window.location.hash = "search:IncHash=ValueFromPrefix";
+                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemoveWithPrefix').val());
+
+                        executable.internalExecute();
+
+                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(url.fparam('IncHash', 'search')).toEqual('');
+                    });                    
+
+                    it('Should be set', function() {
+                        executable.tryGetVal = function(value) {
+                            if (value === "$('#incSelector')") {
+                                return 5;
+                            }
+                        };                        
+                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateSet').val());
+
+                        executable.internalExecute();
+
+                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(url.fparam('IncHash', 'root')).toEqual('5');
                     });
 
                 });
@@ -3820,71 +4110,92 @@ describe('Incoding', function() {
 
                     beforeEach(function() {
                         evalConditional = new ConditionalEval();
-                        evalConditional.jsonData = { inverse : false, code : 'false' };
                     });
 
-                    describe('When Eval', function() {
-
-                        it('Should be satisfied', function() {
-                            var isSatisfied = evalConditional.isInternalSatisfied();
-                            expect(isSatisfied).toBeFalsy();
-                        });
-
-                        it('Should be with data', function() {
-                            evalConditional.jsonData.code = 'data';
-                            var isSatisfied = evalConditional.isInternalSatisfied(true);
-                            expect(isSatisfied).toBeTruthy();
-                        });
-
+                    it('Should be satisfied', function() {
+                        evalConditional.jsonData = $.parseJSON($('#ConditionalEval').val());
+                        var isSatisfied = evalConditional.isInternalSatisfied();
+                        expect(isSatisfied).toBeFalsy();
                     });
+
+                    it('Should be with data', function() {
+                        evalConditional.jsonData = $.parseJSON($('#ConditionalEvalData').val());
+                        var isSatisfied = evalConditional.isInternalSatisfied(true);
+                        expect(isSatisfied).toBeTruthy();
+                    });
+                });
+
+                describe('When ConditionalIs', function () {
+
+                    var evalConditional;
+
+                    beforeEach(function() {
+                        evalConditional = new ConditionalIs();
+                        evalConditional.jsonData = $.parseJSON($('#ConditionalIs').val());
+                        evalConditional.tryGetVal = function (original) {
+                            return original;
+                        };
+                    });
+
+                    it('Should be satisfied', function () {                        
+                        spyOn(ExecutableHelper, 'Compare').andReturn(true);
+                        
+                        var isSatisfied = evalConditional.isInternalSatisfied();
+                        
+                        expect(isSatisfied).toBeTruthy();
+                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith("$('#id')", "5", 'equal');
+                    });
+
 
                 });
 
                 describe('When ConditionalData', function() {
 
-                    var existsItem, dataConditional;
+                    var existsItem, dataConditional, expectedValue;
 
                     beforeEach(function() {
 
-                        existsItem = { prop1 : 1, prop2 : 2 };
-
+                        existsItem = { prop1 : 1, JqueryVersion : 2 };
+                        expectedValue = '123';
                         dataConditional = new ConditionalData();
-                        dataConditional.jsonData = { property : "prop2", value : "123", method : 1, inverse : false };
                         dataConditional.tryGetVal = function() {
-                            return dataConditional.jsonData.value;
+                            return expectedValue;
                         };
 
                         spyOn(ExecutableHelper, 'Compare').andReturn(true);
                     });
 
                     it('Should be satisfied object', function() {
+                        dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+
                         var satisfied = dataConditional.isInternalSatisfied(existsItem);
 
                         expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.prop2, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.JqueryVersion, expectedValue, dataConditional.jsonData.method);
                     });
 
                     it('Should be satisfied object without property', function() {
-                        dataConditional.jsonData.property = '';
+                        dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
 
                         var satisfied = dataConditional.isInternalSatisfied(existsItem);
 
                         expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem, expectedValue, dataConditional.jsonData.method);
                     });
 
                     it('Should be satisfied array', function() {
-                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, prop2 : 18 }]);
+                        dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, JqueryVersion : 18 }]);
 
                         expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.prop2, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.JqueryVersion, dataConditional.jsonData.value, dataConditional.jsonData.method);
                     });
 
                     it('Should be satisfied array without property', function() {
-                        dataConditional.jsonData.property = '';
-                        var data = [existsItem, { prop1 : 8, prop2 : 18 }];
+                        dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
+                        var data = [existsItem, { prop1 : 8, JqueryVersion : 18 }];
 
-                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, prop2 : 18 }]);
+                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, JqueryVersion : 18 }]);
 
                         expect(satisfied).toBeTruthy();
                         expect(ExecutableHelper.Compare).toHaveBeenCalledWith(data, dataConditional.jsonData.value, dataConditional.jsonData.method);
@@ -3951,104 +4262,7 @@ describe('Incoding', function() {
 
                     expect($(incValue).val()).toEqual('4');
                 });
-
-                it('Should be Target_Wrap', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn("<div class=\"wrap\" />");
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_Wrap').val().f("'value'"));
-
-                    expect(instanceSandBox.parent()).toHaveClass('wrap');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('value');
-                });
-
-                it('Should be Target_UnBind', function() {
-
-                    var isCall = false;
-                    this.target = instanceSandBox;
-                    $(this.target).bind('click', function() {
-                        isCall = true;
-                    });
-
-                    eval($('#Target_UnBind').val().f("'click'"));
-                    $(this.target).trigger('click');
-
-                    expect(isCall).toBeFalsy();
-                });
-
-                it('Should be Target_WrapAll', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn("<div class=\"wrap\" />");
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_WrapAll').val().f("'value'"));
-
-                    expect(instanceSandBox.parent()).toHaveClass('wrap');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('value');
-                });
-
-                it('Should be Target_Remove', function() {
-
-                    this.target = instanceSandBox;
-                    eval($('#Target_Remove').val());
-
-                    expect($('#sandbox', 'body').length).toEqual(0);
-                });
-
-                it('Should be Target_Empty', function() {
-
-                    this.target = instanceSandBox;
-                    $(this.target).html('content');
-
-                    eval($('#Target_Empty').val());
-
-                    expect(this.target).not.toHaveHtml('content');
-                });
-
-                it('Should be Target_RemoveClass', function() {
-                    $(instanceSandBox).addClass('inc');
-
-                    this.target = instanceSandBox;
-                    eval($('#Target_RemoveClass').val().f('inc'));
-
-                    expect(instanceSandBox).not.toHaveClass('inc');
-                });
-
-                it('Should be Target_ToggleClass', function() {
-
-                    this.target = instanceSandBox;
-                    var code = $('#Target_ToggleClass').val().f('inc');
-
-                    eval(code);
-                    expect(instanceSandBox).toHaveClass('inc');
-
-                    eval(code);
-                    expect(instanceSandBox).not.toHaveClass('inc');
-                });
-
-                it('Should be Target_AddClass', function() {
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_AddClass').val().f('inc'));
-                    expect(instanceSandBox).toHaveClass('inc');
-                });
-
-                it('Should be Target_ToggleProp', function() {
-
-                    this.target = instanceSandBox;
-                    var code = $('#Target_ToggleProp').val().f('readonly');
-
-                    eval(code);
-                    expect(instanceSandBox).toHaveProp('readonly', true);
-
-                    eval(code);
-                    expect(instanceSandBox).toHaveProp('readonly', false);
-
-                });
-
+                       
                 it('Should be Target_Val', function() {
 
                     this.target = TestHelper.Instance.SandboxTextBox();
@@ -4056,220 +4270,10 @@ describe('Incoding', function() {
 
                     expect(this.target).toHaveValue('aws');
                 });
-
-                it('Should be Target_Insert', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('content');
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_Insert').val().f("html", "'content'"));
-
-                    expect(this.target).toHaveHtml('content');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('content');
-                });
-
-                it('Should be Target_ValFromSelector', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('newAws');
-
-                    this.target = TestHelper.Instance.SandboxTextBox();
-                    eval($('#Target_ValFromSelector').val().f("'aws'"));
-
-                    expect(this.target).toHaveValue('newAws');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_SetAttr', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('newAws');
-
-                    this.target = TestHelper.Instance.SandboxTextBox();
-                    eval($('#Target_SetAttr').val().f("attr1", "'aws'"));
-
-                    expect(this.target).toHaveAttr('attr1', 'newAws');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_RemoveAttr', function() {
-                    this.target = instanceSandBox;
-                    $(instanceSandBox).attr('attr1', 'aws');
-
-                    eval($('#Target_RemoveAttr').val().f("attr1"));
-
-                    expect(instanceSandBox).not.toHaveAttr("attr1");
-                });
-
-                it('Should be Target_RemoveProp', function() {
-                    this.target = instanceSandBox;
-                    $(instanceSandBox).prop('attr1', 'aws');
-
-                    eval($('#Target_RemoveProp').val().f("attr1"));
-
-                    expect(instanceSandBox).not.toHaveProp("attr1");
-                });
-
-                it('Should be Target_SetProp', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('newAws');
-
-                    this.target = TestHelper.Instance.SandboxTextBox();
-                    eval($('#Target_SetProp').val().f("prop1", "'aws'"));
-
-                    expect(this.target).toHaveProp('prop1', 'newAws');
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_SetCss', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('10');
-                    this.target = TestHelper.Instance.SandboxTextBox();
-
-                    eval($('#Target_SetCss').val().f("width", "'aws'"));
-
-                    if (jQuery.browser.msie && jQuery.browser.version <= 8) {
-                        expect($(this.target).attr('style')).toEqual('width: 10px');
-                    }
-                    else if ($.browser.safari) {
-                        expect($(this.target).attr('style')).toEqual('width: 10px; ');
-                    }
-                    else {
-                        expect(this.target).toHaveAttr('style', 'width: 10px;');
-                    }
-
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_ScrollLeft', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('300');
-                    this.target = instanceSandBox;
-                    $(this.target).css({ height : "100px", width : "100px", overflow : "auto" });
-                    $(this.target).html($("<div>").css({ height : "500px", width : "500px", border : "3px solid #666666" }));
-
-                    eval($('#Target_ScrollLeft').val().f("'aws'"));
-
-                    expect($(this.target).scrollLeft()).toEqual(300);
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_ScrollTop', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('10');
-                    this.target = instanceSandBox;
-                    $(this.target).css({ height : "100px", width : "100px", overflow : "auto" });
-                    $(this.target).html($("<div>").css({ height : "500px", width : "500px", border : "3px solid #666666" }));
-
-                    eval($('#Target_ScrollTop').val().f("'aws'"));
-
-                    expect($(this.target).scrollTop()).toEqual(10);
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_Width', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('10');
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_Width').val().f("'aws'"));
-
-                    expect($(this.target).width()).toEqual(10);
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
-                it('Should be Target_Height', function() {
-                    this.tryGetVal = function() {
-                    };
-                    spyOn(this, 'tryGetVal').andReturn('10');
-                    this.target = instanceSandBox;
-
-                    eval($('#Target_Height').val().f("'aws'"));
-
-                    expect($(this.target).height()).toEqual(10);
-                    expect(this.tryGetVal).toHaveBeenCalledWith('aws');
-                });
-
+            
             });
 
             describe('Conditional', function() {
-
-                describe('Exists jquery selector', function() {
-
-                    it('Should be exist', function() {
-                        var code = $('#Conditional_Exists_Jquery_Selector').val().f("$('body')");
-                        expect(eval(code)).toBeTruthy();
-                    });
-
-                    it('Should not be exist', function() {
-                        var code = $('#Conditional_Exists_Jquery_Selector').val().f("$('.specialNoClass')");
-                        expect(eval(code)).toBeFalsy();
-                    });
-
-                });
-
-                describe('Exists incoding selector', function() {
-
-                    it('Should be exist', function() {
-                        spyOn(ExecutableHelper, 'IsNullOrEmpty').andReturn(false);
-                        this.tryGetVal = function(value) {
-                            return value;
-                        };
-
-                        var code = $('#Conditional_Exists_Incoding_Selector').val().f("'inc'");
-
-                        expect(eval(code)).toBeTruthy();
-                        expect(ExecutableHelper.IsNullOrEmpty).toHaveBeenCalledWith('inc');
-                    });
-
-                    it('Should not be exist', function() {
-                        spyOn(ExecutableHelper, 'IsNullOrEmpty').andReturn(true);
-                        this.tryGetVal = function(value) {
-                            return value;
-                        };
-
-                        var code = $('#Conditional_Exists_Incoding_Selector').val().f("'inc'");
-
-                        expect(eval(code)).toBeFalsy();
-                        expect(ExecutableHelper.IsNullOrEmpty).toHaveBeenCalledWith('inc');
-                    });
-
-                });
-
-                describe('Exists incoding selector', function() {
-
-                    it('Should be exist', function() {
-                        var code = $('#Conditional_Exists_Jquery_Selector').val().f("$('body')");
-                        expect(eval(code)).toBeTruthy();
-                    });
-
-                    it('Should not be exist', function() {
-                        var code = $('#Conditional_Exists_Jquery_Selector').val().f("$('.specialNoClass')");
-                        expect(eval(code)).toBeFalsy();
-                    });
-
-                });
-
-                describe('Support modernizr', function() {
-
-                    it('Should be support', function() {
-                        $('html').addClass('super');
-                        var code = $('#Conditional_ModernizrSupport').val().f("super");
-                        expect(eval(code)).toBeTruthy();
-                    });
-
-                    it('Should not be support', function() {
-                        var code = $('#Conditional_ModernizrSupport').val().f("no-super");
-                        expect(eval(code)).toBeFalsy();
-                    });
-
-                });
 
                 describe('Compare', function() {
 
@@ -4301,37 +4305,10 @@ describe('Incoding', function() {
 
                 });
 
-                describe('Confirm', function() {
-
-                    var textMessage;
-                    beforeEach(function() {
-                        textMessage = "Message";
-                        spyOn(window, 'confirm').andReturn(true);
-                    });
-
-                    it('Should be satisfied', function() {
-                        this.tryGetVal = function() {
-                            return textMessage;
-                        };
-                        var code = $('#Conditional_Confirm').val().f("'element'");
-
-                        expect(eval(code)).toBeTruthy();
-                        expect(window.confirm).toHaveBeenCalledWith(textMessage);
-                    });
-
-                });
 
             });
 
-            it('Should be Window_Alert', function() {
-                var message = 'Message 2';
-                spyOn(window, 'alert');
-
-                eval($('#Window_Alert').val().f(message));
-
-                expect(window.alert).toHaveBeenCalledWith(message);
-            });
-
+     
             it('Should be Window_Clear_Interval', function() {
                 var intervalId = 'inervalId';
                 ExecutableBase.IntervalIds[intervalId] = 1;
@@ -4357,6 +4334,7 @@ describe('Incoding', function() {
     afterEach(function() {
         $('#jasmine-fixtures').remove();
         $.mockjaxClear();
+        $(document).unbind();
     });
 
 });

@@ -3,7 +3,7 @@
   <metadata>
     <id>Incoding.Framework</id>
     <version>
-      1.0.278.1005
+      1.1.279.1201
     </version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
@@ -15,8 +15,7 @@
       CQRS implementation is simpler than you thinked of it.
       Mspec helpers would shorter time spent on unit testing
     </description>
-    <releaseNotes>
-      Stable release.
+    <releaseNotes>      
     </releaseNotes>
     <summary>
       Server side ( domain ) incoding framework
@@ -40,7 +39,7 @@
     <references>
       <reference file="incoding.dll" />      
     </references>
-    <tags>cqrs,C#,framework,rapid</tags>
+    <tags>incoding, web framework, framework,cqrs, repository</tags>
   </metadata>
   <files>
     <file src="lib\" target="lib" />

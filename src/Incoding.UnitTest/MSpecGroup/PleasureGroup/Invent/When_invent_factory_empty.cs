@@ -34,7 +34,7 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_empty_long = () => inventEmpty.LongValue.ShouldEqual(0);
 
         It should_be_empty_bool = () => inventEmpty.BoolValue.ShouldBeFalse();
-        
+
         It should_be_empty_byte = () => inventEmpty.ByteValue.ShouldEqual(new byte());
 
         It should_be_empty_byte_array = () => inventEmpty.ByteArray.ShouldBeEmpty();
@@ -46,14 +46,14 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_not_found_empty = () =>
                                            {
                                                var invent = new InventFactory<FakeGenerateObject>();
-                                               invent.Empty<FakeGenerateObject>(r => r.Fake);
+                                               invent.Empty(r => r.Fake);
                                                Catch.Exception(() => invent.Create()).ShouldBeOfType<ArgumentException>();
                                            };
 
         It should_be_empty = () =>
                                  {
                                      var invent = new InventFactory<FakeGenerateObject>();
-                                     invent.Empty<string>(r => r.StrValue);
+                                     invent.Empty(r => r.StrValue);
                                      invent.Create().StrValue.ShouldBeEmpty();
                                  };
     }

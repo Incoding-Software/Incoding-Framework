@@ -2,8 +2,13 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
     using System.Web.Mvc;
     using JetBrains.Annotations;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -14,8 +19,10 @@ namespace Incoding.MvcContrib
     {
         #region Static Fields
 
-        public static readonly JqueryAjaxFormOptions Default = new JqueryAjaxFormOptions();
-
+        ////ncrunch: no coverage start
+        public static readonly JqueryAjaxFormOptions Default = new JqueryAjaxFormOptions();         
+        ////ncrunch: no coverage end
+        
         #endregion
 
         #region Constructors
@@ -37,10 +44,7 @@ namespace Incoding.MvcContrib
         ///     Default value: <c>false</c>.
         /// </summary>
         [UsedImplicitly]
-        public bool ForceSync
-        {
-            set { Set("forceSync", value); }
-        }
+        public bool ForceSync { set { this.Set("forceSync", value); } }
 
         /// <summary>
         ///     Boolean flag indicating whether data must be submitted in strict semantic order (slower).
@@ -50,20 +54,14 @@ namespace Incoding.MvcContrib
         ///     Default value: <see langword="false" />
         /// </summary>
         [UsedImplicitly]
-        public bool Semantic
-        {
-            set { Set("semantic", value); }
-        }
+        public bool Semantic { set { this.Set("semantic", value); } }
 
         /// <summary>
         ///     The method in which the form data
         ///     Default value: value of form's method attribute (or 'GET' if none found)
         /// </summary>
         [UsedImplicitly]
-        public FormMethod Type
-        {
-            set { Set("type", value); }
-        }
+        public HttpVerbs Type { set { this.Set("type", value.ToString()); } }
 
         /// <summary>
         ///     URL to which the form data will be submitted.
@@ -72,7 +70,17 @@ namespace Incoding.MvcContrib
         [UsedImplicitly]
         public string Url
         {
-            set { Set("url", value); }
+            set
+            {
+                var routes = value.SelectQueryString();
+                if (routes.Any())
+                {
+                    this.Set("url", value.Split('?')[0]);
+                    this.Set("data", routes.Select(r => new { name = r.Key, value = r.Value.ToString() }));
+                }
+                else
+                    this.Set("url", value);
+            }
         }
 
         #endregion

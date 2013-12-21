@@ -20,21 +20,25 @@
 
         It should_be_get_date = () => date.GetDate()
                                           .ToString()
-                                          .ShouldEqual("@@javascript:new Date().getDate()@@");
+                                          .ShouldEqual("||javascript*new Date().getDate()||");
+
+        It should_be_get_time = () => date.GetTime()
+                                          .ToString()
+                                          .ShouldEqual("||javascript*new Date().getTime()||");
 
         It should_be_get_day = () => date.GetDay()
-                                         .ToString().ShouldEqual("@@javascript:new Date().getDay()@@");
+                                         .ToString().ShouldEqual("||javascript*new Date().getDay()||");
 
         It should_be_get_full_year = () => date.GetFullYear()
-                                               .ToString().ShouldEqual("@@javascript:new Date().getFullYear()@@");
+                                               .ToString().ShouldEqual("||javascript*new Date().getFullYear()||");
 
         It should_be_get_timezone_off_set = () => date.GetTimezoneOffset()
-                                                      .ToString().ShouldEqual("@@javascript:new Date().getTimezoneOffset()@@");
+                                                      .ToString().ShouldEqual("||javascript*new Date().getTimezoneOffset()||");
 
         It should_be_to_time_string = () => date.ToTimeString()
-                                                .ToString().ShouldEqual("@@javascript:new Date().toTimeString()@@");
+                                                .ToString().ShouldEqual("||javascript*new Date().toTimeString()||");
 
         It should_be_to_date_string = () => date.ToDateString()
-                                                .ToString().ShouldEqual("@@javascript:new Date().toDateString()@@");
+                                                .ToString().ShouldEqual("||javascript*new Date().toDateString()||");
     }
 }

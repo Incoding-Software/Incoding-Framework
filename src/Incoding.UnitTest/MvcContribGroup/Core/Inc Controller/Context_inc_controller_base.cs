@@ -6,6 +6,7 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
@@ -22,7 +23,8 @@
         {
             dispatcher = Pleasure.Mock<IDispatcher>();
             httpContext = Pleasure.Mock<HttpContextBase>();
-            controller = new FakeController(dispatcher.Object, httpContext.Object);
+            IoCFactory.Instance.StubTryResolve(dispatcher.Object);
+            controller = new FakeController(httpContext.Object);
             modelStateDictionary = new ModelStateDictionary();
             controller.ViewData.SetValue("_modelState", modelStateDictionary);
         }
@@ -40,8 +42,7 @@
         {
             #region Constructors
 
-            public FakeController(IDispatcher dispatcher, HttpContextBase httpContextBase)
-                    : base(dispatcher)
+            public FakeController(HttpContextBase httpContextBase)
             {
                 ControllerContext = new ControllerContext(httpContextBase, new RouteData(), this);
             }

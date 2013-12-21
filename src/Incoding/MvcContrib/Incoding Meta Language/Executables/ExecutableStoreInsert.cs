@@ -10,11 +10,11 @@
     {
         #region Constructors
 
-        internal ExecutableStoreInsert(string type, bool replace, string prefix)
+        public ExecutableStoreInsert(string type, bool replace, string prefix)
         {
-            Data.Set("type", type);
-            Data.Set("replace", replace);
-            Data.Set("prefix", prefix);
+            this.Set("type", type);
+            this.Set("replace", replace);
+            this.Set("prefix", prefix);
         }
 
         #endregion

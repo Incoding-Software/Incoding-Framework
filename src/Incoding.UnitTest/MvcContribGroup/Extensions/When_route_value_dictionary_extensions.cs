@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -65,6 +66,11 @@
                                              .ToLink("Value")
                                              .ToHtmlString()
                                              .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\">Value</a>");
+        
+        It should_be_to_link_mvc_html_string = () => new RouteValueDictionary(new { @class = "class" })
+                                             .ToLink(new MvcHtmlString("<br/>"))
+                                             .ToHtmlString()
+                                             .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"><br/></a>");
 
         It should_be_to_link_no_replace_href = () => new RouteValueDictionary(new { @href = "http://asdsd" })
                                                              .ToLink("Value")

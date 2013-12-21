@@ -6,6 +6,7 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -29,9 +30,9 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        public override MvcHtmlString Render()
+        public override MvcHtmlString ToHtmlString()
         {
-            return this.htmlHelper.PasswordFor(this.property, this.attributes);
+            return this.htmlHelper.PasswordFor(this.property, GetAttributes());
         }
     }
 }

@@ -3,12 +3,16 @@
     #region << Using >>
 
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using Incoding.Extensions;
     using Incoding.Maybe;
 
     #endregion
 
+    /// <summary>
+    ///     An HTML snippet, action expression, jQuery object, or DOM element specifying the structure to wrap around the matched elements.
+    /// </summary>
     public class JquerySelector : Selector
     {
         #region Constructors
@@ -106,6 +110,16 @@
             return new JquerySelectorExtend(this.selector);
         }
 
+        public JquerySelectorExtend Expression(JqueryExpression expression)
+        {
+            foreach (var exist in Enum.GetValues(typeof(JqueryExpression))
+                                      .Cast<JqueryExpression>()
+                                      .Where(r => expression.HasFlag(r)))
+                AlsoSelector(":{0}".F(exist.ToJqueryString()));
+
+            return new JquerySelectorExtend(this.selector);
+        }
+
         /// <summary>
         ///     Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> ending exactly with a given string. The comparison is case sensitive.
         /// </summary>
@@ -163,18 +177,32 @@
         }
 
         /// <summary>
-        ///     Selects all elements with the given <paramref name="classes" />.
+        ///     Selects all elements with the given <paramref name="class" />.
         /// </summary>
-        public JquerySelectorExtend Class(string classes)
+        public JquerySelectorExtend Class(string @class)
         {
-            classes.Split(" ".ToCharArray())
-                   .DoEach((@class, index) => AndSelector("." + Escaping(@class)));
+            AndSelector("." + Escaping(@class.Trim()));
+            return new JquerySelectorExtend(this.selector);
+        }
+
+        /// <summary>
+        ///     Selects all elements with the given <paramref name="@class" />.
+        /// </summary>
+        public JquerySelectorExtend Class(params string[] @class)
+        {
+            @class.DoEach((r, index) => OrSelector("." + Escaping(r)));
             return new JquerySelectorExtend(this.selector);
         }
 
         public JquerySelectorExtend Document()
         {
             AndSelector("window.document");
+            return new JquerySelectorExtend(this.selector);
+        }
+
+        public JquerySelectorExtend Immediate()
+        {
+            AndSelector(">");
             return new JquerySelectorExtend(this.selector);
         }
 

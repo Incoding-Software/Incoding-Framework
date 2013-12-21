@@ -14,6 +14,16 @@ namespace Incoding.MSpecContrib
     {
         #region Factory constructors
 
+        public static void ShouldBeFileContent(this ActionResult actionResult, byte[] fileContents, string contentType = "", string fileDownloadName = "")
+        {
+            var fileResult = actionResult as FileContentResult;
+
+            fileResult.ShouldNotBeNull();
+            fileResult.FileContents.ShouldEqualWeakEach(fileContents);
+            fileResult.ContentType.ShouldEqual(contentType);
+            fileResult.FileDownloadName.ShouldEqual(fileDownloadName);
+        }
+
         public static void ShouldBeIncodingData<TData>(this ActionResult actionResult, Action<TData> verify)
         {
             ShouldBeIncoding(actionResult, data =>
@@ -88,11 +98,20 @@ namespace Incoding.MSpecContrib
             redirectResult.RouteValues["Action"].ToString().ToLower().ShouldEqual(action.GetMethodBodyName().ToLower());
         }
 
-        public static void ShouldBeViewName(this ActionResult actionResult, string viewName)
+        public static void ShouldBeView(this ActionResult actionResult, string viewName = "")
         {
-            var viewResult = actionResult as ViewResult;
-            viewResult.ShouldNotBeNull();
-            viewResult.ViewName.ShouldEqual(viewName);
+            (actionResult is ViewResult || actionResult is PartialViewResult).ShouldBeTrue();
+            if (actionResult is ViewResult)
+                ((ViewResult)actionResult).ViewName.ShouldEqual(viewName);
+
+            if (actionResult is PartialViewResult)
+                ((PartialViewResult)actionResult).ViewName.ShouldEqual(viewName);
+        }
+
+        public static void ShouldBeView<TModel>(this ActionResult actionResult, TModel model, string viewName = "")
+        {
+            actionResult.ShouldBeView(viewName);
+            actionResult.ShouldBeModel(model);
         }
 
         #endregion

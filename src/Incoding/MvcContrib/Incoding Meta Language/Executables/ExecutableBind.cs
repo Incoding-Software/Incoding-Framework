@@ -12,11 +12,11 @@
 
         public ExecutableBind(string type, string meta, string bind)
         {
-            Data.Set("type", type);
+            this.Set("type", type);
             if (!string.IsNullOrWhiteSpace(meta))
-                Data.Set("meta", meta);
+                this.Set("meta", meta);
             if (!string.IsNullOrWhiteSpace(bind))
-                Data.Set("bind", bind);
+                this.Set("bind", bind);
         }
 
         #endregion

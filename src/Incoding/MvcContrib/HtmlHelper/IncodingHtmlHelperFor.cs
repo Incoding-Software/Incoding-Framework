@@ -66,6 +66,11 @@
             return Control(new IncCheckBoxControl<TModel, TProperty>(this.htmlHelper, this.property), configuration);
         }
 
+        public MvcHtmlString RadioButton(Action<IncRadioButtonControl<TModel, TProperty>> configuration = null)
+        {
+            return Control(new IncRadioButtonControl<TModel, TProperty>(this.htmlHelper, this.property), configuration);
+        }
+
         public MvcHtmlString Hidden(Action<IncHiddenControl<TModel, TProperty>> configuration = null)
         {
             return Control(new IncHiddenControl<TModel, TProperty>(this.htmlHelper, this.property), configuration);
@@ -76,7 +81,7 @@
         MvcHtmlString Control<TInput>(TInput input, Action<TInput> configuration) where TInput : IncControlBase
         {
             configuration.Do(action => action(input));
-            return input.Render();
+            return input.ToHtmlString();
         }
     }
 }

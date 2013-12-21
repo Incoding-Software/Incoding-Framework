@@ -33,11 +33,11 @@
                                   };
 
         Because of = () => builder
-                                   .Confirm(Selector.Value(confirm1))
+                                   .Eval(confirm1)
                                    .And
-                                   .Confirm(Selector.Value(confirm2))
+                                   .Eval(confirm2)
                                    .Or
-                                   .Confirm(Selector.Value(confirm3));
+                                   .Eval(confirm3);
 
         It should_be_1_and = () => builder
                                            .GetByIndex(0)
@@ -46,8 +46,8 @@
                                                                 {
                                                                         type = ConditionalOfType.Eval.ToString(), 
                                                                         inverse = false, 
-                                                                        and = true, 
-                                                                        code = "window.confirm(this.tryGetVal('{0}'));".F(confirm1)
+                                                                        and = true,
+                                                                        code = confirm1
                                                                 }, dsl => dsl.IncludeAllFields());
 
         It should_be_2_and = () => builder
@@ -57,8 +57,8 @@
                                                                 {
                                                                         type = ConditionalOfType.Eval.ToString(), 
                                                                         inverse = false, 
-                                                                        and = true, 
-                                                                        code = "window.confirm(this.tryGetVal('{0}'));".F(confirm2)
+                                                                        and = true,
+                                                                        code = confirm2
                                                                 }, dsl => dsl.IncludeAllFields());
 
         It should_be_3_or = () => builder
@@ -68,8 +68,8 @@
                                                                {
                                                                        type = ConditionalOfType.Eval.ToString(), 
                                                                        inverse = false, 
-                                                                       and = false, 
-                                                                       code = "window.confirm(this.tryGetVal('{0}'));".F(confirm3)
+                                                                       and = false,
+                                                                       code = confirm3
                                                                }, dsl => dsl.IncludeAllFields());
     }
 }

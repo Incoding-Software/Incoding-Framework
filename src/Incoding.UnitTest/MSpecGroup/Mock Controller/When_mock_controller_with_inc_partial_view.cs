@@ -18,12 +18,6 @@ namespace Incoding.UnitTest.MSpecGroup
 
         protected class FakeController : IncControllerBase
         {
-            #region Constructors
-
-            public FakeController(IDispatcher dispatcher)
-                    : base(dispatcher) { }
-
-            #endregion
 
             #region Api Methods
 

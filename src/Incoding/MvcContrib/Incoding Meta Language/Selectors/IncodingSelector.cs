@@ -22,7 +22,7 @@
 
         public Selector HashQueryString(string key, string prefix)
         {
-            AndSelector("@@@@@{0}:{1}@@@@@".F(key, prefix));
+            AndSelector("||hashQueryString*{0}:{1}||".F(key, prefix));
             return this;
         }
 
@@ -43,7 +43,7 @@
 
         public Selector HashUrl(string prefix)
         {
-            AndSelector("@@@@{0}@@@@".F(prefix));
+            AndSelector("||hashUrl*{0}||".F(prefix));
             return this;
         }
 
@@ -54,7 +54,7 @@
 
         public Selector QueryString(string key)
         {
-            AndSelector("@@@{0}@@@".F(key));
+            AndSelector("||queryString*{0}||".F(key));
             return this;
         }
 
@@ -70,7 +70,7 @@
 
         public Selector Cookie(string key)
         {
-            AndSelector("@@@@@@{0}@@@@@@".F(key));
+            AndSelector("||cookie*{0}||".F(key));
             return this;
         }
 
@@ -79,9 +79,10 @@
             var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
             configuration(options);
             options.Async = false;
-            AndSelector("@@@@@@@{0}@@@@@@@".F(options.OptionCollections.ToJsonString()));
+            AndSelector("||ajax*{0}||".F(options.ToJsonString()));
             return this;
         }
+
 
         public Selector AjaxGet(string url)
         {
@@ -99,6 +100,14 @@
                                 options.Url = url;
                                 options.Type = HttpVerbs.Post;
                             });
+        }
+
+        public Selector BuildUrl(string url)
+        {
+            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
+            options.Url = url;
+            AndSelector("||buildurl*{0}||".F(options.ToJsonString()));
+            return this;
         }
 
         #endregion

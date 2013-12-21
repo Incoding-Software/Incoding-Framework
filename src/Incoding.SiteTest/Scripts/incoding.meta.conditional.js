@@ -93,3 +93,22 @@ ConditionalEval.prototype.isInternalSatisfied = function(data) {
 // ReSharper restore UnusedParameter
 
 //#endregion
+
+
+//#region class ConditionalIs extend from ConditionalBase
+
+incodingExtend(ConditionalIs, ConditionalBase);
+
+function ConditionalIs() {
+}
+
+// ReSharper disable UnusedParameter
+ConditionalIs.prototype.isInternalSatisfied = function(data) {
+    var left = this.tryGetVal(this.jsonData.left);
+    var right = this.tryGetVal(this.jsonData.right);
+
+    return ExecutableHelper.Compare(left, right, this.jsonData.method);
+};
+// ReSharper restore UnusedParameter
+
+//#endregion

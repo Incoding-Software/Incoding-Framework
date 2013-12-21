@@ -2,7 +2,6 @@ namespace Incoding.Block.Caching
 {
     #region << Using >>
 
-    using System;
     using Incoding.Block.Core;
 
     #endregion
@@ -31,47 +30,27 @@ namespace Incoding.Block.Caching
 
         #region Factory constructors
 
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
-        public static IsSatisfied<ICacheKey> Filter(Func<ICacheKey, bool> conditional)
-        {
-            return SatisfiedSyntax.Filter(conditional);
-        }
-
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
         public static IsSatisfied<ICacheKey> For<TCacheKey>()
                 where TCacheKey : class, ICacheKey
         {
             return SatisfiedSyntax.For<ICacheKey, TCacheKey>();
         }
 
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
+        #endregion
+
+        #region Api Methods
+
         public IsSatisfied<ICacheKey> ForAll()
         {
             return SatisfiedSyntax.Filter<ICacheKey>(key => true);
         }
 
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
         public IsSatisfied<ICacheKey> ForFirstDerived<TCacheKey>()
                 where TCacheKey : ICacheKey
         {
             return SatisfiedSyntax.ForFirstDerived<ICacheKey, TCacheKey>();
         }
 
-        #endregion
-
-        #region Api Methods
-
-        /// <summary>
-        ///     See <see cref="SatisfiedSyntax" />
-        /// </summary>
         public IsSatisfied<ICacheKey> ForDeepDerived<TCacheKey>()
                 where TCacheKey : class, ICacheKey
         {

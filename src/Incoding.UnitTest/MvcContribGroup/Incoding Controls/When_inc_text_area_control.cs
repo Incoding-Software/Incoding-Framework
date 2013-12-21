@@ -22,7 +22,7 @@
                                      .TextArea(boxControl =>
                                                    {
                                                        boxControl.Cols = 10;
-                                                       boxControl.Rows = 30;
+                                                       boxControl.Rows = 30;                                                       
                                                    })
                                      .ToHtmlString();
                          };

@@ -30,12 +30,12 @@ namespace Incoding.UnitTest.MvcContribGroup
                                       var viewContext = Pleasure.MockAsObject<ViewContext>(mock => mock.SetupGet(r => r.Writer).Returns(textWriter.Object));
 
                                       var helper = new HtmlHelper(viewContext, Pleasure.MockAsObject<IViewDataContainer>(), new RouteCollection());
-                                      script = new MvcScriptTemplate<string>(helper, "id", "htmlType");
+                                      script = new MvcScriptTemplate<string>(helper, "id");
                                   };
 
         Because of = () => script.Dispose();
 
-        It should_be_write_start = () => textWriter.Verify(r => r.Write(Pleasure.MockIt.IsStrong("<script id=\"id\" type=\"htmlType\">")));
+        It should_be_write_start = () => textWriter.Verify(r => r.Write(Pleasure.MockIt.IsStrong("<script id=\"id\" type=\"text/template\" >")));
 
         It should_be_write_end = () => textWriter.Verify(r => r.Write(Pleasure.MockIt.IsStrong("</script>")));
     }

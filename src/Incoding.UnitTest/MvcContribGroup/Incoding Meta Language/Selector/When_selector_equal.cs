@@ -39,9 +39,9 @@
 
         It should_be_string_selector = () => (string.Empty == Selector.Value(5)).ShouldBeFalse();
 
-        It should_be_selector_string_success = () => (Selector.Value(5) == "'5'").ShouldBeTrue();
+        It should_be_selector_string_success = () => (Selector.Value(5) == "5").ShouldBeTrue();
 
-        It should_be_string_selector_success = () => ("'5'" == Selector.Value(5)).ShouldBeTrue();
+        It should_be_string_selector_success = () => ("5" == Selector.Value(5)).ShouldBeTrue();
 
         It should_not_be_selector_string = () => (Selector.Value(5) != string.Empty).ShouldBeTrue();
 

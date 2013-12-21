@@ -46,12 +46,11 @@ function AjaxAdapter() {
                 return;
             }
 
-            if ($('[name={0}]'.f(name)).is('[type=checkbox],select')) {
-                value = value.toString().split(',');
-            }
+            var isElementCanArray = $('[name="{0}"]'.f(name.replaceAll("[", "\\[").replaceAll("]", "\\]"))).is('[type=checkbox],select,[type=radio]');
+            var isValueCanArray = _.isArray(value) || value.toString().contains(',');
 
-            if (_.isArray(value)) {
-                $(value).each(function() {
+            if (_.isArray(value) || (isValueCanArray && isElementCanArray)) {
+                $(value.toString().split(',')).each(function() {
                     res.push({ name : name, value : this });
                 });
             }
@@ -96,14 +95,7 @@ AjaxAdapter.Instance = new AjaxAdapter();
 
 function ExecutableHelper() {
 
-    var supportedElements = 'script,input,select,options,textarea';
-
     var getValAction = function(selector) {
-
-        var hasNotSupportedElement = $(selector).not(supportedElements).length > 0;
-        if (hasNotSupportedElement) {
-            return selector;
-        }
 
         var scripts = $(selector).filter('script');
         if (scripts.length > 0) {
@@ -141,7 +133,7 @@ function ExecutableHelper() {
             return res;
         }
 
-        if ($(selector).is('[multiple]')) {
+        if ($(selector).is('select[multiple]')) {
             var res = [];
             $($(selector).val()).each(function() {
                 if (!ExecutableHelper.IsNullOrEmpty(this)) {
@@ -167,9 +159,8 @@ function ExecutableHelper() {
         if (ExecutableHelper.IsNullOrEmpty(selector)) {
             return selector;
         }
-
         if (selector instanceof jQuery) {
-            return getValAction(selector);
+            return selector.length != 0 ? getValAction(selector) : '';
         }
 
         var isPrimitiveType = (_.isNumber(selector) || _.isBoolean(selector) || _.isArray(selector) || _.isDate(selector) || _.isFunction(selector));
@@ -179,43 +170,71 @@ function ExecutableHelper() {
         }
 
         selector = selector.toString();
+        var isJqueryVariable = selector.startsWith("$(");
+        var isSelector = (selector.startsWith("||") && selector.endWith("||"));
 
-        var isJqueryVariable = selector.startsWith("$(") && selector.toString().endWith(")");
+        if (!isJqueryVariable && !isSelector) {
+            return selector;
+        }
 
         if (isJqueryVariable) {
-            return getValAction(eval(selector));
+            return this.TryGetVal(eval(selector));
         }
 
-        if (selector.contains("@@@@@@@")) {
-            var options = $.parseJSON(selector.replaceAll("'@@@@@@@", '').replaceAll("@@@@@@@'", ''));
-            if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
-                for (var i = 0; i < options.data.length; i++) {
-                    options.data[i].selector = ExecutableHelper.Instance.TryGetVal(options.data[i].selector);
+        var res;
+
+        if (isSelector) {
+
+            var valueSelector = selector.substring(2, selector.length - 2);
+            valueSelector = valueSelector.substring(selector.indexOf('*') - 1, selector.length);
+
+            var isTypeSelector = function(type) {
+                return selector.startsWith("||{0}*".f(type));
+            };
+
+            if (isTypeSelector('ajax') || isTypeSelector('buildurl')) {
+                var options = $.parseJSON(valueSelector);
+                if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
+                    for (var i = 0; i < options.data.length; i++) {
+                        options.data[i].selector = ExecutableHelper.Instance.TryGetVal(options.data[i].selector);
+                    }
                 }
-            }
-            var ajaxData;
-            AjaxAdapter.Instance.request(options, function(result) {
-                ajaxData = result.data;
-            });
-            return ajaxData;
-        }
+                if (isTypeSelector('buildurl')) {
+                    var dataAsString = '';
+                    if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
+                        for (var i = 0; i < options.data.length; i++) {
+                            options.data[i].selector = this.TryGetVal(options.data[i].selector);
+                        }
+                        dataAsString = options.data.select(function(item) {
+                            return '{0}={1}'.f(item.name, item.selector);
+                        }).join('&');
+                    }
+                    res = '{0}?{1}'.f(options.url, dataAsString);
+                }
+                else {
+                    var ajaxData;
+                    AjaxAdapter.Instance.request(options, function(result) {
+                        ajaxData = result.data;
+                    });
+                    res = ajaxData;
+                }
 
-        var res = selector;
-        if (selector.contains("@@@@@@")) {
-            res = $.cookie(selector.replaceAll("@@@@@@", ''));
-        }
-        else if (selector.contains("@@@@@")) {
-            var clearValue = selector.replaceAll("@@@@@", '');
-            res = $.url(window.location.href).fparam(clearValue.split(':')[0], clearValue.split(':')[1]);
-        }
-        else if (selector.contains("@@@@")) {
-            res = $.url(window.location.href).furl(selector.replaceAll("@@@@", ''));
-        }
-        else if (selector.contains("@@@")) {
-            res = $.url(window.location.href).param(selector.replaceAll("@@@", ''));
-        }
-        else if (selector.contains("@@javascript")) {
-            res = eval(selector.replaceAll('@@', '').split(":")[1]);
+            }
+            else if (isTypeSelector('cookie')) {
+                res = $.cookie(valueSelector);
+            }
+            else if (isTypeSelector('hashQueryString')) {
+                res = $.url(window.location.href).fparam(valueSelector.split(':')[0], valueSelector.split(':')[1]);
+            }
+            else if (isTypeSelector('hashUrl')) {
+                res = $.url(window.location.href).furl(valueSelector);
+            }
+            else if (isTypeSelector('queryString')) {
+                res = $.url(window.location.href).param(valueSelector);
+            }
+            else if (isTypeSelector('javascript')) {
+                res = eval(valueSelector);
+            }
         }
 
         return ExecutableHelper.IsNullOrEmpty(res) ? '' : res;
@@ -223,6 +242,10 @@ function ExecutableHelper() {
     };
 
     this.TrySetValue = function(element, val) {
+
+        if ($(element).is('[type=hidden]') && $('[name={0}]'.f($(element).prop('name'))).length == 2) {
+            return;
+        }
 
         if ($(element).is(':checkbox')) {
             var onlyCheckBoxes = $(element).filter(':checkbox');
@@ -334,7 +357,7 @@ ExecutableHelper.Compare = function(actual, expected, method) {
         return actual !== expected;
     }
 
-    if (method == 'contains') {
+    if (method == 'iscontains') {
         return actual.contains(expected);
     }
 
@@ -383,9 +406,9 @@ ExecutableHelper.IsNullOrEmpty = function(value) {
 };
 
 ExecutableHelper.RedirectTo = function(destentationUrl) {
-    destentationUrl = decodeURIComponent(destentationUrl);
+    var decodeUri = decodeURIComponent(destentationUrl);
 
-    var isSame = destentationUrl.contains('#') && window.location.hash.replace("#", "") == destentationUrl.split('#')[1];
+    var isSame = decodeUri.contains('#') && window.location.hash.replace("#", "") == decodeUri.split('#')[1];
     if (isSame) {
         $(document).trigger(jQuery.Event(IncSpecialBinds.IncChangeUrl));
         return;
@@ -443,65 +466,36 @@ ExecutableHelper.ToBool = function(value) {
 
 //#region Templates
 
-function IncMustacheTemplate(data, template) {
+function IncMustacheTemplate() {
 
-    this.data = data;
-
-    this.prepare = function(source) {
-
-        var currentData = this.data;
-
-        $(['Sum', 'Max', 'Min', 'First', 'Last', 'Average', 'Count']).each(function() {
-
-            var pattern = "{{#IncTemplate" + this + "}}(.*?){{/IncTemplate" + this + "}}";
-            if (!new RegExp(pattern, "g").test(source)) {
-                return true;
-            }
-
-            var value = '';
-            var property = new RegExp(pattern, "g").exec(source)[1];
-            var isNumberType = this == 'Max' || this == 'Min' || this == 'Average' || this == 'Sum' || this == 'Count';
-
-            if (ExecutableHelper.IsNullOrEmpty(currentData) && isNumberType) {
-                value = 0;
-            }
-            else if (this == 'Count' && _.isArray(currentData)) {
-                value = currentData.length;
-            }
-            else if (_.isArray(currentData)) {
-                // ReSharper disable UnusedLocals
-                var parseData = currentData.select(function(item) {
-                    var itemValue = item[property];
-                    if (isNumberType) {
-                        {
-                            var parseValue = parseFloat(itemValue);
-                            if (_.isNumber(parseValue) && !_.isNaN(parseValue)) {
-                                return parseValue;
-                            }
-                        }
-                    }
-                    return itemValue;
-                });
-                // ReSharper restore UnusedLocals    
-                value = eval('parseData.{0}()'.f(this.toString().toLowerCase()));
-            }
-            else if (currentData.hasOwnProperty(property)) {
-                value = currentData[property];
-            }
-            else {
-                value = '';
-            }
-
-            source = source.replaceAll("{{#IncTemplate" + this + "}}" + property + "{{/IncTemplate" + this + "}}", value);
-        });
-
-        return source;
+    this.compile = function(tmpl) {
+        return tmpl;
     };
 
-    this.template = this.prepare(template);
+    this.render = function(tmpl, data) {
+        var compile = Mustache.compile(tmpl);
+        return compile(data);
+    };
 
-    this.render = function() {
-        return Mustache.to_html(this.template, { data : this.data });
+}
+
+function IncHandlerbarsTemplate() {
+
+    this.compile = function(tmpl) {
+        return navigator.Ie8 ? tmpl
+            : Handlebars.precompile(tmpl);
+    };
+
+    this.render = function(tmpl, data) {
+
+        if (navigator.Ie8) {
+            return Handlebars.compile(tmpl)(data);
+        }
+
+        if (!_.isFunction(tmpl)) {
+            tmpl = eval("(" + tmpl + ")");
+        }
+        return Handlebars.template(tmpl)(data);
     };
 
 }
@@ -509,8 +503,45 @@ function IncMustacheTemplate(data, template) {
 function TemplateFactory() {
 }
 
-TemplateFactory.Create = function(type, data, template) {
-    return new IncMustacheTemplate(data, template);
+TemplateFactory.Version = '';
+
+TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data) {
+
+    selectorKey = selectorKey + TemplateFactory.Version;
+    if (navigator.Ie8) {
+        selectorKey = selectorKey + 'ie8';
+    }
+
+    var compile = '';
+    var isLocalStore = typeof (Storage) !== "undefined";
+    if (isLocalStore) {
+        try {
+            compile = localStorage.getItem(selectorKey);
+        }
+        catch (e) {
+            compile = '';
+        }
+    }
+
+    if (ExecutableHelper.IsNullOrEmpty(compile)) {
+        compile = builder.compile(evaluatedSelector());
+        if (isLocalStore) {
+            try {
+                localStorage.setItem(selectorKey, compile);
+            }
+            catch (e) {
+                if (e.name === 'QUOTA_EXCEEDED_ERR') {
+                    localStorage.clear();
+                }
+            }
+        }
+    }
+
+    if (!_.isArray(data) && !ExecutableHelper.IsNullOrEmpty(data)) {
+        data = [data];
+    }
+
+    return builder.render(compile, { data: data });
 };
 
 //#endregion

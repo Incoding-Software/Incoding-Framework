@@ -18,6 +18,11 @@ namespace Incoding.Data
         void Save<TEntity>(TEntity entity) where TEntity : class, IEntity;
 
         /// <summary>
+        ///     Flushed if a query is requested for some entity type and there are dirty local entity instances
+        /// </summary>
+        void Flush();
+
+        /// <summary>
         ///     <see cref="Save{TEntity}" /> or update
         /// </summary>
         /// <typeparam name="TEntity">Type entity</typeparam>
