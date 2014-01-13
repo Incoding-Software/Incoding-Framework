@@ -73,6 +73,39 @@
             return With(action(Selector.Jquery));
         }
 
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithName<T>(Expression<Func<T, object>> memberName)
+        {
+            return With(selector => selector.Name(memberName));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithName(string name)
+        {
+            return With(selector => selector.Name(name));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithId<T>(Expression<Func<T, object>> memberId)
+        {
+            return With(selector => selector.Id(memberId));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithId(string id)
+        {
+            return With(selector => selector.Id(id));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithClass(string @class)
+        {
+            return With(selector => selector.Class(@class));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Action<JquerySelectorExtend> self)
+        {
+            var selector = Selector.Jquery.Self();
+            self(selector);
+            return With(selector);
+        }
+
         public IIncodingMetaLanguageCallbackInstancesDsl Self()
         {
             return With(selector => selector.Self());

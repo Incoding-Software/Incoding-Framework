@@ -208,7 +208,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #region Css
 
-        It should_be_set_css = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+        It should_be_css_set = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                              .Do().Direct()
                                              .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Set(CssStyling.FontFamily, value))
                                              .GetExecutable<ExecutableEvalMethod>()
@@ -219,7 +219,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                           { "context", "$(this.target)" }
                                                                   });
 
-        It should_be_set_css_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+        It should_be_css_set_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                    .Do().Direct()
                                                    .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Set(CssStyling.Width, string.Empty))
                                                    .GetExecutable<ExecutableEvalMethod>()
@@ -229,6 +229,17 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                 { "args", new[] { "width", string.Empty } }, 
                                                                                 { "context", "$(this.target)" }
                                                                         });
+
+        It should_be_display = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                             .Do().Direct()
+                                             .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Display(Display.TableCaption))
+                                             .GetExecutable<ExecutableEvalMethod>()
+                                             .ShouldEqualData(new Dictionary<string, object>
+                                                                  {
+                                                                          { "method", "css" }, 
+                                                                          { "args", new[] { "display", "table-caption" } }, 
+                                                                          { "context", "$(this.target)" }
+                                                                  });
 
         It should_be_height = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                             .Do().Direct()

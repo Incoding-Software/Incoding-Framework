@@ -250,7 +250,8 @@
     <Compile Include="ContractOptionAttribute.cs" />
     <Compile Include="CQRS\Common\Command\DeleteEntityByIdCommandT.cs" />
     <Compile Include="CQRS\Common\Query\HasEntitiesQuery.cs" />
-    <Compile Include="CQRS\Common\Query\IncStructureResponse.cs" />
+    <Compile Include="CQRS\Common\Response\IncBoolResponse.cs" />
+    <Compile Include="CQRS\Common\Response\IncStructureResponse.cs" />
     <Compile Include="CQRS\Core\CommandBase.cs" />
     <Compile Include="CQRS\Common\Command\DeleteEntityByIdCommand.cs" />
     <Compile Include="CQRS\Common\Query\GetEntitiesQuery.cs" />
@@ -331,7 +332,7 @@
     <Compile Include="Extensions\StringUrlExtensions.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IncFrameworkException.cs" />
-    <Compile Include="IncWebException.cs" />
+    <Compile Include="MvcContrib\Core\IncWebException.cs" />
     <Compile Include="MvcContrib\Core\IncValidatorFactory.cs" />
     <Compile Include="MvcContrib\Core\IncControllerBase.cs" />
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableEvalMethod.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableForm.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableStoreManipulate.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\Display.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryEasing.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\JqueryShowOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JuqeryEffect.cs" />
@@ -551,7 +553,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

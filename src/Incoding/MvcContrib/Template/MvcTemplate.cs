@@ -12,7 +12,7 @@
     {
         #region Static Fields
 
-        static readonly Lazy<ITemplateFactory> factory = new Lazy<ITemplateFactory>(() => IoCFactory.Instance.TryResolve<ITemplateFactory>());
+        readonly Lazy<ITemplateFactory> factory = new Lazy<ITemplateFactory>(() => IoCFactory.Instance.TryResolve<ITemplateFactory>() ?? new TemplateHandlebarsFactory());
 
         #endregion
 

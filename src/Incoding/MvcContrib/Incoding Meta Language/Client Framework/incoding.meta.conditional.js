@@ -35,8 +35,7 @@ ConditionalBase.prototype =
         },
         // ReSharper disable UnusedParameter
         isInternalSatisfied : function(data) {
-            // ReSharper restore UnusedParameter
-            throw new Error('Need override this method');
+        // ReSharper restore UnusedParameter            
         },
         tryGetVal : function(variable) {
             return this.executable.tryGetVal(variable);

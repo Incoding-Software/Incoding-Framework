@@ -196,7 +196,8 @@ namespace Incoding.MvcContrib
 
         public MvcHtmlString RenderDropDownTemplate()
         {
-            string template = IoCFactory.Instance.TryResolve<ITemplateFactory>().GetDropDownTemplate();
+            var templateFactory = IoCFactory.Instance.TryResolve<ITemplateFactory>() ?? new TemplateHandlebarsFactory();
+            string template = templateFactory.GetDropDownTemplate();
             return new MvcHtmlString(CreateScript(DropDownTemplateId, HtmlType.TextTemplate, string.Empty, new MvcHtmlString(template)).ToString());
         }
 

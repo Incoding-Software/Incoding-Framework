@@ -146,7 +146,12 @@ namespace Incoding.MvcContrib
             }
             catch (IncWebException exception)
             {
-                ModelState.AddModelError(exception.Property, exception.Message);
+                foreach (var pairError in exception.Errors)
+                {
+                    foreach (var errorMessage in pairError.Value)
+                        ModelState.AddModelError(pairError.Key, errorMessage);
+                }
+
                 return error(exception);
             }
         }

@@ -34,5 +34,53 @@
                                                  .GetActions<ExecutableValidationParse>()
                                                  .First()["target"]
                                                  .ShouldEqual("$(this.self).closest('tr')");
+
+        It should_be_with_id = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                             .Do()
+                                             .Direct()
+                                             .OnSuccess(dsl => dsl.WithId("id").Core().Form.Validation.Parse())
+                                             .GetActions<ExecutableValidationParse>()
+                                             .First()["target"]
+                                             .ShouldEqual("$('#id')");
+
+        It should_be_with_id_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                        .Do()
+                                                        .Direct()
+                                                        .OnSuccess(dsl => dsl.WithId<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
+                                                        .GetActions<ExecutableValidationParse>()
+                                                        .First()["target"]
+                                                        .ShouldEqual("$('#Value')");
+
+        It should_be_with_name = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                               .Do()
+                                               .Direct()
+                                               .OnSuccess(dsl => dsl.WithName("Value").Core().Form.Validation.Parse())
+                                               .GetActions<ExecutableValidationParse>()
+                                               .First()["target"]
+                                               .ShouldEqual("$('[name=\"Value\"]')");
+
+        It should_be_with_name_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                          .Do()
+                                                          .Direct()
+                                                          .OnSuccess(dsl => dsl.WithName<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
+                                                          .GetActions<ExecutableValidationParse>()
+                                                          .First()["target"]
+                                                          .ShouldEqual("$('[name=\"Value\"]')");
+
+        It should_be_with_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                .Do()
+                                                .Direct()
+                                                .OnSuccess(dsl => dsl.WithClass("red").Core().Form.Validation.Parse())
+                                                .GetActions<ExecutableValidationParse>()
+                                                .First()["target"]
+                                                .ShouldEqual("$('.red')");
+
+        It should_be_with_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                               .Do()
+                                               .Direct()
+                                               .OnSuccess(dsl => dsl.WithSelf(extend => extend.Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
+                                               .GetActions<ExecutableValidationParse>()
+                                               .First()["target"]
+                                               .ShouldEqual("$(this.self).closest('tr')");
     }
 }

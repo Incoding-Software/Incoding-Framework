@@ -3,7 +3,9 @@
     #region << Using >>
 
     using System.Collections.Specialized;
+    using System.Linq;
     using System.Web.Mvc;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -21,12 +23,16 @@
 
         Because of = () =>
                          {
-                             result = controller.PushErrorResult(new FakeCommand(), exception => new ContentResult
-                                                                                                     {
-                                                                                                             Content = exception.Message
-                                                                                                     });
+                             result = controller.PushErrorResult(new FakeCommand(), exception =>
+                                                                                        {
+                                                                                            var pair = exception.Errors.First();
+                                                                                            return new ContentResult
+                                                                                                       {
+                                                                                                               Content = "{0}:{1}".F(pair.Key, pair.Value[0])
+                                                                                                       };
+                                                                                        });
                          };
 
-        It should_be_re_view = () => ((ContentResult)result).Should(contentResult => contentResult.Content.ShouldEqual(Pleasure.Generator.TheSameString()));
+        It should_be_re_view = () => ((ContentResult)result).Should(contentResult => contentResult.Content.ShouldEqual("key:TheSameString"));
     }
 }

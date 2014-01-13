@@ -95,25 +95,36 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                             { "insertType", "text" }
                                                                     });
 
-        It should_be_insert_with_jquery_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+        It should_be_insert_with_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                          .Do().Direct()
+                                                          .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent(HtmlTag.Area)).Text())
+                                                          .GetExecutable<ExecutableInsert>()
+                                                          .ShouldEqualData(new Dictionary<string, object>
+                                                                               {
+                                                                                       { "insertType", "text" }, 
+                                                                                       { "template", "$('.new').parent('area')" }
+                                                                               });
+
+
+        It should_be_insert_with_template_by_id = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                .Do().Direct()
+                                                                .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateById("id").Text())
+                                                                .GetExecutable<ExecutableInsert>()
+                                                                .ShouldEqualData(new Dictionary<string, object>
+                                                                                     {
+                                                                                             { "insertType", "text" }, 
+                                                                                             { "template", "$('#id')" }
+                                                                                     });
+
+        It should_be_insert_with_template_by_url = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                  .Do().Direct()
-                                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Jquery.Class("new").Parent(HtmlTag.Area)).Text())
+                                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateByUrl(Pleasure.Generator.TheSameString()).Text())
                                                                  .GetExecutable<ExecutableInsert>()
                                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                                       {
-                                                                                              { "insertType", "text" },
-                                                                                              { "template", "$('.new').parent('area')" }
+                                                                                              { "insertType", "text" }, 
+                                                                                              { "template", "||ajax*{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}||" }
                                                                                       });
-
-        It should_be_insert_with_ajax_template = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                               .Do().Direct()
-                                                               .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplate(Selector.Incoding.AjaxGet(Pleasure.Generator.TheSameString())).Text())
-                                                               .GetExecutable<ExecutableInsert>()
-                                                               .ShouldEqualData(new Dictionary<string, object>
-                                                                                    {
-                                                                                            { "insertType", "text" },
-                                                                                            { "template", "||ajax*{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}||" }
-                                                                                    });
 
         It should_be_insert_for = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()
@@ -121,7 +132,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                 .GetExecutable<ExecutableInsert>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "insertType", "text" },
+                                                                             { "insertType", "text" }, 
                                                                              { "property", "Prop1" }
                                                                      });
 
@@ -131,7 +142,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                     .GetExecutable<ExecutableInsert>()
                                                     .ShouldEqualData(new Dictionary<string, object>
                                                                          {
-                                                                                 { "insertType", "text" },
+                                                                                 { "insertType", "text" }, 
                                                                                  { "prepare", true }
                                                                          });
     }

@@ -12,6 +12,35 @@ function testEvalMethod(arg1, arg2, arg3) {
 
 function TestHelper() {
 
+/*
+    this.Spy = function (spy) {
+        
+        var uniqueName = function () {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (var i = 0; i < 5; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+            return text;
+        }
+
+        
+        $.eachProperties(spy, function() {
+            var value = spy[this];
+
+            if (_.isFunction(value)) {
+                spyOn(spy, this).andCallFake(value);
+            }
+            else {
+                spyOn(spy, this).andReturn(value);
+            }
+        });
+
+        return spy;
+    };
+*/
+    
     this.SandboxSubmit = function() {
         var res = $('<input>').attr({ id : 'sandboxSubmit', type : 'submit', name : 'sandboxSubmit' });
         appendSetFixtures(res);
@@ -972,34 +1001,40 @@ describe('Incoding', function() {
 
                 describe('When register', function() {
 
-                    it('Should be registry action', function() {
+                    it('Should be action', function() {
                         runner.Registry('Action', undefined, { is : true });
                         expect(runner.actions[0].is).toBeTruthy();
                     });
 
-                    it('Should be registry before', function() {
+                    it('Should be before', function() {
                         runner.Registry('Executable', 1, { is : true });
                         expect(runner.before[0].is).toBeTruthy();
                     });
 
-                    it('Should be registry success', function() {
+                    it('Should be success', function() {
                         runner.Registry('Executable', 2, { is : true });
                         expect(runner.success[0].is).toBeTruthy();
                     });
 
-                    it('Should be registry error', function() {
+                    it('Should be error', function() {
                         runner.Registry('Executable', 3, { is : true });
                         expect(runner.error[0].is).toBeTruthy();
                     });
 
-                    it('Should be registry complete', function() {
+                    it('Should be complete', function() {
                         runner.Registry('Executable', 4, { is : true });
                         expect(runner.complete[0].is).toBeTruthy();
                     });
 
-                    it('Should be registry break', function() {
+                    it('Should be break', function() {
                         runner.Registry('Executable', 5, { is : true });
                         expect(runner.breakes[0].is).toBeTruthy();
+                    });
+
+                    it('Should be undefined', function() {
+                        expect(function() {
+                            runner.Registry('Executable', 6, { is : true });
+                        }).toThrow('Not found status 6');
                     });
 
                 });
@@ -1021,9 +1056,12 @@ describe('Incoding', function() {
                         runner.actions.push(action);
                     });
 
-                    it('Should be doIt break before', function() {
-                        var before = new ExecutableBase();
-                        before.onBind = event.type;
+                    it('Should be break on before', function () {                        
+                        var before = {
+                            onBind: event.type,
+                            execute: function () {                                
+                            }
+                        };                        
                         spyOn(before, 'execute').andThrow(new IncClientException());
                         runner.before.push(before);
 
@@ -1034,6 +1072,18 @@ describe('Incoding', function() {
 
                         expect(before.execute).toHaveBeenCalled();
                         expect(breakCallback.execute).toHaveBeenCalledWith(new IncClientException());
+                        expect(action.execute).not.toHaveBeenCalled();
+                    });
+
+                    it('Should be throw on before', function () {                        
+                        runner.before.push({
+                            onBind: event.type,
+                            execute: function() {
+                                throw 'SpecificationException';
+                            }
+                        });
+                                                
+                        expect(function() {runner.DoIt(event);}).toThrow('SpecificationException');                       
                         expect(action.execute).not.toHaveBeenCalled();
                     });
 
@@ -1125,7 +1175,7 @@ describe('Incoding', function() {
                         engine = new IncodingEngine();
                     });
 
-                    it('Should be call ExecutableFactory.Create', function() {
+                    it('Should be ExecutableFactory.Create', function() {
 
                         var incData = '[{ "type" : "DirectAction", "data" : { "innerText" : "innerText", "onBind" : "click" } }]';
                         $(instanceSandBox).attr('incoding', incData);
@@ -1146,27 +1196,50 @@ describe('Incoding', function() {
                         expect($(instanceSandBox).data('events')).toBeFalsy();
 
                     });
+                    
+                    it('Should be once', function () {
+
+                        $(instanceSandBox).attr('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur" } }]');
+
+                        spyOn(ExecutableFactory, 'Create');
+
+                        engine.parse(instanceSandBox);
+                        engine.parse(instanceSandBox);
+
+                        expect(ExecutableFactory.Create.callCount).toEqual(1);
+
+                    });
 
                     describe('When bind', function() {
 
-                        var stubMetaBind = function(bind) {
+                        var fakeExecute;
 
+                        beforeEach(function() {
                             $(instanceSandBox).removeData('incoding-runner');
-                            instanceSandBox = $('#sandbox').attr('incoding', '[{ "type" : "ExecutableDirectAction", "data" : { "onBind" : "' + bind + '" } }]');
-
-                            var fakeExecute = new ExecutableDirectAction();
-                            fakeExecute.onBind = bind;
+                            fakeExecute = new ExecutableDirectAction();
                             spyOn(fakeExecute, 'execute');
 
-                            ExecutableFactory.Create = function() {
-                                return fakeExecute;
-                            };
-                            return fakeExecute;
+                            spyOn(ExecutableFactory, 'Create').andReturn(fakeExecute);
+                        });
+
+                        var stubMetaBind = function(bind) {
+                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([{ type : 'ExecutableDirectAction', data : { onBind : bind } }]));
+                            fakeExecute.onBind = bind;
                         };
 
-                        it('Should be "click"', function() {
+                        it('Should be bind click', function() {
+                            stubMetaBind('click');
 
-                            var fakeExecute = stubMetaBind('click');
+                            engine.parse(instanceSandBox);
+
+                            $(instanceSandBox).trigger('click');
+                            expect(fakeExecute.execute).toHaveBeenCalled();                            
+                        });
+
+                        it('Should be bind once', function() {
+                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([{ type : 'ExecutableDirectAction', data : { onBind : 'click' } },
+                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } }]));
+                            fakeExecute.onBind = 'click';
 
                             engine.parse(instanceSandBox);
 
@@ -1174,18 +1247,23 @@ describe('Incoding', function() {
                             expect(fakeExecute.execute).toHaveBeenCalled();
                         });
 
-                        it('Should be "InitIncoding"', function() {
-
-                            var fakeExecute = stubMetaBind('initincoding click');
-
+                        it('Should be at once trigger init incoding', function() {
+                            stubMetaBind('initincoding click');
                             engine.parse(instanceSandBox);
-
                             expect(fakeExecute.execute).toHaveBeenCalled();
                         });
 
-                        it('Should be "IncChangeUrl"', function() {
+                        it('Should be bind init incoding', function() {
+                            stubMetaBind('initincoding click');
 
-                            var fakeExecute = stubMetaBind('incchangeurl');
+                            engine.parse(instanceSandBox);
+                            $(instanceSandBox).trigger('initincoding');
+
+                            expect(fakeExecute.execute.callCount).toEqual(2);
+                        });
+
+                        it('Should be bind inc change url', function() {
+                            stubMetaBind('incchangeurl');
 
                             engine.parse(instanceSandBox);
 
@@ -1202,18 +1280,7 @@ describe('Incoding', function() {
                         });
                     });
 
-                    it('Should be parse only once', function() {
-
-                        $(instanceSandBox).attr('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur" } }]');
-
-                        spyOn(ExecutableFactory, 'Create');
-
-                        engine.parse(instanceSandBox);
-                        engine.parse(instanceSandBox);
-
-                        expect(ExecutableFactory.Create.callCount).toEqual(1);
-
-                    });
+    
 
                 });
 
@@ -2412,6 +2479,7 @@ describe('Incoding', function() {
                 spyOn(builder, 'render');
                 spyOn(builder, 'compile').andReturn(compile);
 
+                navigator.Ie8 = false;
                 TemplateFactory.Version = '';
                 localStorage.removeItem(selectorKey);
             });
@@ -2448,6 +2516,54 @@ describe('Incoding', function() {
                 TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
                 expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
             });
+
+            it('Should be ToHtml ie8', function () {
+                navigator.Ie8 = true;
+                spyOn(localStorage, 'getItem').andReturn('1');
+                spyOn(localStorage, 'setItem');
+
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+
+                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+                expect(localStorage.getItem).toHaveBeenCalledWith(selectorKey + 'ie8');
+                expect(localStorage.setItem).not.toHaveBeenCalled();
+            });
+            
+            it('Should be ToHtml local storage get with throw', function () {
+                spyOn(localStorage, 'getItem').andThrow();
+                spyOn(localStorage, 'setItem');
+
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id: 1 }]);
+
+                expect(builder.render).toHaveBeenCalledWith(compile, { data: [item] });
+                expect(localStorage.setItem).toHaveBeenCalledWith(selectorKey, compile);
+            });
+
+            it('Should be ToHtml local storage set with throw quota', function () {
+                spyOn(localStorage, 'setItem').andThrow({ name: 'QUOTA_EXCEEDED_ERR' });
+                spyOn(localStorage, 'clear');
+
+                expect(function() {
+                    TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+                }).not.toThrow();
+
+                expect(builder.render).toHaveBeenCalledWith(compile, { data: [item] });
+                expect(localStorage.clear).toHaveBeenCalled();
+            });
+
+            it('Should be ToHtml local storage set with throw', function () {
+                spyOn(localStorage, 'setItem').andThrow('SpecificationException');
+                spyOn(localStorage, 'clear');
+
+                expect(function() {
+                    TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }])
+                }).not.toThrow();
+
+                expect(builder.render).toHaveBeenCalledWith(compile, { data: [item] });
+                expect(localStorage.clear).not.toHaveBeenCalled();
+            });
+
+
 
         });
 
@@ -2526,7 +2642,7 @@ describe('Incoding', function() {
 
             describe('When ExecutableBase', function() {
 
-                it('Should be default', function() {
+                it('Should be initialize default', function() {
                     var executable = new ExecutableBase();
                     expect(executable.onBind).toEqual('');
                     expect(executable.self).toEqual('');
@@ -2537,7 +2653,7 @@ describe('Incoding', function() {
                     expect(executable.ands).toEqual(null);
                     expect(executable.getTarget()).toEqual('');
                 });
-
+       
                 describe('Execute', function() {
 
                     var executable, expectedData;
@@ -2753,7 +2869,7 @@ describe('Incoding', function() {
                     });
 
                 });
-
+              
             });
 
             describe('When ExecutableActionBase', function() {
@@ -2763,10 +2879,10 @@ describe('Incoding', function() {
                 beforeEach(function() {
 
                     state = {
-                        success : [jasmine.createSpyObj('successCallback', ['execute'])],
-                        error : [jasmine.createSpyObj('successCallback', ['execute'])],
-                        complete : [jasmine.createSpyObj('successCallback', ['execute'])],
-                        breakes : [jasmine.createSpyObj('successCallback', ['execute'])],
+                        success : [jasmine.createSpyObj('callback', ['execute'])],
+                        error: [jasmine.createSpyObj('callback', ['execute'])],
+                        complete: [jasmine.createSpyObj('callback', ['execute'])],
+                        breakes: [jasmine.createSpyObj('callback', ['execute'])],
                     };
                     result = { redirectTo : '', success : true, data : 'data' };
 
@@ -2775,7 +2891,17 @@ describe('Incoding', function() {
                     spyOn(ExecutableHelper, "RedirectTo");
                 });
 
-                it('Should be redirect', function() {
+                it('Should be throw', function() {                                  
+                    state.success[0] = {
+                        execute: function () {
+                        }
+                    };
+                    spyOn(state.success[0], 'execute').andThrow('SpecificationException');
+
+                    expect(function () { action.complete(result, state); }).toThrow('SpecificationException');
+                });
+
+                it('Should be redirect', function () {
                     result.redirectTo = 'url';
 
                     action.complete(result, state);
@@ -4271,41 +4397,6 @@ describe('Incoding', function() {
                     expect(this.target).toHaveValue('aws');
                 });
             
-            });
-
-            describe('Conditional', function() {
-
-                describe('Compare', function() {
-
-                    var actualVal, expectVal;
-
-                    beforeEach(function() {
-
-                        actualVal = 'actualVal';
-                        expectVal = 'expectedVal';
-
-                        spyOn(ExecutableHelper, "Compare").andReturn(true);
-                    });
-
-                    it('Should be satisfied', function() {
-                        this.tryGetVal = function(arg) {
-                            if (arg == 'element') {
-                                return actualVal;
-                            }
-                            if (arg == 'value') {
-                                return expectVal;
-                            }
-                        };
-
-                        var code = $('#Conditional_Value').val().f("'element'", "'value'", "equal");
-
-                        expect(eval(code)).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(actualVal, expectVal, 'equal');
-                    });
-
-                });
-
-
             });
 
      

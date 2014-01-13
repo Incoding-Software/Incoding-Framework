@@ -1431,10 +1431,8 @@ ExecutableBase.prototype = {
         
         current.internalExecute(data);        
     },    
-    internalExecute : function(data) {
-        throw new Error('Need override this method');
-    },
-        
+    internalExecute : function(data) {        
+    },        
     isValid : function(data) {
 
         var current = this;
@@ -1487,7 +1485,7 @@ function ExecutableActionBase() {
 }
 
 $.extend(ExecutableActionBase.prototype, {
-    complete : function(result, state) {
+    complete: function (result, state) {
 
         if (!ExecutableHelper.IsNullOrEmpty(result.redirectTo)) {
             ExecutableHelper.RedirectTo(result.redirectTo);
@@ -1503,31 +1501,31 @@ $.extend(ExecutableActionBase.prototype, {
         }
 
         var hasBreak = false;
-        var executeState = function() {
+        var executeState = function () {
             try {
                 this.execute(resultData);
             }
-            catch(e) {
+            catch (e) {
                 if (e instanceof IncClientException) {
                     hasBreak = true;
+                    return false;//stop execute state
                 }
-                return false;
+
+                console.log('Incoding exception: {0}'.f(e.message));
+                if (navigator.Ie8) {
+                    return false;//stop execute state
+                }
+                throw e;
             }
         };
 
-        if (result.success) {
-            $(state.success).each(executeState);
-        }
-        else {
-            $(state.error).each(executeState);
-        }
+        $(result.success ? state.success : state.error).each(executeState);
         $(state.complete).each(executeState);
         if (hasBreak) {
-            $(state.breakes).each(function() {
+            $(state.breakes).each(function () {
                 this.execute(resultData);
             });
         }
-
     }
 });
 
@@ -1920,16 +1918,12 @@ ExecutableStoreManipulate.prototype.internalExecute = function(data) {
                         break;
                     case 'set':
                         url.setFparam(this.key, current.tryGetVal(this.value), this.prefix);
-                        break;
-                    default:
-                        throw 'Not found case for {0}'.f(this.verb);
+                        break;      
                 }
             });
 
             ExecutableHelper.RedirectTo(url.toHref());
             break;
-        default:
-            throw 'Argument out of range {0}'.f(this.jsonData.type);
     }
 };
 
@@ -1953,8 +1947,6 @@ ExecutableForm.prototype.internalExecute = function() {
         case 'clear':
             $(form).clearForm();
             break;
-        default:
-            throw 'argument of range {0}'.f(method);
     }
 };
 
@@ -1983,8 +1975,6 @@ ExecutableBind.prototype.internalExecute = function() {
                 $(this.target).unbind(this.jsonData.bind);
             }
             break;
-        default:
-            throw "Argument out of range {0}".f(type);
     }
 };
     
@@ -2028,8 +2018,7 @@ ConditionalBase.prototype =
         },
         // ReSharper disable UnusedParameter
         isInternalSatisfied : function(data) {
-            // ReSharper restore UnusedParameter
-            throw new Error('Need override this method');
+        // ReSharper restore UnusedParameter            
         },
         tryGetVal : function(variable) {
             return this.executable.tryGetVal(variable);

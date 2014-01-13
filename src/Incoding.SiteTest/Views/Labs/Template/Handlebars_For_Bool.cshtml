@@ -21,6 +21,6 @@
                                                      new FakeModel { Is = true, Value = "True" },
                                                      new FakeModel { Is = false, Value = "False" },
                                              }))
-          .OnSuccess(dsl => dsl.Self().Core().Insert.WithTemplate(Selector.Jquery.Id(tmplId)).Html())
+          .OnSuccess(dsl => dsl.Self().Core().Insert.WithTemplateById(tmplId).Html())
           .AsHtmlAttributes()
           .ToDiv())   

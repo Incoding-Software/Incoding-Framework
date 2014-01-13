@@ -52,6 +52,14 @@
         }
 
         /// <summary>
+        ///     Set css display attribute of every matched element.
+        /// </summary>
+        public IExecutableSetting Display(Display display)
+        {
+            return Set(CssStyling.Display, display.ToLocalization());
+        }
+
+        /// <summary>
         ///     Set the height of every matched element.
         /// </summary>
         /// <param name="value">

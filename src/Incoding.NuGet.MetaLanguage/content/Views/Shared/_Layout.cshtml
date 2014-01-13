@@ -11,7 +11,7 @@
         <script type="text/javascript" src="@Url.Content("~/Scripts/handlebars-1.1.2.js")"> </script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/incoding.framework.min.js")"> </script>                      
         <script>
-            TemplateFactory.Version = '1';
+            TemplateFactory.Version = '@Guid.NewGuid().ToString()';
         </script>
     </head>
     @Html.Incoding().RenderDropDownTemplate()

@@ -2,6 +2,7 @@
 {
     using System.Configuration;
     using System.Linq;
+    using System.Web.Mvc;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using FluentValidation;
@@ -13,13 +14,11 @@
     using Incoding.Extensions;
     using Incoding.MvcContrib;
     using NHibernate.Context;
-	using System.Web.Mvc;
 
     public static class Bootstrapper
     {
         public static void Start()
         {
-
             IoCFactory.Instance.Initialize(init => init.WithProvider(new StructureMapIoCProvider(registry =>
                                                                                                      {
                                                                                                          registry.For<IDispatcher>().Singleton().Use<DefaultDispatcher>();
@@ -38,9 +37,9 @@
 
                                                                                                          registry.Scan(r =>
                                                                                                                            {
-                                                                                                                               r.AssembliesFromApplicationBaseDirectory(p => p.GetType().IsImplement(typeof(AbstractValidator<>)) ||
-                                                                                                                                                                             p.GetType().IsImplement<ISetUp>() ||
-                                                                                                                                                                             p.GetType().IsImplement(typeof(IEventSubscriber<>)));
+                                                                                                                               r.AssembliesFromApplicationBaseDirectory(p => p.GetTypes().Any(type => type.IsImplement(typeof(AbstractValidator<>)) ||
+                                                                                                                                                                                           type.IsImplement<ISetUp>() ||
+                                                                                                                                                                                           type.IsImplement(typeof(IEventSubscriber<>))));
                                                                                                                                r.WithDefaultConventions();
 
                                                                                                                                r.ConnectImplementationsToTypesClosing(typeof(AbstractValidator<>));
@@ -48,12 +47,16 @@
                                                                                                                                r.AddAllTypesOf<ISetUp>();
                                                                                                                            });
                                                                                                      })));
-		    
-			ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));            
+
+            ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));
             FluentValidationModelValidatorProvider.Configure();
 
             foreach (var setUp in IoCFactory.Instance.ResolveAll<ISetUp>().OrderBy(r => r.GetOrder()))
                 setUp.Execute();
+
+			var ajaxDef = JqueryAjaxOptions.Default;
+            ajaxDef.Cache = false; // disabled cache as default
         }
     }
+
 }

@@ -8,5 +8,5 @@ if($file) {
     $file.Open()
     $file.Document.Activate()
     $file.Document.Selection.StartOfDocument()
-    $file.Document.ReplaceText("AreaRegistration.RegisterAllAreas();", "AreaRegistration.RegisterAllAreas(); `r`n Bootstrapper.Start();")
+    $file.Document.ReplaceText("AreaRegistration.RegisterAllAreas();", "AreaRegistration.RegisterAllAreas(); `r`n Bootstrapper.Start(); `r`n new DispatcherController(); // init routes")
 }

@@ -3,8 +3,11 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using Incoding.Extensions;
+    using Incoding.Quality;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -61,10 +64,40 @@ namespace Incoding.MvcContrib
             return InternalInsert("text");
         }
 
+#if DEBUG
+        [Obsolete("Please use selector as argument", false)]
+#endif
+#if !DEBUG
+        [Obsolete("Please use selector as argument", true)]
+#endif
+        [UsedImplicitly, ExcludeFromCodeCoverage]
+        public IncodingMetaCallbackInsertDsl WithTemplate(string selector)
+        {
+            throw new ArgumentException("Argument should be type of Selector", "selector");
+        }
+
+        [Obsolete("Please use WithTemplateById or WithTemplateByUrl")]
         public IncodingMetaCallbackInsertDsl WithTemplate(Selector selector)
-        {            
+        {
             this.insertTemplateSelector = selector;
             return this;
+        }
+
+        [Obsolete("Please use WithTemplateById or WithTemplateByUrl")]
+        public IncodingMetaCallbackInsertDsl WithTemplate(JquerySelectorExtend selector)
+        {
+            this.insertTemplateSelector = selector;
+            return this;
+        }
+
+        public IncodingMetaCallbackInsertDsl WithTemplateById(string id)
+        {
+            return WithTemplate(id.ToId() as Selector);
+        }
+
+        public IncodingMetaCallbackInsertDsl WithTemplateByUrl(string url)
+        {
+            return WithTemplate(url.ToAjaxGet());
         }
 
         public IncodingMetaCallbackInsertDsl Prepare()

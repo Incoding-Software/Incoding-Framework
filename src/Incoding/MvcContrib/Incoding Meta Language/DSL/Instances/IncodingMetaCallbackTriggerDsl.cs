@@ -39,10 +39,32 @@ namespace Incoding.MvcContrib
             return this.plugIn.Registry(new ExecutableTrigger(trigger.ToLower(), this.triggerProperty));
         }
 
+        // ReSharper disable UnusedMember.Global
         public IExecutableSetting Incoding()
         {
             return Invoke(JqueryBind.Incoding);
         }
+
+        public IExecutableSetting Click()
+        {
+            return Invoke(JqueryBind.Click);
+        }
+
+        public IExecutableSetting Submit()
+        {
+            return Invoke(JqueryBind.Submit);
+        }
+
+        public IExecutableSetting None()
+        {
+            return Invoke(JqueryBind.None);
+        }
+
+        public IExecutableSetting Change()
+        {
+            return Invoke(JqueryBind.Change);
+        }
+        // ReSharper restore UnusedMember.Global
 
         public IncodingMetaCallbackTriggerDsl For<TModel>(Expression<Func<TModel, object>> property)
         {
