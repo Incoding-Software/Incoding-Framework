@@ -100,9 +100,9 @@ Or use the Package Manager console in Visual Studio
      {
          #region Estabilish value
          
-         static MockMessage<GetUsersQuery, IncPaginatedResult<User>> mockQuery;
+         static MockMessage<GetUsersQuery, List<User>> mockQuery;
          
-         static IncPaginatedResult<User> expected;
+         static List<User> expected;
          
          static User user;
          
@@ -111,17 +111,16 @@ Or use the Package Manager console in Visual Studio
          Establish establish = () =>
                               {
             GetUsersQuery query = Pleasure.Generator.Invent<GetUsersQuery>();
-            expected = new IncPaginatedResult<User>(Pleasure.ToList(Pleasure.Generator.Invent<User>()), 1);
+            expected = Pleasure.ToList(Pleasure.Generator.Invent<User>());
             user = Pleasure.Generator.Invent<User>(dsl => dsl.GenerateTo<Classification>(r => r.Faculty)
-                                                                         .Tuning(r => r.Role, RoleOfType.Admin));
+                                                             .Tuning(r => r.Role, RoleOfType.Admin));
                                                                          
             mockQuery = MockQuery<GetUsersQuery, IncPaginatedResult<User>>
                    .When(query)
                    .StubGetById(CtrPleasure.TheUserId(), user)
-                   .StubPaginated(paginatedSpecification: new PaginatedSpecification(query.CurrentPage, query.PageSize),
-                                                       whereSpecification: new UserByContentOptWhereSpec(query.Content),
-                                  result: expected);
-                             };
+                   .StubQuery(whereSpecification: new UserByContentOptWhereSpec(query.Content),
+                              entities: expected);                          
+                               };
                              
              Because of = () => mockQuery.Original.Execute();
              
