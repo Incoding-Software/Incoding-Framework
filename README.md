@@ -34,9 +34,21 @@ Or use the Package Manager console in Visual Studio
          .OnSuccess(dsl = > dsl.Self().Core().Insert.Html())
          .AsHtmlAttributes()
          .ToDiv()
+       
+#### Article 
+* [Iml vs Jquery](http://blog.incframework.com/en/jqyery-style-vs-iml-style/)
+* [Iml vs Ajax asp.net mvc](http://blog.incframework.com/ru/ajax-actionlink-vs-iml/)
+* [Selector](http://blog.incframework.com/ru/power-selector/)
+* [Iml how it work](http://blog.incframework.com/ru/iml-how-it-work/)
+
+#### Source code
+* [Iml vs Jquery ](https://github.com/IncodingSoftware/Jquery-Vs-Iml)
+* [Iml vs Ajax asp.net mvc](https://github.com/IncodingSoftware/AjaxAspNetVsIML)
          
 
-## CRQS COMMAND
+## CRQS
+
+### Command
 
     public class ChangeStatusOrderCommand : CommandBase
     {  
@@ -58,7 +70,7 @@ Or use the Package Manager console in Visual Studio
        }  
     }
     
-## CQRS QUERY
+### QUERY
 
     public class GetGapsQuery : QueryBase<List<GetGapsQuery.Response>>
       {
@@ -91,9 +103,20 @@ Or use the Package Manager console in Visual Studio
          }
          
        } 
+      
+
+#### Article 
+* [CQRS vs Nlayer](http://blog.incframework.com/en/jqyery-style-vs-iml-style/)
+* [CQRS extend course](http://blog.incframework.com/ru/cqrs-advanced-course/)
+* [Repository](http://blog.incframework.com/ru/repository/)
+
+
+#### Source code
+* [CQRS ](https://github.com/IncodingSoftware/CQRS)
+* [Repository](https://github.com/IncodingSoftware/Repository)
+
        
-       
-#Time spent on unit testing
+## Time spent on unit testing
 
      [Subject(typeof(GetUsersQuery))]
      public class When_get_users
@@ -126,6 +149,7 @@ Or use the Package Manager console in Visual Studio
              
              It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
        }
+       
        
       
 # Documentation
