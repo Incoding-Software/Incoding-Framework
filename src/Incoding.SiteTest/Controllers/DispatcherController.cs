@@ -11,8 +11,10 @@
     {
         #region Constructors
 
+        ////ncrunch: no coverage start
         public DispatcherController()
-                : base(AppDomain.CurrentDomain.GetAssemblies()) { }
+                : base(typeof(AddProductCommand).Assembly) { }
+        ////ncrunch: no coverage end
 
         #endregion
     }

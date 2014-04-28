@@ -125,20 +125,23 @@
   </data>
   <data name="CompareFactory_Not_Found_Property" xml:space="preserve">
     <value>Not found property {0} in class {1}</value>
-  </data>  
-    <data name="AdHocOrderSpecification_Equal_diffrent_count_expressions" xml:space="preserve">
+  </data>
+  <data name="AdHocOrderSpecification_Equal_diffrent_count_expressions" xml:space="preserve">
     <value>Actual count expressions {0} but expected {1}</value>
-  </data>   
-    <data name="AdHocOrderSpecification_Equal_diffrent_type" xml:space="preserve">
+  </data>
+  <data name="AdHocOrderSpecification_Equal_diffrent_type" xml:space="preserve">
     <value>Actual type {0} but expected {1}</value>
-  </data> 
-    <data name="AdHocOrderSpecification_Equal_diffrent_expressions" xml:space="preserve">
+  </data>
+  <data name="AdHocOrderSpecification_Equal_diffrent_expressions" xml:space="preserve">
     <value>Actual expression {0} but expected {1}</value>
-  </data> 
+  </data>
   <data name="AdHocFetchSpecification_Equal_diffrent_expressions" xml:space="preserve">
     <value>Actual expression {0} but expected {1}</value>
   </data>
   <data name="AdHocFetchSpecification_Equal_diffrent_count_expressions" xml:space="preserve">
     <value>Actual count expressions {0} but expected {1}</value>
+  </data>
+  <data name="Session_Factory_Not_Open" xml:space="preserve">
+    <value>"Database access logic cannot be used, if session not opened. Implicitly session usage not allowed now. Please open session"</value>
   </data>
 </root>

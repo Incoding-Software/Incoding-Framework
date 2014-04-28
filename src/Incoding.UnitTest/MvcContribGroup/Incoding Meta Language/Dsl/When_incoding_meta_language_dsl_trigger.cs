@@ -13,28 +13,37 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingMetaCallbackTriggerDsl))]
     public class When_incoding_meta_language_dsl_trigger
     {
-        #region Estabilish value
+        #region Establish value
 
-        static Func<JquerySelector, JquerySelector> with = selector => selector.Id("Id");
+        static Func<JquerySelector, JquerySelectorExtend> with = selector => selector.Id("Id");
 
         #endregion
 
         It should_be_invoke = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                             .Do().Direct()
-                                            .OnSuccess(dsl => dsl.With(with).Core().Trigger.Invoke(JqueryBind.DbClick))
+                                            .OnSuccess(dsl => dsl.With(with).Core().Trigger.Invoke(JqueryBind.DblClick))
                                             .GetExecutable<ExecutableTrigger>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "trigger", "dbclick" }
+                                                                         { "trigger", "dblclick" }
                                                                  });
 
+        It should_be_invoke_click = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                  .Do().Direct()
+                                                  .OnSuccess(dsl => dsl.With(with).Core().Trigger.Click())
+                                                  .GetExecutable<ExecutableTrigger>()
+                                                  .ShouldEqualData(new Dictionary<string, object>
+                                                                       {
+                                                                               { "trigger", "click" }
+                                                                       });
+      
         It should_be_invoke_for = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()
-                                                .OnSuccess(dsl => dsl.With(with).Core().Trigger.For<ArgumentException>(r => r.Message).Invoke(JqueryBind.DbClick))
+                                                .OnSuccess(dsl => dsl.With(with).Core().Trigger.For<ArgumentException>(r => r.Message).Invoke(JqueryBind.DblClick))
                                                 .GetExecutable<ExecutableTrigger>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "trigger", "dbclick" }, 
+                                                                             { "trigger", "dblclick" },
                                                                              { "property", "Message" }
                                                                      });
 
@@ -49,7 +58,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_quick_trigger = () =>
                                          {
-                                             foreach (var bind in new[] { JqueryBind.Click, JqueryBind.Incoding, JqueryBind.Change, JqueryBind.None, JqueryBind.Submit })
+                                             foreach (var bind in new[] { JqueryBind.Click, JqueryBind.Incoding, JqueryBind.Change, JqueryBind.None, JqueryBind.Submit,JqueryBind.Focus })
                                              {
                                                  new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                          .Do().Direct()

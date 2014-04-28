@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(FileLogger))]
     public class When_file_logger_log_with_template : Context_file_logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static string thisIsCustomFormat;
 

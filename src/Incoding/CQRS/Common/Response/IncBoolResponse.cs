@@ -1,11 +1,40 @@
 ﻿namespace Incoding.CQRS
 {
+    #region << Using >>
+
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using Incoding.Extensions;
+    using Incoding.Quality;
+    using JetBrains.Annotations;
+
+    #endregion
+
     public class IncBoolResponse : IncStructureResponse<bool>
     {
         #region Constructors
 
+        [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor, false), ExcludeFromCodeCoverage]
+        public IncBoolResponse() { }
+
         public IncBoolResponse(bool value)
                 : base(value) { }
+
+        #endregion
+
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            return obj.IsReferenceEquals(this) &&
+                   ((IncStructureResponse<bool>)obj).Value.Equals(Value);
+        }
+
+        [ExcludeFromCodeCoverage]
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
 
         #endregion
 
@@ -21,22 +50,22 @@
 
         public static bool operator ==(bool left, IncBoolResponse right)
         {
-            return left == right.Value;
+            return new IncBoolResponse(left).Equals(right);
         }
 
         public static bool operator !=(bool left, IncBoolResponse right)
         {
-            return !(left == right);
+            return !new IncBoolResponse(left).Equals(right);
         }
 
         public static bool operator ==(IncBoolResponse left, bool right)
         {
-            return left.Value == right;
+            return new IncBoolResponse(right).Equals(left);
         }
 
         public static bool operator !=(IncBoolResponse left, bool right)
         {
-            return !(left == right);
+            return !new IncBoolResponse(right).Equals(left);
         }
     }
 }

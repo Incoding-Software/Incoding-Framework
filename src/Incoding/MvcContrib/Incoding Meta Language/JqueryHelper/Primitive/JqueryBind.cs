@@ -19,7 +19,7 @@ namespace Incoding.MvcContrib
 
         Change = 4, 
 
-        DbClick = 8, 
+        DblClick = 8, 
 
         Blur = 16, 
 

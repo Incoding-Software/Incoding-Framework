@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(ClipboardLogger))]
     public class When_clipboard_logger_log : Context_Logger
     {
-        #region Estabilish value
+        #region Establish value
 
         [STAThread]
         static void Log()

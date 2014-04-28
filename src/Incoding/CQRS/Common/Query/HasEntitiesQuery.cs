@@ -7,11 +7,11 @@
 
     #endregion
 
-    public class HasEntitiesQuery<TEntity> : QueryBase<IncStructureResponse<bool>> where TEntity : class, IEntity
+    public class HasEntitiesQuery<TEntity> : QueryBase<IncBoolResponse> where TEntity : class, IEntity, new()
     {
-        protected override IncStructureResponse<bool> ExecuteResult()
+        protected override IncBoolResponse ExecuteResult()
         {
-            return new IncStructureResponse<bool>(Repository.Query<TEntity>().Any());
+            return Repository.Query<TEntity>().Any();
         }
     }
 }

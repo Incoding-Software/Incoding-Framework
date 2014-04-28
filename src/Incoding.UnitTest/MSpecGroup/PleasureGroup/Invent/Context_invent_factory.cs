@@ -6,6 +6,7 @@ namespace Incoding.UnitTest.MSpecGroup
     using System.Collections.Generic;
     using System.IO;
     using System.Web;
+    using Incoding.MSpecContrib;
     using Incoding.Quality;
 
     #endregion
@@ -16,15 +17,26 @@ namespace Incoding.UnitTest.MSpecGroup
 
         protected class FakeGenerateObject
         {
+            #region Constructors
+
+            public FakeGenerateObject()
+            {
+                ValueSetInCtor = Pleasure.Generator.TheSameString();
+            }
+
+            #endregion
+
             #region Properties
 
             [IgnoreInvent("Test")]
             public string IgnoreValueByAttr { get; set; }
 
+            public string ValueSetInCtor { get; set; }
+
             public string StrValue { get; set; }
 
             public bool BoolValue { get; set; }
-            
+
             public int IntValue { get; set; }
 
             public int? IntValueNullable { get; set; }
@@ -48,6 +60,8 @@ namespace Incoding.UnitTest.MSpecGroup
             public byte? ByteValueNullable { get; set; }
 
             public DateTime DateTimeValue { get; set; }
+
+            public DateTime? DateTimeValueNullable { get; set; }
 
             public TimeSpan TimeSpanValue { get; set; }
 
@@ -84,7 +98,8 @@ namespace Incoding.UnitTest.MSpecGroup
             public Guid GuidValue { get; set; }
 
             public Guid? GuidValueNullable { get; set; }
-
+            
+            
             #endregion
         }
 

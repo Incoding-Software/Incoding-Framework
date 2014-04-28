@@ -5,38 +5,17 @@ namespace Incoding.EventBroker
     using System;
     using System.Linq;
     using System.Reflection;
-    using Incoding.Block.ExceptionHandling;
     using Incoding.Block.IoC;
     using Incoding.Extensions;
-    using Incoding.Maybe;
 
     #endregion
 
     public class DefaultEventBroker : IEventBroker
     {
-        #region Fields
-
-        ActionPolicy defaultActionPolicy;
-
-        Func<IEventSubscriber<IEvent>> sharedSubscriber;
-
-        #endregion
-
-        #region Constructors
-
-        public DefaultEventBroker()
-        {
-            this.defaultActionPolicy = ActionPolicy.Direct();
-        }
-
-        #endregion
-
         #region IEventBroker Members
 
         public void Publish<TEvent>(TEvent @event) where TEvent : class, IEvent
         {
-            this.sharedSubscriber.Do(subscriber => subscriber().Subscribe(@event));
-
             var eventType = @event.GetType();
 
             var allSubscriberTypes = IoCFactory.Instance.ResolveAll<object>(typeof(IEventSubscriber<>).MakeGenericType(new[] { eventType }));
@@ -68,9 +47,9 @@ namespace Incoding.EventBroker
                                          };
 
                 if (handleMethod.HasAttribute<HandlerAsyncAttribute>())
-                    this.defaultActionPolicy.Do(() => handleEvent.BeginInvoke(null, handleEvent));
+                    handleEvent.BeginInvoke(null, handleEvent);
                 else
-                    this.defaultActionPolicy.Do(handleEvent.Invoke);
+                    handleEvent.Invoke();
             }
         }
 
@@ -80,22 +59,6 @@ namespace Incoding.EventBroker
             return IoCFactory.Instance
                              .ResolveAll<object>(subscriberType)
                              .Any();
-        }
-
-        #endregion
-
-        #region Api Methods
-
-        public DefaultEventBroker WithSharedSubscriber(Func<IEventSubscriber<IEvent>> evaluated)
-        {
-            this.sharedSubscriber = evaluated;
-            return this;
-        }
-
-        public DefaultEventBroker WithActionPolicy(ActionPolicy actionPolicy)
-        {
-            this.defaultActionPolicy = actionPolicy;
-            return this;
         }
 
         #endregion

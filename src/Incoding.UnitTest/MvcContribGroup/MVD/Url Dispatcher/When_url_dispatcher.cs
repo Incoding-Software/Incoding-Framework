@@ -145,6 +145,16 @@
                                                            .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
                                           };
 
+        It should_be_push_same_command_on_composite = () =>
+                                                          {
+                                                              const string actionUrl = "/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand";
+                                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
+                                                              urlDispatcher.Push(new FakeCommand { DecodeValue = Pleasure.Generator.TheSameString() })
+                                                                           .Push(new FakeCommand { DecodeValue = Pleasure.Generator.TheSameString() })
+                                                                           .ToString()
+                                                                           .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand&DecodeValue=TheSameString");
+                                                          };
+
         It should_be_push = () =>
                                 {
                                     const string actionUrl = "/Dispatcher/Push?incType=FakeCommand";
@@ -198,7 +208,7 @@
 
         It should_be_model_null_to_view = () =>
                                               {
-                                                  const string actionUrl = "/Dispatcher/Render?incType=FakeModel&incView=~%2FFakeSerializeObject.cs";
+                                                  const string actionUrl = "/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
                                                   httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                                   urlDispatcher.Model<FakeModel>()
                                                                .AsView("~/FakeSerializeObject.cs")
@@ -207,11 +217,11 @@
 
         It should_be_model_to_view = () =>
                                          {
-                                             const string actionUrl = "/Dispatcher/Render?incType=FakeMode&incView=~%2FFakeSerializeObject.cs";
+                                             const string actionUrl = "/Dispatcher/Render?incType=FakeMode&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                              urlDispatcher.Model(new FakeModel { DecodeValue = "{{1}}", EncodeValue = HttpUtility.UrlEncode("{{1}}") })
                                                           .AsView("~/FakeSerializeObject.cs")
-                                                          .ShouldEqual("/Dispatcher/Render?incType=FakeModel&incView=~%2FFakeSerializeObject.cs&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                                          .ShouldEqual("/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                          };
 
         It should_be_query_to_file = () =>
@@ -239,6 +249,15 @@
                                                           .AsJson()
                                                           .ShouldEqual("/Dispatcher/Query?incType=FakeQuery&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                          };
+
+        It should_be_query_to_string = () =>
+                                           {
+                                               var query = urlDispatcher.Query(new FakeQuery
+                                                                                   {
+                                                                                           DecodeValue = "{{1}}", EncodeValue = HttpUtility.UrlEncode("{{1}}"),
+                                                                                   });
+                                               query.ToString().ShouldEqual(query.AsJson());
+                                           };
 
         It should_be_query_enable_validate_to_json = () =>
                                                          {

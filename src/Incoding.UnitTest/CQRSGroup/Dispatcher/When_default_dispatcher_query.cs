@@ -3,6 +3,7 @@ namespace Incoding.UnitTest
     #region << Using >>
 
     using System.Data;
+    using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
@@ -42,25 +43,43 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static FakeQuery message;
 
         static FakeQuery.FakeResponse result;
 
+        static MessageExecuteSetting executeSetting;
+
         #endregion
 
-        Establish establish = () => { message = new FakeQuery(); };
+        Establish establish = () =>
+                                  {
+                                      executeSetting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.IgnoreBecauseAuto(r => r.Mute));
+                                      message = new FakeQuery();
 
-        Because of = () => { result = dispatcher.Query(message); };
+                                      unitOfWorkFactory.Setup(r => r.Create(IsolationLevel.ReadUncommitted, executeSetting.Connection)).Returns(unitOfWork.Object);
+                                      IoCFactory.Instance.StubTryResolveByNamed(executeSetting.DataBaseInstance, unitOfWorkFactory.Object);
+                                  };
+
+        Because of = () =>
+                         {
+                             result = dispatcher.Query(message, setting =>
+                                                                    {
+                                                                        setting.Connection = executeSetting.Connection;
+                                                                        setting.DataBaseInstance = executeSetting.DataBaseInstance;
+                                                                    });
+                         };
 
         It should_be_result = () => result.ShouldEqualWeak(new FakeQuery.FakeResponse { Value = 5 });
+
+        It should_be_not_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Never());
 
         It should_be_not_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Never());
 
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose());
 
-        It should_be_read_uncommitted = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadUncommitted, Pleasure.MockIt.IsNull<IDbConnection>()));
+        It should_be_read_uncommitted = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadUncommitted, executeSetting.Connection));
 
         It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
 

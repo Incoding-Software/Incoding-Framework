@@ -44,7 +44,7 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static Mock<CommandBase> message;
 
@@ -62,7 +62,7 @@ namespace Incoding.UnitTest
                                                                                                                                                                                                          {
                                                                                                                                                                                                              var unitOfWork = new Mock<IUnitOfWork>();
                                                                                                                                                                                                              unitOfWorkFactoryMock
-                                                                                                                                                                                                                     .Setup(r => r.Create(Pleasure.MockIt.IsAny<IsolationLevel>(), Pleasure.MockIt.IsNull<IDbConnection>()))
+                                                                                                                                                                                                                     .Setup(r => r.Create(Pleasure.MockIt.IsAny<IsolationLevel>(), Pleasure.MockIt.IsNull<string>()))
                                                                                                                                                                                                                      .Returns(unitOfWork.Object);
                                                                                                                                                                                                          });
 

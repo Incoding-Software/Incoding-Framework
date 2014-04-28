@@ -4,8 +4,8 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
     using System.Collections.Generic;
     using System.Linq;
-    using Incoding.MSpecContrib;
     using Incoding.Maybe;
+    using Incoding.MSpecContrib;
     using Machine.Specifications;
 
     #endregion
@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(MaybeEnumerable))]
     public class When_maybe_enumerable : Context_maybe
     {
-        #region Estabilish value
+        #region Establish value
 
         static IEnumerable<FakeMaybe> collection;
 

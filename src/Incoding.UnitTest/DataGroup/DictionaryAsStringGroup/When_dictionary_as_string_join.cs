@@ -10,7 +10,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(DictionaryAsString))]
     public class When_dictionary_as_string_join
     {
-        #region Estabilish value
+        #region Establish value
 
         static string sourceCollection;
 

@@ -44,13 +44,11 @@ namespace Incoding.MSpecContrib
             return routeValueDictionary.ToDictionary(r => r.Key, r => (TValue)r.Value);
         }
 
-        [DebuggerStepThrough]
         public static IEnumerable<T> ToEnumerable<T>(params T[] agrs)
         {
             return ToList(agrs).AsEnumerable();
         }
 
-        [DebuggerStepThrough]
         public static List<T> ToList<T>(params T[] args)
         {
             return args
@@ -58,13 +56,11 @@ namespace Incoding.MSpecContrib
                     .ReturnOrDefault(obj => new List<T>(obj), new List<T>());
         }
 
-        [DebuggerStepThrough]
         public static IQueryable<T> ToQueryable<T>(params T[] args)
         {
             return ToList(args).AsQueryable();
         }
 
-        [DebuggerStepThrough]
         public static ReadOnlyCollection<T> ToReadOnly<T>(params T[] args)
         {
             return ToList(args).AsReadOnly();
@@ -74,7 +70,6 @@ namespace Incoding.MSpecContrib
 
         #region Mock
 
-        [DebuggerStepThrough]
         public static Mock<TMock> Mock<TMock>(Action<Mock<TMock>> configure = null) where TMock : class
         {
             var res = new Mock<TMock>();
@@ -82,13 +77,11 @@ namespace Incoding.MSpecContrib
             return res;
         }
 
-        [DebuggerStepThrough]
         public static TMock MockAsObject<TMock>(Action<Mock<TMock>> configure = null) where TMock : class
         {
             return Mock(configure).Object;
         }
 
-        [DebuggerStepThrough]
         public static Mock<TMock> MockStrict<TMock>(Action<Mock<TMock>> configure = null) where TMock : class
         {
             var res = new Mock<TMock>(MockBehavior.Strict);
@@ -96,13 +89,11 @@ namespace Incoding.MSpecContrib
             return res;
         }
 
-        [DebuggerStepThrough]
         public static TMock MockStrictAsObject<TMock>(Action<Mock<TMock>> configure = null) where TMock : class
         {
             return MockStrict(configure).Object;
         }
 
-        [DebuggerStepThrough]
         public static Mock<ISpy> Spy(Action<Mock<ISpy>> configure = null)
         {
             return Mock(configure);
@@ -112,20 +103,23 @@ namespace Incoding.MSpecContrib
 
         #region Action and Func 
 
-        public static void Do(Action<int> action, int countDo)
+        public static long Do(Action<int> action, int countDo)
         {
-            for (int i = 0; i < countDo; i++)
-                action(i);
+            return Stopwatch(() =>
+                                 {
+                                     for (int i = 0; i < countDo; i++)
+                                         action(i);
+                                 });
         }
 
-        public static void Do10(Action<int> action)
+        public static long Do10(Action<int> action)
         {
-            Do(action, 10);
+            return Do(action, 10);
         }
 
-        public static void Do3(Action<int> action)
+        public static long Do3(Action<int> action)
         {
-            Do(action, 3);
+            return Do(action, 3);
         }
 
         public static T DoFunc<T>(Func<T> func, int countFunc)
@@ -146,31 +140,26 @@ namespace Incoding.MSpecContrib
 
         #region Sleep helper
 
-        [DebuggerStepThrough]
         public static DateTime NowPlush100Milliseconds()
         {
             return DateTime.Now.AddMilliseconds(100);
         }
 
-        [DebuggerStepThrough]
         public static void Sleep1000Milliseconds()
         {
             SleepMilliseconds(1000);
         }
 
-        [DebuggerStepThrough]
         public static void Sleep100Milliseconds()
         {
             SleepMilliseconds(100);
         }
 
-        [DebuggerStepThrough]
         public static void Sleep50Milliseconds()
         {
             SleepMilliseconds(50);
         }
 
-        [DebuggerStepThrough]
         public static void SleepMilliseconds(int milliseconds)
         {
             Thread.Sleep(new TimeSpan(0, 0, 0, 0, milliseconds));
@@ -184,7 +173,6 @@ namespace Incoding.MSpecContrib
         {
             #region Factory constructors
 
-            [DebuggerStepThrough]
             public static ManualResetEvent Do(Action action, int countThread)
             {
                 var manualResetEvent = new ManualResetEvent(false);
@@ -210,7 +198,6 @@ namespace Incoding.MSpecContrib
                 return manualResetEvent;
             }
 
-            [DebuggerStepThrough]
             public static ManualResetEvent Do10(Action action)
             {
                 return Do(action, 10);
@@ -228,13 +215,11 @@ namespace Incoding.MSpecContrib
                 return Convert.ToBase64String(Bytes(size));
             }
 
-            [DebuggerStepThrough]
             public static bool Bool()
             {
                 return PositiveNumber(0, 100) >= 50;
             }
 
-            [DebuggerStepThrough]
             public static byte[] Bytes(int size = 100)
             {
                 var bytes = new byte[size];
@@ -244,7 +229,6 @@ namespace Incoding.MSpecContrib
                 return bytes;
             }
 
-            [DebuggerStepThrough]
             public static DateTime DateTime()
             {
                 int year = GetRandom().Next(1800, 2100);
@@ -255,26 +239,22 @@ namespace Incoding.MSpecContrib
                 return new DateTime(year, months, days, timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds);
             }
 
-            [DebuggerStepThrough]
             public static string Email()
             {
                 string randomString = Path.GetRandomFileName().Replace(".", string.Empty);
                 return "{0}@mail.com".F(randomString);
             }
 
-            [DebuggerStepThrough]
             public static MemoryStream EmptyStream()
             {
                 return new MemoryStream();
             }
 
-            [DebuggerStepThrough]
             public static TEnum Enum<TEnum>()
             {
                 return (TEnum)System.Enum.Parse(typeof(TEnum), EnumAsInt(typeof(TEnum)).ToString(), true);
             }
 
-            [DebuggerStepThrough]
             public static int EnumAsInt(Type enumType)
             {
                 var enumValues = System.Enum.GetValues(enumType)
@@ -288,7 +268,6 @@ namespace Incoding.MSpecContrib
                 return enumValues[randomIndexEnumValues];
             }
 
-            [DebuggerStepThrough]
             public static string GuidAsString()
             {
                 return Guid.NewGuid().ToString();
@@ -316,8 +295,7 @@ namespace Incoding.MSpecContrib
                                                             });
             }
 
-            [DebuggerStepThrough]
-            public static T Invent<T>(Action<IInventFactoryDsl<T>> action = null) where T : new()
+            public static T Invent<T>(Action<IInventFactoryDsl<T>> action = null)
             {
                 var inventFactory = new InventFactory<T>();
                 action.Do(r => r(inventFactory));
@@ -325,14 +303,20 @@ namespace Incoding.MSpecContrib
                 return inventFactory.Create();
             }
 
-            [DebuggerStepThrough]
+            public static object Invent(Type type)
+            {
+                return typeof(Generator).GetMethods()
+                                        .Single(r => r.Name.EqualsWithInvariant("Invent") && r.GetParameters().ElementAtOrDefault(0).ParameterType != typeof(Type))
+                                        .MakeGenericMethod(type)
+                                        .Invoke(null, new object[] { null });
+            }
+
             public static T InventEmpty<T>() where T : new()
             {
                 var inventFactory = new InventFactory<T>();
                 return inventFactory.CreateEmpty();
             }
 
-            [DebuggerStepThrough]
             public static T InventEntity<T>(Action<IInventFactoryDsl<T>> action = null) where T : IEntity, new()
             {
                 return Invent<T>(factory =>
@@ -342,13 +326,11 @@ namespace Incoding.MSpecContrib
                                      });
             }
 
-            [DebuggerStepThrough]
             public static KeyValuePair<string, string> KeyValuePair()
             {
                 return new KeyValuePair<string, string>(String(length: 10), String());
             }
 
-            [DebuggerStepThrough]
             public static decimal PositiveDecimal(byte? scale = null)
             {
                 decimal positiveDecimal = Math.Round(new decimal(GetRandom().Next(999999999), 0, 0, false, scale ?? (byte)GetRandom().Next(2)) * (decimal)0.5, 2);
@@ -367,20 +349,17 @@ namespace Incoding.MSpecContrib
                 return positiveFloating < 0 ? -positiveFloating : positiveFloating;
             }
 
-            [DebuggerStepThrough]
             public static int PositiveNumber(int minValue = 0, int maxValue = int.MaxValue)
             {
                 int positiveNumber = GetRandom().Next(minValue, maxValue);
                 return positiveNumber < 0 ? -positiveNumber : positiveNumber;
             }
 
-            [DebuggerStepThrough]
             public static Stream Stream(int size = 10)
             {
                 return new MemoryStream(Bytes(size));
             }
 
-            [DebuggerStepThrough]
             public static string String(int length = 50)
             {
                 string res = string.Empty;
@@ -390,43 +369,36 @@ namespace Incoding.MSpecContrib
                 return res.Substring(0, length);
             }
 
-            [DebuggerStepThrough]
             public static DateTime The20120406Noon()
             {
                 return new DateTime(2012, 4, 16);
             }
 
-            [DebuggerStepThrough]
             public static CultureInfo TheRuCulture()
             {
                 return new CultureInfo("ru-RU");
             }
 
-            [DebuggerStepThrough]
             public static int TheSameNumber()
             {
                 return 153;
             }
 
-            [DebuggerStepThrough]
             public static string TheSameString()
             {
                 return "TheSameString";
             }
 
-            [DebuggerStepThrough]
             public static TimeSpan TimeSpan()
             {
                 return new TimeSpan(PositiveNumber(1, 24), PositiveNumber(1, 60), PositiveNumber(1, 60));
             }
 
-            [DebuggerStepThrough]
             public static Uri Uri(object queryString = null)
             {
                 return new Uri(Url(queryString));
             }
 
-            [DebuggerStepThrough]
             public static string Url(object queryString = null)
             {
                 return "http://sample.com"
@@ -451,7 +423,6 @@ namespace Incoding.MSpecContrib
         {
             #region Factory constructors
 
-            [DebuggerStepThrough]
             public static T Is<T>(Action<T> verify)
             {
                 Func<T, bool> match = arg =>
@@ -471,31 +442,26 @@ namespace Incoding.MSpecContrib
                 return It.Is<T>(arg => match(arg));
             }
 
-            [DebuggerStepThrough]
             public static T IsAny<T>()
             {
                 return It.IsAny<T>();
             }
 
-            [DebuggerStepThrough]
             public static T IsNotNull<T>()
             {
                 return Is<T>(r => r.ShouldBeOfType<T>());
             }
 
-            [DebuggerStepThrough]
             public static T IsNull<T>()
             {
                 return Is<T>(r => r.ShouldBeNull());
             }
 
-            [DebuggerStepThrough]
             public static TActual IsStrong<TActual>(TActual expected, Action<ICompareFactoryDsl<TActual, TActual>> action)
             {
                 return IsWeak(expected, action);
             }
 
-            [DebuggerStepThrough]
             public static TActual IsStrong<TActual>(TActual expected)
             {
                 // ReSharper disable IntroduceOptionalParameters.Global
@@ -504,13 +470,11 @@ namespace Incoding.MSpecContrib
                 // ReSharper restore IntroduceOptionalParameters.Global
             }
 
-            [DebuggerStepThrough]
             public static TActual IsWeak<TActual, TExpected>(TExpected expected)
             {
                 return IsWeak<TActual, TExpected>(expected, null);
             }
 
-            [DebuggerStepThrough]
             public static TActual IsWeak<TActual, TExpected>(TExpected expected, Action<ICompareFactoryDsl<TActual, TExpected>> action)
             {
                 return Is<TActual>(arg => arg.ShouldEqualWeak(expected, action));
@@ -520,5 +484,19 @@ namespace Incoding.MSpecContrib
         }
 
         #endregion
+
+        public static long Stopwatch(Action action)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            action();
+            stopwatch.Stop();
+            return stopwatch.ElapsedMilliseconds;
+        }
+
+        public static long StopwatchAsSecond(Action action)
+        {
+            return Stopwatch(action) / 1000;
+        }
     }
 }

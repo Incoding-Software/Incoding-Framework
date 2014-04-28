@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory))]
     public class When_caching_factory_delete
     {
-        #region Estabilish value
+        #region Establish value
 
         static CachingFactory cachingFactory;
 

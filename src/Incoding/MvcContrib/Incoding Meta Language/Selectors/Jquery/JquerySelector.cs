@@ -133,32 +133,35 @@
         /// </summary>
         public JquerySelectorExtend Id(params string[] ids)
         {
-            ids.DoEach((id, index) => OrSelector("#" + Escaping(id)));
+            ids.DoEach((id) => OrSelector("#" + Escaping(id)));
             return new JquerySelectorExtend(this.selector);
         }
 
         /// <summary>
-        ///     Selects a single element with the given <paramref name="expression" /> attribute.
+        ///     Selects a single element with the given <paramref name="expressions" /> attribute.
         /// </summary>
-        public JquerySelectorExtend Id<TModel>(Expression<Func<TModel, object>> expression)
+        public JquerySelectorExtend Id<TModel>(params Expression<Func<TModel, object>>[] expressions)
         {
-            return Id(expression.GetMemberNameAsHtmlId());
+            return Id(expressions.Select(r => r.GetMemberNameAsHtmlId())
+                                .ToArray());
         }
 
         /// <summary>
         ///     Selects a single element with the given <paramref name="name" /> attribute.
         /// </summary>
-        public JquerySelectorExtend Name(string name)
+        public JquerySelectorExtend Name(params string[] name)
         {
-            return EqualsAttribute(HtmlAttribute.Name.ToString(), name);
+            name.DoEach((r) => OrSelector(FixedAsAttribute(HtmlAttribute.Name.ToString().ToLower(), r, string.Empty)));
+            return new JquerySelectorExtend(this.selector);
         }
 
         /// <summary>
-        ///     Selects a single element with the given <paramref name="expression" /> attribute.
+        ///     Selects a single element with the given <paramref name="expressions" /> attribute.
         /// </summary>
-        public JquerySelectorExtend Name<TModel>(Expression<Func<TModel, object>> expression)
+        public JquerySelectorExtend Name<TModel>(params Expression<Func<TModel, object>>[] expressions)
         {
-            return Name(expression.GetMemberName());
+            return Name(expressions.Select(r => r.GetMemberName())
+                                  .ToArray());
         }
 
         public JquerySelectorExtend Tag(HtmlTag tag)
@@ -243,6 +246,16 @@
         public JquerySelectorExtend NotEqualsAttribute(HtmlAttribute attribute, string value)
         {
             return NotEqualsAttribute(attribute.ToString(), value);
+        }
+
+        /// <summary>
+        ///     Select elements that either don't have the specified <paramref name="attribute" />, or do have the specified
+        ///     <paramref name="attribute" />
+        /// </summary>
+        public JquerySelectorExtend NotEqualsAttribute(HtmlAttribute attribute)
+        {
+            string value = attribute.ToStringLower();
+            return NotEqualsAttribute(value, value);
         }
 
         /// <summary>

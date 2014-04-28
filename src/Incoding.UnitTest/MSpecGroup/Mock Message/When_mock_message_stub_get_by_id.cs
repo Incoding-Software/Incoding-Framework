@@ -3,7 +3,6 @@ namespace Incoding.UnitTest.MSpecGroup
     #region << Using >>
 
     using Incoding.CQRS;
-    using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
 
@@ -14,7 +13,7 @@ namespace Incoding.UnitTest.MSpecGroup
     {
         #region Fake classes
 
-        class FakeMockMessage : QueryBase<IEntity>
+        class FakeMockMessage : QueryBase<FakeEntityForNew>
         {
             #region Override
 
@@ -24,9 +23,9 @@ namespace Incoding.UnitTest.MSpecGroup
 
             #endregion
 
-            protected override IEntity ExecuteResult()
+            protected override FakeEntityForNew ExecuteResult()
             {
-                return Repository.GetById<IEntity>(Id);
+                return Repository.GetById<FakeEntityForNew>(Id);
             }
 
             #endregion
@@ -34,18 +33,18 @@ namespace Incoding.UnitTest.MSpecGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
-        static MockMessage<FakeMockMessage, IEntity> mockMessage;
+        static MockMessage<FakeMockMessage, FakeEntityForNew> mockMessage;
 
         #endregion
 
         Establish establish = () =>
                                   {
                                       var input = Pleasure.Generator.Invent<FakeMockMessage>();
-                                      mockMessage = MockQuery<FakeMockMessage, IEntity>
+                                      mockMessage = MockQuery<FakeMockMessage, FakeEntityForNew>
                                               .When(input)
-                                              .StubGetById(input.Id, Pleasure.MockAsObject<IEntity>());
+                                              .StubGetById(input.Id, Pleasure.MockAsObject<FakeEntityForNew>());
                                   };
 
         Because of = () => mockMessage.Original.Execute();

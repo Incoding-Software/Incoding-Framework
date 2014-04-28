@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(ActionLogger))]
     public class When_lambda_logger_log : Context_Logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static bool isLog;
 

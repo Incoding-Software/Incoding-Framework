@@ -15,7 +15,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(IoCFactory))]
     public class When_ioc_factory
     {
-        #region Estabilish value
+        #region Establish value
 
         protected static Mock<IIoCProvider> iocProvider;
 

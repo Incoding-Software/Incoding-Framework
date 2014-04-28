@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(JqueryAjaxOptions))]
     public class When_jquery_ajax_options
     {
-        #region Estabilish value
+        #region Establish value
 
         static JqueryAjaxOptions options;
 

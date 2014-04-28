@@ -12,7 +12,7 @@
     [Subject(typeof(IncControllerBase))]
     public class When_inc_controller_base_try_push_with_exception : Context_inc_controller_base
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncFakeException exception;
 

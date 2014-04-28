@@ -2,72 +2,93 @@
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using Incoding.Extensions;
+    using Incoding.Maybe;
 
     #endregion
 
-    public class CommandComposite
+    public class CommandComposite : ISettingCommandComposite
     {
         #region Fields
 
-        readonly List<MessageCompositePart> parts = new List<MessageCompositePart>();
+        readonly List<IMessage<object>> parts = new List<IMessage<object>>();
 
         #endregion
 
         #region Properties
 
-        public List<MessageCompositePart> Parts
-        {
-            get { return this.parts; }
-        }
+        public ReadOnlyCollection<IMessage<object>> Parts { get { return this.parts.AsReadOnly(); } }
 
         #endregion
 
-        #region Api Methods
+        #region ISettingCommandComposite Members
 
-        public void Quote(IMessage<object> message, MessageExecuteSetting executeSetting = null)
+        public ISettingCommandComposite WithConnectionString(string connectionString)
         {
-            var part = new MessageCompositePart(message, executeSetting ?? new MessageExecuteSetting());
-            this.parts.Add(part);
+            this.parts[this.parts.Count - 1].Setting.Connection = connectionString;
+            return this;
         }
 
-        #endregion
-
-        #region Nested classes
-
-        public class MessageCompositePart
+        public ISettingCommandComposite WithDateBaseString(string dbInstance)
         {
-            #region Fields
+            this.parts[this.parts.Count - 1].Setting.DataBaseInstance = dbInstance;
+            return this;
+        }
 
-            readonly IMessage<object> message;
+        public ISettingCommandComposite Mute(MuteEvent mute)
+        {
+            this.parts[this.parts.Count - 1].Setting.Mute = mute;
+            return this;
+        }
 
-            readonly MessageExecuteSetting setting;
+        public ISettingCommandComposite AsDelay(Action<MessageDelaySetting> configuration = null)
+        {
+            var delay = new MessageDelaySetting();
+            configuration.Do(action => action(delay));
+            this.parts[this.parts.Count - 1].Setting.Delay = delay;
+            return this;
+        }
 
-            #endregion
+        public ISettingCommandComposite OnBefore(Action<IMessage<object>> action)
+        {
+            this.parts[this.parts.Count - 1].Setting.OnBefore = action;
+            return this;
+        }
 
-            #region Constructors
+        public ISettingCommandComposite OnAfter(Action<IMessage<object>> action)
+        {
+            this.parts[this.parts.Count - 1].Setting.OnAfter = action;
+            return this;
+        }
 
-            internal MessageCompositePart(IMessage<object> message, MessageExecuteSetting executeSetting)
+        public ISettingCommandComposite OnError(Action<IMessage<object>, Exception> action)
+        {
+            this.parts[this.parts.Count - 1].Setting.OnError = action;
+            return this;
+        }
+
+        public ISettingCommandComposite OnComplete(Action<IMessage<object>> action)
+        {
+            this.parts[this.parts.Count - 1].Setting.OnComplete = action;
+            return this;
+        }
+
+        public ISettingCommandComposite Quote(IMessage<object> message, MessageExecuteSetting executeSetting = null)
+        {
+            if (executeSetting != null)
+                message.Setting = new MessageExecuteSetting(executeSetting);
+            else
             {
-                this.message = message;
-                this.setting = executeSetting;
+                message.Setting = message.GetType().FirstOrDefaultAttribute<MessageExecuteSettingAttribute>()
+                                         .With(r => new MessageExecuteSetting(r))
+                                         .Recovery(new MessageExecuteSetting());
             }
 
-            #endregion
-
-            #region Properties
-
-            public IMessage<object> Message
-            {
-                get { return this.message; }
-            }
-
-            public MessageExecuteSetting Setting
-            {
-                get { return this.setting; }
-            }
-
-            #endregion
+            this.parts.Add(message);
+            return this;
         }
 
         #endregion

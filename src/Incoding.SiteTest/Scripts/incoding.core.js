@@ -32,16 +32,10 @@ function InitGps() {
     }
 }
 
-
-
-
-
-
-
 $.extend(String.prototype, {
     replaceAll : function(find, replace) {
         return this.split(find).join(replace);
-    },    
+    },
     endWith : function(suffix) {
         return (this.substr(this.length - suffix.length) === suffix);
     },
@@ -80,7 +74,7 @@ $.extend(Array.prototype, {
     contains : function(findValue) {
         return $.inArray(findValue, this) != -1;
     },
-    remove: function (from, to) {
+    remove : function(from, to) {
         var rest = this.slice((to || from) + 1 || this.length);
         this.length = from < 0 ? this.length + from : from;
         return this.push.apply(this, rest);
@@ -161,6 +155,12 @@ $.fn.extend({
             this.attr(key, key);
         }
         return this;
+    },
+    increment : function(step) {
+        return $(this).each(function() {
+            var val = parseInt($(this).val());
+            $(this).val((_.isNaN(val) ? 0 : val) + parseInt(step));
+        });
     }
 });
 
@@ -172,7 +172,21 @@ $.extend({
                 evaluated.call(property);
             }
         }
-    },  
+    },
+    byName : function(name, nextSelector) {
+        if (ExecutableHelper.IsNullOrEmpty(name)) {
+            name = '';
+        }
+        var selectorByName = '[name="{0}"]'.f(name.toString()
+            .replaceAll("[", "\\[")
+            .replaceAll("]", "\\]"));
+        if (ExecutableHelper.IsNullOrEmpty(nextSelector)) {
+            return $(selectorByName);
+        }
+        else {
+            return $(selectorByName + nextSelector);
+        }
+    },
     eachFormElements : function(ob, evaluated) {
         var inputTag = 'input,select';
         var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
@@ -254,7 +268,7 @@ $.extend({
 
 })(jQuery, document);
 
-navigator.Ie8 = (function () {
+navigator.Ie8 = (function() {
     var N = navigator.appName, ua = navigator.userAgent, tem;
     var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
     if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {
@@ -263,5 +277,7 @@ navigator.Ie8 = (function () {
     M = M ? [M[1], M[2]] : [N, navigator.appVersion, '-?'];
     return M.contains('MSIE') && M.contains('8.0');
 })();
+
+
 
 //#endregion

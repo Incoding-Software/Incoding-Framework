@@ -8,7 +8,7 @@ namespace Incoding.CQRS
 
     #endregion
 
-    public class GetEntitiesQuery<T> : QueryBase<List<T>> where T : class, IEntity
+    public class GetEntitiesQuery<T> : QueryBase<List<T>> where T : class, IEntity, new()
     {
         #region Override
 

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -22,6 +23,7 @@
 
         #region IConditionalBinaryBuilder Members
 
+        [Obsolete("Please use native C#", false)]
         public IConditionalBuilder And
         {
             get
@@ -32,6 +34,7 @@
             }
         }
 
+        [Obsolete("Please use native C#", false)]
         public IConditionalBuilder Or
         {
             get
@@ -46,6 +49,7 @@
 
         #region IConditionalBuilder Members
 
+        [Obsolete("Please use native C#", false)]
         public ConditionalBuilder Not
         {
             get
@@ -55,9 +59,26 @@
             }
         }
 
+        void IsRegistry(Expression expression, bool setAnd)
+        {
+            var nodeType = expression.NodeType;
+            if (nodeType.IsAnyEquals(ExpressionType.AndAlso,
+                                     ExpressionType.And,
+                                     ExpressionType.Or,
+                                     ExpressionType.OrElse))
+            {
+                var binary = expression as BinaryExpression;
+                bool isAnd = nodeType.IsAnyEquals(ExpressionType.And, ExpressionType.AndAlso);
+                IsRegistry(binary.Left, isAnd);
+                IsRegistry(binary.Right, isAnd);
+            }
+            else
+                Registry(new ConditionalIs(expression, setAnd));
+        }
+
         public IConditionalBinaryBuilder Is(Expression<Func<bool>> expression)
         {
-            Registry(new ConditionalIs(expression, this.and));
+            IsRegistry(expression.Body, this.and);
             return this;
         }
 
@@ -68,18 +89,22 @@
             return this;
         }
 
+        public IConditionalBinaryBuilder Data<TModel>(Expression<Func<TModel, bool>> expression)
+        {
+            Registry(new ConditionalData<TModel>(expression, this.and));
+            return this;
+        }
+
+        #endregion
+
+        #region Api Methods
+
         public void Registry(ConditionalBase conditional)
         {
             if (this.inverse)
                 this.conditionals.Add(!conditional);
             else
                 this.conditionals.Add(conditional);
-        }
-
-        public IConditionalBinaryBuilder Data<TModel>(Expression<Func<TModel, bool>> expression)
-        {
-            Registry(new ConditionalData<TModel>(expression, this.and));
-            return this;
         }
 
         #endregion

@@ -3,25 +3,25 @@ namespace Incoding.Block.Core
     #region << Using >>
 
     using System;
+    using Incoding.Maybe;
 
     #endregion
 
-    public abstract class FactoryBase<TInit> where TInit : class
+    public abstract class FactoryBase<TInit> where TInit : class, new()
     {
+        // ReSharper disable UnassignedField.Global
         #region Fields
 
-        protected TInit init;
+        protected readonly TInit init = new TInit();
 
         #endregion
 
+        // ReSharper restore UnassignedField.Global
         #region Api Methods
 
-        public abstract void UnInitialize();
-
-        public void Initialize(Action<TInit> initializeAction)
-        {
-            Guard.NotNull("initializeAction", initializeAction);
-            initializeAction(this.init);
+        public void Initialize(Action<TInit> initializeAction = null)
+        {        
+            initializeAction.Do(action => action(this.init));
         }
 
         #endregion

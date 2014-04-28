@@ -4,56 +4,45 @@ namespace Incoding.Data
 
     using System.Data;
     using NHibernate;
-    using NHibernate.Context;
 
     #endregion
 
-    public class NhibernateUnitOfWork : IUnitOfWork
+    public class NhibernateUnitOfWork : UnitOfWorkBase<ISession, INhibernateSessionFactory>
     {
         #region Fields
 
-        readonly ISession session;
-
-        readonly ITransaction transaction;
+        ITransaction transaction;
 
         #endregion
 
         #region Constructors
 
-        public NhibernateUnitOfWork(ISession session, IsolationLevel isolationLevel)
-        {
-            Guard.NotNull("session", session);
-            CurrentSessionContext.Bind(session);
-
-            this.session = session;
-            this.transaction = session.BeginTransaction(isolationLevel);
-        }
+        public NhibernateUnitOfWork(INhibernateSessionFactory sessionFactory, string connectionString, IsolationLevel isolationLevel)
+                : base(sessionFactory, isolationLevel, connectionString) { }
 
         #endregion
 
-        #region IUnitOfWork Members
-
-        public void Commit()
+        protected override void InternalFlush()
         {
-            this.session.Flush();
+            this.session.Value.Flush();
+        }
+
+        protected override void InternalCommit()
+        {
             this.transaction.Commit();
         }
 
-        #endregion
+        protected override void InternalOpen()
+        {
+            this.transaction = this.session.Value.BeginTransaction(this.isolationLevel);
+        }
 
-        #region Disposable
-
-        public void Dispose()
+        protected override void InternalSubmit()
         {
             if (!this.transaction.WasCommitted && !this.transaction.WasRolledBack)
                 this.transaction.Rollback();
 
             this.transaction.Dispose();
-
-            CurrentSessionContext.Unbind(this.session.SessionFactory);
-            this.session.Dispose();
         }
-
-        #endregion
     }
 }

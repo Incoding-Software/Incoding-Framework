@@ -54,6 +54,8 @@
 
         public static JavaScriptSelector JS { get { return new JavaScriptSelector(); } }
 
+        public static EventSelector Event { get { return new EventSelector(); } }
+        
         #endregion
 
         #region ISelector Members

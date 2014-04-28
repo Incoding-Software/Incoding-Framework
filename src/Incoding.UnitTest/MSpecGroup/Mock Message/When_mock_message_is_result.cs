@@ -27,7 +27,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<FakeMessage, string> mockMessage;
 

@@ -6,46 +6,25 @@ namespace Incoding.UnitTest
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
-    using Moq;
-    using It = Machine.Specifications.It;
 
     #endregion
 
     [Subject(typeof(DefaultDispatcher))]
-    public class When_default_dispatcher_push_throw_with_mute_event : Context_default_dispatcher
+    public class When_default_dispatcher_push_throw_with_mute_event : Behavior_default_dispatcher_push_with_mute_event
     {
-        #region Estabilish value
-
-        static Mock<CommandBase> message;
-
-        static Exception exception;
-
-        #endregion
-
-        Establish establish = () =>
-                                  {
-                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>());
-                                      eventBroker.Setup(r => r.HasSubscriber(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>())).Returns(true);
-                                  };
+        Establish establish = () => eventBroker.Setup(r => r.HasSubscriber(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>())).Returns(true);
 
         Because of = () =>
                          {
-                             exception = Catch.Exception(() => dispatcher.Push(message.Object, new MessageExecuteSetting
-                                                                                                   {
-                                                                                                           PublishEventOnError = false, 
-                                                                                                           PublishEventOnBefore = false, 
-                                                                                                           PublishEventOnComplete = false
-                                                                                                   }));
+                             exception = Catch.Exception(() => dispatcher.Push(Pleasure.MockAsObject<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>()), new MessageExecuteSetting
+                                                                                                                                                                                         {
+                                                                                                                                                                                                 Mute = MuteEvent.OnAfter |
+                                                                                                                                                                                                        MuteEvent.OnBefore |
+                                                                                                                                                                                                        MuteEvent.OnComplete |
+                                                                                                                                                                                                        MuteEvent.OnError,
+                                                                                                                                                                                         }));
                          };
 
-        It should_be_exception = () => exception.ShouldNotBeNull();
-
-        It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
-
-        It should_be_not_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()), Times.Never());
-
-        It should_be_not_publish_after_fail = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()), Times.Never());
-
-        It should_be_not_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()), Times.Never());
+        Behaves_like<Behavior_default_dispatcher_push_with_mute_event> should_be_verify;
     }
 }

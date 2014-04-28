@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.KnowleadgeGroup
     [Subject("")]
     public class When_understand_different_bit_and_bool_operator
     {
-        #region Estabilish value
+        #region Establish value
 
         static bool IsTrue(ISpy spy)
         {

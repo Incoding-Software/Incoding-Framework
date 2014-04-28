@@ -19,21 +19,16 @@
             return all[index];
         }
 
-        public static ConditionalBase GetFirst(this IConditionalBinaryBuilder builder)
-        {
-            return builder.GetByIndex(0);
-        }
-
-        public static void ShouldEqualConditionalIs(this object conditionalIs, string left, string right, string method, bool inverse = false)
+        public static void ShouldEqualConditionalIs(this object conditionalIs, string left, string right, string method, bool inverse = false, bool and = true)
         {
             conditionalIs.ShouldEqualWeak(new
                                               {
-                                                      type = ConditionalOfType.Is.ToString(), 
-                                                      inverse = inverse, 
-                                                      left = left, 
-                                                      right = right, 
-                                                      method = method, 
-                                                      and = true
+                                                      type = ConditionalOfType.Is.ToString(),
+                                                      inverse = inverse,
+                                                      left = left,
+                                                      right = right,
+                                                      method = method,
+                                                      and = and
                                               }, dsl => dsl.IncludeAllFields());
         }
 

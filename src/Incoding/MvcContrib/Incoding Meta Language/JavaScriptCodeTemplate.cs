@@ -4,10 +4,8 @@
     {
         #region Constants
 
-        public const string Target_Increment = "$(this.target).val(parseInt($(this.target).val()) + 1);";
-
-        public const string Target_Decrement = "$(this.target).val(parseInt($(this.target).val()) - 1);";
-
+        public const string Target_Increment = "$(this.target).increment({0});";
+        
         public const string Target_Jquery_Plug_In = "$(this.target).{0}({1});";
 
         public const string Target_Val = "$(this.target).val({0});";

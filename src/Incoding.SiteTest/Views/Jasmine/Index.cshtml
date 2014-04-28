@@ -144,7 +144,7 @@
     <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false).ToJsonString())" id="ExecutableInsertWithProperty"/>
     <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true).ToJsonString())" id="ExecutableInsertWithPrepare"/>
     <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false).ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new {Value = Selector.Jquery.Id("sandboxTextBox")})), false).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })), false).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
 
 
     <input type="hidden" value="@(new ExecutableForm("clear").ToJsonString())" id="ExecutableFormClear"/>
@@ -164,24 +164,18 @@
     <input type="hidden" value="@(new ConditionalEval("false", true).GetData().ToJsonString())" id="ConditionalEval"/>
     <input type="hidden" value="@(new ConditionalEval("data", true).GetData().ToJsonString())" id="ConditionalEvalData"/>
 
-    <input type="hidden" value="@(new ConditionalIs(()=> Selector.Jquery.Id("id") == 5,true).GetData().ToJsonString())" id="ConditionalIs"/>
+    <input type="hidden" value="@(new ConditionalIs(() => Selector.Jquery.Id("id") == 5, true).GetData().ToJsonString())" id="ConditionalIs"/>
     <input type="hidden" value="@(new ConditionalData<JasmineIndexContainer>(container => container.JqueryVersion == "123", true).GetData().ToJsonString())" id="ConditionalData"/>
     <input type="hidden" value="@(new ConditionalData<string>(container => container == "123", true).GetData().ToJsonString())" id="ConditionalDataWihtoutProperty"/>
-    
-    
-    
-    
+          
     <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateRemove"/>    
     <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "search", } }).ToJsonString())" id="ExecutableStoreManipulateRemoveWithPrefix"/>        
     <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "set", key = "IncHash", value = Selector.Jquery.Id("incSelector").ToString(), prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateSet"/>    
     
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment" id="Target_Increment"/>
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Decrement" id="Target_Decrement"/>             
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Val" id="Target_Val"/>        
-     
-
-    <input type="hidden" value="@JavaScriptCodeTemplate.Document_SetTitle" id="Document_SetTitle"/>
-        
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(1)" id="Target_Increment"/>
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(-1)" id="Target_Decrement"/>             
+    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Val" id="Target_Val"/>             
+    <input type="hidden" value="@JavaScriptCodeTemplate.Document_SetTitle" id="Document_SetTitle"/>        
     <input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>       
     
     
@@ -190,6 +184,17 @@
     <input type="hidden" value="@Selector.JS.DateTime.GetTimezoneOffset()" id="Selector_Js_DateTime_GetTimezoneOffset"/> 
     <input type="hidden" value="@Selector.JS.DateTime.ToDateString()" id="Selector_Js_DateTime_ToDateString"/> 
     <input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/> 
+    
+    
+    <input type="hidden" value="@Selector.Event.ScreenX" id="Selector_Event_ScreenX"/> 
+    <input type="hidden" value="@Selector.Event.ScreenY" id="Selector_Event_ScreenY"/> 
+    <input type="hidden" value="@Selector.Event.Type" id="Selector_Event_Type"/> 
+    <input type="hidden" value="@Selector.Event.PageX" id="Selector_Event_PageX"/> 
+    <input type="hidden" value="@Selector.Event.PageY" id="Selector_Event_PageY"/> 
+    <input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/> 
+    <input type="hidden" value="@Selector.Event.Which" id="Selector_Event_Which"/> 
+    
+
     
     <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Accuracy" id="Selector_Js_Navigator_Accuracy"/> 
     <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.AltitudeAccuracy" id="Selector_Js_Navigator_AltitudeAccuracy"/> 
@@ -221,6 +226,6 @@
                                                                                                                              Value = Selector.Jquery.Id("sandboxTextBox")
                                                                                                                      });
                                                              }))" id="Selector_Incoding_Ajax"/>            
-    <input type="hidden" value="@(Selector.Incoding.BuildUrl(Url.Action("GetValue", "Jasmine", new {Value = Selector.Jquery.Id("sandboxTextBox")})))" id="Selector_Incoding_Build_Url"/>    
+    <input type="hidden" value="@(Selector.Incoding.BuildUrl(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })))" id="Selector_Incoding_Build_Url"/>    
     
 </body>

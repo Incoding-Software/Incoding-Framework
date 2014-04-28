@@ -12,7 +12,10 @@
 
         public static void Behaviors(this IIncodingMetaLanguagePlugInDsl plugInDsl, Action<IIncodingMetaLanguagePlugInDsl> action)
         {
+            var behaviorDsl = (IIncodingMetaLanguageBehaviorDsl)plugInDsl;
+            behaviorDsl.Lock();
             action(plugInDsl);
+            behaviorDsl.UnLock();
         }
 
         public static IncodingMetaLanguageCoreDsl Core(this IIncodingMetaLanguagePlugInDsl plugInDsl)

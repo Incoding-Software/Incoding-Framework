@@ -159,6 +159,8 @@
 
         #endregion
 
+        #region Class, IEnumerable 
+
         It should_be_compare = () =>
                                    {
                                        var compare = new CompareFactory<FakeCompare, FakeCompare>();
@@ -391,6 +393,8 @@
                                                                                   compare.IsCompare().ShouldBeTrue();
                                                                               };
 
+        #endregion
+
         #region Primitive, Collection, Special
 
         It should_be_not_compare_string_with_string = () =>
@@ -428,27 +432,47 @@
         It should_be_not_compare_dictionary = () =>
                                                   {
                                                       var compare = new CompareFactory<IDictionary<string, string>, IDictionary<string, string>>();
-                                                      compare.Compare(Pleasure.ToDictionary(Pleasure.Generator.KeyValuePair()), Pleasure.ToDictionary(Pleasure.Generator.KeyValuePair()));
+                                                      compare.Compare(Pleasure.ToDictionary(new KeyValuePair<string, string>("Key", "Value")),
+                                                                      Pleasure.ToDictionary(new KeyValuePair<string, string>("Key1", "Value2")));
                                                       compare.IsCompare().ShouldBeFalse();
-                                                      compare.GetDifferencesAsString().ShouldContain("Compare  Item 0 from Actual with Item 0 from Expected");
+                                                      compare.GetDifferencesAsString().ShouldContain("Actual   [Key, Value]");
+                                                      compare.GetDifferencesAsString().ShouldContain("Expected [Key1, Value2]");
                                                   };
 
-        It should_be_compare_complex_dictionary = () =>
-                                                      {
-                                                          var compare = new CompareFactory<Dictionary<string, List<string>>, Dictionary<string, List<string>>>();
-                                                          var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
-                                                          compare.Compare(dictionary, dictionary);
-                                                          compare.IsCompare().ShouldBeTrue();
-                                                      };
+        It should_be_compare_dictionary_with_value_class = () =>
+                                                               {
+                                                                   var compare = new CompareFactory<Dictionary<string, FakeCompare2>, Dictionary<string, FakeCompare2>>();
+                                                                   var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, FakeCompare2>(Pleasure.Generator.String(), Pleasure.Generator.Invent<FakeCompare2>()));
+                                                                   compare.Compare(dictionary, dictionary);
+                                                                   compare.IsCompare().ShouldBeTrue();
+                                                               };
 
-        It should_be_not_compare_complex_dictionary = () =>
-                                                          {
-                                                              var compare = new CompareFactory<Dictionary<string, List<string>>, Dictionary<string, List<string>>>();
-                                                              var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
-                                                              var dictionary2 = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
-                                                              compare.Compare(dictionary, dictionary2);
-                                                              compare.IsCompare().ShouldBeFalse();
-                                                          };
+        It should_be_not_compare_dictionary_with_value_class = () =>
+                                                                   {
+                                                                       var compare = new CompareFactory<Dictionary<string, FakeCompare2>, Dictionary<string, FakeCompare2>>();
+                                                                       var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, FakeCompare2>(Pleasure.Generator.String(), Pleasure.Generator.Invent<FakeCompare2>()));
+                                                                       var dictionary2 = Pleasure.ToDictionary(new KeyValuePair<string, FakeCompare2>(Pleasure.Generator.String(), Pleasure.Generator.Invent<FakeCompare2>()));
+                                                                       compare.Compare(dictionary, dictionary2);
+                                                                       compare.IsCompare().ShouldBeFalse();                                                                       
+                                                                   };
+
+        It should_be_compare_dictionary_with_value_list = () =>
+                                                              {
+                                                                  var compare = new CompareFactory<Dictionary<string, List<string>>, Dictionary<string, List<string>>>();
+                                                                  var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
+                                                                  compare.Compare(dictionary, dictionary);
+                                                                  compare.IsCompare().ShouldBeTrue();
+                                                              };
+
+        It should_be_not_compare_dictionary_with_value_list = () =>
+                                                                  {
+                                                                      var compare = new CompareFactory<Dictionary<string, List<string>>, Dictionary<string, List<string>>>();
+                                                                      var dictionary = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
+                                                                      var dictionary2 = Pleasure.ToDictionary(new KeyValuePair<string, List<string>>(Pleasure.Generator.String(), Pleasure.ToList(Pleasure.Generator.String())));
+                                                                      compare.Compare(dictionary, dictionary2);
+                                                                      compare.IsCompare().ShouldBeFalse();
+                                                                      compare.GetDifferencesAsString().ShouldContain("Compare  Item 0 from Actual with Item 0 from Expected");
+                                                                  };
 
         It should_be_not_compare_with_decimal = () =>
                                                     {
@@ -593,6 +617,14 @@
                                                    compare.Compare(Pleasure.Generator.Invent<FakeCompare>(), Pleasure.Generator.Invent<FakeCompare2>());
                                                    compare.IsCompare().ShouldBeTrue();
                                                };
+
+        It should_be_compare_with_ignore_anonymous = () =>
+                                                         {
+                                                             var compare = new CompareFactory<object, FakeCompare>();
+                                                             compare.Ignore("Test", "Test");
+                                                             compare.Compare(new { Test = Pleasure.Generator.String() }, Pleasure.Generator.Invent<FakeCompare>());
+                                                             compare.IsCompare().ShouldBeTrue();
+                                                         };
 
         It should_be_compare_with_ignore_because_calculate = () =>
                                                                  {

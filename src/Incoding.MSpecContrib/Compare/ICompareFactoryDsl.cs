@@ -41,6 +41,8 @@ namespace Incoding.MSpecContrib
         ICompareFactoryDsl<TActual, TExpected> Ignore(string actualIgnore, string reason);
 
         ICompareFactoryDsl<TActual, TExpected> IncludeAllFields();
+
+        ICompareFactoryDsl<TActual, TExpected> NotNull(Expression<Func<TActual, object>> actualProp);
     }
 
     // ReSharper restore UnusedMemberInSuper.Global

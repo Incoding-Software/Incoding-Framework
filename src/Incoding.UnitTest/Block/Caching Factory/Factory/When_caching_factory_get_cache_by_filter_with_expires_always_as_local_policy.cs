@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory))]
     public class When_caching_factory_get_cache_by_filter_with_expires_always_as_local_policy
     {
-        #region Estabilish value
+        #region Establish value
 
         static string filterKey;
 

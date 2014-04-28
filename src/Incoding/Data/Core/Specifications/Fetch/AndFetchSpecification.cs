@@ -26,7 +26,7 @@ namespace Incoding.Data
 
         #endregion
 
-        public override Action<AdHocFetchSpecification<TEntity>> FetchedBy()
+        public override Action<AdHocFetchSpecificationBase<TEntity>> FetchedBy()
         {
             return r =>
                        {

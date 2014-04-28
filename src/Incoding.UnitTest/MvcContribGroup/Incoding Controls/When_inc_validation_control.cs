@@ -13,7 +13,7 @@
     [Subject(typeof(IncTextBoxControl<,>))]
     public class When_inc_validation_control : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncValidationControl control;
 

@@ -20,16 +20,10 @@ namespace Incoding.Block.ExceptionHandling
 
         #endregion
 
-        #region Constructors
-
-        internal InitExceptionHandling() { }
-
-        #endregion
-
         #region Api Methods
 
         public void WithPolicy(Func<ExceptionPolicy, ExceptionPolicy> func)
-        {            
+        {
             this.exceptionPolicies.Add(func(new ExceptionPolicy()));
         }
 

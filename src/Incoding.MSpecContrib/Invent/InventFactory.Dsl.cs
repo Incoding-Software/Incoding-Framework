@@ -3,35 +3,31 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
-    using System.Diagnostics;
     using System.Linq.Expressions;
     using Incoding.Extensions;
 
     #endregion
 
-    public partial class InventFactory<T> : IInventFactoryDsl<T> where T : new()
+    public partial class InventFactory<T> : IInventFactoryDsl<T>
     {
+        
         #region IInventFactoryDsl<T> Members
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property) where TGenerate : new()
         {
-            return GenerateTo<TGenerate>(property.GetMemberName());
+            return GenerateTo(property, null);
         }
 
-        [DebuggerStepThrough]
-        public IInventFactoryDsl<T> GenerateTo<TGenerate>(string property) where TGenerate : new()
+        public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new()
         {
-            return Tuning(property, Pleasure.Generator.Invent<TGenerate>());
+            return Tuning(property, Pleasure.Generator.Invent(innerDsl));
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, TGenerate>> property)
         {
             return Empty<TGenerate>(property.GetMemberName());
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Empty<TGenerate>(string property)
         {
             Guard.NotNull("property", property);
@@ -42,14 +38,12 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Tuning<TValue>(Expression<Func<T, TValue>> property, TValue value)
         {
             Guard.NotNull("property", property);
             return Tuning(property.GetMemberName(), value);
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Tuning(string property, object value)
         {
             Guard.NotNull("property", property);
@@ -59,7 +53,6 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Ignore(Expression<Func<T, object>> property, string reason)
         {
             Guard.NotNull("property", property);
@@ -71,7 +64,6 @@ namespace Incoding.MSpecContrib
             return Ignore(property, "Auto");
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Ignore(string property, string reason)
         {
             Guard.NotNull("property", property);
@@ -81,12 +73,17 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
-        [DebuggerStepThrough]
         public IInventFactoryDsl<T> Callback(Action<T> callback)
         {
             Guard.NotNull("callback", callback);
 
             this.callbacks.Add(callback);
+            return this;
+        }
+
+        public IInventFactoryDsl<T> MuteCtor()
+        {
+            this.isMuteCtor = true;
             return this;
         }
 

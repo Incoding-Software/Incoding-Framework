@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using System.Collections;
     using Incoding.Extensions;
     using Incoding.Maybe;
@@ -181,6 +182,18 @@
                 return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Val.F(value.ToJsonString())));
 
             return this.plugInDsl.Core().JQuery.Call("val", value.Recovery(string.Empty));
+        }
+
+        /// <summary>
+        ///     Set the <paramref name="value" /> of each element in the set of matched elements.
+        /// </summary>
+        /// <param name="value"> A string of text or an array of strings corresponding to the value of each matched element to set as selected </param>
+        public IExecutableSetting Val(Func<JquerySelector, JquerySelectorExtend> value)
+        {
+            if (value == null)
+                return Val((object)null);
+
+            return this.plugInDsl.Core().JQuery.Call("val", value(Selector.Jquery));
         }
 
         /// <summary>

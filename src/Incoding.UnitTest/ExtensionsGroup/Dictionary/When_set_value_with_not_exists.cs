@@ -12,7 +12,7 @@
     [Subject(typeof(DictionaryExtensions))]
     public class When_set_value_with_not_exists
     {
-        #region Estabilish value
+        #region Establish value
 
         static Dictionary<string, string> dictionary;
 

@@ -41,7 +41,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         class EntityFetchSpecification : FetchSpecification<FakeEntity>
         {
-            public override Action<AdHocFetchSpecification<FakeEntity>> FetchedBy()
+            public override Action<AdHocFetchSpecificationBase<FakeEntity>> FetchedBy()
             {
                 return specification => specification.Join(r => r.Id);
             }
@@ -80,7 +80,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<FakeMockMessage, IncPaginatedResult<FakeEntity>> mockMessage;
 

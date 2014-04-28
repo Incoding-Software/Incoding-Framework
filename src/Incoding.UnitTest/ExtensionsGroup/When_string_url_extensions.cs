@@ -3,6 +3,7 @@
     #region << Using >>
 
     using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Machine.Specifications;
 
     #endregion
@@ -10,10 +11,41 @@
     [Subject(typeof(StringUrlExtensions))]
     public class When_string_url_extensions
     {
+        class FakeRoutes
+        {
+            // ReSharper disable UnusedMember.Local
+            public int Prop1 { get; set; }
+
+            public int Prop2 { get; set; }
+
+            public int Prop3 { get; set; }
+
+            public int Prop4 { get; set; }
+
+            public int Prop5 { get; set; }
+
+            public int Prop6 { get; set; }
+
+            public int Prop7 { get; set; }
+
+            public int Prop8 { get; set; }
+
+            public int Prop9 { get; set; }
+
+            // ReSharper restore UnusedMember.Local
+        }
+
+        It should_be_append_to_query_string_performance = () =>
+                                                              {
+                                                                  var route = Pleasure.Generator.Invent<FakeRoutes>();
+                                                                  Pleasure.Do(i => "http://domain.com".AppendToQueryString(route), 1000)
+                                                                          .ShouldBeLessThan(150);
+                                                              };
+
         It should_be_append_to_query_string_without_encode = () => "http://domain.com"
                                                                            .AppendToQueryString(new
                                                                                                     {
-                                                                                                            Param = "Value1", 
+                                                                                                            Param = "Value1",
                                                                                                             Param2 = "http://domain.com"
                                                                                                     })
                                                                            .ShouldEqual("http://domain.com?Param=Value1&Param2=http://domain.com");
@@ -67,7 +99,7 @@
         It should_be_append_to_hash_query_string = () => "http://sample.com#!"
                                                                  .AppendToHashQueryString(new
                                                                                               {
-                                                                                                      param = "value", 
+                                                                                                      param = "value",
                                                                                                       param2 = "value2"
                                                                                               })
                                                                  .ShouldEqual("http://sample.com#!param=value/param2=value2");
@@ -75,7 +107,7 @@
         It should_be_append_to_hash_query_string_with_hash_url = () => "http://sample.com#!Index/Home?"
                                                                                .AppendToHashQueryString(new
                                                                                                             {
-                                                                                                                    param = "value", 
+                                                                                                                    param = "value",
                                                                                                                     param2 = "value2"
                                                                                                             })
                                                                                .ShouldEqual("http://sample.com#!Index/Home?param=value/param2=value2");
@@ -90,7 +122,7 @@
         It should_be_append_to_hash_query_string_with_exist = () => "http://sample.com#!Index/Home?param=Value"
                                                                             .AppendToHashQueryString(new { param = "newValue" })
                                                                             .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
-   
+
         It should_be_append_to_hash_query_string_with_exist_empty = () => "http://sample.com#!Index/Home?param="
                                                                                   .AppendToHashQueryString(new { param = "newValue" })
                                                                                   .ShouldEqual("http://sample.com#!Index/Home?param=newValue");
@@ -102,7 +134,7 @@
         It should_be_append_to_hash_query_string_with_encode_value = () => "http://sample.com#!"
                                                                                    .AppendToHashQueryString(new
                                                                                                                 {
-                                                                                                                        param = "~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml", 
+                                                                                                                        param = "~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml",
                                                                                                                         area = string.Empty
                                                                                                                 })
                                                                                    .ShouldEqual("http://sample.com#!param=~%2FAreas%2FKitchen%2FViews%2FKitchen%2FTable.cshtml/area=");

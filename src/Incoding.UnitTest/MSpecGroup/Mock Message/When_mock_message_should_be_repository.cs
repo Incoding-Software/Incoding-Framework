@@ -16,7 +16,11 @@
 
         class FakeEntity : IncEntityBase
         {
+
+
             #region Constructors
+
+            public FakeEntity() { }
 
             public FakeEntity(string id)
             {
@@ -54,12 +58,16 @@
 
                 Repository.Flush();
                 Repository.Flush();
+
+
+                Repository.DeleteAll<FakeEntity>();
+                Repository.DeleteByIds<FakeEntity>(new object[] { 1, 2, 3 });
             }
         }
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<FakeCommand, object> mockMessage;
 
@@ -92,5 +100,9 @@
         It should_be_not_save = () => mockMessage.ShouldNotBeSave<FakeNewEntity>();
 
         It should_be_not_save_or_update = () => mockMessage.ShouldNotBeSaveOrUpdate<FakeNewEntity>();
+
+        It should_be_delete_all = () => mockMessage.ShouldBeDeleteAll<FakeEntity>();
+
+        It should_be_delete_by_ids = () => mockMessage.ShouldBeDeleteByIds<FakeEntity>(new object[] { 1, 2, 3 });
     }
 }

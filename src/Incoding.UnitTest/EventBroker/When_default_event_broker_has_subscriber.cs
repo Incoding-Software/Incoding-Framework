@@ -20,7 +20,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static DefaultEventBroker eventBroker;
 

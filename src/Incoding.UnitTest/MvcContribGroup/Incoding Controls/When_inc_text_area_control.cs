@@ -10,7 +10,7 @@
     [Subject(typeof(IncTextBoxControl<,>))]
     public class When_inc_text_area_control : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static string result;
 

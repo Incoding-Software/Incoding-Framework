@@ -13,7 +13,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(IncEntityBase))]
     public class When_entities_distinct : Context_entity_base
     {
-        #region Estabilish value
+        #region Establish value
 
         static List<IncEntityBase> entityCollection;
 

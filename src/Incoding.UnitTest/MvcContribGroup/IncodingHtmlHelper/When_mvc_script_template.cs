@@ -16,7 +16,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(MvcScriptTemplate<>))]
     public class When_mvc_script_template
     {
-        #region Estabilish value
+        #region Establish value
 
         static Mock<TextWriter> textWriter;
 

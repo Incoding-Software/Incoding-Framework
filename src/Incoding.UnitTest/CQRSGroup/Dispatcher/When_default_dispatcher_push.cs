@@ -14,7 +14,7 @@
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push : Context_default_dispatcher
     {
-        #region Estabilish value
+        #region Establish value
 
         static Mock<CommandBase> message;
 
@@ -26,11 +26,13 @@
 
         It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
 
-        It should_be_commit = () => unitOfWork.Verify(r => r.Commit());
+        It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Once());
+
+        It should_be_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Once());
 
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose());
 
-        It should_be_committed = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<IDbConnection>()));
+        It should_be_committed = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>()));
 
         It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
 

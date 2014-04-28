@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(TraceLogger))]
     public class When_trace_logger_log : Context_Logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
 

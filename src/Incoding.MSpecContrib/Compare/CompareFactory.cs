@@ -122,6 +122,11 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
+        public ICompareFactoryDsl<TActual, TExpected> NotNull(Expression<Func<TActual, object>> actualProp)
+        {
+            return ForwardToAction(actualProp, actual => actual.TryGetValue(actualProp.GetMemberName()).ShouldNotBeNull());
+        }
+
         public ICompareFactoryDsl<TActual, TExpected> ForwardToDefault<TValue>(Expression<Func<TActual, TValue>> actualProp)
         {
             return ForwardToDefault<TValue>(actualProp.GetMemberName());
@@ -205,9 +210,11 @@ namespace Incoding.MSpecContrib
                 if (this.ignoreProperties.Any(r => r.Equals(actualMemberName, StringComparison.InvariantCultureIgnoreCase)))
                     continue;
 
+                ////ncrunch: no coverage start
                 if (this.ignoreProperties.Any(r => actualMemberName.Contains("<{0}>".F(r))))
                     continue;
 
+                ////ncrunch: no coverage end            
                 if (this.forwardsToPredicate.ContainsKey(actualMemberName))
                 {
                     this.forwardsToPredicate[actualMemberName].Invoke(actual);
@@ -283,7 +290,7 @@ namespace Incoding.MSpecContrib
 
                     int index = 0;
                     while (actualEnumerator.MoveNext() && expectedEnumerator.MoveNext())
-                    {
+                    {                        
                         InternalShouldEqual(actualEnumerator.Current, expectedEnumerator.Current, "Item {0} from {1}".F(index, actualName), "Item {0} from {1}".F(index, expectedName));
                         index++;
                     }
@@ -297,7 +304,7 @@ namespace Incoding.MSpecContrib
                     return;
                 }
 
-                if (actual.GetType().IsImplement<IDbConnection>() && expected.GetType().IsImplement<IDbConnection>())
+                if (actual.GetType().IsImplement<IDbConnection>())
                 {
                     var actualConnection = actual as IDbConnection;
                     var expectedConnection = expected as IDbConnection;
@@ -305,13 +312,17 @@ namespace Incoding.MSpecContrib
                     return;
                 }
 
-                if (actual.GetType().IsTypicalType() && expected.GetType().IsTypicalType())
+                if (actual.GetType().IsTypicalType())
                 {
                     actual.ShouldEqual(expected);
                     return;
                 }
 
                 Console.WriteLine("Start {0}", actual.GetType());
+
+                if (ReferenceEquals(actual, expected))
+                    return;
+
                 actual.ShouldEqualWeak(expected, dsl =>
                                                      {
                                                          if (actual.GetType().BaseType.FullName.Contains("Incoding.Specification"))

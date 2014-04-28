@@ -12,7 +12,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(Guard))]
     public class When_guard
     {
-        #region Estabilish value
+        #region Establish value
 
         protected static string Argument { get; set; }
 

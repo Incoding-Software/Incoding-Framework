@@ -126,12 +126,12 @@ namespace Incoding.MvcContrib
             var setting = new IncTryPushSetting();
             action.Do(r => r(setting));
 
-            Func<ActionResult> defaultSuccess = () => View(composite.Parts[0].Message);
+            Func<ActionResult> defaultSuccess = () => View(composite.Parts[0]);
             if (HttpContext.Request.IsAjaxRequest())
                 defaultSuccess = () => IncodingResult.Success();
             var success = setting.SuccessResult ?? defaultSuccess;
 
-            Func<IncWebException, ActionResult> defaultError = (ex) => View(composite.Parts[0].Message);
+            Func<IncWebException, ActionResult> defaultError = (ex) => View(composite.Parts[0]);
             if (HttpContext.Request.IsAjaxRequest())
                 defaultError = (ex) => IncodingResult.Error(ModelState);
             var error = setting.ErrorResult ?? defaultError;

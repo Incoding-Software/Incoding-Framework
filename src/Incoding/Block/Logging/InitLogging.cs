@@ -4,54 +4,37 @@ namespace Incoding.Block.Logging
 
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     #endregion
 
     public sealed class InitLogging
     {
+        ////ncrunch: no coverage start
         #region Fields
 
-        internal IParserException parser;
+        internal readonly List<LoggingPolicy> policies = new List<LoggingPolicy>();
 
-        readonly List<LoggingPolicy> loggingPolicies = new List<LoggingPolicy>();
-
-        #endregion
-
-        #region Constructors
-
-        internal InitLogging(IParserException parserException)
-        {
-            WithParser(parserException);
-        }
+        internal IParserException parser = new DefaultParserException();
 
         #endregion
 
+        ////ncrunch: no coverage end
         #region Api Methods
 
-        /// <summary>
-        ///     Add default parse exception
-        /// </summary>
-        /// <param name="newParserException"> </param>
         public InitLogging WithParser(IParserException newParserException)
         {
             this.parser = newParserException;
             return this;
         }
 
-        public InitLogging WithPolicy(Func<LoggingPolicy, LoggingPolicy> action)
+        public InitLogging WithPolicy(Action<ILoggingPolicyFor> action)
         {
-            this.loggingPolicies.Add(action(new LoggingPolicy()));
+            var policy = new LoggingPolicy();
+            action(policy);
+            this.policies.Add(policy);
             return this;
         }
 
         #endregion
-
-        internal List<LoggingPolicy> GetLoggingPolicies(string logType)
-        {
-            return this.loggingPolicies
-                       .Where(r => r.IsSatisfied(logType))
-                       .ToList();
-        }
     }
 }

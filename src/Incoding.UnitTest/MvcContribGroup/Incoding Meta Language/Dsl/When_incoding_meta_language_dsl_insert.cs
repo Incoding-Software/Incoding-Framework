@@ -26,9 +26,9 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
-        static readonly Func<JquerySelector, JquerySelector> targetSelector = selector => selector.Id("Selector");
+        static readonly Func<JquerySelector, JquerySelectorExtend> targetSelector = selector => selector.Id("Selector");
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                           .ShouldEqualData(new Dictionary<string, object>
                                                                                {
                                                                                        { "insertType", "text" }, 
-                                                                                       { "template", "$('.new').parent('area')" }
+                                                                                       { "template", "$('.new').parent($('area'))" }
                                                                                });
 
 

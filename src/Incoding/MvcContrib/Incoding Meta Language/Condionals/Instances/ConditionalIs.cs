@@ -23,31 +23,23 @@ namespace Incoding.MvcContrib
 
         #region Constructors
 
-        public ConditionalIs(Expression<Func<bool>> expression, bool and)
+        public ConditionalIs(Expression body, bool and)
                 : base(ConditionalOfType.Is.ToString(), and)
         {
-            var body = expression.Body;
-
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Lambda:
-                    if (body is MethodCallExpression)
-                        SetMethodCall(body as MethodCallExpression);
-                    else if (body is UnaryExpression)
-                        SetUnary(body as UnaryExpression);
-                    else if (body is BinaryExpression)
-                        SetBinary(body as BinaryExpression);
-                    else if (body.Type == typeof(Boolean))
-                        SetBoolean(body);
-                    break;
-
-                    ////ncrunch: no coverage start
-                default:
-                    throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(expression.NodeType));
-
-                    ////ncrunch: no coverage end
-            }
+            if (body is MethodCallExpression)
+                SetMethodCall(body as MethodCallExpression);
+            else if (body is UnaryExpression)
+                SetUnary(body as UnaryExpression);
+            else if (body is BinaryExpression)
+                SetBinary(body as BinaryExpression);
+            else if (body.Type == typeof(Boolean))
+                SetBoolean(body);
+            else
+                throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(body.GetType()));
         }
+
+        public ConditionalIs(Expression<Func<bool>> expression, bool and)
+                : this(expression.Body, and) { }
 
         #endregion
 

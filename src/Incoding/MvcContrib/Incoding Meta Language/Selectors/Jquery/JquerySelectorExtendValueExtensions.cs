@@ -125,6 +125,15 @@
             return selector.Property("length");
         }
 
+
+        /// <summary>
+        ///     Get the current value of the first element in the set of matched elements
+        /// </summary>
+        public static JquerySelectorExtend Val(this JquerySelectorExtend selector)
+        {
+            return selector.Method("val");
+        }
+
         /// <summary>
         ///     Call method
         /// </summary>

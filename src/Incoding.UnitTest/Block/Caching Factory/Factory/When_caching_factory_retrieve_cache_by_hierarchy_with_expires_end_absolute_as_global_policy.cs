@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory))]
     public class When_caching_factory_retrieve_cache_by_hierarchy_with_expires_end_absolute_as_global_policy
     {
-        #region Estabilish value
+        #region Establish value
 
         static CachingFactory cachingFactory;
 

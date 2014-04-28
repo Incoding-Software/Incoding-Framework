@@ -2,9 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>
-      1.2.15.1058
-    </version>
+    <version>1.3.0.787-beta</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -22,31 +20,31 @@
     <iconUrl>http://incframework.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2013</copyright>
+    <copyright>Copyright  2013 - 2014</copyright>
     <dependencies>
       <group targetFramework="net40">
-        <dependency id="Newtonsoft.Json" version="4.5.11" />
-        <dependency id="NHibernate" version="3.3.1.4000" />
-        <dependency id="FluentNHibernate" version="1.3.0.733" />
+        <dependency id="Newtonsoft.Json" version="6.0.1" />
+        <dependency id="NHibernate" version="3.3.1.4001" />
+        <dependency id="FluentNHibernate" version="1.4.0.0" />
         <dependency id="FluentValidation-signed" version="3.4.6.0" />
         <dependency id="FluentValidation.MVC3-signed" version="3.4.0.6" />
         <dependency id="JetBrains.Annotations" version="7.0" />
-        <dependency id="jQuery" version="(1.7.2,2.0.0)" />
-        <dependency id="Microsoft.jQuery.Unobtrusive.Validation" version="2.0.30116.0" />
-        <dependency id="jQuery.Validation" version="1.9.0" />
+        <dependency id="jQuery.Validation" version="1.9.0" />        
+        <dependency id="Microsoft.jQuery.Unobtrusive.Validation" version="2.0.30116.0" />        
         <dependency id="jQuery.Form" version="3.28" />
         <dependency id="underscore.js" version="1.4.4" />
         <dependency id="Handlebars" version="1.1.2" />
+        <dependency id="jQuery" version="(1.7.2,2.0.0)" />
       </group>
     </dependencies>
     <references>
-      <reference file="incoding.dll" />
+      <reference file="incoding.dll" />     
     </references>
     <tags>ajax, incoding, no-js,rich client application,single page,iml, web framework, framework</tags>
   </metadata>
   <files>
     <file src="lib\" target="lib" />
     <file src="tools\" target="tools" />
-    <file src="content\" target="content" />
+    <file src="content\" target="content" />    
   </files>
 </package>

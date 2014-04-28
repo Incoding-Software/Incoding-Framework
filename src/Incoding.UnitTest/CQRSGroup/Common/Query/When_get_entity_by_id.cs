@@ -20,7 +20,7 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<GetEntityByIdQuery<FakeEntity>, FakeEntity> mockQuery;
 

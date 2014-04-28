@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(EventLogger))]
     public class When_event_logger_log : Context_Logger
     {
-        #region Estabilish value
+        #region Establish value
 
         const string testLog = "Test Log";
 
@@ -21,10 +21,7 @@ namespace Incoding.UnitTest.Block
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      if (EventLog.Exists(sourceName))
-                                          EventLog.DeleteEventSource(sourceName);
-
+                                  {                                      
                                       logger = new EventLogger(sourceName, testLog, EventLogEntryType.Information);
                                   };
 

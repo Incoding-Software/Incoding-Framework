@@ -6,7 +6,7 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public interface IIncodingMetaLanguageActionDsl
+    public interface IIncodingMetaLanguageActionDsl 
     {
         IIncodingMetaLanguageEventBuilderDsl Ajax(Action<JqueryAjaxOptions> configuration);
 
@@ -22,6 +22,8 @@ namespace Incoding.MvcContrib
 
         IIncodingMetaLanguageEventBuilderDsl Direct(IncodingResult result);
 
+        IIncodingMetaLanguageEventBuilderDsl Direct(object data);
+
         IIncodingMetaLanguageEventBuilderDsl Submit(Action<JqueryAjaxFormOptions> configuration = null);
 
         IIncodingMetaLanguageEventBuilderDsl SubmitOn(Func<JquerySelector, JquerySelector> action, Action<JqueryAjaxFormOptions> configuration = null);
@@ -29,5 +31,9 @@ namespace Incoding.MvcContrib
         IIncodingMetaLanguageEventBuilderDsl AjaxHashGet(string url = "", string prefix = "root");
 
         IIncodingMetaLanguageEventBuilderDsl AjaxHashPost(string url = "", string prefix = "root");
+
+        IIncodingMetaLanguageActionDsl PreventDefault();
+
+        IIncodingMetaLanguageActionDsl StopPropagation();
     }
 }

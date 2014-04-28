@@ -1,8 +1,3 @@
-#region copyright
-
-// @incoding 2011
-#endregion
-
 namespace Incoding.EventBroker
 {
     #region << Using >>

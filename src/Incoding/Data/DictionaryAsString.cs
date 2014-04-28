@@ -19,7 +19,7 @@ namespace Incoding.Data
         const string splitPair = "&";
 
         #endregion
-
+        
         #region Factory constructors
 
         public static void Join(ref string source, string key, object value)

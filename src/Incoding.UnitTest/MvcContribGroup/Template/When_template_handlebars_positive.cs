@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(TemplateHandlebarsSyntax<>))]
     public class When_template_handlebars_positive : Context_template
     {
-        #region Estabilish value
+        #region Establish value
 
         static TemplateHandlebarsSyntax<FakeModel> each;
 

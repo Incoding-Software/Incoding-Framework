@@ -11,7 +11,7 @@
     [Subject(typeof(IncHiddenControl<,>))]
     public class When_inc_file_control : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static string result;
 

@@ -35,7 +35,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static IQueryable<IEntity> fakeCollection;
 

@@ -21,7 +21,7 @@
 
         public class FakeFetchSpecification : FetchSpecification<FakeEntity>
         {
-            public override Action<AdHocFetchSpecification<FakeEntity>> FetchedBy()
+            public override Action<AdHocFetchSpecificationBase<FakeEntity>> FetchedBy()
             {
                 return r => r.Join(entity => entity.Id);
             }
@@ -75,7 +75,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<FakeMockMessage, List<FakeEntity>> mockMessage;
 

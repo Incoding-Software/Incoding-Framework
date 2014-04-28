@@ -12,7 +12,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(DeleteEntityByIdCommand))]
     public class When_delete_entity_by_id_with_wrong_assembly_qualified_name
     {
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<DeleteEntityByIdCommand, object> mockCommand;
 

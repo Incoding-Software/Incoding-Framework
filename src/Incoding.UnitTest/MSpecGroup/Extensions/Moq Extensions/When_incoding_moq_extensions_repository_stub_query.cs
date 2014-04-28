@@ -18,7 +18,7 @@
     {
         #region Fake classes
 
-        class Spec : Specification<IEntity>
+        class Spec : Specification<FakeEntityForNew>
         {
             #region Fields
 
@@ -36,7 +36,7 @@
             #endregion
 
             ////ncrunch: no coverage start
-            public override Expression<Func<IEntity, bool>> IsSatisfiedBy()
+            public override Expression<Func<FakeEntityForNew, bool>> IsSatisfiedBy()
             {
                 return null;
             }
@@ -44,7 +44,7 @@
             ////ncrunch: no coverage end        
         }
 
-        class UserFacilitiesSpecification : Specification<IEntity>
+        class UserFacilitiesSpecification : Specification<FakeEntityForNew>
         {
             readonly IEnumerable<Guid> _facilities;
 
@@ -53,16 +53,16 @@
                 this._facilities = facilities;
             }
 
-            public override Expression<Func<IEntity, bool>> IsSatisfiedBy()
+            public override Expression<Func<FakeEntityForNew, bool>> IsSatisfiedBy()
             {
                 return null;
             }
         }
 
-        class SpecWithoutFields : Specification<IEntity>
+        class SpecWithoutFields : Specification<FakeEntityForNew>
         {
             ////ncrunch: no coverage start
-            public override Expression<Func<IEntity, bool>> IsSatisfiedBy()
+            public override Expression<Func<FakeEntityForNew, bool>> IsSatisfiedBy()
             {
                 return null;
             }
@@ -77,7 +77,7 @@
                                                    var repository = Pleasure.Mock<IRepository>();
 
                                                    repository.StubQuery(whereSpecification: new SpecWithoutFields(), 
-                                                                        entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                                        entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                    repository.Object.Query(whereSpecification: new SpecWithoutFields())
                                                              .First()
@@ -89,8 +89,8 @@
                                                var repository = Pleasure.Mock<IRepository>();
 
                                                var ids = Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid());
-                                               repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(ids), 
-                                                                    entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                               repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(ids),
+                                                                    entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                repository.Object.Query(whereSpecification: new UserFacilitiesSpecification(ids.ToArray()))
                                                          .First()
@@ -106,7 +106,7 @@
                                                              var ids = Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid());
                                                              repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(ids)
                                                                                           .And(new SpecWithoutFields()),
-                                                                                  entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                                                  entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                              repository.Object.Query(whereSpecification: new UserFacilitiesSpecification(ids)
                                                                                              .And(new SpecWithoutFields()))
@@ -121,7 +121,7 @@
                                                                    var ids = Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid());
                                                                    repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(ids)
                                                                                                 .And(new SpecWithoutFields()),
-                                                                                        entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                                                        entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                                    repository.Object.Query(whereSpecification: new UserFacilitiesSpecification(ids))
                                                                              .ShouldBeEmpty();
@@ -131,8 +131,8 @@
                                                  {
                                                      var repository = Pleasure.Mock<IRepository>();
 
-                                                     repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid())), 
-                                                                          entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                     repository.StubQuery(whereSpecification: new UserFacilitiesSpecification(Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid())),
+                                                                          entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                      repository.Object.Query(whereSpecification: new UserFacilitiesSpecification(Pleasure.ToEnumerable(Guid.NewGuid(), Guid.NewGuid())))
                                                                .ShouldBeEmpty();
@@ -142,7 +142,7 @@
                                                      {
                                                          var repository = Pleasure.Mock<IRepository>();
 
-                                                         repository.StubQuery(entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                         repository.StubQuery(entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
                                                          repository.Object.Query(whereSpecification: new SpecWithoutFields()).ShouldBeEmpty();
                                                      };
 
@@ -151,8 +151,8 @@
                                                             var repository = Pleasure.Mock<IRepository>();
 
                                                             repository.StubQuery(whereSpecification: new Spec(Pleasure.Generator.TheSameString())
-                                                                                         .And(new SpecWithoutFields()), 
-                                                                                 entities: Pleasure.MockStrictAsObject<IEntity>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
+                                                                                         .And(new SpecWithoutFields()),
+                                                                                 entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(mock => mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString())));
 
                                                             repository.Object.Query(whereSpecification: new Spec(Pleasure.Generator.TheSameString())
                                                                                             .And(new SpecWithoutFields()))
@@ -166,11 +166,11 @@
                                                                      string entityId2 = Pleasure.Generator.String();
                                                                      var repository = Pleasure.Mock<IRepository>(mock =>
                                                                                                                      {
-                                                                                                                         mock.StubQuery(whereSpecification: new Spec(entityId1), 
-                                                                                                                                        entities: Pleasure.MockStrictAsObject<IEntity>(s => s.SetupGet(r => r.Id).Returns(entityId1)));
+                                                                                                                         mock.StubQuery(whereSpecification: new Spec(entityId1),
+                                                                                                                                        entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(s => s.SetupGet(r => r.Id).Returns(entityId1)));
 
-                                                                                                                         mock.StubQuery(whereSpecification: new Spec(entityId2), 
-                                                                                                                                        entities: Pleasure.MockStrictAsObject<IEntity>(s => s.SetupGet(r => r.Id).Returns(entityId2)));
+                                                                                                                         mock.StubQuery(whereSpecification: new Spec(entityId2),
+                                                                                                                                        entities: Pleasure.MockStrictAsObject<FakeEntityForNew>(s => s.SetupGet(r => r.Id).Returns(entityId2)));
                                                                                                                      });
 
                                                                      repository.Object.Query(whereSpecification: new Spec(entityId1))

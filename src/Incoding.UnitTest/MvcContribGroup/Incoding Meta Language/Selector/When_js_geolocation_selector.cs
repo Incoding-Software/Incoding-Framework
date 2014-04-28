@@ -10,7 +10,7 @@
     [Subject(typeof(JSGeolocationSelector))]
     public class When_js_geolocation_selector
     {
-        #region Estabilish value
+        #region Establish value
 
         static JSCoordsSelector currentPosition;
 

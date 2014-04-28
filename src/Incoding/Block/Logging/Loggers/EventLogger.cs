@@ -26,8 +26,10 @@ namespace Incoding.Block.Logging
             this.logName = logName;
             this.logEntryType = logEntryType;
 
+            ////ncrunch: no coverage start
             if (!EventLog.SourceExists(sourceName))
                 EventLog.CreateEventSource(sourceName, logName);
+            ////ncrunch: no coverage end
         }
 
         #endregion

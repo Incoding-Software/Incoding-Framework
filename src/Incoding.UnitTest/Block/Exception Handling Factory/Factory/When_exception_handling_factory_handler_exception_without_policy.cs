@@ -11,7 +11,7 @@
     [Subject(typeof(ExceptionHandlingFactory))]
     public class When_exception_handling_factory_handler_exception_without_policy
     {
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
 
@@ -22,7 +22,7 @@
         Establish establish = () =>
                                   {
                                       exceptionHandling = new ExceptionHandlingFactory();
-                                      exceptionHandling.Initialize(handling => { });
+                                      exceptionHandling.Initialize();
                                   };
 
         Because of = () => { exception = Catch.Exception(() => exceptionHandling.Handler(new ArgumentException())); };

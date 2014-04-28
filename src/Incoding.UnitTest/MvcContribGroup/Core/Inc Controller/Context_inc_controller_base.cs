@@ -71,7 +71,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         protected static FakeController controller;
 

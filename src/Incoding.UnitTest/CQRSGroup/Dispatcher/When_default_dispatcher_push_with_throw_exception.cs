@@ -14,7 +14,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push_with_throw_exception : Context_default_dispatcher
     {
-        #region Estabilish value
+        #region Establish value
 
         static Mock<CommandBase> message;
 
@@ -22,22 +22,16 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        Establish establish = () =>
-                                  {
-                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>());
-                                      eventBroker.Setup(r => r.HasSubscriber(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>())).Returns(true);
-                                  };
+        Establish establish = () => { message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>()); };
 
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
 
-        It should_be_exception = () => exception.ShouldBeNull();
+        It should_be_exception = () => exception.ShouldBeOfType<ArgumentException>();
 
         It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
 
-        It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
+        It should_be_not_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Never());
 
-        It should_be_publish_after_fail = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()));
-
-        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()));
+        It should_be_dispose = () => unitOfWork.Verify(r => r.Dispose(), Times.Once());
     }
 }

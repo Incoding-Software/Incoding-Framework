@@ -13,7 +13,7 @@
     [Subject(""), Tags("Knowleadge")]
     public class When_understand_select_with_empty_collection
     {
-        #region Estabilish value
+        #region Establish value
 
         static IEnumerable<int> emptyCollection;
 

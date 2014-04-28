@@ -15,12 +15,15 @@ namespace Incoding.UnitTest.Block
     {
         Establish establish = () =>
                                   {
-                                      loggingPolicy = new LoggingPolicy()
-                                              .For()
-                                              .Use(() => defaultMockLogger.Object);
+                                      loggingPolicy = new LoggingPolicy();
+                                      loggingPolicy.For(new[]
+                                                            {
+                                                                    LogType.Debug,
+                                                                    LogType.Trace
+                                                            }).Use(defaultMockLogger.Object);
                                   };
 
-        Because of = () => loggingPolicy.Log(new LogMessage(Pleasure.Generator.String(), null, null));
+        Because of = () => loggingPolicy.Log(LogType.Debug, new LogMessage(Pleasure.Generator.String(), null, null));
 
         It should_be_log = () => defaultMockLogger.Verify(r => r.Log(Moq.It.IsAny<LogMessage>()), Times.Once());
     }

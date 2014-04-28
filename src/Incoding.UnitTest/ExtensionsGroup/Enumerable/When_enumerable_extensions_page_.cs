@@ -13,7 +13,7 @@
     [Subject(typeof(EnumerableExtensions))]
     public class When_enumerable_extensions_page_
     {
-        #region Estabilish value
+        #region Establish value
 
         static List<int> collection;
 

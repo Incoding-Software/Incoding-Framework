@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory))]
     public class When_caching_factory_set_cache_through_retrieve
     {
-        #region Estabilish value
+        #region Establish value
 
         static FakeSerializeObject retrieve;
 

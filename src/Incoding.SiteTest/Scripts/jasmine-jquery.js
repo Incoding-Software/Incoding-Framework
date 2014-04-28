@@ -208,6 +208,14 @@ jasmine.JQuery.matchersClass = {};
         },
 
         toHaveProp : function(propertyName, expectedPropertyValue) {
+            if (propertyName == 'checked' && expectedPropertyValue) {
+                if ($.browser.webkit) {
+                    return hasProperty(this.actual.prop(propertyName));
+                }
+                else {
+                    return hasProperty(this.actual.prop(propertyName), true);
+                }
+            }
             return hasProperty(this.actual.prop(propertyName), expectedPropertyValue);
         },
 

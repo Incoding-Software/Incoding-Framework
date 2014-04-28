@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using JetBrains.Annotations;
@@ -15,6 +16,12 @@
 
     public class UrlDispatcher
     {
+        #region Static Fields
+
+        public static bool IsVerifySchema;
+
+        #endregion
+
         #region Fields
 
         readonly UrlHelper urlHelper;
@@ -34,6 +41,7 @@
 
         public UrlQueryDispatcher<TQuery> Query<TQuery>(object routes = null)
         {
+            VerifySchema<TQuery>(routes);
             return new UrlQueryDispatcher<TQuery>(this.urlHelper, routes);
         }
 
@@ -49,6 +57,7 @@
 
         public UrlPushDispatcher Push<TCommand>(object routes = null)
         {
+            VerifySchema<TCommand>(routes);
             var res = new UrlPushDispatcher(this.urlHelper);
             return res.Push<TCommand>(routes);
         }
@@ -57,7 +66,7 @@
         {
             return this.urlHelper.Action("Render", "Dispatcher", new
                                                                      {
-                                                                             incView = incView, 
+                                                                             incView = incView,
                                                                      });
         }
 
@@ -68,6 +77,7 @@
 
         public UrlModelDispatcher<TModel> Model<TModel>(object routes)
         {
+            VerifySchema<TModel>(routes);
             return new UrlModelDispatcher<TModel>(this.urlHelper, routes);
         }
 
@@ -98,7 +108,8 @@
             {
                 this.defaultRoutes = new RouteValueDictionary
                                          {
-                                                 { "incType", GetTypeName(typeof(TModel)) }
+                                                 { "incType", GetTypeName(typeof(TModel)) },
+                                                 { "incIsModel", true },
                                          };
 
                 this.urlHelper = urlHelper;
@@ -125,7 +136,7 @@
 
             readonly UrlHelper urlHelper;
 
-            readonly object query;
+            readonly RouteValueDictionary query;
 
             readonly RouteValueDictionary defaultRoutes;
 
@@ -141,7 +152,7 @@
                     this.defaultRoutes.Add("incGeneric", GetTypeName(typeof(TQuery).GetGenericArguments()[0]));
 
                 this.urlHelper = urlHelper;
-                this.query = query;
+                this.query = AnonymousHelper.ToDictionary(query);
             }
 
             #endregion
@@ -178,6 +189,11 @@
             }
 
             #endregion
+
+            public override string ToString()
+            {
+                return AsJson();
+            }
         }
 
         public class UrlPushDispatcher
@@ -186,7 +202,7 @@
 
             readonly UrlHelper urlHelper;
 
-            readonly Dictionary<Type, object> dictionary = new Dictionary<Type, object>();
+            readonly List<KeyValuePair<Type, object>> dictionary = new List<KeyValuePair<Type, object>>();
 
             #endregion
 
@@ -203,7 +219,7 @@
 
             public UrlPushDispatcher Push<TCommand>(object routes)
             {
-                this.dictionary.Add(typeof(TCommand), routes);
+                this.dictionary.Add(new KeyValuePair<Type, object>(typeof(TCommand), routes));
                 return this;
             }
 
@@ -247,6 +263,19 @@
         }
 
         #endregion
+
+        void VerifySchema<TOriginal>(object routes)
+        {
+            if (!IsVerifySchema || routes == null)
+                return;
+
+            foreach (var property in routes.GetType().GetProperties())
+            {
+                var type = typeof(TOriginal);
+                if (type.GetProperties().All(r => r.Name != property.Name))
+                    throw new ArgumentOutOfRangeException("routes", "Can't found property {0} on {1}".F(property.Name, type.Name));
+            }
+        }
 
         static string GetTypeName(Type type)
         {

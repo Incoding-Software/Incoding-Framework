@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(HttpMemoryPostedFile))]
     public class When_memory_posted_file_from_http_posted_file
     {
-        #region Estabilish value
+        #region Establish value
 
         static Stream stream;
 

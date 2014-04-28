@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory)), Ignore("Need fixed")]
     public class When_caching_factory_multi_thread_access_delete_cached
     {
-        #region Estabilish value
+        #region Establish value
 
         protected static CachingFactory cachingFactory;
 

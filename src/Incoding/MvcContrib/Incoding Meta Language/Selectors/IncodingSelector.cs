@@ -9,6 +9,7 @@
 
     #endregion
 
+    // ReSharper disable IntroduceOptionalParameters.Global
     public class IncodingSelector : Selector
     {
         #region Constructors
@@ -83,7 +84,6 @@
             return this;
         }
 
-
         public Selector AjaxGet(string url)
         {
             return Ajax(options =>
@@ -112,4 +112,6 @@
 
         #endregion
     }
+
+    // ReSharper restore IntroduceOptionalParameters.Global
 }

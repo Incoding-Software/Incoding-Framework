@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(FileLogger))]
     public class When_file_logger_at_once_replace : Context_file_logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static string logMessage;
 

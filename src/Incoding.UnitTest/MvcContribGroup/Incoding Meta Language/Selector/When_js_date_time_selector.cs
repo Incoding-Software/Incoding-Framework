@@ -10,7 +10,7 @@
     [Subject(typeof(JSDateTimeSelector))]
     public class When_js_date_time_selector
     {
-        #region Estabilish value
+        #region Establish value
 
         static JSDateTimeSelector date;
 

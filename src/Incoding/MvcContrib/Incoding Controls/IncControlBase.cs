@@ -64,13 +64,11 @@ namespace Incoding.MvcContrib
             this.attributes.Set(attr.ToLower(), value.With(r => r.ToString()));
         }
 
-        public void Attr(object attr)
+        public void Attr(RouteValueDictionary attr)
         {
-            var allAttr = AnonymousHelper.ToDictionary(attr);
-
             const string dataIncodingKey = "incoding";
 
-            if (allAttr.ContainsKey(dataIncodingKey))
+            if (attr.ContainsKey(dataIncodingKey))
             {
                 var meta = new List<object>();
                 if (this.attributes.ContainsKey(dataIncodingKey))
@@ -80,13 +78,18 @@ namespace Incoding.MvcContrib
                             .ToList();
                 }
 
-                var newMeta = (allAttr[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer).Cast<object>().ToList();
+                var newMeta = (attr[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer).Cast<object>().ToList();
                 meta.AddRange(newMeta);
 
-                allAttr.Set(dataIncodingKey, meta.ToJsonString());
+                attr.Set(dataIncodingKey, meta.ToJsonString());
             }
 
-            this.attributes.Merge(allAttr);
+            this.attributes.Merge(attr);
+        }
+
+        public void Attr(object attr)
+        {
+            Attr(AnonymousHelper.ToDictionary(attr));
         }
 
         public void AddClass(string @class)

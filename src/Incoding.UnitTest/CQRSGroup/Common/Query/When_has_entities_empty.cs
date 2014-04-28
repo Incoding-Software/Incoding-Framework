@@ -9,28 +9,25 @@
 
     #endregion
 
-    [Subject(typeof(HasEntitiesQuery<IEntity>))]
+    [Subject(typeof(HasEntitiesQuery<>))]
     public class When_has_entities_empty
     {
-        #region Estabilish value
+        #region Establish value
 
-        static MockMessage<HasEntitiesQuery<IEntity>, IncStructureResponse<bool>> mockQuery;
-
-        static IncStructureResponse<bool> expected;
+        static MockMessage<HasEntitiesQuery<FakeEntityForNew>, IncBoolResponse> mockQuery;
 
         #endregion
 
         Establish establish = () =>
                                   {
-                                      var query = Pleasure.Generator.Invent<HasEntitiesQuery<IEntity>>();
-                                      expected = new IncStructureResponse<bool>(false);
+                                      var query = Pleasure.Generator.Invent<HasEntitiesQuery<FakeEntityForNew>>();
 
-                                      mockQuery = MockQuery<HasEntitiesQuery<IEntity>, IncStructureResponse<bool>>
+                                      mockQuery = MockQuery<HasEntitiesQuery<FakeEntityForNew>, IncBoolResponse>
                                               .When(query);
                                   };
 
         Because of = () => mockQuery.Original.Execute();
 
-        It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
+        It should_be_result = () => mockQuery.ShouldBeIsResult(false);
     }
 }

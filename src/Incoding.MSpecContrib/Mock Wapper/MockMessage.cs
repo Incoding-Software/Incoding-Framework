@@ -3,6 +3,7 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
@@ -15,6 +16,8 @@ namespace Incoding.MSpecContrib
     public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage<TResult> where TResult : class
     {
         #region Fields
+
+        protected readonly Mock<IDispatcher> dispatcher;
 
         readonly Mock<IRepository> repository;
 
@@ -32,6 +35,9 @@ namespace Incoding.MSpecContrib
             this.eventBroker = Pleasure.MockStrict<IEventBroker>();
             IoCFactory.Instance.StubTryResolve(this.eventBroker.Object);
 
+            this.dispatcher = Pleasure.MockStrict<IDispatcher>();
+            IoCFactory.Instance.StubTryResolve(this.dispatcher.Object);
+
             Original = instanceMessage;
         }
 
@@ -45,17 +51,27 @@ namespace Incoding.MSpecContrib
 
         #region Api Methods
 
-        public void ShouldBeDelete<TEntity>(object id, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeDeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
+        {
+            this.repository.Verify(r => r.DeleteByIds<TEntity>(Pleasure.MockIt.IsStrong(ids)));
+        }
+
+        public void ShouldBeDeleteAll<TEntity>() where TEntity : class, IEntity, new()
+        {
+            this.repository.Verify(r => r.DeleteAll<TEntity>());
+        }
+
+        public void ShouldBeDelete<TEntity>(object id, int callCount = 1) where TEntity : class, IEntity, new()
         {
             this.repository.Verify(r => r.Delete<TEntity>(id), Times.Exactly(callCount));
         }
 
-        public void ShouldBeDelete<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeDelete<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
         {
             this.repository.Verify(r => r.Delete(Pleasure.MockIt.IsStrong(entity)), Times.Exactly(callCount));
         }
 
-        public void ShouldBeSave<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeSave<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity, new()
         {
             Func<TEntity, bool> match = s =>
                                             {
@@ -71,22 +87,22 @@ namespace Incoding.MSpecContrib
             this.repository.Verify(r => r.Flush(), Times.Exactly(callCount));
         }
 
-        public void ShouldBeSave<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeSave<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
         {
             ShouldBeSave<TEntity>(r => r.ShouldEqualWeak(entity), callCount);
         }
 
-        public void ShouldNotBeSave<TEntity>() where TEntity : class, IEntity
+        public void ShouldNotBeSave<TEntity>() where TEntity : class, IEntity, new()
         {
             ShouldBeSave<TEntity>(r => r.ShouldBeOfType<TEntity>(), 0);
         }
 
-        public void ShouldNotBeSaveOrUpdate<TEntity>() where TEntity : class, IEntity
+        public void ShouldNotBeSaveOrUpdate<TEntity>() where TEntity : class, IEntity, new()
         {
             ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldBeOfType<TEntity>(), 0);
         }
 
-        public void ShouldBeSaveOrUpdate<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeSaveOrUpdate<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity, new()
         {
             Func<TEntity, bool> match = s =>
                                             {
@@ -97,9 +113,15 @@ namespace Incoding.MSpecContrib
             this.repository.Verify(r => r.SaveOrUpdate(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
         }
 
-        public void ShouldBeSaveOrUpdate<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity
+        public void ShouldBeSaveOrUpdate<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
         {
             ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldEqualWeak(entity), callCount);
+        }
+
+        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command) where TCommand : CommandBase
+        {
+            this.dispatcher.StubPush(command);
+            return this;
         }
 
         #endregion
@@ -142,18 +164,17 @@ namespace Incoding.MSpecContrib
 
         #region Api Methods
 
-        public MockMessage<TMessage, TResult> StubQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null, params TEntity[] entities) where TEntity : class, IEntity
+        public MockMessage<TMessage, TResult> StubQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null, params TEntity[] entities) where TEntity : class, IEntity, new()
         {
             return Stub(message => message.repository.StubQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification, entities));
         }
 
-
-        public MockMessage<TMessage, TResult> StubEmptyQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity
+        public MockMessage<TMessage, TResult> StubEmptyQuery<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
             return Stub(message => message.repository.StubQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification, Pleasure.ToArray<TEntity>()));
         }
 
-        public MockMessage<TMessage, TResult> StubPaginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, IncPaginatedResult<TEntity> result = null) where TEntity : class, IEntity
+        public MockMessage<TMessage, TResult> StubPaginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, IncPaginatedResult<TEntity> result = null) where TEntity : class, IEntity, new()
         {
             return Stub(message => message.repository.StubPaginated(paginatedSpecification, orderSpecification, whereSpecification, fetchSpecification, result));
         }
@@ -167,7 +188,7 @@ namespace Incoding.MSpecContrib
             return StubQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification, entities.ToArray());
         }
 
-        public MockMessage<TMessage, TResult> StubGetById<TEntity>(object id, TEntity res) where TEntity : class, IEntity
+        public MockMessage<TMessage, TResult> StubGetById<TEntity>(object id, TEntity res) where TEntity : class, IEntity, new()
         {
             return Stub(message => message.repository.StubGetById(id, res));
         }
@@ -175,6 +196,11 @@ namespace Incoding.MSpecContrib
         public void ShouldBePublished()
         {
             this.eventBroker.VerifyAll();
+        }
+
+        public void ShouldBePushed()
+        {
+            this.dispatcher.VerifyAll();
         }
 
         #endregion

@@ -63,7 +63,7 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_if = () =>
                               {
                                   var executable = new ExecutableValidationParse();
-                                  executable.If(builder => builder.Eval(Pleasure.Generator.TheSameString()));
+                                  executable.If(() => Pleasure.Generator.TheSameString() == Selector.Jquery.Self());
                                   executable
                                           .Merge(new RouteValueDictionary())
                                           .Should(dictionary =>
@@ -76,9 +76,14 @@ namespace Incoding.UnitTest.MvcContribGroup
 
                                                           var leftD = group1[0] as JObject;
 
-                                                          leftD.Value<string>("code").ShouldEqual(Pleasure.Generator.TheSameString());
+                                                          leftD.Value<string>("type").ShouldEqual("Is");
+                                                          leftD.Value<bool>("inverse").ShouldEqual(false);
+                                                          leftD.Value<string>("left").ShouldBeTheSameString();
+                                                          leftD.Value<string>("right").ShouldEqual(Selector.Jquery.Self().ToString());
+                                                          leftD.Value<string>("method").ShouldEqual("equal");
                                                           leftD.Value<bool>("and").ShouldBeTrue();
                                                       });
-                              };
+                              };     
+        
     }
 }

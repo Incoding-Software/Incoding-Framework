@@ -28,6 +28,12 @@
                                             .ToString()
                                             .ShouldEqual("$(this.self).length");
 
+        It should_be_val = () => Selector.Jquery
+                                         .Self()
+                                         .Val()
+                                         .ToString()
+                                         .ShouldEqual("$(this.self).val()");
+
         It should_be_inner_height = () => Selector.Jquery
                                                   .Self()
                                                   .InnerHeight()

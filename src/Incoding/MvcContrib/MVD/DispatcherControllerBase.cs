@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -21,11 +22,17 @@
     {
         #region Static Fields
 
+        ////ncrunch: no coverage start
+
         internal static readonly List<Type> duplicates = new List<Type>();
 
         static readonly object lockObject = new object();
 
         static readonly List<Type> types = new List<Type>();
+
+        static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>(); 
+
+        ////ncrunch: no coverage end
 
         #endregion
 
@@ -89,17 +96,17 @@
             return IncJson(result);
         }
 
-        public virtual ActionResult Render(string incView, string incType, string incGeneric)
+        public virtual ActionResult Render(string incView, string incType, string incGeneric,bool? incIsModel)
         {
             incView = HttpUtility.UrlDecode(incView);
             object model = null;
-             
+
             if (!string.IsNullOrWhiteSpace(incType))
             {
                 var query = Create(incType, incGeneric);
                 var baseType = query.GetType().BaseType;
-
-                model = baseType.Name.EqualsWithInvariant("QueryBase`1")
+                
+                model = baseType.Name.EqualsWithInvariant("QueryBase`1") && !incIsModel.GetValueOrDefault(false)
                                 ? dispatcher.GetType()
                                             .GetMethod("Query")
                                             .MakeGenericMethod(baseType.GetGenericArguments()[0])
@@ -161,18 +168,20 @@
         Type FindTypeByName(string name, bool isGeneric)
         {
             name = HttpUtility.UrlDecode(name).With(s => s.Replace(" ", "+"));
-            var allSatisfied = types.Where(r => r.Name.IsAnyEqualsIgnoreCase(name) ||
-                                                r.FullName.IsAnyEqualsIgnoreCase(name))
-                                    .ToList();
+            return cache.GetOrAdd(name, s =>
+                                            {
+                                                var allSatisfied = types.Where(r => r.Name.IsAnyEqualsIgnoreCase(s) ||
+                                                                                    r.FullName.IsAnyEqualsIgnoreCase(s))
+                                                                        .ToList();
 
-            string prefix = isGeneric ? " generic" : string.Empty;
-            if (allSatisfied.Count == 0)
-                throw new IncMvdException("Not found any{0} type {1}".F(prefix, name));
+                                                string prefix = isGeneric ? " generic" : string.Empty;
+                                                if (allSatisfied.Count == 0)
+                                                    throw new IncMvdException("Not found any{0} type {1}".F(prefix, s));
 
-            if (allSatisfied.Count > 1)
-                throw new IncMvdException("Ambiguous{0} type {1}".F(prefix, name));
-
-            return allSatisfied.First();
+                                                if (allSatisfied.Count > 1)
+                                                    throw new IncMvdException("Ambiguous{0} type {1}".F(prefix, s));
+                                                return allSatisfied.First();
+                                            });
         }
     }
 }

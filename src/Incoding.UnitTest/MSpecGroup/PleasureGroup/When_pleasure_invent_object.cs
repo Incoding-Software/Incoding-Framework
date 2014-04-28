@@ -8,7 +8,7 @@ namespace Incoding.UnitTest.MSpecGroup
     #endregion
 
     [Subject(typeof(Pleasure.Generator))]
-    public class When_pleasure_invent_object
+    public class When_pleasure_invent
     {
         #region Fake classes
 
@@ -23,16 +23,12 @@ namespace Incoding.UnitTest.MSpecGroup
 
         #endregion
 
-        #region Estabilish value
+        It should_be_by_generic = () => Pleasure.Generator.Invent<FakeGenerateObject>()
+                                                .Should(o => o.StrValue.ShouldNotBeEmpty());
 
-        static FakeGenerateObject result;
-
-        #endregion
-
-        Because of = () => { result = Pleasure.Generator.Invent<FakeGenerateObject>(); };
-
-        It should_be_created = () => result.ShouldNotBeNull();
-
-        It should_be_set_string = () => result.StrValue.ShouldNotBeEmpty();
+        It should_be_by_type = () => Pleasure.Generator.Invent(typeof(FakeGenerateObject))
+                                             .ShouldNotBeNull();
     }
+
+
 }

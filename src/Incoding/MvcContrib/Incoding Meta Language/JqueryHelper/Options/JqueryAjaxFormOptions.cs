@@ -2,13 +2,11 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    using JetBrains.Annotations;
     using Incoding.Extensions;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -17,13 +15,15 @@ namespace Incoding.MvcContrib
     /// </summary>
     public class JqueryAjaxFormOptions : MetaTypicalOptions
     {
+        ////ncrunch: no coverage start
+
         #region Static Fields
 
-        ////ncrunch: no coverage start
-        public static readonly JqueryAjaxFormOptions Default = new JqueryAjaxFormOptions();         
-        ////ncrunch: no coverage end
-        
+        public static readonly JqueryAjaxFormOptions Default = new JqueryAjaxFormOptions();
+
         #endregion
+
+        ////ncrunch: no coverage end
 
         #region Constructors
 
@@ -76,10 +76,21 @@ namespace Incoding.MvcContrib
                 if (routes.Any())
                 {
                     this.Set("url", value.Split('?')[0]);
-                    this.Set("data", routes.Select(r => new { name = r.Key, value = r.Value.ToString() }));
+                    Data = routes.Select(r => new JqueryAjaxRoute { name = r.Key, value = r.Value.ToString() })
+                                 .ToList();
                 }
                 else
                     this.Set("url", value);
+            }
+        }
+
+        [UsedImplicitly]
+        public IEnumerable<JqueryAjaxRoute> Data
+        {
+            set
+            {
+                var currentData = (this.GetOrDefault("data") as List<JqueryAjaxRoute>) ?? new List<JqueryAjaxRoute>();
+                this.Set("data", currentData.Merger(value));
             }
         }
 

@@ -14,7 +14,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push_throw_without_subscriber : Context_default_dispatcher
     {
-        #region Estabilish value
+        #region Establish value
 
         static Mock<CommandBase> message;
 

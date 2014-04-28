@@ -13,7 +13,7 @@
     [Subject(typeof(IncHiddenControl<,>))]
     public class When_inc_label_control_with_name : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncLabelControl control;
 

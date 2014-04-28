@@ -12,7 +12,7 @@
     [Subject(typeof(IncodingMetaLanguageDsl))]
     public class When_incoding_meta_language_dsl_more_when
     {
-        #region Estabilish value
+        #region Establish value
 
         static IIncodingMetaLanguageEventBuilderDsl metaBuilder;
 

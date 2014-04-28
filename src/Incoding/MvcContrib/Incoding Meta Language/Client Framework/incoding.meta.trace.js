@@ -1,4 +1,4 @@
-﻿"use strict";
+﻿/*"use strict";
 
 function LoggerBase() {
     this.getStatus = function(status) {
@@ -42,4 +42,4 @@ IncodingRunner.prototype.logger = {
     laterOn : function() {
         console.groupEnd();
     }
-};
+};*/

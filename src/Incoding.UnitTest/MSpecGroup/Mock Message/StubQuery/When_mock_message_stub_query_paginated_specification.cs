@@ -16,7 +16,7 @@ namespace Incoding.UnitTest.MSpecGroup
     {
         #region Fake classes
 
-        class FakeMockMessage : QueryBase<List<IEntity>>
+        class FakeMockMessage : QueryBase<List<FakeEntityForNew>>
         {
             #region Properties
 
@@ -28,9 +28,9 @@ namespace Incoding.UnitTest.MSpecGroup
 
             #region Override
 
-            protected override List<IEntity> ExecuteResult()
+            protected override List<FakeEntityForNew> ExecuteResult()
             {
-                return Repository.Query<IEntity>(paginatedSpecification: new PaginatedSpecification(CurrentPage, PageSize)).ToList();
+                return Repository.Query<FakeEntityForNew>(paginatedSpecification: new PaginatedSpecification(CurrentPage, PageSize)).ToList();
             }
 
             #endregion
@@ -38,19 +38,19 @@ namespace Incoding.UnitTest.MSpecGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
-        static MockMessage<FakeMockMessage, List<IEntity>> mockMessage;
+        static MockMessage<FakeMockMessage, List<FakeEntityForNew>> mockMessage;
 
         #endregion
 
         Establish establish = () =>
                                   {
                                       var query = Pleasure.Generator.Invent<FakeMockMessage>();
-                                      mockMessage = MockQuery<FakeMockMessage, List<IEntity>>
+                                      mockMessage = MockQuery<FakeMockMessage, List<FakeEntityForNew>>
                                               .When(query)
                                               .StubQuery(paginatedSpecification: new PaginatedSpecification(query.CurrentPage, query.PageSize),
-                                                         entities: Pleasure.MockAsObject<IEntity>());
+                                                         entities: Pleasure.MockAsObject<FakeEntityForNew>());
                                   };
 
         Because of = () => mockMessage.Original.Execute();

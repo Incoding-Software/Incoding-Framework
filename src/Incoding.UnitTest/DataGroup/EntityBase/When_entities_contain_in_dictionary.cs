@@ -12,7 +12,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(IncEntityBase))]
     public class When_entities_contain_in_dictionary : Context_entity_base
     {
-        #region Estabilish value
+        #region Establish value
 
         static Dictionary<IncEntityBase, string> entityDictionary;
 

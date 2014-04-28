@@ -1,5 +1,24 @@
 ﻿"use strict";
 
+//#region class IncAjaxEvent
+
+function IncAjaxEvent() {
+    this.ResponseText = '';
+    this.StatusCode = '';
+    this.StatusText = '';
+}
+
+IncAjaxEvent.Create = function(response) {
+    var res = new IncAjaxEvent();
+    res.ResponseText = response.responseText;
+    res.StatusCode = response.status;
+    res.StatusText = response.statusText;
+    return res;
+};
+
+//#endregion
+
+
 //#region class IncSpecialBind
 
 function IncSpecialBinds() {
@@ -45,8 +64,8 @@ function AjaxAdapter() {
                 res.push({ name : name, value : value });
                 return;
             }
-
-            var isElementCanArray = $('[name="{0}"]'.f(name.replaceAll("[", "\\[").replaceAll("]", "\\]"))).is('[type=checkbox],select,[type=radio]');
+            
+            var isElementCanArray =  $.byName(name).is('[type=checkbox],select,[type=radio]');
             var isValueCanArray = _.isArray(value) || value.toString().contains(',');
 
             if (_.isArray(value) || (isValueCanArray && isElementCanArray)) {
@@ -67,19 +86,19 @@ function AjaxAdapter() {
         $.extend(options, {
             headers : { "X-Requested-With" : "XMLHttpRequest" },
             dataType : 'JSON',
-            success : function(data) {
+            success : function(data, textStatus, jqXHR) {
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
                 var parseResult = new IncodingResult(data);
                 callback(parseResult);
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess));
             },
             beforeSend : function(jqXHR, settings) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore));
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
             complete : function(jqXHR, textStatus) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete));
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
             error : function(jqXHR, textStatus, errorThrown) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError));
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
             data : this.params(options.data)
         });
@@ -144,8 +163,7 @@ function ExecutableHelper() {
         }
 
         if ($(selector).is(':radio')) {
-            var nameSelector = '[name="{0}"]:checked'.f($(selector).prop('name'));
-            return $(nameSelector).val();
+            return $.byName($(selector).prop('name'), ':checked').val();
         }
 
         return $(selector).val();
@@ -153,6 +171,8 @@ function ExecutableHelper() {
 
     this.self = '';
     this.target = '';
+    this.event = '';
+    this.result = '';
 
     this.TryGetVal = function(selector) {
 
@@ -243,7 +263,7 @@ function ExecutableHelper() {
 
     this.TrySetValue = function(element, val) {
 
-        if ($(element).is('[type=hidden]') && $('[name={0}]'.f($(element).prop('name'))).length == 2) {
+        if ($(element).is('[type=hidden]') && $.byName($(element).prop('name')).length == 2) {
             return;
         }
 
@@ -283,7 +303,8 @@ function ExecutableHelper() {
         }
 
         if ($(element).is(':radio')) {
-            $('input[name={0}][value="{1}"]'.f($(element).prop('name'), val)).prop('checked', true);
+            $.byName($(element).prop('name'), '[value="{0}"]'.f(val))
+                .prop('checked', true);
             return;
         }
 
@@ -307,12 +328,12 @@ ExecutableHelper.IsData = function(data, property, evaluated) {
     }
 
     if (!_.isArray(data)) {
-        return evaluated.call(data[property]);
+        return evaluated.call(data[property] || '');
     }
 
     var res = false;
     $(data).each(function() {
-        if (evaluated.call(this[property])) {
+        if (evaluated.call(this[property] || '')) {
             res = true;
             return false;
         }
@@ -524,12 +545,17 @@ TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data
     }
 
     if (ExecutableHelper.IsNullOrEmpty(compile)) {
-        compile = builder.compile(evaluatedSelector());
+        var tmplContent = evaluatedSelector();
+        if (ExecutableHelper.IsNullOrEmpty(tmplContent)) {
+            throw 'Template is empty';
+        }
+
+        compile = builder.compile(tmplContent);
         if (isLocalStore) {
             try {
                 localStorage.setItem(selectorKey, compile);
             }
-            catch (e) {
+            catch(e) {
                 if (e.name === 'QUOTA_EXCEEDED_ERR') {
                     localStorage.clear();
                 }

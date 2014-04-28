@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.KnowleadgeGroup
     [Subject(""), Tags("Knowledge")]
     public class When_understand_select_with_null_collection
     {
-        #region Estabilish value
+        #region Establish value
 
         static IEnumerable<int> nullCollection;
 

@@ -7,12 +7,12 @@ namespace Incoding.MSpecContrib
 
     #endregion
 
-    public interface IInventFactoryDsl<T> where T : new()
+    public interface IInventFactoryDsl<T>
     {
         IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property) where TGenerate : new();
 
-        IInventFactoryDsl<T> GenerateTo<TGenerate>(string property) where TGenerate : new();
-
+        IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new();
+        
         IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, TGenerate>> property);
 
         IInventFactoryDsl<T> Empty<TGenerate>(string property);
@@ -30,5 +30,7 @@ namespace Incoding.MSpecContrib
         IInventFactoryDsl<T> Ignore(string property, string reason);
 
         IInventFactoryDsl<T> Callback(Action<T> callback);
+
+        IInventFactoryDsl<T> MuteCtor();
     }
 }

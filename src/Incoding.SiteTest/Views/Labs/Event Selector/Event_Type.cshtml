@@ -1,0 +1,27 @@
+﻿@using Incoding.Extensions
+@{
+    string selectorEventName = Guid.NewGuid().ToString();
+}
+<input type="text" id="@selectorEventName"/>
+@(Html.When(JqueryBind.InitIncoding | JqueryBind.Click | JqueryBind.MouseOut)
+      .Do()
+      .Direct()
+      .OnSuccess(dsl => dsl.WithId(selectorEventName).Core().JQuery.Attributes.Val(Selector.Event.Type))
+      .AsHtmlAttributes()
+      .ToButton("Set Val"))                        
+        
+        
+@(Html.When(JqueryBind.InitIncoding | JqueryBind.Click | JqueryBind.MouseOut)
+      .Do()
+      .Direct()
+      .OnSuccess(dsl =>
+                     {
+                         dsl.WithId(selectorEventName).Core().JQuery.Attributes.Val("now init")
+                            .If(() => Selector.Event.Type == JqueryBind.InitIncoding.ToStringLower());
+                         dsl.WithId(selectorEventName).Core().JQuery.Attributes.Val("now click")
+                            .If(() => Selector.Event.Type == JqueryBind.Click.ToStringLower());
+                         dsl.WithId(selectorEventName).Core().JQuery.Attributes.Val("now mouse out")
+                            .If(() => Selector.Event.Type == JqueryBind.MouseOut.ToStringLower());
+                     })
+      .AsHtmlAttributes()
+      .ToButton("By if"))

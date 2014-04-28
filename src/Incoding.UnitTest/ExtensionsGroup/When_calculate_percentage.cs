@@ -10,7 +10,7 @@
     [Subject(typeof(MathHelper))]
     public class When_calculate_percentage
     {
-        #region Estabilish value
+        #region Establish value
 
         static decimal resultIfCount0;
 

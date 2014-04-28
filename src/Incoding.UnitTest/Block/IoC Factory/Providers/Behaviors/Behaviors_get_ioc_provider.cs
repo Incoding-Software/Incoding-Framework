@@ -2,10 +2,13 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
+    using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.Extensions;
+    using Incoding.MSpecContrib;
     using Incoding.Utilities;
     using Machine.Specifications;
 
@@ -25,6 +28,12 @@ namespace Incoding.UnitTest.Block
                                    };
 
         It should_be_get_by_type = () => ioCProvider.Get<IEmailSender>(typeof(IEmailSender)).ShouldBeTheSameAs(defaultInstance);
+
+        It should_be_performance_try_get = () => Pleasure.Do(i => ioCProvider.TryGet<IEmailSender>().ShouldNotBeNull(), 1000)
+                                                         .ShouldBeLessThan(ioCProvider is StructureMapIoCProvider ? 15 : 100);
+
+        It should_be_performance_try_get_by_named = () => Pleasure.Do(i => ioCProvider.TryGetByNamed<ILogger>(consoleNameInstance).ShouldNotBeNull(), 1000)
+                                                                  .ShouldBeLessThan(ioCProvider is StructureMapIoCProvider ? 15 : 100);
 
         It should_be_try_get = () => ioCProvider.TryGet<IEmailSender>().ShouldBeTheSameAs(defaultInstance);
 

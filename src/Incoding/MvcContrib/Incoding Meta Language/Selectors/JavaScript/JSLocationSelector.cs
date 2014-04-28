@@ -21,6 +21,17 @@ namespace Incoding.MvcContrib
             }
         }
 
+
+        public Selector Hash
+        {
+            get
+            {
+                var res = new JSLocationSelector(this);
+                res.AddProperty("hash");
+                return res;
+            }
+        }
+
         public Selector Href
         {
             get

@@ -13,6 +13,10 @@ namespace Incoding.UnitTest.ExtensionsGroup
     {
         It should_be_format = () => "{0}-{1}".F(1, 2).ShouldEqual("1-2");
 
+        It should_be_join = () => new[] { "Vlad", "Kopachinsky" }
+                                          .AsString(",")
+                                          .ShouldEqual("Vlad,Kopachinsky");
+
         It should_be_is_guid = () => "79C1B0D8-CA0E-46E5-8275-959C9FB38A95".IsGuid()
                                                                            .ShouldBeTrue();
 

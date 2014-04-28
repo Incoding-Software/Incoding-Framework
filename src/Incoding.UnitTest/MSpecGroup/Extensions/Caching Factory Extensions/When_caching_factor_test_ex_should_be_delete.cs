@@ -11,7 +11,7 @@
     [Subject(typeof(CachingFactoryTestEx))]
     public class When_caching_factor_test_ex_should_be_delete : Context_CachingFactoryTestEx
     {
-        #region Estabilish value
+        #region Establish value
 
         static FakeCache cacheKey;
 

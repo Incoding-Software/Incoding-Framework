@@ -25,7 +25,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         struct FakeReadOnlyValue
         {

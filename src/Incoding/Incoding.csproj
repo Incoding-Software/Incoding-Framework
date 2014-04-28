@@ -29,6 +29,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile />
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -150,13 +152,19 @@
     <AssemblyOriginatorKeyFile>IncFramework.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Enyim.Caching, Version=2.12.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="FluentNHibernate, Version=1.3.0.733, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
+    <Reference Include="FluentNHibernate, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
+      <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -175,27 +183,41 @@
       <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net40\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=3.3.1.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NHibernate.3.3.3.4000\lib\Net35\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=2.6.4.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -244,7 +266,10 @@
     <Compile Include="Block\Logging\Loggers\TraceLogger.cs" />
     <Compile Include="Block\Logging\LoggingFactory.cs" />
     <Compile Include="Block\Logging\Policy\LoggingPolicy.cs" />
-    <Compile Include="Block\Logging\Policy\LoggingPolicyFluentEx.cs" />
+    <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusByUIDCommand.cs" />
+    <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusCommand.cs" />
+    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByUIDWhereSpec.cs" />
+    <Compile Include="Block\Scheduler\InitScheduler.cs" />
     <Compile Include="ContractAbbreviateAttribute.cs" />
     <Compile Include="ContractArgumentValidatorAttribute.cs" />
     <Compile Include="ContractOptionAttribute.cs" />
@@ -258,9 +283,18 @@
     <Compile Include="CQRS\Common\Query\GetEntityByIdQuery.cs" />
     <Compile Include="CQRS\Core\CommandComposite.cs" />
     <Compile Include="CQRS\Core\IMessage.cs" />
+    <Compile Include="CQRS\Core\ISettingCommandComposite.cs" />
+    <Compile Include="CQRS\Core\MessageDelaySetting.cs" />
+    <Compile Include="CQRS\Core\MuteEvent.cs" />
+    <Compile Include="Block\Scheduler\Command\AddDelayToSchedulerCommand.cs" />
+    <Compile Include="Block\Scheduler\SchedulerFactory.cs" />
+    <Compile Include="Block\Scheduler\Persistence\DelayOfStatus.cs" />
+    <Compile Include="Block\Scheduler\Persistence\DelayToScheduler.cs" />
+    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByStatusWhere.cs" />
     <Compile Include="CQRS\Core\MessageBase.cs" />
     <Compile Include="CQRS\Core\IDispatcher.cs" />
     <Compile Include="CQRS\Core\MessageExecuteSetting.cs" />
+    <Compile Include="CQRS\Core\MessageExecuteSettingAttribute.cs" />
     <Compile Include="CQRS\DefaultDispatcher.cs" />
     <Compile Include="CQRS\Core\QueryBase.cs" />
     <Compile Include="CQRS\DispatcherExtensions.cs" />
@@ -273,8 +307,13 @@
     <Compile Include="CQRS\Common\Specifications\EntityContainIdSpec.cs" />
     <Compile Include="CQRS\Common\Specifications\EntityByIdSpec.cs" />
     <Compile Include="CQRS\ISetUp.cs" />
-    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchSpecification.cs" />
+    <Compile Include="Block\Scheduler\Query\GetExpectedDelayToSchedulerQuery.cs" />
+    <Compile Include="Data\Core\QueryableExtensions.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchEFSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchNhibernateSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchSpecificationBase.cs" />
     <Compile Include="Data\Core\Specifications\Fetch\AndFetchSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchRavenDbSpecification.cs" />
     <Compile Include="Data\Core\Specifications\Order\AdHocOrderSpecification.cs" />
     <Compile Include="Data\Core\Specifications\Fetch\FetchSpecification.cs" />
     <Compile Include="Data\Core\Specifications\Order\OrderSpecification.cs" />
@@ -289,14 +328,36 @@
     <Compile Include="Data\Core\IEntity.cs" />
     <Compile Include="Data\CollectionAsString.cs" />
     <Compile Include="Data\DictionaryAsString.cs" />
+    <Compile Include="Data\Provider\EF\ContextExtensions.cs" />
+    <Compile Include="Data\Provider\EF\EFClassMap.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkSessionFactory.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkRepository.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkUnitOfWork.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\EF\IEFClassMap.cs" />
+    <Compile Include="Data\Provider\EF\IEntityFrameworkSessionFactory.cs" />
+    <Compile Include="Data\Provider\EF\IncDbContext.cs" />
+    <Compile Include="Data\Core\UnitOfWorkBase.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDatabaseDisposable.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\MongoDb\IMongoDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbRepository.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbUnitOfWork.cs" />
     <Compile Include="Data\Provider\NHibernate\HqGenerator\GuidStringGenerator.cs" />
-    <Compile Include="Data\Provider\NHibernate\Core\INhibernateSessionFactory.cs" />
+    <Compile Include="Data\Provider\NHibernate\INhibernateSessionFactory.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateManagerDataBase.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateEntityMap.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateRepository.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateSessionFactory.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateUnitOfWork.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\RavenDb\IRavenDbSessionFactory.cs" />
+    <Compile Include="Data\Core\ISessionFactory.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbRepository.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWork.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWorkFactory.cs" />
     <Compile Include="EventBroker\Core\IEvent.cs" />
     <Compile Include="EventBroker\Core\IEventBroker.cs" />
     <Compile Include="EventBroker\Core\IEventSubscriber.cs" />
@@ -332,7 +393,7 @@
     <Compile Include="Extensions\StringUrlExtensions.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IncFrameworkException.cs" />
-    <Compile Include="MvcContrib\Core\IncWebException.cs" />
+    <Compile Include="IncWebException.cs" />
     <Compile Include="MvcContrib\Core\IncValidatorFactory.cs" />
     <Compile Include="MvcContrib\Core\IncControllerBase.cs" />
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
@@ -350,7 +411,9 @@
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageEventBuilderDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguagePlugInDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageUtilitiesDsl.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageWithDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaCallbackBindDsl.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaCallbackConsoleDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaCallbackFormApiDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaCallbackWindowDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Instances\IncodingMetaLanguageCoreDsl.cs" />
@@ -364,9 +427,12 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableForm.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableStoreManipulate.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\Display.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\IncAjaxEvent.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryAjaxRoute.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryEasing.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\JqueryShowOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JuqeryEffect.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Selectors\EventSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\IJavaScriptSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\JSCoordsSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\JSDateTimeSelector.cs" />
@@ -384,6 +450,7 @@
     <Compile Include="MvcContrib\MVD\IncMvdException.cs" />
     <Compile Include="MvcContrib\MVD\UrlDispatcher.cs" />
     <Compile Include="MvcContrib\Primitive\HtmlInputType.cs" />
+    <Compile Include="MvcContrib\Primitive\KeyCode.cs" />
     <Compile Include="MvcContrib\Template\Factory\ITemplateFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateHandlebarsFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateMustacheFactory.cs" />
@@ -517,11 +584,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Block\Counter\" />
-    <Folder Include="Data\Provider\EF\" />
-    <Folder Include="Data\Provider\MongoDb\" />
-    <Folder Include="Data\Provider\RavenDb\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="IncFramework.pub" />
     <None Include="IncFramework.PublicKeyOnly.snk" />
     <None Include="IncFramework.snk" />
@@ -553,7 +618,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
@@ -563,6 +628,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy  "$(SolutionDir)Incoding\MvcContrib\Incoding Meta Language\Client Framework\*.*"   "$(SolutionDir)Incoding.SiteTest\Scripts\" /C /F /Y /S</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

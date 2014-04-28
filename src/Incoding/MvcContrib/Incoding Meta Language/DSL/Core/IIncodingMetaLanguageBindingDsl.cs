@@ -2,21 +2,24 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
     using JetBrains.Annotations;
 
     #endregion
 
-    public interface IIncodingMetaLanguageBindingDsl
+
+    public interface IIncodingMetaLanguageBindingDsl : IIncodingMetaLanguageActionDsl
     {
+        [Obsolete("Not use because is default")]
         IIncodingMetaLanguageActionDsl Do();
 
-        [UsedImplicitly]
+        [UsedImplicitly, Obsolete("Use PreventDefault()")]
         IIncodingMetaLanguageActionDsl DoWithPreventDefault();
 
-        [UsedImplicitly]
+        [UsedImplicitly, Obsolete("Use StopPropagation()")]
         IIncodingMetaLanguageActionDsl DoWithStopPropagation();
 
-        [UsedImplicitly]
+        [UsedImplicitly, Obsolete("Use combine PreventDefault and StopPropagation()")]
         IIncodingMetaLanguageActionDsl DoWithPreventDefaultAndStopPropagation();
     }
 }

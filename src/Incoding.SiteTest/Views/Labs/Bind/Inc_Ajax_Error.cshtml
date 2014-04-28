@@ -1,0 +1,14 @@
+﻿       @{
+            var containerId = Guid.NewGuid().ToString();
+        }
+        <div id="@containerId"></div>
+
+        @(Html.When(JqueryBind.IncAjaxError)
+              .Do()
+              .Event()  
+              .OnSuccess(dsl => dsl.WithId(containerId).Core().Insert.For<IncAjaxEvent>(r=>r.ResponseText).Html())
+              .When(JqueryBind.Click)
+              .Do()
+              .AjaxPost("ErrorUrl")              
+              .AsHtmlAttributes()
+              .ToButton("Run error url"))       

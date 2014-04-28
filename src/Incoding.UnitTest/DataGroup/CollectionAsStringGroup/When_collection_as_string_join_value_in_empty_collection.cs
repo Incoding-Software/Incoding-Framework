@@ -12,7 +12,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(CollectionAsString))]
     public class When_collection_as_string_join_value_in_empty_collection
     {
-        #region Estabilish value
+        #region Establish value
 
         static string value;
 

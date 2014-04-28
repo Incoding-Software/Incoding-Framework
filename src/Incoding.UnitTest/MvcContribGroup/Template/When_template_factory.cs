@@ -20,7 +20,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MvcTemplate<FakeModel> template;
 

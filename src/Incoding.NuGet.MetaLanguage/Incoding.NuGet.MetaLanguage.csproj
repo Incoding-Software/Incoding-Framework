@@ -51,8 +51,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="content\Views\Home\Index.cshtml" />
-    <None Include="content\Views\Shared\_Layout.cshtml" />
+    <None Include="content\Views\Home\Index.cshtml.pp" />
+    <None Include="content\Views\Shared\_Layout.cshtml.pp" />
     <None Include="content\web.config.transform" />
     <None Include="NuGetPackage.ps1" />
     <None Include="NuGetSetup.ps1" />

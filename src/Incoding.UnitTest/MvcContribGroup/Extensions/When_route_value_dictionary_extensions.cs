@@ -2,8 +2,8 @@
 {
     #region << Using >>
 
-    using System.Web.Mvc;
     using System.Web.Routing;
+    using System.Web.WebPages;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -16,6 +16,16 @@
                                             .ToTag(HtmlTag.Label)
                                             .ToHtmlString()
                                             .ShouldEqual("<label class=\"class\"></label>");
+
+        It should_be_to_tag_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                         .ToTag(HtmlTag.Label, "Test")
+                                                         .ToHtmlString()
+                                                         .ShouldEqual("<label class=\"class\">Test</label>");
+
+        It should_be_to_tag_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
+                                                                 .ToTag(HtmlTag.Label, o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                                 .ToHtmlString()
+                                                                 .ShouldEqual("<label class=\"class\"><div></label>");
 
         It should_be_to_div = () => new RouteValueDictionary(new { @class = "class" })
                                             .ToDiv()
@@ -32,10 +42,60 @@
                                           .ToHtmlString()
                                           .ShouldEqual("<i class=\"class\"></i>");
 
+        It should_be_to_i_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                       .ToI("Test")
+                                                       .ToHtmlString()
+                                                       .ShouldEqual("<i class=\"class\">Test</i>");
+
+        It should_be_to_i_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
+                                                               .ToI(o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                               .ToHtmlString()
+                                                               .ShouldEqual("<i class=\"class\"><div></i>");
+
+        It should_be_to_img = () => new RouteValueDictionary(new { @class = "class" })
+                                            .ToImg()
+                                            .ToHtmlString()
+                                            .ShouldEqual("<img class=\"class\"></img>");
+
+        It should_be_to_img_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                         .ToImg("Test")
+                                                         .ToHtmlString()
+                                                         .ShouldEqual("<img class=\"class\">Test</img>");
+
+        It should_be_to_img_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
+                                                                 .ToImg(o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                                 .ToHtmlString()
+                                                                 .ShouldEqual("<img class=\"class\"><div></img>");
+
+        It should_be_to_label = () => new RouteValueDictionary(new { @class = "class" })
+                                              .ToLabel()
+                                              .ToHtmlString()
+                                              .ShouldEqual("<label class=\"class\"></label>");
+
+        It should_be_to_label_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                           .ToLabel("Test")
+                                                           .ToHtmlString()
+                                                           .ShouldEqual("<label class=\"class\">Test</label>");
+
+        It should_be_to_label_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
+                                                                   .ToLabel(o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                                   .ToHtmlString()
+                                                                   .ShouldEqual("<label class=\"class\"><div></label>");
+
         It should_be_to_button = () => new RouteValueDictionary(new { @class = "class" })
-                                               .ToButton("Value")
+                                               .ToButton()
                                                .ToHtmlString()
-                                               .ShouldEqual("<button class=\"class\">Value</button>");
+                                               .ShouldEqual("<button class=\"class\"></button>");
+
+        It should_be_to_button_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                            .ToButton("Value")
+                                                            .ToHtmlString()
+                                                            .ShouldEqual("<button class=\"class\">Value</button>");
+
+        It should_be_to_button_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
+                                                                    .ToButton(o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                                    .ToHtmlString()
+                                                                    .ShouldEqual("<button class=\"class\"><div></button>");
 
         It should_be_to_submit = () => new RouteValueDictionary(new { @class = "class" })
                                                .ToSubmit("Value")
@@ -63,18 +123,23 @@
                                                .ShouldEqual("<select class=\"class\"></select>");
 
         It should_be_to_link = () => new RouteValueDictionary(new { @class = "class" })
-                                             .ToLink("Value")
+                                             .ToLink()
                                              .ToHtmlString()
-                                             .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\">Value</a>");
-        
-        It should_be_to_link_mvc_html_string = () => new RouteValueDictionary(new { @class = "class" })
-                                             .ToLink(new MvcHtmlString("<br/>"))
-                                             .ToHtmlString()
-                                             .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"><br/></a>");
+                                             .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"></a>");
 
-        It should_be_to_link_no_replace_href = () => new RouteValueDictionary(new { @href = "http://asdsd" })
-                                                             .ToLink("Value")
-                                                             .ToHtmlString()
-                                                             .ShouldEqual("<a href=\"http://asdsd\">Value</a>");
+        It should_be_to_link_with_content_as_helper = () => new RouteValueDictionary(new { @class = "class" })
+                                                                    .ToLink(o => new HelperResult(writer => writer.WriteLine("<div>")))
+                                                                    .ToHtmlString()
+                                                                    .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"><div></a>");
+
+        It should_be_to_link_with_content = () => new RouteValueDictionary(new { @class = "class" })
+                                                          .ToLink("Value")
+                                                          .ToHtmlString()
+                                                          .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\">Value</a>");
+
+        It should_be_to_link_replace_href = () => new RouteValueDictionary(new { @href = "http://asdsd" })
+                                                          .ToLink("Value")
+                                                          .ToHtmlString()
+                                                          .ShouldEqual("<a href=\"http://asdsd\">Value</a>");
     }
 }

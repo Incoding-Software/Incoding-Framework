@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(EqualsExtensions))]
     public class When_equals_extensions
     {
-        #region Estabilish value
+        #region Establish value
 
         static string theSameString = Pleasure.Generator.TheSameString();
 
@@ -24,6 +24,10 @@ namespace Incoding.UnitTest.ExtensionsGroup
         It should_be_any_contains_with_considering_case = () => theSameString.IsAnyContains(theSameString.InverseCase()).ShouldBeFalse();
 
         It should_be_any_contains_with_ignore_case = () => theSameString.IsAnyContainsIgnoreCase(theSameString.InverseCase()).ShouldBeTrue();
+
+        It should_be_all_equal = () => theSameString.IsAllEquals(theSameString, theSameString).ShouldBeTrue();
+
+        It should_be_all_not_equal = () => theSameString.IsAllEquals(theSameString, theSameString.Inverse()).ShouldBeFalse();
 
         It should_be_any_equal = () => theSameString.IsAnyEquals(theSameString, theSameString.Inverse()).ShouldBeTrue();
 

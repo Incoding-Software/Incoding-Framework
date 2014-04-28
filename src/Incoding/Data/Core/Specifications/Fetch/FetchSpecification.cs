@@ -10,8 +10,8 @@ namespace Incoding.Data
     public abstract class FetchSpecification<TEntity>
     {
         #region Api Methods
-
-        public abstract Action<AdHocFetchSpecification<TEntity>> FetchedBy();
+        
+        public abstract Action<AdHocFetchSpecificationBase<TEntity>> FetchedBy();
 
         #endregion
 
@@ -35,10 +35,10 @@ namespace Incoding.Data
 
             ////ncrunch: no coverage end
             /// 
-            var fetchLeft = new AdHocFetchSpecification<TEntity>();
+            var fetchLeft = new AdHocFetchNhibernateSpecification<TEntity>();
             FetchedBy()(fetchLeft);
 
-            var fetchRight = new AdHocFetchSpecification<TEntity>();
+            var fetchRight = new AdHocFetchNhibernateSpecification<TEntity>();
             other.FetchedBy()(fetchRight);
 
             return fetchLeft.Equals(fetchRight);

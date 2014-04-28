@@ -23,9 +23,6 @@ namespace Incoding.Block.Logging
         [UsedImplicitly]
         public const string Info = "Info";
 
-        [UsedImplicitly]
-        public const string IncFramework = "IncFramework";
-
         #endregion
     }
 }

@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(LoggingPolicy))]
     public class When_logging_policy_with_in_line : Context_Logging_Policy
     {
-        #region Estabilish value
+        #region Establish value
 
         static bool result;
 
@@ -19,12 +19,12 @@ namespace Incoding.UnitTest.Block
 
         Establish establish = () =>
                                   {
-                                      loggingPolicy = new LoggingPolicy()
-                                              .For(LogType.Debug)
-                                              .UseInLine(context => { result = true; });
+                                      loggingPolicy = new LoggingPolicy();
+                                      loggingPolicy.For(LogType.Debug)
+                                                   .UseInLine(context => { result = true; });
                                   };
 
-        Because of = () => loggingPolicy.Log(new LogMessage(Pleasure.Generator.String(), null, null));
+        Because of = () => loggingPolicy.Log(LogType.Debug,new LogMessage(Pleasure.Generator.String(), null, null));
 
         It should_be_in_line = () => result.ShouldBeTrue();
     }

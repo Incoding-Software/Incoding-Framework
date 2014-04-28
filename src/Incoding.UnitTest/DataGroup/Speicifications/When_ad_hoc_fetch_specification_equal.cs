@@ -7,7 +7,7 @@
 
     #endregion
 
-    [Subject(typeof(AdHocFetchSpecification<>))]
+    [Subject(typeof(AdHocFetchNhibernateSpecification<>))]
     public class When_ad_hoc_fetch_specification_equal
     {
         #region Fake classes
@@ -29,22 +29,22 @@
 
         #endregion
 
-        It should_be_null = () => new AdHocFetchSpecification<FakeEntity>().Equals(null).ShouldBeFalse();
+        It should_be_null = () => new AdHocFetchNhibernateSpecification<FakeEntity>().Equals(null).ShouldBeFalse();
 
         It should_be_different_count_expressions = () =>
                                                        {
-                                                           var left = new AdHocFetchSpecification<FakeEntity>();
+                                                           var left = new AdHocFetchNhibernateSpecification<FakeEntity>();
                                                            left.Join(r => r.Prop);
                                                            Catch
-                                                                   .Exception(() => left.ShouldEqual(new AdHocFetchSpecification<FakeEntity>()))
+                                                                   .Exception(() => left.ShouldEqual(new AdHocFetchNhibernateSpecification<FakeEntity>()))
                                                                    .ShouldBeOfType<SpecificationException>();
                                                        };
 
         It should_be_different_expressions = () =>
                                                  {
-                                                     var left = new AdHocFetchSpecification<FakeEntity>();
+                                                     var left = new AdHocFetchNhibernateSpecification<FakeEntity>();
                                                      left.Join(r => r.Prop);
-                                                     var right = new AdHocFetchSpecification<FakeEntity>();
+                                                     var right = new AdHocFetchNhibernateSpecification<FakeEntity>();
                                                      right.Join(r => r.Id);
                                                      Catch
                                                              .Exception(() => left.ShouldEqual(right))

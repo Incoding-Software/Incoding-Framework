@@ -27,7 +27,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockHtmlHelper<FakeModel> htmlHelper;
 
@@ -73,7 +73,7 @@
                                                       {
                                                           var meta = dsl.TryGetValue("meta") as IncodingMetaContainer;
                                                           meta.ShouldNotBeNull();
-                                                          meta.onBind.ShouldEqual("initincoding incchangeurl incoding");
+                                                          meta.OnBind.ShouldEqual("initincoding incchangeurl incoding");
                                                       });
 
         It should_be_when_string = () => htmlHelper
@@ -83,7 +83,7 @@
                                                              {
                                                                  var meta = dsl.TryGetValue("meta") as IncodingMetaContainer;
                                                                  meta.ShouldNotBeNull();
-                                                                 meta.onBind.ShouldEqual("blur incoding");
+                                                                 meta.OnBind.ShouldEqual("blur incoding");
                                                              });
     }
 }

@@ -1,8 +1,20 @@
 ﻿namespace Incoding.CQRS
 {
+    #region << Using >>
+
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using Incoding.Quality;
+    using JetBrains.Annotations;
+
+    #endregion
+
     public class IncStructureResponse<T>
     {
         #region Constructors
+
+        [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor, false), ExcludeFromCodeCoverage]
+        public IncStructureResponse() { }
 
         public IncStructureResponse(T value)
         {

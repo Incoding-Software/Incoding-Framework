@@ -47,9 +47,14 @@
             return this;
         }
 
+        public string For(string field)
+        {
+            return Build("{{" + this.level + field + "}}");
+        }
+
         public string For(Expression<Func<TModel, object>> field)
         {
-            return Build("{{" + this.level + field.GetMemberName() + "}}");
+            return For(field.GetMemberName());
         }
 
         public string For(Expression<Func<TModel, bool>> field)
@@ -82,9 +87,14 @@
             return NotInline(field, content.Invoke(null).ToHtmlString());
         }
 
+        public string ForRaw(string field)
+        {
+            return Build("{{{" + this.level + field + "}}}");
+        }
+
         public string ForRaw(Expression<Func<TModel, object>> field)
         {
-            return Build("{{{" + this.level + field.GetMemberName() + "}}}");
+            return ForRaw(field.GetMemberName());
         }
 
         public ITemplateSyntax<TNewModel> ForEach<TNewModel>(Expression<Func<TModel, IEnumerable<TNewModel>>> field)

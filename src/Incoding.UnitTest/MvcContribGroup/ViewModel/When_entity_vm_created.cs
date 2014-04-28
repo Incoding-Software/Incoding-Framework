@@ -26,7 +26,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static IEntity entity;
 

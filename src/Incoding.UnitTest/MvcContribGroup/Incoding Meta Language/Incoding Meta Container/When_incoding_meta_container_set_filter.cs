@@ -13,7 +13,7 @@
     [Subject(typeof(IncodingMetaContainer))]
     public class When_incoding_meta_container_set_filter
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncodingMetaContainer meta;
 
@@ -24,9 +24,9 @@
         Establish establish = () =>
                                   {
                                       meta = new IncodingMetaContainer();
-                                      meta.onBind = "change";
+                                      meta.OnBind = "change";
                                       meta.Add(new ExecutableDirectAction(string.Empty));
-                                      meta.onBind = "click";
+                                      meta.OnBind = "click";
                                       meta.Add(new ExecutableDirectAction(string.Empty));
 
                                       conditional = new ConditionalEval(Pleasure.Generator.TheSameString(), true);

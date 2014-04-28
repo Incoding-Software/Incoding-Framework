@@ -15,7 +15,7 @@
     [Subject(typeof(ExecutableBase))]
     public class When_executable_base_conditionals
     {
-        #region Estabilish value
+        #region Establish value
 
         static ExecutableBase executable;
 

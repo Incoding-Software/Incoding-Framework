@@ -11,18 +11,8 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public class IncodingResult : JsonResult
+    public class IncodingResult : ActionResult
     {
-        #region Constructors
-
-        IncodingResult()
-        {
-            // this.MaxJsonLength = int.MaxValue;
-            JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-        }
-
-        #endregion
-
         #region Factory constructors
 
         public static IncodingResult Error(object data = null)
@@ -38,8 +28,8 @@ namespace Incoding.MvcContrib
             var errorData = modelState
                     .Select(valuePair => new JsonModelStateData
                                              {
-                                                     name = valuePair.Key, 
-                                                     isValid = !modelState[valuePair.Key].Errors.Any(), 
+                                                     name = valuePair.Key,
+                                                     isValid = !modelState[valuePair.Key].Errors.Any(),
                                                      errorMessage = modelState[valuePair.Key].Errors
                                                                                              .FirstOrDefault()
                                                                                              .ReturnOrDefault(s => s.ErrorMessage, string.Empty)
@@ -76,6 +66,12 @@ namespace Incoding.MvcContrib
                     .Replace(Environment.NewLine, string.Empty);
             return Success(data);
         }
+
+        #endregion
+
+        #region Properties
+
+        public object Data { get; set; }
 
         #endregion
 
@@ -123,6 +119,13 @@ namespace Incoding.MvcContrib
         public override string ToString()
         {
             return Data.ToJsonString();
+        }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var response = context.HttpContext.Response;
+            response.ContentType = "application/json";
+            response.Write(Data.ToJsonString());
         }
     }
 }

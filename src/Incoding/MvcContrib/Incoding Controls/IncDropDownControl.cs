@@ -30,7 +30,7 @@ namespace Incoding.MvcContrib
             this.htmlHelper = htmlHelper;
             this.property = property;
             Data = new SelectList(new string[0]);
-            Template = Selector.Jquery.Id(IncodingHtmlHelper.DropDownTemplateId);
+            Template = Selector.Jquery.Id(IncodingHtmlHelper.DropDownTemplateId);            
             InitBind = JqueryBind.InitIncoding;
         }
 
@@ -39,6 +39,8 @@ namespace Incoding.MvcContrib
         #region Properties
 
         public JqueryBind InitBind { get; set; }
+
+        public bool? Cache { get; set; }
 
         public string Url { get; set; }
 
@@ -61,7 +63,13 @@ namespace Incoding.MvcContrib
 
             if (isAjax || isIml)
             {
-                var meta = isAjax ? this.htmlHelper.When(InitBind).Do().AjaxGet(Url) : this.htmlHelper.When(InitBind).Do().Direct();
+                var meta = isAjax ? this.htmlHelper.When(InitBind).Do().Ajax(options =>
+                                                                                 {
+                                                                                     options.Url = Url;
+                                                                                     options.Type =HttpVerbs.Get;
+                                                                                     if (Cache.HasValue)
+                                                                                         options.Cache = Cache.Value;
+                                                                                 }) : this.htmlHelper.When(InitBind).Do().Direct();
                 this.attributes.Merge(meta.OnSuccess(dsl =>
                                                          {
                                                              if (isAjax)
@@ -89,7 +97,7 @@ namespace Incoding.MvcContrib
                                           .OnSuccess(dsl =>
                                                          {
                                                              OnChange.Do(action => action(dsl));
-                                                             this.OnEvent.Do(action => action(dsl));
+                                                             OnEvent.Do(action => action(dsl));
                                                          })
                                           .AsHtmlAttributes());
             }

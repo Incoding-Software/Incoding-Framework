@@ -11,7 +11,7 @@
     [Subject(typeof(ConditionalBuilder))]
     public class When_conditional_builder_reset_inverse
     {
-        #region Estabilish value
+        #region Establish value
 
         static string confirm1;
 

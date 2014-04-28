@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(AnonymousHelper))]
     public class When_route_value_dictionary_helper_from_object
     {
-        #region Estabilish value
+        #region Establish value
 
         static RouteValueDictionary result;
 

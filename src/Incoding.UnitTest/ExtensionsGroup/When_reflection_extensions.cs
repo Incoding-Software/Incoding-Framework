@@ -89,6 +89,16 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
         #endregion
 
+        It should_be_primitive_int = () => typeof(int).IsPrimitive().ShouldBeTrue();
+
+        It should_be_primitive_nullable_int = () => typeof(int?).IsPrimitive().ShouldBeTrue();
+
+        It should_be_primitive_string = () => typeof(string).IsPrimitive().ShouldBeTrue();
+
+        It should_be_not_primitive = () => typeof(IGenericType).IsPrimitive().ShouldBeFalse();
+
+        It should_be_not_primitive_generic = () => typeof(IGenericHandler<GenericType2>).IsPrimitive().ShouldBeFalse();
+
         It should_be_implement_class = () => typeof(ArgumentException).IsImplement<Exception>().ShouldBeTrue();
 
         It should_be_implement_with_generic = () => typeof(List<int>).IsImplement<IList<int>>();

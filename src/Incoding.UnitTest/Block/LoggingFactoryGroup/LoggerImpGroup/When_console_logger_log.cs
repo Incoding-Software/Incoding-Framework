@@ -12,7 +12,7 @@
     [Subject(typeof(ConsoleLogger))]
     public class When_console_logger_log : Context_Logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
 

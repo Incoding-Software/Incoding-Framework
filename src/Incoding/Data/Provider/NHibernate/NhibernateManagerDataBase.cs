@@ -4,6 +4,7 @@ namespace Incoding.Data
 
     using System;
     using FluentNHibernate.Cfg;
+    using NHibernate.Cfg;
     using NHibernate.Tool.hbm2ddl;
 
     #endregion
@@ -13,25 +14,25 @@ namespace Incoding.Data
     {
         #region Fields
 
-        readonly SchemaExport schemaExport;
+        readonly Lazy<SchemaExport> schemaExport;
 
-        readonly SchemaValidator schemaValidate;
+        readonly Lazy<SchemaValidator> schemaValidate;
 
-        readonly SchemaUpdate schemaUpdate;
+        readonly Lazy<SchemaUpdate> schemaUpdate;
 
         #endregion
 
         #region Constructors
 
-        public NhibernateManagerDataBase(FluentConfiguration builderConfiguration)
+        public NhibernateManagerDataBase(Configuration configuration)
         {
-            Guard.NotNull("fluentConfiguration", builderConfiguration);
-
-            var configuration = builderConfiguration.BuildConfiguration();
-            this.schemaExport = new SchemaExport(configuration);
-            this.schemaUpdate = new SchemaUpdate(configuration);
-            this.schemaValidate = new SchemaValidator(configuration);
+            this.schemaExport = new Lazy<SchemaExport>(() => new SchemaExport(configuration));
+            this.schemaUpdate = new Lazy<SchemaUpdate>(() => new SchemaUpdate(configuration));
+            this.schemaValidate = new Lazy<SchemaValidator>(() => new SchemaValidator(configuration));
         }
+
+        public NhibernateManagerDataBase(FluentConfiguration builderConfiguration)
+                : this(builderConfiguration.BuildConfiguration()) { }
 
         #endregion
 
@@ -39,17 +40,17 @@ namespace Incoding.Data
 
         public void Create()
         {
-            this.schemaExport.Create(true, true);
+            this.schemaExport.Value.Create(true, true);
         }
 
         public void Drop()
         {
-            this.schemaExport.Drop(false, true);
+            this.schemaExport.Value.Drop(false, true);
         }
 
         public void Update()
         {
-            this.schemaUpdate.Execute(true, true);
+            this.schemaUpdate.Value.Execute(true, true);
         }
 
         public bool IsExist()
@@ -63,7 +64,7 @@ namespace Incoding.Data
             outException = null;
             try
             {
-                this.schemaValidate.Validate();
+                this.schemaValidate.Value.Validate();
                 return true;
             }
             catch (Exception exception)

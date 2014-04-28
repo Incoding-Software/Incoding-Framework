@@ -93,6 +93,10 @@
                                                                  .Id<FakeForm>(r => r.Input.ArrayIds[0]).ToString()
                                                                  .ShouldEqual("$('#Input_ArrayIds[0]')");
 
+        It should_be_to_id_expressions = () => Selector.Jquery
+                                                       .Id<FakeForm>(r => r.Input.Id, r => r.Input.Long).ToString()
+                                                       .ShouldEqual("$('#Input_Id,#Input_Long')");
+
         It should_be_string_to_id = () => "id".ToId()
                                               .ToString()
                                               .ShouldEqual("$('#id')");
@@ -112,6 +116,10 @@
         It should_be_to_name_expression = () => Selector.Jquery
                                                         .Name<FakeForm>(r => r.Prop).ToString()
                                                         .ShouldEqual("$('[name=\"Prop\"]')");
+
+        It should_be_to_name_expressions = () => Selector.Jquery
+                                                         .Name<FakeForm>(r => r.Prop, r => r.Input.Long).ToString()
+                                                         .ShouldEqual("$('[name=\"Prop\"],[name=\"Input.Long\"]')");
 
         It should_be_to_name_helper = () => MockHtmlHelper<FakeForm>
                                                     .When()
@@ -214,7 +222,12 @@
         It should_be_to_not_equals_attribute = () => Selector.Jquery
                                                              .NotEqualsAttribute(HtmlAttribute.Type, InputType.Text.ToString())
                                                              .ToString()
-                                                             .ShouldEqual("$('[type!=\"Text\"]')");
+                                                             .ShouldEqual("$('[type!=\"Text\"]')"); 
+        
+        It should_be_to_not_equals_attribute_by_attribute = () => Selector.Jquery
+                                                             .NotEqualsAttribute(HtmlAttribute.Type)
+                                                             .ToString()
+                                                             .ShouldEqual("$('[type!=\"type\"]')");
 
         It should_be_to_ends_with_attribute = () => Selector.Jquery
                                                             .EndsWithAttribute(HtmlAttribute.Type, InputType.Text.ToString())
@@ -303,7 +316,7 @@
                                              .Self()
                                              .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
                                              .ToString()
-                                             .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
+                                             .ShouldEqual("$(this.self).find($('input[type=\"text\"]'))");
 
 
     }

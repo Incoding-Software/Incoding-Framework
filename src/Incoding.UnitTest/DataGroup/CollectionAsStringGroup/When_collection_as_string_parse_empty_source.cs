@@ -12,7 +12,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(CollectionAsString))]
     public class When_collection_as_string_parse_empty_source
     {
-        #region Estabilish value
+        #region Establish value
 
         static string strCollection;
 

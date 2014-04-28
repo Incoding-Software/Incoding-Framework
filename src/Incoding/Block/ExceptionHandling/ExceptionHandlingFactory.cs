@@ -4,6 +4,7 @@ namespace Incoding.Block.ExceptionHandling
 
     using System;
     using System.Linq;
+    using System.Threading;
     using Incoding.Block.Core;
 
     #endregion
@@ -12,42 +13,13 @@ namespace Incoding.Block.ExceptionHandling
     {
         #region Static Fields
 
-        static readonly object lockObject = new object();
-
-        static volatile ExceptionHandlingFactory instance;
-
-        #endregion
-
-        #region Constructors
-
-        public ExceptionHandlingFactory()
-        {
-            UnInitialize();
-        }
+        static readonly Lazy<ExceptionHandlingFactory> instance = new Lazy<ExceptionHandlingFactory>(() => new ExceptionHandlingFactory());
 
         #endregion
 
         #region Properties
 
-        public static ExceptionHandlingFactory Instance
-        {
-            ////ncrunch: no coverage start
-            get
-            {
-                if (instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (instance == null)
-                            instance = new ExceptionHandlingFactory();
-                    }
-                }
-
-                return instance;
-            }
-
-            ////ncrunch: no coverage end
-        }
+        public static ExceptionHandlingFactory Instance { get { return instance.Value; } }
 
         #endregion
 
@@ -70,10 +42,5 @@ namespace Incoding.Block.ExceptionHandling
         }
 
         #endregion
-
-        public override void UnInitialize()
-        {
-            this.init = new InitExceptionHandling();
-        }
     }
 }

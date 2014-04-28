@@ -33,8 +33,8 @@
             unitOfWorkFactory = Pleasure.MockStrict<IUnitOfWorkFactory>(unitOfWorkFactoryMock =>
                                                                             {
                                                                                 unitOfWork = new Mock<IUnitOfWork>();
-                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<IDbConnection>())).Returns(unitOfWork.Object);
-                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadUncommitted, Pleasure.MockIt.IsNull<IDbConnection>())).Returns(unitOfWork.Object);
+                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
+                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadUncommitted, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
                                                                             });
             IoCFactory.Instance.StubTryResolve(unitOfWorkFactory.Object);
 

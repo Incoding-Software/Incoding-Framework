@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System.Linq;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -25,7 +26,60 @@
                                           .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                           .GetActions<ExecutableValidationParse>()
                                           .First()["target"]
-                                          .ShouldEqual("$(this.self).closest('tr')");
+                                          .ShouldEqual("$(this.self).closest($('tr'))");
+
+        It should_be_reset_target = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                  .Do()
+                                                  .Direct()
+                                                  .OnSuccess(dsl =>
+                                                                 {
+                                                                     dsl.Self().Core().Form.Validation.Parse();
+                                                                     dsl.WithId("Id").Core().Form.Validation.Refresh();
+                                                                     dsl.WithClass("class").Core().Form.Reset();
+                                                                 })
+                                                  .Should(dsl =>
+                                                              {
+                                                                  dsl.GetActions<ExecutableValidationParse>()
+                                                                     .First()["target"]
+                                                                          .ShouldEqual("$(this.self)");
+
+                                                                  dsl.GetActions<ExecutableValidationRefresh>()
+                                                                     .First()["target"]
+                                                                          .ShouldEqual("$('#Id')");
+
+                                                                  dsl.GetActions<ExecutableForm>()
+                                                                     .First()["target"]
+                                                                          .ShouldEqual("$('.class')");
+                                                              });
+
+        It should_be_reset_target_after_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                               .Do()
+                                                               .Direct()
+                                                               .OnSuccess(dsl => dsl.Self().Core().Form.Validation.Parse())
+                                                               .When(JqueryBind.Change)
+                                                               .Do()
+                                                               .Direct()
+                                                               .OnSuccess(dsl => dsl.WithId("Id").Core().Form.Validation.Refresh())
+                                                               .Should(dsl =>
+                                                                           {
+                                                                               dsl.GetActions<ExecutableValidationParse>()
+                                                                                  .First()["target"]
+                                                                                       .ShouldEqual("$(this.self)");
+
+                                                                               dsl.GetActions<ExecutableValidationRefresh>()
+                                                                                  .First()["target"]
+                                                                                       .ShouldEqual("$('#Id')");
+                                                                           });
+
+        It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                   .Do()
+                                                   .Direct()
+                                                   .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr)))
+                                                                        .With(r => r.Id("Next"))
+                                                                        .Core().Form.Validation.Parse())
+                                                   .GetActions<ExecutableValidationParse>()
+                                                   .First()["target"]
+                                                   .ShouldEqual("$(this.self).closest($('tr')).add($('#Next'))");
 
         It should_be_with_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do()
@@ -33,7 +87,7 @@
                                                  .OnSuccess(dsl => dsl.With(r => r.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                                  .GetActions<ExecutableValidationParse>()
                                                  .First()["target"]
-                                                 .ShouldEqual("$(this.self).closest('tr')");
+                                                 .ShouldEqual("$(this.self).closest($('tr'))");
 
         It should_be_with_id = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                              .Do()
@@ -81,6 +135,6 @@
                                                .OnSuccess(dsl => dsl.WithSelf(extend => extend.Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                                .GetActions<ExecutableValidationParse>()
                                                .First()["target"]
-                                               .ShouldEqual("$(this.self).closest('tr')");
+                                               .ShouldEqual("$(this.self).closest($('tr'))");
     }
 }

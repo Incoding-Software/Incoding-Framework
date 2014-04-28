@@ -13,7 +13,7 @@ namespace Incoding.UnitTest
     [Subject(typeof(CollectionAsString))]
     public class When_collection_as_string_parse_source_without_split_char
     {
-        #region Estabilish value
+        #region Establish value
 
         static string strCollection;
 

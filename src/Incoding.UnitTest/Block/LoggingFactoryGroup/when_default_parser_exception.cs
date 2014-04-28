@@ -11,7 +11,7 @@
     [Subject(typeof(DefaultParserException))]
     public class When_default_parser_exception
     {
-        #region Estabilish value
+        #region Establish value
 
         static DefaultParserException parser;
 

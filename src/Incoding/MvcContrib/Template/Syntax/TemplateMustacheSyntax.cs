@@ -40,11 +40,16 @@ namespace Incoding.MvcContrib
         {
             throw new NotImplementedException();
         }
+
+        public string For(string field)
+        {
+            return "{{" + field + "}}";
+        }
+
         ////ncrunch: no coverage end
-        
         public string For(Expression<Func<TModel, object>> field)
         {
-            return "{{" + field.GetMemberName() + "}}";
+            return For(field.GetMemberName());
         }
 
         public string For(Expression<Func<TModel, bool>> field)
@@ -79,9 +84,14 @@ namespace Incoding.MvcContrib
             return NotInline(field, new MvcHtmlString(content.Invoke(null).ToHtmlString()));
         }
 
+        public string ForRaw(string field)
+        {
+            return "{{{" + field + "}}}";
+        }
+
         public string ForRaw(Expression<Func<TModel, object>> field)
         {
-            return "{{{" + field.GetMemberName() + "}}}";
+            return ForRaw(field.GetMemberName());
         }
 
         public ITemplateSyntax<TNewModel> ForEach<TNewModel>(Expression<Func<TModel, IEnumerable<TNewModel>>> field)

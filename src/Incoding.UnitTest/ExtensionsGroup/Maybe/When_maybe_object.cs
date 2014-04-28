@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(MaybeObject))]
     public class When_maybe_object : Context_maybe
     {
-        #region Estabilish value
+        #region Establish value
 
         static FakeMaybe nullValue;
 

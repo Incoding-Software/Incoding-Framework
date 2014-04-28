@@ -10,7 +10,7 @@
     [Subject(typeof(IncDropDownControl<,>))]
     public class When_inc_drop_down_control_with_on_init : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncDropDownControl<FakeModel, string> control;
 

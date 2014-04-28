@@ -11,7 +11,7 @@
     [Subject(typeof(IncodingResult))]
     public class When_incoding_result_to_string
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncodingResult result;
 

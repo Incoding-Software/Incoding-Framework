@@ -34,7 +34,7 @@ namespace Incoding.UnitTest.Block
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static CachingFactory fake1;
 

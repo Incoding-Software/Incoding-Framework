@@ -4,12 +4,14 @@
 
     using System;
     using System.Data.SqlClient;
+    using Incoding.Block.ExceptionHandling;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Machine.Specifications.Annotations;
     using Moq;
     using It = Machine.Specifications.It;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -61,7 +63,7 @@
                                                       var dispatcher = Pleasure.Mock<IDispatcher>();
                                                       var command = Pleasure.Generator.Invent<FakeCommand>();
 
-                                                      dispatcher.Object.Push(command, Pleasure.Generator.Invent<MessageExecuteSetting>());
+                                                      dispatcher.Object.Push(command, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.MuteCtor()));
 
                                                       Catch
                                                               .Exception(() => dispatcher.ShouldBePush(command))
@@ -72,12 +74,11 @@
                                                    {
                                                        var dispatcher = Pleasure.Mock<IDispatcher>();
                                                        var command = Pleasure.Generator.Invent<FakeCommand>();
-                                                       var setting = Pleasure.Generator.Invent<MessageExecuteSetting>();
 
-                                                       dispatcher.Object.Push(command, setting);
+                                                       dispatcher.Object.Push(command, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.MuteCtor()));
 
                                                        Catch
-                                                               .Exception(() => dispatcher.ShouldBePush(command, Pleasure.Generator.Invent<MessageExecuteSetting>()))
+                                                               .Exception(() => dispatcher.ShouldBePush(command, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.MuteCtor())))
                                                                .ShouldBeOfType<MockException>();
                                                    };
 
@@ -97,6 +98,26 @@
                                                       .Exception(() => dispatcher.ShouldBePush(command, callCount: 2, executeSetting: setting))
                                                       .ShouldBeNull();
                                           };
+
+        It should_be_delay = () =>
+                                 {
+                                     var dispatcher = Pleasure.Mock<IDispatcher>();
+                                     var command = Pleasure.Generator.Invent<FakeCommand>();
+                                     var setting = Pleasure.Generator.Invent<MessageDelaySetting>(dsl => dsl.Tuning(r => r.Policy, ActionPolicy.Repeat(2)
+                                                                                                                                               .Interval(1.Seconds())));
+
+                                     dispatcher.Object.Delay(command, delaySetting =>
+                                                                          {
+                                                                              delaySetting.Connection = setting.Connection;
+                                                                              delaySetting.DataBaseInstance = setting.DataBaseInstance;
+                                                                              delaySetting.Policy = setting.Policy;
+                                                                              delaySetting.UID = setting.UID;
+                                                                          });
+
+                                     Catch
+                                             .Exception(() => dispatcher.ShouldBeDelay(command, delaySetting: setting))
+                                             .ShouldBeNull();
+                                 };
 
         It should_be_push_composite_different_command = () =>
                                                     {
@@ -134,7 +155,7 @@
                                                        {
                                                            var dispatcher = Pleasure.Mock<IDispatcher>();
                                                            var command = Pleasure.Generator.Invent<FakeCommand>();
-                                                           var setting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.Tuning(r => r.Connection, new SqlConnection(@"Data Source=Work\SQLEXPRESS;Database=IncRealDb;Integrated Security=true;")));
+                                                           var setting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.Tuning(r => r.Connection, @"Data Source=Work\SQLEXPRESS;Database=IncRealDb;Integrated Security=true;"));
 
                                                            dispatcher.Object.Push(composite => composite.Quote(command, setting));
 
@@ -146,14 +167,14 @@
         It should_be_push_with_wrong_connection = () =>
                                                       {
                                                           var dispatcher = Pleasure.Mock<IDispatcher>();
-                                                          var sqlConnection = new SqlConnection(@"Data Source=Work\SQLEXPRESS;Database=IncRealDb;Integrated Security=true;");
+                                                          const string sqlConnection = @"Data Source=Work\SQLEXPRESS;Database=IncRealDb;Integrated Security=true;";
 
                                                           dispatcher.Object.Push(new FakeCommand(), setting => setting.Connection = sqlConnection);
 
                                                           Catch
                                                                   .Exception(() => dispatcher.ShouldBePush(new FakeCommand(), new MessageExecuteSetting
                                                                                                                                   {
-                                                                                                                                          Connection = new SqlConnection(@"Data Source=any;Database=different;")
+                                                                                                                                      Connection = @"Data Source=any;Database=different;"
                                                                                                                                   }))
                                                                   .ShouldBeOfType<MockException>();
                                                       };

@@ -17,7 +17,7 @@
         It should_be_not = () => new ConditionalBuilder()
                                          .Not
                                          .Eval(Selector.Value(Pleasure.Generator.TheSameString()))
-                                         .GetFirst()
+                                         .GetByIndex(0)
                                          .GetData()
                                          .ShouldEqualWeak(new
                                                               {
@@ -33,7 +33,7 @@
 
         It should_be_eval = () => new ConditionalBuilder()
                                           .Eval(Pleasure.Generator.TheSameString())
-                                          .GetFirst()
+                                          .GetByIndex(0)
                                           .GetData()
                                           .ShouldEqualWeak(new
                                                                {
@@ -45,15 +45,80 @@
 
         It should_be_is = () => new ConditionalBuilder()
                                         .Is(() => Selector.Jquery.Id("id") == true)
-                                        .GetFirst()
+                                        .GetByIndex(0)
                                         .GetData()
-                                        .ShouldEqualConditionalIs(left: "$('#id')",
+                                        .ShouldEqualConditionalIs(left: "$('#id')", 
                                                                   right: "True", 
                                                                   method: "equal");
 
+        It should_be_is_and = () => new ConditionalBuilder()
+                                            .Is(() => Selector.Jquery.Id("id")  &&
+                                                      !Selector.Jquery.Id("id2"))
+                                            .Should(builder =>
+                                                        {
+                                                            builder.GetByIndex(0)
+                                                                   .GetData()
+                                                                   .ShouldEqualConditionalIs(left: "$('#id')", 
+                                                                                             right: "True", 
+                                                                                             method: "equal");
+
+                                                            builder.GetByIndex(1)
+                                                                   .GetData()
+                                                                   .ShouldEqualConditionalIs(left: "$('#id2')", 
+                                                                                             right: "False", 
+                                                                                             method: "equal");
+                                                        });
+
+        It should_be_is_or = () => new ConditionalBuilder()
+                                           .Is(() => Selector.Jquery.Id("id")  ||
+                                                     !Selector.Jquery.Id("id2"))
+                                           .Should(builder =>
+                                                       {
+                                                           builder.GetByIndex(0)
+                                                                  .GetData()
+                                                                  .ShouldEqualConditionalIs(left: "$('#id')", 
+                                                                                            right: "True", 
+                                                                                            and: false, 
+                                                                                            method: "equal");
+
+                                                           builder.GetByIndex(1)
+                                                                  .GetData()
+                                                                  .ShouldEqualConditionalIs(left: "$('#id2')", 
+                                                                                            right: "False", 
+                                                                                            and: false, 
+                                                                                            method: "equal");
+                                                       });
+
+        It should_be_is_multiple = () => new ConditionalBuilder().Is(() => Selector.Jquery.Id("id") ||
+                                                                           !Selector.Jquery.Id("id2") &&
+                                                                           Selector.Jquery.Id("id3"))
+                                                 .Should(builder =>
+                                                             {
+                                                                 builder.GetByIndex(0)
+                                                                        .GetData()
+                                                                        .ShouldEqualConditionalIs(left: "$('#id')",
+                                                                                                  right: "True",
+                                                                                                  and: false,
+                                                                                                  method: "equal");
+
+                                                                 builder.GetByIndex(1)
+                                                                        .GetData()
+                                                                        .ShouldEqualConditionalIs(left: "$('#id2')",
+                                                                                                  right: "False",
+                                                                                                  and: true,
+                                                                                                  method: "equal");
+
+                                                                 builder.GetByIndex(2)
+                                                                        .GetData()
+                                                                        .ShouldEqualConditionalIs(left: "$('#id3')",
+                                                                                                  right: "False",
+                                                                                                  and: false,
+                                                                                                  method: "equal");
+                                                             });
+
         It should_be_data = () => new ConditionalBuilder()
                                           .Data<IEntity>(r => r.Id == "123")
-                                          .GetFirst()
+                                          .GetByIndex(0)
                                           .GetData()
                                           .ShouldEqualWeak(new
                                                                {

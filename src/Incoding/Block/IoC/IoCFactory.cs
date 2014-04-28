@@ -5,6 +5,7 @@ namespace Incoding.Block.IoC
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Incoding.Block.Core;
 
     #endregion
@@ -13,42 +14,13 @@ namespace Incoding.Block.IoC
     {
         #region Static Fields
 
-        static readonly object lockObject = new object();
-
-        static volatile IoCFactory currentInstance;
-
-        #endregion
-
-        #region Constructors
-
-        public IoCFactory()
-        {
-            UnInitialize();
-        }
+        static readonly Lazy<IoCFactory> instance = new Lazy<IoCFactory>(() => new IoCFactory());
 
         #endregion
 
         #region Properties
 
-        public static IoCFactory Instance
-        {
-            ////ncrunch: no coverage start
-            get
-            {
-                if (currentInstance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (currentInstance == null)
-                            currentInstance = new IoCFactory();
-                    }
-                }
-
-                return currentInstance;
-            }
-
-            ////ncrunch: no coverage end
-        }
+        public static IoCFactory Instance { get { return instance.Value; } }
 
         #endregion
 
@@ -106,10 +78,5 @@ namespace Incoding.Block.IoC
         }
 
         #endregion
-
-        public override void UnInitialize()
-        {
-            this.init = new IoCInit();
-        }
     }
 }

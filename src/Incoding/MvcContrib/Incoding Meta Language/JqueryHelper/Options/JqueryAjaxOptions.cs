@@ -7,6 +7,7 @@ namespace Incoding.MvcContrib
     using System.Web.Mvc;
     using Incoding.Extensions;
     using JetBrains.Annotations;
+    using Incoding.Maybe;
 
     #endregion
 

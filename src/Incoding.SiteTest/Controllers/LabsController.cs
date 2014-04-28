@@ -2,9 +2,10 @@
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using Incoding.Extensions;
+    using Incoding.CQRS;
     using Incoding.MvcContrib;
     using Incoding.SiteTest.VM;
 
@@ -19,18 +20,21 @@
         {
             return IncJson(new OptGroupVm(new List<KeyValueVm>
                                               {
-                                                      new KeyValueVm("Russian"),
+                                                      new KeyValueVm("Russian"), 
                                                       new KeyValueVm("USA")
                                               }));
         }
 
         [HttpGet]
+        public ActionResult Inc_271()
+        {
+            return View("Issue/inc_271");
+        }
+
+        [HttpGet]
         public ActionResult Index()
         {
-            return View(new LabsIndexContainer
-                            {
-                                    DropId = LabsIndexContainer.TestEnum.Value2
-                            });
+            return View();
         }
 
         [HttpPost]
@@ -57,6 +61,13 @@
         }
 
         #endregion
+    }
 
+    public class TestCommand : CommandBase
+    {
+        public override void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingResult))]
     public class When_incoding_result_with_redirect_to : BehaviorsJsonResultSpec
     {
-        #region Estabilish value
+        #region Establish value
 
         static string url;
 

@@ -4,7 +4,6 @@ namespace Incoding.UnitTest
 
     using System;
     using System.Collections.Generic;
-    using Incoding.Block.ExceptionHandling;
     using Incoding.Block.IoC;
     using Incoding.EventBroker;
     using Incoding.MSpecContrib;
@@ -59,11 +58,9 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
-
-        static Mock<ISpy> actionPolicySpy;
 
         static Mock<ISpy> eventHandlerSpy;
 
@@ -73,9 +70,7 @@ namespace Incoding.UnitTest
 
         Establish establish = () =>
                                   {
-                                      actionPolicySpy = Pleasure.Spy();
-                                      eventBroker = new DefaultEventBroker()
-                                              .WithActionPolicy(ActionPolicy.Catch(r => actionPolicySpy.Object.Is(r)));
+                                      eventBroker = new DefaultEventBroker();
                                       eventHandlerSpy = Pleasure.Spy(mock => mock.Setup(r => r.Is(Pleasure.MockIt.IsAny<object[]>())).Throws<IncFakeException>());
 
                                       var fakeEventSubscriberWithException = new FakeEventSubscriberWithException(eventHandlerSpy.Object);
@@ -85,10 +80,8 @@ namespace Incoding.UnitTest
 
         Because of = () => { exception = Catch.Exception(() => eventBroker.Publish(new FakeEventWithException())); };
 
-        It should_be_catch_exception = () => exception.ShouldBeNull();
+        It should_be_catch_exception = () => exception.ShouldNotBeNull();
 
         It should_be_disposable = () => eventHandlerSpy.Verify(r => r.Is(Pleasure.MockIt.Is<object[]>(o => o[0].ShouldEqual("Dispose"))));
-
-        It should_be_execute_action_policy = () => actionPolicySpy.Verify(r => r.Is(Pleasure.MockIt.Is<object[]>(objects => objects[0].ShouldBeOfType<IncFakeException>())));
     }
 }

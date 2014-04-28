@@ -19,14 +19,19 @@
 
         #region Api Methods
 
+        public IExecutableSetting IncrementVal(Selector step)
+        {
+            return this.plugInDsl.Core().JQuery.Call("increment", step);
+        }
+
         public IExecutableSetting IncrementVal()
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Increment));
+            return IncrementVal(1);
         }
 
         public IExecutableSetting DecrementVal()
         {
-            return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Decrement));
+            return IncrementVal(-1);
         }
 
         #endregion

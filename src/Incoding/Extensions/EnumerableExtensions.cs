@@ -13,13 +13,20 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
-        public static IEnumerable<T> Merge<T>(this IEnumerable<T> source, IEnumerable<T> destination)
+        public static IEnumerable<T> Unique<T>(this IEnumerable<T> source, IEnumerable<T> dest)
         {
             var sourceAsList = source.ToList();
 
-            foreach (var canDuplicate in destination)
+            foreach (var canDuplicate in dest)
                 sourceAsList.Remove(canDuplicate);
 
+            return sourceAsList.AsEnumerable();
+        }
+
+        public static IEnumerable<T> Merger<T>(this IEnumerable<T> source, IEnumerable<T> dest)
+        {
+            var sourceAsList = source.ToList();
+            sourceAsList.AddRange(dest.Where(item => !sourceAsList.Contains(item)));
             return sourceAsList.AsEnumerable();
         }
 

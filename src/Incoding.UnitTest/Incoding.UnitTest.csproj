@@ -14,6 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,13 +86,29 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK, Version=1.5.1.0, Culture=neutral, PublicKeyToken=cd2d24cd2bace800, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RavenDB.Database.2.5.2851\lib\net40\AWSSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Enyim.Caching, Version=2.12.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
     </Reference>
-    <Reference Include="FluentNHibernate, Version=1.2.0.712, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
+    <Reference Include="FluentAutomation.Core">
+      <HintPath>..\packages\FluentAutomation.Core.2.3.0.1\lib\net40\FluentAutomation.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAutomation.SeleniumWebDriver">
+      <HintPath>..\packages\FluentAutomation.SeleniumWebDriver.2.3.0.1\lib\net40\FluentAutomation.SeleniumWebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAutomation.WatiN">
+      <HintPath>..\packages\FluentAutomation.WatiN.2.3.0.1\lib\net40\FluentAutomation.WatiN.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,20 +117,57 @@
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.SHDocVw">
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\Interop.SHDocVw.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Machine.Specifications, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Machine.Specifications.0.5.12\lib\net40\Machine.Specifications.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
+      <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.1\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\Microsoft.mshtml.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.2.0.6.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="NCrunch.Framework, Version=1.48.0.5, Culture=neutral, PublicKeyToken=01d101bf6f3e0aea, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NCrunch.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.3.3.3.4000\lib\Net35\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
@@ -120,15 +175,33 @@
     <Reference Include="Ninject.Extensions.Conventions">
       <HintPath>..\packages\ninject.extensions.conventions.3.0.0.11\lib\net40\Ninject.Extensions.Conventions.dll</HintPath>
     </Reference>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Embedded">
+      <HintPath>..\packages\RavenDB.Embedded.2.5.2851\lib\net40\Raven.Client.Embedded.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Client.Lightweight.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Database">
+      <HintPath>..\packages\RavenDB.Database.2.5.2851\lib\net40\Raven.Database.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -139,6 +212,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WatiN.Core">
+      <HintPath>..\packages\WatiN.2.1.0\lib\net40\WatiN.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver">
+      <HintPath>..\packages\Selenium.WebDriver.2.39.0\lib\net40\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\packages\Selenium.Support.2.39.0\lib\net40\WebDriver.Support.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Block\Caching Factory\Cache Providers\When_mem_cached_provider_init_with_configuration.cs">
@@ -153,22 +235,89 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_with_exists_cache_after_reload_caching_factory.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_with_always_expires.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
+    <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status_by_uid.cs" />
+    <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_uid.cs" />
+    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_with_global_throw.cs" />
+    <Compile Include="Block\Scheduler Factory\When_get_all_delay_to_scheduler.cs" />
+    <Compile Include="Block\Scheduler Factory\When_delay_to_sceduler_get_instance.cs" />
+    <Compile Include="Block\Scheduler Factory\When_save_DelayToScheduler.cs" />
+    <Compile Include="Block\Scheduler Factory\When_message_execute_setting_serialize_to_json.cs" />
+    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_error.cs" />
+    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_success.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Common\Response\When_inc_bool_response.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\Behavior_default_dispatcher_push_with_connection_string.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\Behavior_default_dispatcher_push_with_mute_event.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_complex.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_exception.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_multiple_instances.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_performance.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_without_subscriber.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_paginated.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_fetch_join_many_specification.cs">
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_real_command.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_with_mute_event_by_attributes.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_connection_string_by_attribute.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_delay.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_setting_closure.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_throw_on_after_error_execute_event.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_unit_of_work.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_unit_of_work_not_open.cs" />
+    <Compile Include="CQRSGroup\Message\When_command_composite_fluent_api.cs" />
+    <Compile Include="CQRSGroup\Message\Context_message_base_repository.cs" />
+    <Compile Include="CQRSGroup\Message\When_command_composite_quote_not_reference.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_delay.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_push.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_query.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_event_broker.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_repository.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_repository_without_unit_of_work.cs" />
+    <Compile Include="CQRSGroup\Message\When_message_base_repository_with_db_instance.cs" />
+    <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status.cs" />
+    <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_status.cs" />
+    <Compile Include="Block\Scheduler Factory\When_add_delay_to_scheduler.cs" />
+    <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_hard_value.cs" />
+    <Compile Include="DataGroup\Provider\Entity Framework\When_entity_framework_unit_of_work_factory.cs" />
+    <Compile Include="DataGroup\Provider\Entity Framework\When_entity_framework_unit_of_work.cs" />
+    <Compile Include="DataGroup\Provider\Entity Framework\When_entity_framework_session_factory.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Read Concept Entity\DbEntityQueryAsItem.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Read Concept Entity\DbEntityQuery.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Read Concept Entity\DbEntityQueryAsReference.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Relation Concept Entity\DbEntityReference.cs" />
+    <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_open.cs" />
+    <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_open_without_connection.cs" />
+    <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_without_session.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_dispose.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_open_session_with_connection_string.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\When_nhibernate_unit_of_work.cs" />
+    <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_repository_performance_save.cs" />
+    <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_unit_of_work_factory_create.cs" />
+    <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_scenario.cs" />
+    <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_session_factory.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_get_current_session.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_fetch_join_specification.cs">
+    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_get_current_session_without_open_session.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_flush.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_open_session.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataGroup\Provider\Repository DB\Behavior_repository.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\DbEntityAsGuid.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\DbEntityByInt.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\DbEntityWithSpecificIdName.cs" />
+    <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_unit_of_work.cs" />
+    <Compile Include="DataGroup\Provider\Repository DB\RepositoryTestExtensions.cs" />
+    <Compile Include="DataGroup\Provider\Repository DB\When_entity_framework_repository.cs" />
+    <Compile Include="DataGroup\Provider\Repository DB\When_mongo_db_repository.cs" />
+    <Compile Include="DataGroup\Provider\Repository DB\When_nhibernate_repository.cs" />
+    <Compile Include="DataGroup\Provider\Repository DB\When_rave_db_repository.cs" />
     <Compile Include="EventBroker\When_default_event_broker_has_subscriber.cs" />
+    <Compile Include="EventBroker\When_default_event_broker_publish_event_with_handler_throw_exception.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_merger.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_.cs" />
     <Compile Include="ExtensionsGroup\When_fetch_specification_extensions.cs" />
+    <Compile Include="FakeEntityForNew.cs" />
     <Compile Include="FakeSerializeObject.cs" />
-    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_direct.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_catch.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_wrap.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_nothing.cs" />
@@ -178,27 +327,8 @@
     <Compile Include="Block\LoggingFactoryGroup\when_default_parser_exception.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_connection_string.cs" />
-    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_get_current_session.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\Context_nhibernate_repository_query.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_order_descending_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_paginated_all_where_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbItemEntity.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\Establish Domain\RealDbEntity.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_order_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_all_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_paginated_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository Query\When_nhibernate_repository_query_with_where_specification.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\Context_nhibernate_repository.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_delete.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_delete_by_id.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_get_by_id.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_load_by_id.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_load_by_id_with_null.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_save.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_save_or_update.cs" />
-    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_open_session.cs" />
-    <Compile Include="DataGroup\Nhibernate\When_nhibernate_session_factory_open_session_with_connection_string.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Relation Concept Entity\DbEntityItem.cs" />
+    <Compile Include="DataGroup\Provider\Establish Domain\Relation Concept Entity\DbEntity.cs" />
     <Compile Include="DataGroup\Speicifications\When_ad_hoc_fetch_specification_equal.cs" />
     <Compile Include="DataGroup\Speicifications\When_ad_hoc_order_specification_equal.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_to_csv.cs" />
@@ -223,9 +353,15 @@
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification.cs" />
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification_wrong.cs" />
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_with_wrong.cs" />
-    <Compile Include="MSpecGroup\Nhibernate\When_spec_with_persistence_specification.cs" />
-    <Compile Include="MSpecGroup\Nhibernate\When_nhibernate_persistence_specification.cs" />
-    <Compile Include="MSpecGroup\Nhibernate\When_nhibernate_session_extensions.cs" />
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_nhibernate_session_extensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_base_class.cs" />
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_instance.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_push.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
@@ -234,8 +370,10 @@
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_to_key_values.cs" />
     <Compile Include="MvcContribGroup\Extensions\When_html_extensions.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_attr_attributes.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_with_on.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_on_change.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_on_init.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_url_and_cache.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_drop_down_control_with_url_and_optional.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control_without_message.cs" />
@@ -246,6 +384,7 @@
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_radio_button_control_unchecked.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_radio_button_control_with_name.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_radio_button_control_with_null_value.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_sharp_analog.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Impl\When_conditional_data.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_bind.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_behaviors.cs" />
@@ -265,8 +404,11 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_conditional_builder.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Conditional\Builder\When_conditional_builder_reset_inverse.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_set_filter.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_with_url.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_target.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_data.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_url.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_event_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_java_script_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_issue.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_location_selector.cs" />
@@ -279,29 +421,20 @@
     <Compile Include="MvcContribGroup\IncodingHtmlHelper\When_begin_tag.cs" />
     <Compile Include="CQRSGroup\Common\Query\When_has_entities.cs" />
     <Compile Include="CQRSGroup\Common\Query\When_has_entities_empty.cs" />
-    <Compile Include="CQRSGroup\Common\Specifications\When_entity_by_id.cs" />
-    <Compile Include="CQRSGroup\Common\Specifications\When_entity_contains_id.cs" />
     <Compile Include="CQRSGroup\Common\Query\When_get_entities.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id.cs" />
     <Compile Include="CQRSGroup\Dispatcher\Context_default_dispatcher.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_commands.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_setting_exception.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_all_commit.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_behavior_exception.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_behavior.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_data_base_instance.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_throw_exception.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_with_throw_exception_and_re_throw_in_event.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_throw_with_mute_event.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_query.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_wrong_assembly_qualified_name.cs" />
     <Compile Include="CQRSGroup\Common\Query\When_get_entity_by_id.cs" />
-    <Compile Include="DataGroup\Nhibernate\When_nhibernate_unit_of_work_factory_create.cs" />
-    <Compile Include="DataGroup\Nhibernate\UnitOfWork\Context_nhibernate_unit_of_work.cs" />
-    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_commit.cs" />
-    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_disposable_after_commit.cs" />
-    <Compile Include="DataGroup\Nhibernate\Repository\When_nhibernate_repository_get_by_id_with_null.cs" />
-    <Compile Include="DataGroup\Nhibernate\UnitOfWork\When_nhibernate_unit_of_work_disposable.cs" />
+    <Compile Include="DataGroup\Provider\Nhibernate\When_nhibernate_unit_of_work_factory_create.cs" />
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_join_value_special_value.cs" />
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_special_source.cs" />
     <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_with_collections.cs" />
@@ -317,7 +450,6 @@
     <Compile Include="ExtensionsGroup\Maybe\When_maybe_object.cs" />
     <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_ninject.cs" />
     <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_structure_map.cs" />
-    <Compile Include="EventBroker\When_default_event_broker_with_shared_subscriber.cs" />
     <Compile Include="EventBroker\When_default_event_broker_publish_with_async_handler.cs" />
     <Compile Include="KnowleadgeGroup\When_understand_select_with_empty_collection.cs" />
     <Compile Include="KnowleadgeGroup\When_understand_behavior_read_only_field_value_type.cs" />
@@ -358,19 +490,22 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_retrieve_cache_by_hierarchy_with_expires_end_absolute_as_global_policy.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_by_deep_derived_with_expires_always_as_global_policy.cs" />
     <Compile Include="Block\Core\When_satisfied_syntax.cs" />
-    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_catch.cs" />
-    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy_retry.cs" />
+    <Compile Include="Block\Exception Handling Factory\Action Policy\When_action_policy.cs" />
     <Compile Include="Block\Exception Handling Factory\When_exception_policy.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_without_policy.cs" />
     <Compile Include="ExtensionsGroup\When_date_time_extensions.cs" />
-    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_merge.cs" />
+    <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_unique.cs" />
     <Compile Include="ExtensionsGroup\When_equals_extensions.cs" />
     <Compile Include="ExtensionsGroup\When_reflection_extensions.cs" />
     <Compile Include="ExtensionsGroup\When_string_extensions.cs" />
     <Compile Include="ExtensionsGroup\When_calculate_percentage.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\BehaviorsJsonResultSpec.cs" />
+    <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_execute_result.cs" />
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_success_razor_text.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Exceptions\AmbiguousType.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Context_dispatcher_controller.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Other\When_base_dispatcher_controller_push_concurrency.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Other\When_base_dispatcher_controller_push_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_by_name.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\Context_dispatcher_controller_render.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_clear_model_state.cs" />
@@ -399,8 +534,10 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_model_by_full_name.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Exceptions\When_base_dispatcher_controller_wrong_generic_instance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Exceptions\When_base_dispatcher_controller_wrong_instance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_query_as_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_filter.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_duplicate.cs" />
+    <Compile Include="MvcContribGroup\MVD\Url Dispatcher\When_url_dispatcher_verify_schema.cs" />
     <Compile Include="MvcContribGroup\MVD\Url Dispatcher\When_url_dispatcher.cs" />
     <Compile Include="MvcContribGroup\Template\When_template_factory.cs" />
     <Compile Include="MvcContribGroup\Template\When_template_handlebars_syntax_foreach.cs" />
@@ -414,6 +551,7 @@
     <Compile Include="MvcContribGroup\Template\When_template_handlebars_syntax_not_each.cs" />
     <Compile Include="MvcContribGroup\Template\When_template_handlebars_positive.cs" />
     <Compile Include="MvcContribGroup\Template\When_template_handlebars_syntax_not_with_up.cs" />
+    <Compile Include="UseCase\When_auto_inc_271.cs" />
     <Compile Include="When_guard.cs" />
     <Compile Include="Block\IoC Factory\IFake.cs" />
     <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_eject_ioc_provider.cs">
@@ -450,9 +588,8 @@
     <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_with_in_line.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_exception.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_message.cs" />
-    <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_for.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log_with_wrong_log_type.cs" />
-    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_with_parser.cs" />
+    <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_with_custom_parser.cs" />
     <Compile Include="DataGroup\EntityBase\Context_entity_base.cs" />
     <Compile Include="DataGroup\EntityBase\When_entities_contain_in_dictionary.cs" />
     <Compile Include="DataGroup\EntityBase\When_entities_distinct.cs" />
@@ -463,7 +600,6 @@
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_empty_source.cs" />
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_source_without_split_char.cs" />
     <Compile Include="EventBroker\Publish\Behaviors_default_event_broker_publish_event.cs" />
-    <Compile Include="EventBroker\When_default_event_broker_publish_event_with_handler_throw_exception.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_success_with_ajax_with_custom.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_error_result_with_custom.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_success.cs" />
@@ -516,7 +652,6 @@
     <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_create_ctor.cs" />
     <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_equal.cs" />
     <Compile Include="MvcContribGroup\Core\When_inc_validation_factory.cs" />
-    <Compile Include="MvcContribGroup\IncodingResult\BehaviorsJsonResultSpec.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_collection_to_select_list_with_all_parameter.cs" />
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_error.cs" />
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_with_redirect_to.cs" />
@@ -592,7 +727,7 @@
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_generate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\When_pleasure_quick_method.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_typical_options_set.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_typical_options.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_to_html_attributes.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -625,6 +760,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="MvcContribGroup\Incoding Meta Language\Performance\" />
     <Folder Include="UtilitiesGroup\SerializerWrapperGroup\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -633,9 +769,10 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

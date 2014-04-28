@@ -24,6 +24,18 @@
         }
 
         /// <summary>
+        ///     Add elements to the set of matched elements.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="selector">
+        ///     selector to match elements against.
+        /// </param>
+        public static JquerySelectorExtend Add(this JquerySelectorExtend original, JquerySelectorExtend selector)
+        {
+            return original.Method("add", selector);
+        }
+
+        /// <summary>
         ///     Get the children of each element in the set of matched elements, optionally filtered by a action.
         /// </summary>
         /// <param name="original"></param>
@@ -50,7 +62,7 @@
         /// <summary>
         ///     Get the children of each element
         /// </summary>
-        /// <param name="original"></param>        
+        /// <param name="original"></param>
         public static JquerySelectorExtend Children(this JquerySelectorExtend original)
         {
             return original.Children(null);
@@ -360,6 +372,21 @@
             return original.Siblings(null);
         }
 
+        /// <summary>
+        ///     Reduce the set of matched elements to a subset specified by a range of indices.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="start">
+        ///     An integer indicating the 0-based position at which the elements begin to be selected. If negative, it indicates an offset from the end of the set.
+        /// </param>
+        /// <param name="end">
+        ///     An integer indicating the 0-based position at which the elements stop being selected. If negative, it indicates an offset from the end of the set. If omitted, the range continues until the end of the set.
+        /// </param>
+        public static JquerySelectorExtend Slice(this JquerySelectorExtend original, Selector start, Selector end = null)
+        {
+            return original.Method("slice", new object[] { start, end ?? 0 });
+        }
+
         #endregion
 
         static JquerySelectorExtend AddTree(JquerySelectorExtend original, Func<JquerySelector, JquerySelector> action, string type)
@@ -367,7 +394,7 @@
             if (action == null)
                 original.AddMethod("{0}".F(type));
             else
-                original.AddMethod(type, action(Selector.Jquery).ToSelector());
+                original.AddMethod(type, action(Selector.Jquery));
 
             return original;
         }

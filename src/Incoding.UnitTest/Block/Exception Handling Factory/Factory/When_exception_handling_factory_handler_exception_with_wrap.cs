@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(ExceptionHandlingFactory))]
     public class When_exception_handling_factory_handler_exception_with_wrap
     {
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
 
@@ -23,8 +23,7 @@ namespace Incoding.UnitTest.Block
         Establish establish = () =>
                                   {
                                       exceptionHandling = new ExceptionHandlingFactory();
-                                      exceptionHandling.Initialize(handling => handling.WithPolicy(policy => policy
-                                                                                                                     .ForAll()
+                                      exceptionHandling.Initialize(handling => handling.WithPolicy(policy => policy.ForAll()
                                                                                                                      .Wrap(r => new ApplicationException(Pleasure.Generator.TheSameString(), r))));
                                   };
 

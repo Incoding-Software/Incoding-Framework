@@ -6,7 +6,7 @@ namespace Incoding.MSpecContrib
 
     #endregion
 
-    public class MockCommand<TMessage> : MockMessage<TMessage, object> where TMessage : MessageBase<object>
+    public class MockCommand<TMessage> : MockMessage<TMessage, object> where TMessage : CommandBase
     {
         #region Constructors
 
@@ -17,11 +17,12 @@ namespace Incoding.MSpecContrib
 
         #region Factory method
 
-        public static MockMessage<TMessage, object> When(TMessage instanceMessage)
+        public static MockCommand<TMessage> When(TMessage instanceMessage)
         {
             return new MockCommand<TMessage>(instanceMessage);
         }
 
         #endregion
+
     }
 }

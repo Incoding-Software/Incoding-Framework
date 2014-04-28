@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(DictionaryExtensions))]
     public class When_set_value_with_exists
     {
-        #region Estabilish value
+        #region Establish value
 
         const string key = "Key";
 

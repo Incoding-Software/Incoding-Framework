@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingPolicy))]
     public class When_caching_policy_set_expires
     {
-        #region Estabilish value
+        #region Establish value
 
         static CachingPolicy cachingPolicy;
 

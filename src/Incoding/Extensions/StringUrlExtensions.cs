@@ -73,15 +73,8 @@ namespace Incoding.Extensions
 
             hash = hash.Contains("?") ? hash.Replace("&", "/") : hash + "?";
 
-            hash = hash
-                    .If(r => r.Contains("?"))
-                    .Then()
-                    .Recovery(() => hash + "?");
-
-            hash = hash
-                    .Not(r => r.StartsWith("/"))
-                    .Then()
-                    .Recovery(() => hash.Substring(1, hash.Length - 1));
+            if (hash.StartsWith("/"))
+                hash = hash.Substring(1, hash.Length - 1);
 
             return "{0}#!{1}".F(root, hash);
         }
@@ -98,7 +91,7 @@ namespace Incoding.Extensions
             if (dictionary.Count == 0)
                 return value;
 
-            bool hasExistsQueryString = value.If(r => r.Contains("?")).Has();
+            bool hasExistsQueryString = (value ?? string.Empty).Contains("?");
             if (hasExistsQueryString)
             {
                 var originalQuery = value.Split("?".ToCharArray())[1]

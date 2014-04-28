@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingResult))]
     public class When_incoding_result_error_with_model_state : BehaviorsJsonResultSpec
     {
-        #region Estabilish value
+        #region Establish value
 
         static ModelStateDictionary modelState;
 

@@ -10,7 +10,7 @@ namespace Incoding.CQRS
 
     #endregion
 
-    public class GetEntityByIdQuery<T> : QueryBase<T> where T : class, IEntity
+    public class GetEntityByIdQuery<T> : QueryBase<T> where T : class, IEntity, new()
     {
         #region Constructors
 

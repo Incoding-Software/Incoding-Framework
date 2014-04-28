@@ -31,6 +31,7 @@
                                          .For<FakeModel>(r => r.Prop, Pleasure.Generator.TheSameString())
                                          .Errors.ShouldBeKeyValue("Prop", new List<string> { Pleasure.Generator.TheSameString() });
 
+
         It should_be_for_multiple = () => IncWebException
                                                   .For<FakeModel>(r => r.Prop, "Regular expression")
                                                   .Also<FakeModel>(r => r.Prop, "Required")

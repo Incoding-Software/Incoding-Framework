@@ -63,7 +63,7 @@
             controller.ValueProvider = Pleasure.MockStrictAsObject<IValueProvider>(mock => mock.Setup(r => r.GetValue(Pleasure.MockIt.IsAny<string>())).Returns(new ValueProviderResult(string.Empty, string.Empty, Thread.CurrentThread.CurrentCulture)));
 
             var modelBinderDictionary = new ModelBinderDictionary();
-            var modelBinder = Pleasure.MockAsObject<IModelBinder>(mock => mock.Setup(r => r.BindModel(Pleasure.MockIt.IsAny<ControllerContext>(), 
+            var modelBinder = Pleasure.MockAsObject<IModelBinder>(mock => mock.Setup(r => r.BindModel(Pleasure.MockIt.IsAny<ControllerContext>(),
                                                                                                       Pleasure.MockIt.IsAny<ModelBindingContext>())));
             foreach (var type in types.Recovery(new Type[] { }))
                 modelBinderDictionary.Add(type, modelBinder);

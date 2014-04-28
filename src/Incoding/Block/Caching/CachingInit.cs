@@ -20,21 +20,9 @@ namespace Incoding.Block.Caching
 
         #endregion
 
-        #region Constructors
-
-        internal CachingInit(ICachedProvider cachedProvider)
-        {
-            WithProvider(cachedProvider);
-        }
-
-        #endregion
-
         #region Properties
 
-        public ICachedProvider Provider
-        {
-            get { return this.cachedProvider; }
-        }
+        public ICachedProvider Provider { get { return this.cachedProvider; } }
 
         #endregion
 

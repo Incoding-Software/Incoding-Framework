@@ -27,7 +27,7 @@
 
         class FakeFetch1 : FetchSpecification<FakeEntity>
         {
-            public override Action<AdHocFetchSpecification<FakeEntity>> FetchedBy()
+            public override Action<AdHocFetchSpecificationBase<FakeEntity>> FetchedBy()
             {
                 return specification => specification.Join(r => r.Value);
             }
@@ -35,7 +35,7 @@
 
         class FakeFetch2 : FetchSpecification<FakeEntity>
         {
-            public override Action<AdHocFetchSpecification<FakeEntity>> FetchedBy()
+            public override Action<AdHocFetchSpecificationBase<FakeEntity>> FetchedBy()
             {
                 return specification => specification.Join(r => r.Value2);
             }
@@ -43,7 +43,7 @@
 
         class FakeFetchAll : FetchSpecification<FakeEntity>
         {
-            public override Action<AdHocFetchSpecification<FakeEntity>> FetchedBy()
+            public override Action<AdHocFetchSpecificationBase<FakeEntity>> FetchedBy()
             {
                 return specification => specification.Join(r => r.Value).Join(r => r.Value2);
             }
@@ -51,7 +51,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static FakeFetch1 fetch1;
 

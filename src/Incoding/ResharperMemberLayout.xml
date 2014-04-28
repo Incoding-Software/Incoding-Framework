@@ -74,7 +74,7 @@
       <Match>
         <Static />
       </Match>
-      <Group Region="Estabilish value" />
+      <Group Region="Establish value" />
     </Entry>
   </Pattern>
 

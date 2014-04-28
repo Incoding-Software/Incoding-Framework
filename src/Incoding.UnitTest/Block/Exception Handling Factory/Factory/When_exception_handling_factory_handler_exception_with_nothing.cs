@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(ExceptionHandlingFactory))]
     public class When_exception_handling_factory_handler_exception_with_nothing
     {
-        #region Estabilish value
+        #region Establish value
 
         static Exception exception;
 

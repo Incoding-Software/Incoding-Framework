@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.MSpecGroup
     [Subject(typeof(InventFactory<>))]
     public class When_invent_factory_empty : Context_invent_factory
     {
-        #region Estabilish value
+        #region Establish value
 
         static InventFactory<FakeGenerateObject> inventFactory;
 

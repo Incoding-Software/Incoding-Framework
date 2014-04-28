@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     [Subject(typeof(DictionaryExtensions))]
     public class When_merge_dictionary
     {
-        #region Estabilish value
+        #region Establish value
 
         static Dictionary<string, object> src;
 

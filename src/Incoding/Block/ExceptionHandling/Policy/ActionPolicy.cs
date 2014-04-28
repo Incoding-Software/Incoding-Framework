@@ -3,6 +3,8 @@ namespace Incoding.Block.ExceptionHandling
     #region << Using >>
 
     using System;
+    using System.Threading;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -10,66 +12,33 @@ namespace Incoding.Block.ExceptionHandling
     {
         #region Fields
 
-        /// <summary>
-        ///     Action policy without behavior
-        /// </summary>
-        readonly Action<Action> policy;
+        readonly ActionOfType type;
+
+        int attempt;
+
+        TimeSpan? interval;
 
         #endregion
 
         #region Constructors
 
-        ActionPolicy(Action<Action> policy)
+        ActionPolicy(ActionOfType type)
         {
-            this.policy = policy;
+            this.type = type;
         }
 
         #endregion
 
         #region Factory constructors
 
-        public static ActionPolicy Catch(Action<Exception> catchAction)
-        {
-            Action<Action> actionPolicy = action =>
-                                              {
-                                                  try
-                                                  {
-                                                      action.Invoke();
-                                                  }
-                                                  catch (Exception exception)
-                                                  {
-                                                      catchAction.Invoke(exception);
-                                                  }
-                                              };
-            return new ActionPolicy(actionPolicy);
-        }
-
         public static ActionPolicy Direct()
         {
-            return new ActionPolicy(action => action.Invoke());
+            return new ActionPolicy(ActionOfType.Direct);
         }
 
-        public static ActionPolicy Retry(int retryCount)
+        public static ActionPolicy Repeat(int attempt)
         {
-            Action<Action> actionPolicy = action =>
-                                              {
-                                                  int currentRetryCount = 0;
-                                                  while (true)
-                                                  {
-                                                      currentRetryCount++;
-                                                      try
-                                                      {
-                                                          action.Invoke();
-                                                          return;
-                                                      }
-                                                      catch (Exception)
-                                                      {
-                                                          if (currentRetryCount == retryCount)
-                                                              throw;
-                                                      }
-                                                  }
-                                              };
-            return new ActionPolicy(actionPolicy);
+            return new ActionPolicy(ActionOfType.Repeat) { attempt = attempt };
         }
 
         #endregion
@@ -78,7 +47,79 @@ namespace Incoding.Block.ExceptionHandling
 
         public void Do(Action action)
         {
-            this.policy(action);
+            switch (this.type)
+            {
+                case ActionOfType.Direct:
+                    action();
+                    break;
+                case ActionOfType.Repeat:
+                    int currentRetryCount = 0;
+                    while (true)
+                    {
+                        try
+                        {
+                            action.Invoke();
+                            break;
+                        }
+                        catch (Exception)
+                        {
+                            if (currentRetryCount == this.attempt)
+                                throw;
+
+                            if (this.interval.HasValue)
+                                Thread.Sleep(this.interval.Value);
+                        }
+                        finally
+                        {
+                            currentRetryCount++;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        public ActionPolicy Interval(TimeSpan time)
+        {
+            this.interval = time;
+            return this;
+        }
+
+        #endregion
+
+        #region Equals
+
+        public override bool Equals(object obj)
+        {
+            return this.IsReferenceEquals(obj) && Equals(obj as ActionPolicy);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = (int)this.type;
+                hashCode = (hashCode * 397) ^ this.attempt;
+                hashCode = (hashCode * 397) ^ this.interval.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ActionPolicy other)
+        {
+            if (other == null)
+                return false;
+            return this.type == other.type && this.attempt == other.attempt && this.interval.Equals(other.interval);
+        }
+
+        #endregion
+
+        #region Enums
+
+        enum ActionOfType
+        {
+            Direct,
+
+            Repeat
         }
 
         #endregion

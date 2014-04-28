@@ -14,7 +14,7 @@
     [Subject(typeof(EnumExtensions))]
     public class When_enum_extensions
     {
-        #region Estabilish value
+        #region Establish value
 
         enum FakeEnum
         {

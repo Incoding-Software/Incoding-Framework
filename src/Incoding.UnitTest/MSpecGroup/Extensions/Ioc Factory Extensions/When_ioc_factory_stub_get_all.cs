@@ -12,7 +12,7 @@
     [Subject(typeof(IoCFactoryTestEx))]
     public class When_ioc_factory_stub_get_all : Context_IoC_Factory_TestEx
     {
-        #region Estabilish value
+        #region Establish value
 
         static ILogger fromIoC;
 

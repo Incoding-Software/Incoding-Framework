@@ -12,7 +12,7 @@
     [Subject(typeof(IncHiddenControl<,>))]
     public class When_inc_horizontal_control : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncHorizontalControl<IncHiddenControl<FakeModel, object>> control;
         

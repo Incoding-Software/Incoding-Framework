@@ -23,7 +23,7 @@
         Because of = () =>
                          {
                              Establish(types: new[] { typeof(FakeRenderModelByName) });
-                             result = controller.Render("View", typeof(FakeRenderModelByName).Name, string.Empty);
+                             result = controller.Render("View", typeof(FakeRenderModelByName).Name, string.Empty,true);
                          };
 
         It should_be_render = () =>

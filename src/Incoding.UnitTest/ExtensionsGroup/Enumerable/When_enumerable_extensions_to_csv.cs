@@ -27,7 +27,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static List<FakeCsv> collection;
 

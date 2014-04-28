@@ -12,7 +12,7 @@
     [Subject(typeof(DictionaryAsString))]
     public class When_dictionary_as_string_parse
     {
-        #region Estabilish value
+        #region Establish value
 
         static string sourceCollection;
 

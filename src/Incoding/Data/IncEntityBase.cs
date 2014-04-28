@@ -2,10 +2,10 @@ namespace Incoding.Data
 {
     #region << Using >>
 
-    using System.Diagnostics.CodeAnalysis;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using Incoding.Quality;
+    using MongoDB.Bson.Serialization.Attributes;
 
     #endregion
 
@@ -25,7 +25,6 @@ namespace Incoding.Data
             return Id.ReturnOrDefault(r => r.GetHashCode(), 0);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Positive false")]
         public override bool Equals(object obj)
         {
             return this.IsReferenceEquals(obj) && GetHashCode().Equals(obj.GetHashCode());

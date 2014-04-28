@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -18,7 +19,7 @@
         It should_be_205 = () => Selector.Jquery.Class("nestedInputList")
                                          .Find(HtmlTag.Input)
                                          .ToString()
-                                         .ShouldEqual("$('.nestedInputList').find('input')");
+                                         .ShouldEqual("$('.nestedInputList').find($('input'))");
 
         It should_be_121 = () => Selector.Jquery.Class("nestedInputList").Tag(HtmlTag.Input)
                                          .ToString()
@@ -54,10 +55,23 @@
                                                    .ToString()
                                                    .ShouldEqual("$('input[type=\"text\"]')");
 
-     /*   It should_be_expression_after_method = () => Selector.Jquery.Self()
+        It should_be_226_closest_in_closest = () => Selector.Jquery.Name("IndicatorIds")
+                                                            .Closest(r => r.Class("control-group").Closest(HtmlTag.Tr))
+                                                            .ToString()
+                                                            .ShouldEqual("$('[name=\"IndicatorIds\"]').closest($('.control-group').closest($('tr')))");
+
+        It should_be_330_closure_selector = () =>
+                                                {
+                                                    var self = Selector.Jquery.Self();
+                                                    Pleasure.Do3(i => self.Length()
+                                                                          .ToString()
+                                                                          .ShouldEqual("$(this.self).length"));
+                                                };
+
+        It should_be_expression_after_method = () => Selector.Jquery.Self()
                                                              .Find(HtmlTag.Label)
                                                              .Expression(JqueryExpression.First)
                                                              .ToString()
-                                                             .ShouldEqual("$(this.self).find('label').filter(':first')");*/
+                                                             .ShouldEqual("$(this.self).find('label').filter(':first')");
     }
 }

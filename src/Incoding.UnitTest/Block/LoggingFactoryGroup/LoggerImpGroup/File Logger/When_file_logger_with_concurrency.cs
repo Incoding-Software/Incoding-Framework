@@ -13,7 +13,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(FileLogger)), Ignore("Need fixed")]
     public class When_file_logger_with_concurrency : Context_file_logger
     {
-        #region Estabilish value
+        #region Establish value
 
         static string logMessage;
 

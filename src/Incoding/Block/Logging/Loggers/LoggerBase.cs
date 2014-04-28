@@ -23,15 +23,12 @@
             WithTemplate(message =>
                              {
                                  var dt = DateTime.Now;
-                                 var res = new StringBuilder();
+                                 var res = new StringBuilder();                                 
                                  if (!string.IsNullOrWhiteSpace(message.Message))
                                      res.AppendLine("Message by {0}:{1}".F(dt, message.Message));
 
                                  if (message.Exception != null)
                                      res.AppendLine("Exception by {0}:{1}".F(dt, message.Exception));
-
-                                 if (message.State != null)
-                                     res.AppendLine("State by {0}:{1}".F(dt, message.State));
 
                                  return res.ToString();
                              });

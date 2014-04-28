@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(CachingFactory))]
     public class When_caching_factory_set_cache_with_always_expires
     {
-        #region Estabilish value
+        #region Establish value
 
         static CachingFactory cachingFactory;
 

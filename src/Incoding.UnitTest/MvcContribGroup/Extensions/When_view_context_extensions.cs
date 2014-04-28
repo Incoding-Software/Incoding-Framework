@@ -17,7 +17,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(ViewContextExtensions))]
     public class When_view_context_extensions
     {
-        #region Estabilish value
+        #region Establish value
 
         protected static RouteData routeData;
 

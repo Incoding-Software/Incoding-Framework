@@ -35,6 +35,7 @@ function ExecutableBase() {
     this.jsonData = '';
     this.onBind = '';
     this.self = '';
+    this.event = '';
     this.timeOut = 0;
     this.interval = 0;
     this.intervalId = '';
@@ -76,7 +77,8 @@ ExecutableBase.prototype = {
         current.internalExecute(data);        
     },    
     internalExecute : function(data) {        
-    },        
+    },
+    
     isValid : function(data) {
 
         var current = this;
@@ -90,7 +92,7 @@ ExecutableBase.prototype = {
         $(current.ands).each(function() {
 
             var hasAny = false;
-
+            
             $(this).each(function() {
 
                 hasAny = ConditionalFactory.Create(this, current).isSatisfied(data);
@@ -111,6 +113,7 @@ ExecutableBase.prototype = {
     tryGetVal : function(variable) {
         ExecutableHelper.Instance.self = this.self;
         ExecutableHelper.Instance.target = this.target;
+        ExecutableHelper.Instance.event = this.event;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -130,7 +133,7 @@ function ExecutableActionBase() {
 
 $.extend(ExecutableActionBase.prototype, {
     complete: function (result, state) {
-
+        
         if (!ExecutableHelper.IsNullOrEmpty(result.redirectTo)) {
             ExecutableHelper.RedirectTo(result.redirectTo);
             return;
@@ -146,18 +149,18 @@ $.extend(ExecutableActionBase.prototype, {
 
         var hasBreak = false;
         var executeState = function () {
-            try {
+            try {                
                 this.execute(resultData);
             }
             catch (e) {
                 if (e instanceof IncClientException) {
                     hasBreak = true;
-                    return false;//stop execute state
+                    return false;//stop execute
                 }
 
-                console.log('Incoding exception: {0}'.f(e.message));
+                console.log('Incoding exception: {0}'.f(e.message ? e.messsage : e));
                 if (navigator.Ie8) {
-                    return false;//stop execute state
+                    return false;//stop execute
                 }
                 throw e;
             }
@@ -166,9 +169,7 @@ $.extend(ExecutableActionBase.prototype, {
         $(result.success ? state.success : state.error).each(executeState);
         $(state.complete).each(executeState);
         if (hasBreak) {
-            $(state.breakes).each(function () {
-                this.execute(resultData);
-            });
+            $(state.breakes).each(executeState);
         }
     }
 });
@@ -250,28 +251,36 @@ function ExecutableSubmitAction() {
 ExecutableSubmitAction.prototype.internalExecute = function(data) {
 
     var current = this;
-    var ajaxOptions = $.extend(true, {}, this.jsonData.options);
+    var formSelector = eval(this.jsonData.formSelector);
+    var form = $(formSelector).is('form') ? formSelector : $(formSelector).closest('form').first();
+
+    var ajaxOptions = $.extend(true, {
+        error : function(error) {
+            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(error)));
+            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(error)));
+        },
+        success : function(responseText, statusText, xhr, $form) {
+            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(xhr)));                        
+            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
+            current.complete(new IncodingResult(responseText), data);
+        },
+        beforeSubmit : function(formData, jqForm, options) {
+            var isValid = $(form).valid();
+            if (!isValid) {
+                $(form).validate().focusInvalid();
+            }
+            else {
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success({}));
+            }
+            return isValid;
+        }
+    }, this.jsonData.options);
+
     if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.options.data)) {
         for (var i = 0; i < this.jsonData.options.data.length; i++) {
             ajaxOptions.data[i].value = this.tryGetVal(this.jsonData.options.data[i].value);
         }
     }
-
-    ajaxOptions.success = function(responseText, statusText, xhr, $form) {
-        var result = new IncodingResult(responseText);
-        current.complete(result, data);
-    };
-
-    var formSelector = eval(this.jsonData.formSelector);
-    var form = $(formSelector).is('form') ? formSelector : $(formSelector).closest('form').first();
-
-    ajaxOptions.beforeSubmit = function(formData, jqForm, options) {
-        var isValid = $(form).valid();
-        if (!isValid) {
-            $(form).validate().focusInvalid();
-        }
-        return isValid;
-    };
 
     $(form).ajaxSubmit(ajaxOptions);
 };
@@ -502,7 +511,7 @@ ExecutableStoreInsert.prototype.internalExecute = function() {
             return;
         }
 
-        var value = ExecutableHelper.Instance.TryGetVal($('[name={0}]'.f(name)));
+        var value = ExecutableHelper.Instance.TryGetVal($.byName(name));
         if (ExecutableHelper.IsNullOrEmpty(value)) {
             url.removeFparam(name, prefix);
         }
@@ -562,12 +571,13 @@ ExecutableStoreManipulate.prototype.internalExecute = function(data) {
                         break;
                     case 'set':
                         url.setFparam(this.key, current.tryGetVal(this.value), this.prefix);
-                        break;      
+                        break;
                 }
             });
 
-            ExecutableHelper.RedirectTo(url.toHref());
-            break;
+            return ExecutableHelper.RedirectTo(url.toHref());
+        default:
+            throw 'Argument out of range {0}'.f(this.jsonData.type);
     }
 };
 

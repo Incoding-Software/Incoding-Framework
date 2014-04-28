@@ -36,25 +36,37 @@
 
         public IIncodingMetaLanguageActionDsl Do()
         {
-            this.meta.onEventStatus = IncodingEventCanceled.None;
+            this.meta.OnEventStatus = IncodingEventCanceled.None;
+            return this;
+        }
+
+        public IIncodingMetaLanguageActionDsl PreventDefault()
+        {
+            this.meta.OnEventStatus = IncodingEventCanceled.PreventDefault;
+            return this;
+        }
+
+        public IIncodingMetaLanguageActionDsl StopPropagation()
+        {
+            this.meta.OnEventStatus = IncodingEventCanceled.StopPropagation;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithPreventDefault()
         {
-            this.meta.onEventStatus = IncodingEventCanceled.PreventDefault;
+            this.meta.OnEventStatus = IncodingEventCanceled.PreventDefault;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithStopPropagation()
         {
-            this.meta.onEventStatus = IncodingEventCanceled.StopPropagation;
+            this.meta.OnEventStatus = IncodingEventCanceled.StopPropagation;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithPreventDefaultAndStopPropagation()
         {
-            this.meta.onEventStatus = IncodingEventCanceled.All;
+            this.meta.OnEventStatus = IncodingEventCanceled.All;
             return this;
         }
 
@@ -62,17 +74,16 @@
 
         #region IIncodingMetaLanguageCallbackBodyDsl Members
 
-        public IIncodingMetaLanguageCallbackInstancesDsl With(JquerySelector selector)
+        public IIncodingMetaLanguageCallbackInstancesDsl With(JquerySelectorExtend selector)
         {
-            this.meta.target = selector.ToString();
+            this.meta.Target = selector;
             return this;
         }
 
-        public IIncodingMetaLanguageCallbackInstancesDsl With(Func<JquerySelector, JquerySelector> action)
+        public IIncodingMetaLanguageCallbackInstancesDsl With(Func<JquerySelector, JquerySelectorExtend> action)
         {
             return With(action(Selector.Jquery));
         }
-
 
         public IIncodingMetaLanguageCallbackInstancesDsl WithName<T>(Expression<Func<T, object>> memberName)
         {
@@ -121,6 +132,16 @@
             return callback;
         }
 
+        public void Lock()
+        {
+            this.meta.LockTarget = true;
+        }
+
+        public void UnLock()
+        {
+            this.meta.LockTarget = false;
+        }
+
         #endregion
 
         #region IIncodingMetaLanguageEventBuilderDsl Members
@@ -167,10 +188,10 @@
 
         public IIncodingMetaLanguageBindingDsl When(string nextBind)
         {
-            this.meta.onBind = nextBind.ToLowerInvariant();
+            this.meta.OnBind = nextBind.ToLowerInvariant();
 
-            if (!this.meta.onBind.EqualsWithInvariant("incoding"))
-                this.meta.onBind += " incoding";
+            if (!this.meta.OnBind.EqualsWithInvariant("incoding"))
+                this.meta.OnBind += " incoding";
 
             return this;
         }
@@ -185,7 +206,7 @@
 
         IIncodingMetaLanguageEventBuilderDsl On(IncodingCallbackStatus status, Action<IIncodingMetaLanguageCallbackBodyDsl> action)
         {
-            this.meta.onCurrentStatus = status;
+            this.meta.OnCurrentStatus = status;
             action(this);
             return this;
         }

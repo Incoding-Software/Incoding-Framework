@@ -22,9 +22,9 @@
 
         #region Api Methods
 
-        public AdHocOrderSpecification<TEntity> Order(Expression<Func<TEntity, object>> sortExpression, OrderType type)
+        public AdHocOrderSpecification<TEntity> Order<TValue>(Expression<Func<TEntity, TValue>> sortExpression, OrderType type)
         {
-            this.expressions.Add(new Tuple<Expression<Func<TEntity, object>>, OrderType>(sortExpression, type));
+            this.expressions.Add(new Tuple<Expression<Func<TEntity, object>>, OrderType>(sortExpression.ToBox(), type));
             if (this.expressions.Count == 1)
                 this.applies.Add(entities => type == OrderType.Ascending ? entities.OrderBy(sortExpression) : entities.OrderByDescending(sortExpression));
             else
@@ -39,12 +39,12 @@
             return this;
         }
 
-        public AdHocOrderSpecification<TEntity> OrderBy(Expression<Func<TEntity, object>> sortExpression)
+        public AdHocOrderSpecification<TEntity> OrderBy<TValue>(Expression<Func<TEntity, TValue>> sortExpression)
         {
             return Order(sortExpression, OrderType.Ascending);
         }
 
-        public AdHocOrderSpecification<TEntity> OrderByDescending(Expression<Func<TEntity, object>> sortExpression)
+        public AdHocOrderSpecification<TEntity> OrderByDescending<TValue>(Expression<Func<TEntity, TValue>> sortExpression)
         {
             return Order(sortExpression, OrderType.Descending);
         }

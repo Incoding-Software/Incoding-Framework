@@ -55,6 +55,14 @@ namespace Incoding.Extensions
             return methodInfo.FirstOrDefaultAttribute<TAttribute>() != null;
         }
 
+        public static bool IsPrimitive(this Type targetType)
+        {
+            return targetType.IsPrimitive ||
+                   targetType.IsValueType ||
+                   targetType.GetGenericArguments().ElementAtOrDefault(0).With(r => r.IsValueType) ||
+                   targetType == typeof(string);
+        }
+
         public static bool IsImplement<TImplement>(this Type targetType) where TImplement : class
         {
             return targetType.IsImplement(typeof(TImplement));
@@ -111,7 +119,7 @@ namespace Incoding.Extensions
 
         public static object TryGetValue<TObject>(this TObject ob, string property)
         {
-            var memberInfo = GetMemberInfo(ob, property, BindingFlags.GetField | BindingFlags.GetProperty);
+            var memberInfo = GetMemberInfo(ob, property, BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.Instance) ?? GetMemberInfo(ob, property, BindingFlags.GetField | BindingFlags.GetProperty);
 
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)

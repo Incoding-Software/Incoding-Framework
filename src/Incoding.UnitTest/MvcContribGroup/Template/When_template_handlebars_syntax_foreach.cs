@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(TemplateHandlebarsSyntax<>))]
     public class When_template_handlebars_syntax_foreach : Context_template
     {
-        #region Estabilish value
+        #region Establish value
 
         static ITemplateSyntax<FakeModel> newEach;
 

@@ -11,7 +11,7 @@ namespace Incoding.UnitTest.Block
     [Behaviors]
     public class Behaviors_cached_provider
     {
-        #region Estabilish value
+        #region Establish value
 
         protected static FakeSerializeObject valueToCache = Pleasure.Generator.Invent<FakeSerializeObject>();
 

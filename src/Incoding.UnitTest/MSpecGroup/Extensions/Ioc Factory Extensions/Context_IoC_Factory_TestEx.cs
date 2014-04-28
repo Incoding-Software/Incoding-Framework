@@ -2,7 +2,6 @@
 {
     #region << Using >>
 
-    using Incoding.Block.IoC;
     using Machine.Specifications;
 
     #endregion
@@ -11,7 +10,7 @@
     {
         #region Fields
 
-        Establish establish = () => { IoCFactory.Instance.UnInitialize(); };
+        Establish establish = () => { };
 
         #endregion
     }

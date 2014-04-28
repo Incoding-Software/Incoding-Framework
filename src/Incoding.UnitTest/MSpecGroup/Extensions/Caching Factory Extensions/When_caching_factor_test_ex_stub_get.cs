@@ -11,7 +11,7 @@
     [Subject(typeof(CachingFactoryTestEx))]
     public class When_caching_factor_test_ex_stub_get : Context_CachingFactoryTestEx
     {
-        #region Estabilish value
+        #region Establish value
 
         static FakeCache cacheKey;
 

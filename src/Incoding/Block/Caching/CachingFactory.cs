@@ -4,6 +4,7 @@ namespace Incoding.Block.Caching
 
     using System;
     using System.Collections.Concurrent;
+    using System.Threading;
     using Incoding.Block.Core;
 
     #endregion
@@ -14,42 +15,13 @@ namespace Incoding.Block.Caching
 
         static readonly ConcurrentDictionary<string, ICacheKey> cacheBuffer = new ConcurrentDictionary<string, ICacheKey>();
 
-        static readonly object lockObject = new object();
-
-        static volatile CachingFactory instance;
-
-        #endregion
-
-        #region Constructors
-
-        public CachingFactory()
-        {
-            UnInitialize();
-        }
+        static readonly Lazy<CachingFactory> instance = new Lazy<CachingFactory>(() => new CachingFactory());
 
         #endregion
 
         #region Properties
 
-        public static CachingFactory Instance
-        {
-            ////ncrunch: no coverage start
-            get
-            {
-                if (instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (instance == null)
-                            instance = new CachingFactory();
-                    }
-                }
-
-                return instance;
-            }
-
-            ////ncrunch: no coverage end
-        }
+        public static CachingFactory Instance { get { return instance.Value; } }
 
         #endregion
 
@@ -95,13 +67,8 @@ namespace Incoding.Block.Caching
 
         bool IsExpires(ICacheKey key)
         {
-            var cachingPolicy = this.init.GetLocalPolicy(key) ?? this.init.GetGlobalPolicy(key);
+            var cachingPolicy = this.init.  GetLocalPolicy(key) ?? this.init.GetGlobalPolicy(key);
             return cachingPolicy != null && cachingPolicy.IsExpires(key);
-        }
-
-        public override void UnInitialize()
-        {
-            this.init = new CachingInit(new EmptyCachedProvider());
         }
     }
 }

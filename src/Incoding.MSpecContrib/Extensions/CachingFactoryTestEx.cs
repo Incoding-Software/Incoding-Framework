@@ -65,11 +65,6 @@
                     mockProvider = Mock.Get(cachingInit.Provider);
                     action(mockProvider);
                 }  
-                        
-                        
-                        
-                        
-                        
                         ////ncrunch: no coverage start
                 catch (Exception)
                 {

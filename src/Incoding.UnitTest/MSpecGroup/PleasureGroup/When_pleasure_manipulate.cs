@@ -12,7 +12,7 @@
     [Subject(typeof(Manipulate))]
     public class When_pleasure_manipulate
     {
-        #region Estabilish value
+        #region Establish value
 
         enum Fake2Enum
         {

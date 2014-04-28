@@ -12,7 +12,7 @@
     [Subject(typeof(HttpMemoryPostedFile))]
     public class When_memory_posted_file
     {
-        #region Estabilish value
+        #region Establish value
 
         static HttpMemoryPostedFile httpMemoryPostFile;
 

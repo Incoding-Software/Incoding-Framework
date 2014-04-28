@@ -14,7 +14,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingMetaContainer))]
     public class When_incoding_meta_container_to_html_attributes
     {
-        #region Estabilish value
+        #region Establish value
 
         static void Verify(RouteValueDictionary route)
         {

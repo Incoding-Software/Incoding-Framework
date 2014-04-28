@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "~/Views/Labs/Index.cshtml";
+}
+
+@{ string containerId = Guid.NewGuid().ToString(); }
+@(Html.Hidden("Test", string.Empty, Html.When(JqueryBind.InitIncoding)
+                              .Do()
+                              .Direct()
+                              .OnSuccess(dsl =>
+                                             {
+                                                 dsl.Utilities.Window.Alert("Test");
+                                                 dsl.WithId(containerId).Core().Trigger.Incoding();
+                                             })
+                              .AsHtmlAttributes()))
+
+@(Html.When(JqueryBind.None)
+      .Do()
+      .Direct()
+      .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.AddClass("success"))
+      .AsHtmlAttributes(new { id = containerId })
+      .ToDiv())

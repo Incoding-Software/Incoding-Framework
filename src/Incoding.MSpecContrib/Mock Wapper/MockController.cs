@@ -187,9 +187,9 @@ namespace Incoding.MSpecContrib
             ShouldBePush(command, callCount: 0);
         }
 
-        public void ShouldBePush<TCommand>(Action<TCommand> action, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
+        public void ShouldBePush<TCommand>(Action<TCommand> action, int callCount = 1) where TCommand : CommandBase
         {
-            this.dispatcher.ShouldBePush(action, executeSetting, callCount);
+            this.dispatcher.ShouldBePush(action, callCount);
         }
 
         public MockController<TController> BrokenModelState()

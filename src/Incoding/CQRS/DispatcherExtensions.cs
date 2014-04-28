@@ -18,12 +18,13 @@ namespace Incoding.CQRS
             dispatcher.Push(composite);
         }
 
-        public static void Push(this IDispatcher dispatcher, CommandBase message)
+        public static void Delay(this IDispatcher dispatcher, CommandBase command, Action<MessageDelaySetting> configuration)
         {
-            dispatcher.Push(message, new MessageExecuteSetting());
+            dispatcher.Push(composite => composite.Quote(command)
+                                                  .AsDelay(configuration));
         }
 
-        public static void Push(this IDispatcher dispatcher, CommandBase message, MessageExecuteSetting executeSetting)
+        public static void Push(this IDispatcher dispatcher, CommandBase message, MessageExecuteSetting executeSetting = null)
         {
             dispatcher.Push(composite => composite.Quote(message, executeSetting));
         }
@@ -33,6 +34,13 @@ namespace Incoding.CQRS
             var setting = new MessageExecuteSetting();
             configurationSetting.Do(action => action(setting));
             dispatcher.Push(message, setting);
+        }
+
+        public static TResult Query<TResult>(this IDispatcher dispatcher, QueryBase<TResult> message, Action<MessageExecuteSetting> configurationSetting) where TResult : class
+        {
+            var setting = new MessageExecuteSetting();
+            configurationSetting.Do(action => action(setting));
+            return dispatcher.Query(message, setting);
         }
 
         #endregion

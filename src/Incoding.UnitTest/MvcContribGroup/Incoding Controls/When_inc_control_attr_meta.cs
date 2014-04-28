@@ -15,7 +15,7 @@
     [Subject(typeof(IncTextBoxControl<,>))]
     public class When_inc_control_attr_meta : Context_inc_control
     {
-        #region Estabilish value
+        #region Establish value
 
         static IncTextBoxControl<FakeModel, string> control;
 

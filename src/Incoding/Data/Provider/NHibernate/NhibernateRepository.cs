@@ -3,10 +3,14 @@ namespace Incoding.Data
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Threading.Tasks;
     using Incoding.Extensions;
     using NHibernate;
     using NHibernate.Linq;
+    using NHibernate.Persister.Entity;
 
     #endregion
 
@@ -14,103 +18,112 @@ namespace Incoding.Data
     {
         #region Fields
 
-        readonly Lazy<ISession> session;
+        readonly ISession session;
 
         #endregion
 
         #region Constructors
 
+        [ExcludeFromCodeCoverage]
         public NhibernateRepository(INhibernateSessionFactory sessionFactory)
         {
-            Guard.NotNull("sessionFactory", sessionFactory);
-            this.session = new Lazy<ISession>(sessionFactory.GetCurrentSession);
+            this.session = sessionFactory.GetCurrent();
         }
 
         #endregion
 
         #region IRepository Members
 
-        public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity
-        {            
-            this.session.Value.Save(entity);
+        public void ExecuteSql(string sql)
+        {
+            this.session.CreateSQLQuery(sql).ExecuteUpdate();
+        }
+
+        public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
+        {
+            this.session.Save(entity);
+        }
+
+        public void Saves<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity, new()
+        {
+            foreach (var entity in entities)
+                Save(entity);
         }
 
         public void Flush()
         {
-            this.session.Value.Flush();
+            this.session.Flush();
         }
 
-        public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity
-        {         
-            this.session.Value.SaveOrUpdate(entity);
-        }
-
-        public void Delete<TEntity>(object id) where TEntity : class, IEntity
+        public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            var entity = LoadById<TEntity>(id);
-            this.session.Value.Delete(entity);
+            this.session.SaveOrUpdate(entity);
         }
 
-        public TEntity GetById<TEntity>(object id) where TEntity : class, IEntity
+        public void Delete<TEntity>(object id) where TEntity : class, IEntity, new()
+        {
+            Delete(this.session.Load<TEntity>(id));
+        }
+
+        public void DeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
+        {
+            var metadata = GetMetaData<TEntity>();
+            string idColumnName = metadata.GetPropertyColumnNames("Id").FirstOrDefault();
+            string tableName = metadata.TableName;
+            string queryString = "DELETE FROM [{0}] WHERE {1} IN ({2})".F(tableName, idColumnName, ids.Select(o => o.GetType().IsAnyEquals(typeof(string), typeof(Guid)) ? "'{0}'".F(o.ToString()) : o.ToString()).AsString(","));
+            this.session
+                .CreateSQLQuery(queryString)
+                .ExecuteUpdate();
+        }
+
+        public void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
+        {
+            this.session.Delete(entity);
+        }
+
+        public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
+        {
+            this.session.CreateSQLQuery("DELETE {0}".F(GetMetaData<TEntity>().TableName))
+                .ExecuteUpdate();
+        }
+
+        public TEntity GetById<TEntity>(object id) where TEntity : class, IEntity, new()
         {
             if (id == null)
                 return null;
 
-            return this.session.Value.Get<TEntity>(id);
+            return this.session.Get<TEntity>(id);
         }
 
-        public TEntity LoadById<TEntity>(object id) where TEntity : class, IEntity
+        public TEntity LoadById<TEntity>(object id) where TEntity : class, IEntity, new()
         {
             if (id == null)
                 return null;
 
-            return this.session.Value.Load<TEntity>(id);
+            return this.session.Load<TEntity>(id);
         }
 
-        public IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity
+        public IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
-            return GetQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
+            return this.session.Query<TEntity>().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
-        public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity
+        public Task<IQueryable<TEntity>> QueryAsync<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
-            int totalCount = GetQuery(null, whereSpecification, null, null).Count();
-            var paginatedItems = GetQuery(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification).ToList();
-            return new IncPaginatedResult<TEntity>(paginatedItems, totalCount);
+            throw new NotImplementedException();
         }
 
-        public void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity
+        public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()
         {
-            this.session.Value.Delete(entity);
+            return this.session.Query<TEntity>().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
         #endregion
 
-        IQueryable<TEntity> GetQuery<TEntity>(OrderSpecification<TEntity> orderSpecification, Specification<TEntity> whereSpecification, FetchSpecification<TEntity> fetchSpecification, PaginatedSpecification paginatedSpecification) where TEntity : class, IEntity
+        SingleTableEntityPersister GetMetaData<T>()
         {
-            var source = this.session.Value.Query<TEntity>();
-
-            if (whereSpecification != null && whereSpecification.IsSatisfiedBy() != null)
-                source = source.Where(whereSpecification.IsSatisfiedBy());
-
-            if (orderSpecification != null)
-            {
-                var order = new AdHocOrderSpecification<TEntity>();
-                orderSpecification.SortedBy()(order);
-                source = order.applies.Aggregate(source, (current, apply) => apply(current));
-            }
-
-            if (paginatedSpecification != null)
-                source = source.Page(paginatedSpecification.CurrentPage, paginatedSpecification.PageSize);
-
-            if (fetchSpecification != null)
-            {
-                var fetch = new AdHocFetchSpecification<TEntity>();
-                fetchSpecification.FetchedBy()(fetch);
-                source = fetch.applies.Aggregate(source, (current, apply) => apply(current));
-            }
-
-            return source;
+            var metadata = this.session.SessionFactory.GetClassMetadata(typeof(T));
+            return (SingleTableEntityPersister)metadata;
         }
     }
 }

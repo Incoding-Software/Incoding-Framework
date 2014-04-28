@@ -1,4 +1,4 @@
 namespace Incoding.MvcContrib
 {
-    public interface IIncodingMetaLanguageCallbackInstancesDsl : IIncodingMetaLanguagePlugInDsl { }
+    public interface IIncodingMetaLanguageCallbackInstancesDsl : IIncodingMetaLanguageBehaviorDsl, IIncodingMetaLanguageWithDsl { }
 }

@@ -14,7 +14,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(SelectListExtensions))]
     public class When_collection_to_select_list_with_all_parameter
     {
-        #region Estabilish value
+        #region Establish value
 
         static List<FakeItemCollection> original;
 

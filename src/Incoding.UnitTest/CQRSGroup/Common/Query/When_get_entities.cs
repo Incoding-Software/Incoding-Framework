@@ -19,7 +19,7 @@
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         static MockMessage<GetEntitiesQuery<FakeEntity>, List<FakeEntity>> mockQuery;
 

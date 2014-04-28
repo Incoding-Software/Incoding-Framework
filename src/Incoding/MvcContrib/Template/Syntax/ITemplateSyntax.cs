@@ -14,6 +14,8 @@ namespace Incoding.MvcContrib
     {
         ITemplateSyntax<TModel> Up();
 
+        string For(string field);
+
         string For(Expression<Func<TModel, object>> field);
 
         string For(Expression<Func<TModel, bool>> field);
@@ -31,6 +33,8 @@ namespace Incoding.MvcContrib
         string IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
 
         string NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
+
+        string ForRaw(string field);
 
         string ForRaw(Expression<Func<TModel, object>> field);
 

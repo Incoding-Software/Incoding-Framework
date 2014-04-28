@@ -31,6 +31,11 @@
             return this;
         }
 
+        public IIncodingMetaLanguageEventBuilderDsl Direct(object result)
+        {
+            return Direct(IncodingResult.Success(result));
+        }
+
         public IIncodingMetaLanguageEventBuilderDsl Submit(Action<JqueryAjaxFormOptions> configuration = null)
         {
             return SubmitOn(selector => selector.Self(), configuration);
@@ -84,7 +89,7 @@
 
         public IIncodingMetaLanguageEventBuilderDsl Ajax(Action<JqueryAjaxOptions> configuration)
         {
-            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
+            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);            
             configuration(options);
             this.meta.Add(new ExecutableAjaxAction(false, string.Empty, options));
             return this;

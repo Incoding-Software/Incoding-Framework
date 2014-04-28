@@ -20,6 +20,9 @@
         It should_be_equal_left_bool = () => (true == new IncBoolResponse(true)).ShouldBeTrue();
 
         It should_be_equal_right_bool = () => (new IncBoolResponse(true) == false).ShouldBeFalse();
-        
+
+        It should_not_be_equal_left_bool = () => (true != new IncBoolResponse(true)).ShouldBeFalse();
+
+        It should_not_be_equal_right_bool = () => (new IncBoolResponse(true) != false).ShouldBeTrue();
     }
 }

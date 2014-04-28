@@ -17,6 +17,7 @@
 
         #region Equals
 
+
         public override bool Equals(object obj)
         {
             return Equals(obj as OrderSpecification<TEntity>);

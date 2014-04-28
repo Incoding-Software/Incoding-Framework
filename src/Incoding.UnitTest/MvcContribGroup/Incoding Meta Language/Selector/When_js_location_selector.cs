@@ -22,6 +22,10 @@
                                           .ToString()
                                           .ShouldEqual("||javascript*window.location.host||");
 
+        It should_be_hash = () => location.Hash
+                                          .ToString()
+                                          .ShouldEqual("||javascript*window.location.hash||");
+
         It should_be_href = () => location.Href
                                           .ToString()
                                           .ShouldEqual("||javascript*window.location.href||");

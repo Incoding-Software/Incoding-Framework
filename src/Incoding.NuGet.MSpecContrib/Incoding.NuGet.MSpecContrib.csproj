@@ -46,7 +46,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <None Include="content\app.config" />
+    <None Include="content\app.config.pp" />
     <None Include="content\MSpecAssemblyContext.cs.pp" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

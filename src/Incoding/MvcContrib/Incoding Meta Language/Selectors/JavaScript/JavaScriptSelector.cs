@@ -10,6 +10,10 @@
     {
         #region Constructors
 
+        internal JavaScriptSelector(string selector)
+                : base(selector) { }
+
+
         internal JavaScriptSelector()
                 : base(string.Empty) { }
 

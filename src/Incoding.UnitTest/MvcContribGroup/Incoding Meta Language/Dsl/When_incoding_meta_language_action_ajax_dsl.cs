@@ -14,7 +14,7 @@
     [Subject(typeof(IIncodingMetaLanguageActionDsl))]
     public class When_incoding_meta_language_action_ajax_dsl
     {
-        #region Estabilish value
+        #region Establish value
 
         internal static void VerifyAjax(ExecutableActionBase incodingAjaxAction, string type, bool hash, string prefix)
         {

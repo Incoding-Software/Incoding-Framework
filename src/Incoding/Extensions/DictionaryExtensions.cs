@@ -37,8 +37,8 @@ namespace Incoding.Extensions
         [DebuggerStepThrough]
         public static void Merge(this IDictionary<string, object> src, object dest)
         {
-            var dictionaryFromAnonymus = AnonymousHelper.ToDictionary(dest);
-            src.Merge(dictionaryFromAnonymus);
+            var dictionaryFromAnonymous = AnonymousHelper.ToDictionary(dest);
+            src.Merge(dictionaryFromAnonymous);
         }
 
         [DebuggerStepThrough]

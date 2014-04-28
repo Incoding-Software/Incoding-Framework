@@ -38,12 +38,12 @@ Folder =
     {
         :src =>'src',
         :deploy => 'deploy',
-		:config => File.join('config' , 'ci'),
+	:config => File.join('config' , 'ci'),
         :live =>  File.join('deploy' , 'Live'),
         :dev =>  File.join( 'deploy' , 'Dev'),        
         :clientFramework =>  'src/Incoding/MvcContrib/Incoding Meta Language/Client Framework',                
         :lib => 'src/packages',
-	    :mspecResult =>  File.join('deploy','MspecReport')
+	:mspecResult =>  File.join('deploy','MspecReport')
     }
 
 Files  =
@@ -62,8 +62,14 @@ task :estblish do
   CreateDirIfNotExists(Folder[:live]) 
 end
 
+assemblyinfo :assemblyinfo do |asm|
+  asm.version = ENV['build_number']
+  asm.file_version = ENV['build_number']
+  asm.output_file = "src/Incoding/properties/AssemblyInfo.cs"
+end
+
 desc    'Clean and Build solution'
-msbuild :build do |msb|
+msbuild :build =>[:assemblyinfo] do |msb|
   msb.properties :configuration => :Release, :OutputPath => :"../../#{Folder[:dev]}"
   msb.targets :Clean,:Build
   msb.solution = File.join(Folder[:src],Files[:sln])
@@ -97,13 +103,13 @@ end
   end
 
 
-task :publish =>[:build,:mspec,:minify]  do    
+task :publish =>[:build,:minify]  do    
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.dll'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.pdb'),Folder[:live],:verbose => true)
   FileUtils.cp_r(File.expand_path(Folder[:clientFramework] + '/incoding.meta.trace.js'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.dll'),Folder[:live],:verbose => true)
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.pdb'),Folder[:live],:verbose => true)  
-  FileUtils.cp_r(Folder[:lib],Folder[:live],:verbose => true)
+  
 end
 
 

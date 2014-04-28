@@ -3,6 +3,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using System.Collections.Generic;
+    using Incoding.Block.Logging;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -104,12 +105,12 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                       .Do().Direct()
                                                       .OnSuccess(r => r.Utilities.Document.Forward())
                                                       .GetExecutable<ExecutableEvalMethod>()
-                                                     .ShouldEqualData(new Dictionary<string, object>
-                                                                        {
-                                                                                { "method", "go" },
-                                                                                { "args", new[] { "1" } },
-                                                                                { "context", "history" },
-                                                                        });
+                                                      .ShouldEqualData(new Dictionary<string, object>
+                                                                           {
+                                                                                   { "method", "go" },
+                                                                                   { "args", new[] { "1" } },
+                                                                                   { "context", "history" },
+                                                                           });
 
         It should_be_document_set_title = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                         .Do().Direct()
@@ -119,6 +120,28 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                              {
                                                                                      { "code", "document.title = 'Title';" }
                                                                              });
+
+        It should_be_window_console_log = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                        .Do().Direct()
+                                                        .OnSuccess(r => r.Utilities.Window.Console.Log(LogType.Fatal, Selector.Jquery.Class("test")))
+                                                        .GetExecutable<ExecutableEvalMethod>()
+                                                        .ShouldEqualData(new Dictionary<string, object>
+                                                                             {
+                                                                                     { "method", "log" },
+                                                                                     { "args", new[] { "Fatal", "$('.test')" } },
+                                                                                     { "context", "window.console" },
+                                                                             });
+
+        It should_be_window_open = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                 .Do().Direct()
+                                                 .OnSuccess(r => r.Utilities.Window.Open(Pleasure.Generator.TheSameString(), "Title"))
+                                                 .GetExecutable<ExecutableEvalMethod>()
+                                                 .ShouldEqualData(new Dictionary<string, object>
+                                                                      {
+                                                                              { "method", "open" },
+                                                                              { "args", new[] { "TheSameString", "Title" } },
+                                                                              { "context", "window" },
+                                                                      });
 
         It should_be_window_alert = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   .Do().Direct()

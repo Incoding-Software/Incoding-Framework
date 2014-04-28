@@ -12,7 +12,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(HttpMemoryPostedFile))]
     public class When_memory_posted_file_with_empty_content
     {
-        #region Estabilish value
+        #region Establish value
 
         static MemoryStream emptyStream;
 

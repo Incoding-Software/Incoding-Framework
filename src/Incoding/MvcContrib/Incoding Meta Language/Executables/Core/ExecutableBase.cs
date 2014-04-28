@@ -5,6 +5,7 @@ namespace Incoding.MvcContrib
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Web.Routing;
     using Incoding.Extensions;
 
@@ -26,6 +27,11 @@ namespace Incoding.MvcContrib
             configuration(builder);
             this.conditionals.AddRange(builder.conditionals);
             return this;
+        }
+
+        public IExecutableSetting If(Expression<Func<bool>> expression)
+        {
+            return If(builder => builder.Is(expression));
         }
 
         public void TimeOut(double millisecond)

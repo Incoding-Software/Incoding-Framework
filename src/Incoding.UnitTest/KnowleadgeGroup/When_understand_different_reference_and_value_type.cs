@@ -22,7 +22,7 @@ namespace Incoding.UnitTest.KnowleadgeGroup
 
         #endregion
 
-        #region Estabilish value
+        #region Establish value
 
         struct FakeStructure
         {

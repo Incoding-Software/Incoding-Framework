@@ -3,6 +3,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using System.Collections.Generic;
+    using System.Net;
     using System.Web.WebPages;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
@@ -13,7 +14,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingMetaCallbackJqueryDsl))]
     public class When_incoding_meta_language_dsl_jquery
     {
-        #region Estabilish value
+        #region Establish value
 
         static Selector value = Selector.Value("Value");
 
@@ -21,25 +22,26 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #region Attributes
 
+        
         It should_be_set_attr = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                               .Do().Direct()
                                               .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetAttr(HtmlAttribute.Href, value))
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                    {
-                                                                           { "method", "attr" }, 
-                                                                           { "args", new[] { "href", "Value" } }, 
+                                                                           { "method", "attr" },
+                                                                           { "args", new[] { "href", "Value" } },
                                                                            { "context", "$(this.target)" }
-                                                                   });  
-        
+                                                                   });
+
         It should_be_set_attr_without_value = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                             .Do().Direct()
                                                             .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetAttr(HtmlAttribute.Href))
                                                             .GetExecutable<ExecutableEvalMethod>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                                  {
-                                                                                         { "method", "attr" }, 
-                                                                                         { "args", new[] { "href", "href" } }, 
+                                                                                         { "method", "attr" },
+                                                                                         { "args", new[] { "href", "href" } },
                                                                                          { "context", "$(this.target)" }
                                                                                  });
 
@@ -49,8 +51,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
-                                                                              { "method", "removeAttr" }, 
-                                                                              { "args", new[] { "accept href" } }, 
+                                                                              { "method", "removeAttr" },
+                                                                              { "args", new[] { "accept href" } },
                                                                               { "context", "$(this.target)" }
                                                                       });
 
@@ -60,8 +62,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
-                                                                              { "method", "removeProp" }, 
-                                                                              { "args", new[] { "href" } }, 
+                                                                              { "method", "removeProp" },
+                                                                              { "args", new[] { "href" } },
                                                                               { "context", "$(this.target)" }
                                                                       });
 
@@ -71,8 +73,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                    {
-                                                                           { "method", "prop" }, 
-                                                                           { "args", new[] { "href", "Value" } }, 
+                                                                           { "method", "prop" },
+                                                                           { "args", new[] { "href", "Value" } },
                                                                            { "context", "$(this.target)" }
                                                                    });
 
@@ -82,8 +84,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                             .GetExecutable<ExecutableEvalMethod>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                                  {
-                                                                                         { "method", "prop" }, 
-                                                                                         { "args", new[] { "href", "href" } }, 
+                                                                                         { "method", "prop" },
+                                                                                         { "args", new[] { "href", "href" } },
                                                                                          { "context", "$(this.target)" }
                                                                                  });
 
@@ -93,8 +95,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                .GetExecutable<ExecutableEvalMethod>()
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                     {
-                                                                                            { "method", "prop" }, 
-                                                                                            { "args", new[] { "href", string.Empty } }, 
+                                                                                            { "method", "prop" },
+                                                                                            { "args", new[] { "href", string.Empty } },
                                                                                             { "context", "$(this.target)" }
                                                                                     });
 
@@ -104,8 +106,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                        {
-                                                                               { "method", "removeClass" }, 
-                                                                               { "args", new[] { "class" } }, 
+                                                                               { "method", "removeClass" },
+                                                                               { "args", new[] { "class" } },
                                                                                { "context", "$(this.target)" }
                                                                        });
 
@@ -115,8 +117,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                        {
-                                                                               { "method", "toggleClass" }, 
-                                                                               { "args", new[] { "class" } }, 
+                                                                               { "method", "toggleClass" },
+                                                                               { "args", new[] { "class" } },
                                                                                { "context", "$(this.target)" }
                                                                        });
 
@@ -126,8 +128,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                           {
-                                                                                  { "method", "toggleProp" }, 
-                                                                                  { "args", new[] { "disabled" } }, 
+                                                                                  { "method", "toggleProp" },
+                                                                                  { "args", new[] { "disabled" } },
                                                                                   { "context", "$(this.target)" }
                                                                           });
 
@@ -137,8 +139,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                           {
-                                                                                  { "method", "toggleProp" }, 
-                                                                                  { "args", new[] { "readonly" } }, 
+                                                                                  { "method", "toggleProp" },
+                                                                                  { "args", new[] { "readonly" } },
                                                                                   { "context", "$(this.target)" }
                                                                           });
 
@@ -148,8 +150,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                     .GetExecutable<ExecutableEvalMethod>()
                                                     .ShouldEqualData(new Dictionary<string, object>
                                                                          {
-                                                                                 { "method", "toggleProp" }, 
-                                                                                 { "args", new[] { "checked" } }, 
+                                                                                 { "method", "toggleProp" },
+                                                                                 { "args", new[] { "checked" } },
                                                                                  { "context", "$(this.target)" }
                                                                          });
 
@@ -159,8 +161,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                .GetExecutable<ExecutableEvalMethod>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                     {
-                                                                            { "method", "addClass" }, 
-                                                                            { "context", "$(this.target)" }, 
+                                                                            { "method", "addClass" },
+                                                                            { "context", "$(this.target)" },
                                                                             { "args", new[] { "class" } }
                                                                     });
 
@@ -170,7 +172,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                 .GetExecutable<ExecutableEval>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "code", "$(this.target).val(\"aws\");" }, 
+                                                                             { "code", "$(this.target).val(\"aws\");" },
                                                                      });
 
         It should_be_val_null = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -190,10 +192,21 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                        {
-                                                                               { "method", "val" }, 
-                                                                               { "args", new[] { "$('.class')" } }, 
+                                                                               { "method", "val" },
+                                                                               { "args", new[] { "$('.class')" } },
                                                                                { "context", "$(this.target)" }
                                                                        });
+
+        It should_be_val_selector_by_func = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                          .Do().Direct()
+                                                          .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val(selector => selector.Class("class")))
+                                                          .GetExecutable<ExecutableEvalMethod>()
+                                                          .ShouldEqualData(new Dictionary<string, object>
+                                                                               {
+                                                                                       { "method", "val" },
+                                                                                       { "args", new[] { "$('.class')" } },
+                                                                                       { "context", "$(this.target)" }
+                                                                               });
 
         It should_be_val_array = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
@@ -214,8 +227,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                                   {
-                                                                          { "method", "css" }, 
-                                                                          { "args", new[] { "font-family", "Value" } }, 
+                                                                          { "method", "css" },
+                                                                          { "args", new[] { "font-family", "Value" } },
                                                                           { "context", "$(this.target)" }
                                                                   });
 
@@ -225,8 +238,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                    .GetExecutable<ExecutableEvalMethod>()
                                                    .ShouldEqualData(new Dictionary<string, object>
                                                                         {
-                                                                                { "method", "css" }, 
-                                                                                { "args", new[] { "width", string.Empty } }, 
+                                                                                { "method", "css" },
+                                                                                { "args", new[] { "width", string.Empty } },
                                                                                 { "context", "$(this.target)" }
                                                                         });
 
@@ -236,8 +249,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                                   {
-                                                                          { "method", "css" }, 
-                                                                          { "args", new[] { "display", "table-caption" } }, 
+                                                                          { "method", "css" },
+                                                                          { "args", new[] { "display", "table-caption" } },
                                                                           { "context", "$(this.target)" }
                                                                   });
 
@@ -247,8 +260,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "method", "height" }, 
-                                                                         { "args", new[] { "10" } }, 
+                                                                         { "method", "height" },
+                                                                         { "args", new[] { "10" } },
                                                                          { "context", "$(this.target)" }
                                                                  });
 
@@ -258,8 +271,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
-                                                                              { "method", "scrollLeft" }, 
-                                                                              { "args", new[] { "25" } }, 
+                                                                              { "method", "scrollLeft" },
+                                                                              { "args", new[] { "25" } },
                                                                               { "context", "$(this.target)" }
                                                                       });
 
@@ -269,8 +282,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                 .GetExecutable<ExecutableEvalMethod>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "method", "scrollTop" }, 
-                                                                             { "args", new[] { "25" } }, 
+                                                                             { "method", "scrollTop" },
+                                                                             { "args", new[] { "25" } },
                                                                              { "context", "$(this.target)" }
                                                                      });
 
@@ -280,8 +293,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                                 {
-                                                                        { "method", "width" }, 
-                                                                        { "args", new[] { "25" } }, 
+                                                                        { "method", "width" },
+                                                                        { "args", new[] { "25" } },
                                                                         { "context", "$(this.target)" }
                                                                 });
 
@@ -289,22 +302,37 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #region Func
 
+        It should_be_increment_with_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                             .Do().Direct()
+                                                             .OnSuccess(r => r.Self().Core().Func.IncrementVal(Selector.Jquery.Self()))
+                                                             .GetExecutable<ExecutableEvalMethod>()
+                                                             .ShouldEqualData(new Dictionary<string, object>
+                                                                                  {
+                                                                                          { "method", "increment" },
+                                                                                          { "context", "$(this.target)" },
+                                                                                          { "args", new[] { "$(this.self)" } },
+                                                                                  });
+
         It should_be_increment = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
                                                .OnSuccess(r => r.Self().Core().Func.IncrementVal())
-                                               .GetExecutable<ExecutableEval>()
+                                               .GetExecutable<ExecutableEvalMethod>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                     {
-                                                                            { "code", "$(this.target).val(parseInt($(this.target).val()) + 1);" }
+                                                                            { "method", "increment" },
+                                                                            { "context", "$(this.target)" },
+                                                                            { "args", new[] { "1" } },
                                                                     });
 
         It should_be_decrement = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
                                                .OnSuccess(r => r.Self().Core().Func.DecrementVal())
-                                               .GetExecutable<ExecutableEval>()
+                                               .GetExecutable<ExecutableEvalMethod>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                     {
-                                                                            { "code", "$(this.target).val(parseInt($(this.target).val()) - 1);" }
+                                                                            { "method", "increment" },
+                                                                            { "context", "$(this.target)" },
+                                                                            { "args", new[] { "-1" } },
                                                                     });
 
         It should_be_jquery_plug_in = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -322,8 +350,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
-                                                                              { "method", @"Call" }, 
-                                                                              { "args", new[] { "15" } }, 
+                                                                              { "method", @"Call" },
+                                                                              { "args", new[] { "15" } },
                                                                               { "context", "$(this.target)" }
                                                                       });
 
@@ -337,8 +365,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "method", "remove" }, 
-                                                                         { "args", new string[] { } }, 
+                                                                         { "method", "remove" },
+                                                                         { "args", new string[] { } },
                                                                          { "context", "$(this.target)" }
                                                                  });
 
@@ -348,8 +376,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                                 {
-                                                                        { "method", "empty" }, 
-                                                                        { "args", new string[] { } }, 
+                                                                        { "method", "empty" },
+                                                                        { "args", new string[] { } },
                                                                         { "context", "$(this.target)" }
                                                                 });
 
@@ -359,8 +387,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "method", "detach" }, 
-                                                                         { "args", new string[] { } }, 
+                                                                         { "method", "detach" },
+                                                                         { "args", new string[] { } },
                                                                          { "context", "$(this.target)" }
                                                                  });
 
@@ -370,8 +398,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                           .GetExecutable<ExecutableEvalMethod>()
                                           .ShouldEqualData(new Dictionary<string, object>
                                                                {
-                                                                       { "method", "wrap" }, 
-                                                                       { "args", new[] { "<div>" } }, 
+                                                                       { "method", "wrap" },
+                                                                       { "args", new[] { "<div>" } },
                                                                        { "context", "$(this.target)" }
                                                                });
 
@@ -381,8 +409,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                    {
-                                                                           { "method", "wrapAll" }, 
-                                                                           { "args", new[] { "<div>" } }, 
+                                                                           { "method", "wrapAll" },
+                                                                           { "args", new[] { "<div>" } },
                                                                            { "context", "$(this.target)" }
                                                                    });
 
@@ -392,8 +420,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                 .GetExecutable<ExecutableEvalMethod>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                      {
-                                                                             { "method", "text" }, 
-                                                                             { "args", new[] { string.Empty } }, 
+                                                                             { "method", "text" },
+                                                                             { "args", new[] { string.Empty } },
                                                                              { "context", "$(this.target)" }
                                                                      });
 
@@ -403,8 +431,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                           .GetExecutable<ExecutableEvalMethod>()
                                           .ShouldEqualData(new Dictionary<string, object>
                                                                {
-                                                                       { "method", "text" }, 
-                                                                       { "args", new[] { "<div>" } }, 
+                                                                       { "method", "text" },
+                                                                       { "args", new[] { "<div>" } },
                                                                        { "context", "$(this.target)" }
                                                                });
 
@@ -414,8 +442,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "method", "append" }, 
-                                                                         { "args", new[] { "<div>" } }, 
+                                                                         { "method", "append" },
+                                                                         { "args", new[] { "<div>" } },
                                                                          { "context", "$(this.target)" }
                                                                  });
 
@@ -425,8 +453,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                           {
-                                                                                  { "method", "append" }, 
-                                                                                  { "args", new[] { "||javascript*window.location.href||" } }, 
+                                                                                  { "method", "append" },
+                                                                                  { "args", new[] { "||javascript*window.location.href||" } },
                                                                                   { "context", "$(this.target)" }
                                                                           });
 
@@ -436,8 +464,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                                   {
-                                                                          { "method", "prepend" }, 
-                                                                          { "args", new[] { "<div>" } }, 
+                                                                          { "method", "prepend" },
+                                                                          { "args", new[] { "<div>" } },
                                                                           { "context", "$(this.target)" }
                                                                   });
 
@@ -447,8 +475,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                                 {
-                                                                        { "method", "after" }, 
-                                                                        { "args", new[] { "<div>" } }, 
+                                                                        { "method", "after" },
+                                                                        { "args", new[] { "<div>" } },
                                                                         { "context", "$(this.target)" }
                                                                 });
 
@@ -458,8 +486,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {
-                                                                         { "method", "before" }, 
-                                                                         { "args", new[] { "<div>" } }, 
+                                                                         { "method", "before" },
+                                                                         { "args", new[] { "<div>" } },
                                                                          { "context", "$(this.target)" }
                                                                  });
 
@@ -469,8 +497,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                       {
-                                                                              { "method", "html" }, 
-                                                                              { "args", new[] { "<div>" } }, 
+                                                                              { "method", "html" },
+                                                                              { "args", new[] { "<div>" } },
                                                                               { "context", "$(this.target)" }
                                                                       });
 
@@ -480,8 +508,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                           .GetExecutable<ExecutableEvalMethod>()
                                                           .ShouldEqualData(new Dictionary<string, object>
                                                                                {
-                                                                                       { "method", "html" }, 
-                                                                                       { "args", new[] { "$('#id')" } }, 
+                                                                                       { "method", "html" },
+                                                                                       { "args", new[] { "$('#id')" } },
                                                                                        { "context", "$(this.target)" }
                                                                                });
 
@@ -491,8 +519,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                        {
-                                                                               { "method", "replaceWith" }, 
-                                                                               { "args", new[] { "<div>" } }, 
+                                                                               { "method", "replaceWith" },
+                                                                               { "args", new[] { "<div>" } },
                                                                                { "context", "$(this.target)" }
                                                                        });
 
