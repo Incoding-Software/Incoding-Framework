@@ -7,6 +7,7 @@ Incoding framework (IncFramework) is a rapid web-development powered by asp.net 
 * Define behaviour of your Ajax dynamic pages with NO Javascript code.
 * CQRS implementation is simpler than you thinked of it.
 * Mspec helpers would shorter time spent on unit testing
+* Model View Disaptcher - cqrs over asp.net MVC
 
 ## Installation
 
