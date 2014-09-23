@@ -36,6 +36,6 @@
 
         Because of = () => mockCommand.Original.Execute();
 
-        It should_be_verify = () => mockCommand.ShouldBePushed();
+        It should_be_verify = () => mockCommand.ShouldPushed();
     }
 }

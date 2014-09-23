@@ -2,7 +2,6 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
-    using System;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Block.IoC;
@@ -12,15 +11,25 @@ namespace Incoding.MvcContrib
 
     #endregion
 
+    public enum BootstrapOfVersion
+    {
+        v2,
+
+        v3
+    }
+
     public class IncodingHtmlHelper
     {
         // ReSharper disable ConvertToConstant.Global
         // ReSharper disable FieldCanBeMadeReadOnly.Global
 
         ////ncrunch: no coverage start
+
         #region Static Fields
 
         public static string DropDownTemplateId = "incodingDropDownTemplate";
+
+        public static BootstrapOfVersion BootstrapVersion = BootstrapOfVersion.v2;
 
         #endregion
 
@@ -28,6 +37,7 @@ namespace Incoding.MvcContrib
 
         // ReSharper restore FieldCanBeMadeReadOnly.Global
         // ReSharper restore ConvertToConstant.Global
+
         #region Fields
 
         readonly HtmlHelper htmlHelper;
@@ -35,6 +45,7 @@ namespace Incoding.MvcContrib
         #endregion
 
         ////ncrunch: no coverage start
+
         #region Constructors
 
         public IncodingHtmlHelper(HtmlHelper htmlHelper)
@@ -45,6 +56,7 @@ namespace Incoding.MvcContrib
         #endregion
 
         ////ncrunch: no coverage end
+
         #region Api Methods
 
         public MvcHtmlString Script([PathReference] string src)
@@ -202,7 +214,6 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
 
         static TagBuilder CreateScript(string id, HtmlType type, string src, MvcHtmlString content)
         {

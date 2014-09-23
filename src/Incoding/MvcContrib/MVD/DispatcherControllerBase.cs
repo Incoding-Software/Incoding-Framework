@@ -20,9 +20,9 @@
     // ReSharper disable MemberCanBeProtected.Global
     public class DispatcherControllerBase : IncControllerBase
     {
-        #region Static Fields
-
         ////ncrunch: no coverage start
+
+        #region Static Fields
 
         internal static readonly List<Type> duplicates = new List<Type>();
 
@@ -30,11 +30,11 @@
 
         static readonly List<Type> types = new List<Type>();
 
-        static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>(); 
-
-        ////ncrunch: no coverage end
+        static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
 
         #endregion
+
+        ////ncrunch: no coverage end
 
         #region Constructors
 
@@ -65,12 +65,12 @@
 
                 var defaultTypes = new[]
                                        {
-                                               typeof(int), typeof(decimal), typeof(bool), typeof(byte), 
-                                               typeof(char), typeof(decimal), typeof(double), typeof(float), 
-                                               typeof(long), typeof(object), typeof(sbyte), typeof(short), 
-                                               typeof(string), typeof(uint), typeof(ulong), typeof(ushort), 
-                                               typeof(DateTime), typeof(TimeSpan), typeof(DeleteEntityByIdCommand), typeof(DeleteEntityByIdCommand<>), 
-                                               typeof(GetEntitiesQuery<>), typeof(GetEntityByIdQuery<>), typeof(HasEntitiesQuery<>), typeof(KeyValueVm), 
+                                               typeof(int), typeof(decimal), typeof(bool), typeof(byte),
+                                               typeof(char), typeof(decimal), typeof(double), typeof(float),
+                                               typeof(long), typeof(object), typeof(sbyte), typeof(short),
+                                               typeof(string), typeof(uint), typeof(ulong), typeof(ushort),
+                                               typeof(DateTime), typeof(TimeSpan), typeof(DeleteEntityByIdCommand), typeof(DeleteEntityByIdCommand<>),
+                                               typeof(GetEntitiesQuery<>), typeof(GetEntityByIdQuery<>), typeof(HasEntitiesQuery<>), typeof(KeyValueVm),
                                                typeof(IncEntityBase), typeof(IncStructureResponse<>), typeof(OptGroupVm)
                                        };
                 types.AddRange(defaultTypes.Where(r => !types.Contains(r)));
@@ -96,7 +96,7 @@
             return IncJson(result);
         }
 
-        public virtual ActionResult Render(string incView, string incType, string incGeneric,bool? incIsModel)
+        public virtual ActionResult Render(string incView, string incType, string incGeneric, bool? incIsModel)
         {
             incView = HttpUtility.UrlDecode(incView);
             object model = null;
@@ -105,7 +105,7 @@
             {
                 var query = Create(incType, incGeneric);
                 var baseType = query.GetType().BaseType;
-                
+
                 model = baseType.Name.EqualsWithInvariant("QueryBase`1") && !incIsModel.GetValueOrDefault(false)
                                 ? dispatcher.GetType()
                                             .GetMethod("Query")
@@ -129,9 +129,24 @@
 
         public virtual ActionResult Composite(string incTypes)
         {
-            var commands = incTypes.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                                   .Select(r => (CommandBase)Create(r, string.Empty))
-                                   .ToList();
+            if (string.IsNullOrWhiteSpace(incTypes))
+                throw new ArgumentNullException("incType", "Argument can't be empty ( action composite )");
+
+            var splits = incTypes.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            bool isGroup = splits.Count() == 1;
+
+            List<CommandBase> commands;
+            if (isGroup)
+            {
+                string firstType = splits.First();
+                commands = ((IEnumerable<CommandBase>)Create(firstType, string.Empty, true)).ToList();
+            }
+            else
+            {
+                commands = splits.Select(r => (CommandBase)Create(r, string.Empty))
+                                 .ToList();
+            }
+
             return TryPush(composite =>
                                {
                                    foreach (var commandBase in commands)
@@ -141,7 +156,7 @@
 
         public virtual ActionResult QueryToFile(string incType, string incGeneric, string incContentType, string incFileDownloadName)
         {
-            var query = Create(incType, incGeneric);
+            var query = Create(incType, incGeneric, false);
             var result = dispatcher.GetType()
                                    .GetMethod("Query")
                                    .MakeGenericMethod(query.GetType().BaseType.With(r => r.GetGenericArguments()[0]))
@@ -151,16 +166,23 @@
 
         #endregion
 
-        object Create(string type, string generic)
+        object Create(string type, string generic = "", bool isGroup = false)
         {
-            var instanceType = FindTypeByName(type, false);
+            var inst = FindTypeByName(type, false);
+            var instanceType = isGroup ? typeof(List<>).MakeGenericType(inst) : inst;
             if (!string.IsNullOrWhiteSpace(generic))
-                instanceType = instanceType.MakeGenericType(FindTypeByName(generic, true));
+            {
+                instanceType = instanceType.MakeGenericType(generic.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
+                                                                   .Select(name => FindTypeByName(name, true))
+                                                                   .ToArray());
+            }
 
             var instance = Activator.CreateInstance(instanceType);
             GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                     .Where(r => r.Name == "TryUpdateModel" && r.GetParameters().Length == 1)
-                     .DoEach(info => info.MakeGenericMethod(instanceType).Invoke(this, new[] { instance }));
+                     .Where(r => r.Name == "TryUpdateModel" &&
+                                 r.GetParameters().Length == 1)
+                     .DoEach(info => info.MakeGenericMethod(instanceType)
+                                         .Invoke(this, new[] { instance }));
 
             return instance;
         }

@@ -140,7 +140,7 @@
         public static JquerySelectorExtend Method(this JquerySelectorExtend selector, string method, params object[] args)
         {
             selector.AddMethod(method, args);
-            return selector;
+            return new  JquerySelectorExtend(selector);
         }
 
         /// <summary>
@@ -164,9 +164,9 @@
         ///     Get property
         /// </summary>
         public static JquerySelectorExtend Property(this JquerySelectorExtend selector, string prop)
-        {
+        {            
             selector.AddProperty(prop);
-            return selector;
+            return new JquerySelectorExtend(selector);
         }
 
         /// <summary>

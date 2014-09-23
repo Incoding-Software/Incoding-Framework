@@ -26,7 +26,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                .GetExecutable<ExecutableSubmitAction>()
                                                .Should(action =>
                                                            {
-                                                               action["formSelector"].ShouldEqual("$('#id').parent($('abbr'))");
+                                                               action["formSelector"].ShouldEqual("$('#id').parent('abbr')");
                                                                action["options"].ShouldBeOfType<Dictionary<string, object>>();
                                                            });
     }

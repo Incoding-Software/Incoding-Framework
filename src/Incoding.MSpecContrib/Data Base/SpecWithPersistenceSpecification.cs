@@ -17,6 +17,8 @@
         [ThreadStatic]
         protected static PersistenceSpecification<TEntity> persistenceSpecification;
 
+        
+
         #endregion
 
         #region Fields

@@ -50,6 +50,9 @@ namespace Incoding.Extensions
             return value.Replace("'", "\\'");
         }
 
+
+       
+
         #endregion
     }
 }

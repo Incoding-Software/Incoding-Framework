@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
-    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using JetBrains.Annotations;
@@ -149,7 +148,10 @@
                 this.defaultRoutes = new RouteValueDictionary();
                 this.defaultRoutes.Add("incType", GetTypeName(typeof(TQuery)));
                 if (typeof(TQuery).IsGenericType)
-                    this.defaultRoutes.Add("incGeneric", GetTypeName(typeof(TQuery).GetGenericArguments()[0]));
+                {
+                    this.defaultRoutes.Add("incGeneric", typeof(TQuery).GetGenericArguments().Select(r => GetTypeName(r))
+                                                                       .AsString(","));
+                }
 
                 this.urlHelper = urlHelper;
                 this.query = AnonymousHelper.ToDictionary(query);
@@ -202,7 +204,7 @@
 
             readonly UrlHelper urlHelper;
 
-            readonly List<KeyValuePair<Type, object>> dictionary = new List<KeyValuePair<Type, object>>();
+            readonly Dictionary<Type, List<object>> dictionary = new Dictionary<Type, List<object>>();
 
             #endregion
 
@@ -219,7 +221,12 @@
 
             public UrlPushDispatcher Push<TCommand>(object routes)
             {
-                this.dictionary.Add(new KeyValuePair<Type, object>(typeof(TCommand), routes));
+                var type = typeof(TCommand);
+                if (this.dictionary.ContainsKey(type))
+                    this.dictionary[type].Add(routes);
+                else
+                    this.dictionary.Add(type, new List<object> { routes });
+
                 return this;
             }
 
@@ -233,7 +240,7 @@
             public override string ToString()
             {
                 string baseUrl;
-                if (this.dictionary.Count == 1)
+                if (this.dictionary.Count == 1 && this.dictionary.Values.First().Count == 1)
                 {
                     var pair = this.dictionary.First();
                     var commandType = pair.Key;
@@ -244,15 +251,37 @@
                                                                               });
                 }
                 else
-                    baseUrl = this.urlHelper.Action("Composite", "Dispatcher", new RouteValueDictionary { { "incTypes", string.Join(",", this.dictionary.Select(r => GetTypeName(r.Key))) } });
+                {
+                    baseUrl = this.urlHelper.Action("Composite", "Dispatcher", new RouteValueDictionary
+                                                                                   {
+                                                                                           {
+                                                                                                   "incType", this.dictionary.Select(r => GetTypeName(r.Key))
+                                                                                                                  .Distinct()
+                                                                                                                  .AsString(",")
+                                                                                           }
+                                                                                   });
+                }
 
-                var routes = this.dictionary.Select(r => AnonymousHelper.ToDictionary(r.Value))
-                                 .Aggregate(new RouteValueDictionary(), (dest, source) =>
-                                                                            {
-                                                                                source.Where(pair => !string.IsNullOrWhiteSpace(pair.Value.With(r => r.ToString())))
-                                                                                      .DoEach(dest.Set);
-                                                                                return dest;
-                                                                            });
+                var routes = new RouteValueDictionary();
+                foreach (var pair in this.dictionary)
+                {
+                    var valueAsRoutes = pair.Value.Select(AnonymousHelper.ToDictionary)
+                                            .ToList();
+
+                    if (valueAsRoutes.Count() > 1)
+                    {
+                        for (int i = 0; i < valueAsRoutes.Count; i++)
+                        {
+                            foreach (var keyValue in valueAsRoutes[i].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
+                                routes.Add("[{0}].{1}".F(i, keyValue.Key), keyValue.Value.ToString());
+                        }
+                    }
+                    else
+                    {
+                        foreach (var keyValue in valueAsRoutes[0].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
+                            routes.Add(keyValue.Key, keyValue.Value.ToString());
+                    }
+                }
                 return baseUrl.AppendToQueryString(routes);
             }
 

@@ -3,15 +3,14 @@
     #region << Using >>
 
     using System;
-    using System.Data.SqlClient;
     using Incoding.Block.ExceptionHandling;
     using Incoding.CQRS;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Machine.Specifications.Annotations;
     using Moq;
     using It = Machine.Specifications.It;
-    using Incoding.Extensions;
 
     #endregion
 
@@ -32,6 +31,26 @@
         }
 
         #endregion
+
+        It should_be_stub_push = () =>
+                                     {
+                                         var command = Pleasure.Generator.Invent<FakeCommand>();
+                                         var dispatcher = Pleasure.MockStrict<IDispatcher>();
+                                         dispatcher.StubPush(command);
+                                         Catch
+                                                 .Exception(() => dispatcher.Object.Push(command))
+                                                 .ShouldBeNull();
+                                     };
+
+        It should_not_be_stub_push = () =>
+                                         {
+                                             var command = Pleasure.Generator.Invent<FakeCommand>();
+                                             var dispatcher = Pleasure.MockStrict<IDispatcher>();
+                                             dispatcher.StubPush(command);
+                                             Catch
+                                                     .Exception(() => dispatcher.Object.Push(Pleasure.Generator.Invent<FakeCommand>()))
+                                                     .ShouldNotBeNull();
+                                         };
 
         It should_be_push = () =>
                                 {
@@ -120,21 +139,21 @@
                                  };
 
         It should_be_push_composite_different_command = () =>
-                                                    {
-                                                        var dispatcher = Pleasure.Mock<IDispatcher>();
-                                                        var command = Pleasure.Generator.Invent<FakeCommand>();
-                                                        var command2 = Pleasure.Generator.Invent<Fake2Command>();
-                                                        var setting = Pleasure.Generator.Invent<MessageExecuteSetting>();
+                                                            {
+                                                                var dispatcher = Pleasure.Mock<IDispatcher>();
+                                                                var command = Pleasure.Generator.Invent<FakeCommand>();
+                                                                var command2 = Pleasure.Generator.Invent<Fake2Command>();
+                                                                var setting = Pleasure.Generator.Invent<MessageExecuteSetting>();
 
-                                                        dispatcher.Object.Push(composite =>
-                                                                                   {
-                                                                                       composite.Quote(command, setting);
-                                                                                       composite.Quote(command2, setting);
-                                                                                   });
+                                                                dispatcher.Object.Push(composite =>
+                                                                                           {
+                                                                                               composite.Quote(command, setting);
+                                                                                               composite.Quote(command2, setting);
+                                                                                           });
 
-                                                        Catch.Exception(() => dispatcher.ShouldBePush(command, executeSetting: setting)).ShouldBeNull();
-                                                        Catch.Exception(() => dispatcher.ShouldBePush(command2, executeSetting: setting)).ShouldBeNull();
-                                                    };
+                                                                Catch.Exception(() => dispatcher.ShouldBePush(command, executeSetting: setting)).ShouldBeNull();
+                                                                Catch.Exception(() => dispatcher.ShouldBePush(command2, executeSetting: setting)).ShouldBeNull();
+                                                            };
 
         It should_be_push_composite_without_setting = () =>
                                                           {
@@ -174,7 +193,7 @@
                                                           Catch
                                                                   .Exception(() => dispatcher.ShouldBePush(new FakeCommand(), new MessageExecuteSetting
                                                                                                                                   {
-                                                                                                                                      Connection = @"Data Source=any;Database=different;"
+                                                                                                                                          Connection = @"Data Source=any;Database=different;"
                                                                                                                                   }))
                                                                   .ShouldBeOfType<MockException>();
                                                       };

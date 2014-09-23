@@ -15,6 +15,9 @@
         internal JquerySelectorExtend(string selector)
                 : base(selector) { }
 
+        internal JquerySelectorExtend(JquerySelector selector)
+                : base(selector) { }
+
         #endregion
 
         #region Api Methods

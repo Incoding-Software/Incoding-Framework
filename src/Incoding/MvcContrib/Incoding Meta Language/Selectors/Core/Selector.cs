@@ -11,7 +11,7 @@
 
     #endregion
 
-    public partial class Selector 
+    public partial class Selector
     {
         #region Fields
 
@@ -55,21 +55,18 @@
         public static JavaScriptSelector JS { get { return new JavaScriptSelector(); } }
 
         public static EventSelector Event { get { return new EventSelector(); } }
-        
+
+        public static ResultSelector Result { get { return new ResultSelector(); } }
+
         #endregion
 
-        #region ISelector Members
+        #region Api Methods
 
         public string ToSelector()
         {
             return this.selector;
         }
 
-        #endregion
-
-        #region Api Methods
-
-     
         #endregion
 
         internal static Selector FromHelperResult(Func<object, HelperResult> text)

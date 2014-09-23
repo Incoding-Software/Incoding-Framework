@@ -53,42 +53,52 @@ namespace Incoding.MSpecContrib
         {
             var instanceType = typeof(T);
 
-            if (instanceType.IsPrimitive() || instanceType.IsAnyEquals(typeof(SqlConnection)))
+            if (instanceType.IsPrimitive() || instanceType.IsAnyEquals(typeof(SqlConnection), typeof(byte[])))
                 return (T)GenerateValueOrEmpty(instanceType, false);
 
             if (instanceType.IsImplement<IEnumerable>())
             {
-                var itemType = instanceType.GetGenericArguments()[0];
+                var itemType = instanceType.IsGenericType ? instanceType.GetGenericArguments()[0] : instanceType.GetElementType();
                 var collections = Activator.CreateInstance(typeof(List<>).MakeGenericType(itemType)) as IList;
                 for (int i = 0; i < Pleasure.Generator.PositiveNumber(minValue: 1, maxValue: 5); i++)
                     collections.Add(Pleasure.Generator.Invent(itemType));
-                return (T)(instanceType == typeof(ReadOnlyCollection<>).MakeGenericType(itemType)
-                                   ? Activator.CreateInstance(typeof(ReadOnlyCollection<>).MakeGenericType(itemType), new[] { collections })
-                                   : (T)collections);
+
+                if (instanceType == typeof(ReadOnlyCollection<>).MakeGenericType(itemType))
+                    return (T)Activator.CreateInstance(typeof(ReadOnlyCollection<>).MakeGenericType(itemType), new[] { collections });
+                if (instanceType == typeof(List<>).MakeGenericType(itemType))
+                    return (T)collections;
+
+                var array = Array.CreateInstance(itemType, collections.Count);
+                for (int index = 0; index < collections.Count; index++)
+                {
+                    var item = collections[index];
+                    array.SetValue(item, index);
+                }
+                object res = array;
+                return (T)res;
             }
 
             return CreateInstance();
         }
-
 
         public T CreateInstance()
         {
             const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
             var members = typeof(T)
                     .GetMembers(bindingFlags)
-                    .Where(r => !r.HasAttribute<IgnoreInventAttribute>() || this.tunings.Keys.Contains(r.Name))
+                    .Where(r => !r.HasAttribute<IgnoreInventAttribute>() || tunings.Keys.Contains(r.Name))
                     .Where(r =>
-                    {
-                        var prop = r as PropertyInfo;
-                        if (prop != null && ((PropertyInfo)r).CanWrite)
-                            return true;
+                           {
+                               var prop = r as PropertyInfo;
+                               if (prop != null && ((PropertyInfo)r).CanWrite)
+                                   return true;
 
-                        var field = r as FieldInfo;
-                        if (field != null)
-                            return true;
+                               var field = r as FieldInfo;
+                               if (field != null)
+                                   return true;
 
-                        return false;
-                    })
+                               return false;
+                           })
                     .ToList();
 
             var dictionary = new Dictionary<string, Type>();
@@ -110,30 +120,30 @@ namespace Incoding.MSpecContrib
 
             foreach (var member in members)
             {
-                if (this.ignoreProperties.Any(r => r.Equals(member.Name)))
+                if (ignoreProperties.Any(r => r.Equals(member.Name)))
                     continue;
 
                 var type = member is PropertyInfo ? ((PropertyInfo)member).PropertyType : ((FieldInfo)member).FieldType;
                 var value = instance.TryGetValue(member.Name);
                 var defValue = type.IsValueType ? Activator.CreateInstance(type) : null;
-                bool isHasCtorValue = (value != null && !value.Equals(defValue)) && !this.isMuteCtor;
+                bool isHasCtorValue = (value != null && !value.Equals(defValue)) && !isMuteCtor;
 
-                if (this.tunings.ContainsKey(member.Name))
-                    value = this.tunings[member.Name].Invoke();
+                if (tunings.ContainsKey(member.Name))
+                    value = tunings[member.Name].Invoke();
 
-                if (this.empties.Contains(member.Name))
+                if (empties.Contains(member.Name))
                 {
                     value = GenerateValueOrEmpty(type, true);
                     if (value == null)
                         throw new ArgumentException("Can't found empty value for type {0} by field {1}".F(type, member.Name));
                 }
 
-                if (!isHasCtorValue && !this.tunings.ContainsKey(member.Name) && !this.empties.Contains(member.Name))
+                if (!isHasCtorValue && !tunings.ContainsKey(member.Name) && !empties.Contains(member.Name))
                     value = GenerateValueOrEmpty(type, false);
 
                 instance.SetValue(member.Name, value);
             }
-            this.callbacks.DoEach(action => action(instance));
+            callbacks.DoEach(action => action(instance));
             return instance;
         }
 
@@ -143,10 +153,10 @@ namespace Incoding.MSpecContrib
         {
             Action throwException = () => { throw new ArgumentException("Property should be unique in all dictionary", property); };
 
-            if (this.tunings.ContainsKey(property))
+            if (tunings.ContainsKey(property))
                 throwException();
 
-            if (this.ignoreProperties.Contains(property))
+            if (ignoreProperties.Contains(property))
                 throwException();
         }
 
@@ -154,18 +164,16 @@ namespace Incoding.MSpecContrib
         object GenerateValueOrEmpty(Type propertyType, bool isEmpty)
         {
             object value = null;
-            propertyType = (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                                   ? propertyType.GetGenericArguments()[0]
-                                   : propertyType;
+            bool isNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            propertyType = isNullable ? propertyType.GetGenericArguments()[0] : propertyType;
 
             if (propertyType.IsEnum)
-                value = isEmpty ? 0 : Pleasure.Generator.EnumAsInt(propertyType);
+                value = isEmpty ? 0 : Enum.Parse(propertyType, Pleasure.Generator.EnumAsInt(propertyType).ToString(), true);
             else if (propertyType.IsAnyEquals(typeof(string), typeof(object)))
                 value = isEmpty ? string.Empty : Pleasure.Generator.String();
             else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
                     // ReSharper disable SimplifyConditionalTernaryExpression
-                value = isEmpty ? false : Pleasure.Generator.Bool();                                                                                
-                    
+                value = isEmpty ? false : Pleasure.Generator.Bool();                                                                                                    
                     // ReSharper restore SimplifyConditionalTernaryExpression
             else if (propertyType.IsAnyEquals(typeof(int)))
                 value = isEmpty ? default(int) : Pleasure.Generator.PositiveNumber(1);
@@ -204,7 +212,7 @@ namespace Incoding.MSpecContrib
             else if (propertyType == typeof(SqlConnection))
                 value = new SqlConnection(@"Data Source={0};Database={1};Integrated Security=true;".F(Pleasure.Generator.String(length: 5), Pleasure.Generator.String(length: 5)));
 
-            return value;
+            return isNullable ? Activator.CreateInstance(typeof(Nullable<>).MakeGenericType(propertyType), value) : value;
         }
     }
 }

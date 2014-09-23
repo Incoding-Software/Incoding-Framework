@@ -13,10 +13,9 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .Password();
+                                     .Password(control => { control.MaxLenght = 10; });
                          };
 
-        It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<input id=\"Prop\" name=\"Prop\" type=\"password\" />");
+        It should_be_render = () => result.ToString().ShouldEqual("<input id=\"Prop\" maxlength=\"10\" name=\"Prop\" type=\"password\" />");
     }
 }

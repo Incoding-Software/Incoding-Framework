@@ -12,6 +12,7 @@ namespace Incoding.MSpecContrib
     using System.Reflection;
     using System.Text;
     using Incoding.Extensions;
+    using Incoding.Maybe;
     using Incoding.Quality;
     using Machine.Specifications;
 
@@ -24,6 +25,8 @@ namespace Incoding.MSpecContrib
         readonly List<string> differences = new List<string>();
 
         readonly Dictionary<string, string> forwards = new Dictionary<string, string>();
+
+        readonly List<string> forwardsToString = new List<string>();
 
         readonly Dictionary<string, object> forwardsToValue = new Dictionary<string, object>();
 
@@ -148,7 +151,8 @@ namespace Incoding.MSpecContrib
 
         public ICompareFactoryDsl<TActual, TExpected> ForwardToString(string actualProp)
         {
-            return ForwardToAction(actualProp, actual => actual.ToString());
+            this.forwardsToString.Add(actualProp);
+            return this;
         }
 
         #endregion
@@ -179,6 +183,14 @@ namespace Incoding.MSpecContrib
             if (actual.GetType().IsTypicalType() || actual is IEnumerable || (actual.GetType().IsImplement<IDbConnection>() && expected.GetType().IsImplement<IDbConnection>()))
             {
                 InternalShouldEqual(actual, expected, "Actual", "Expected");
+                return;
+            }
+
+            if (actual is Type && expected is Type)
+            {
+                var actualAsType = actual as Type;
+                var expectedAsType = expected as Type;
+                InternalShouldEqual(actualAsType.FullName, expectedAsType.FullName, "Actual Type.FullName", "Expected Type.FullName");
                 return;
             }
 
@@ -237,7 +249,14 @@ namespace Incoding.MSpecContrib
                     continue;
                 }
 
-                InternalShouldEqual(actualValue, expected.TryGetValue(expectedMember.Name), actualMemberName, expectedPropName);
+                var expectedValue = expected.TryGetValue(expectedMember.Name);
+                if (this.forwardsToString.Contains(actualMemberName))
+                {
+                    InternalShouldEqual(actualValue, expectedValue.With(r => r.ToString()), actualMemberName, actualMemberName);
+                    continue;
+                }
+
+                InternalShouldEqual(actualValue, expectedValue, actualMemberName, expectedPropName);
             }
         }
 

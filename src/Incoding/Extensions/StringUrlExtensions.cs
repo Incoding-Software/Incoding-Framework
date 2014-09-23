@@ -94,11 +94,11 @@ namespace Incoding.Extensions
             bool hasExistsQueryString = (value ?? string.Empty).Contains("?");
             if (hasExistsQueryString)
             {
-                var originalQuery = value.Split("?".ToCharArray())[1]
+                var originalQuery = value.Split("?".ToCharArray(),2)[1]
                         .Split(separateChar.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
                         .Select(r =>
                                     {
-                                        var pair = r.Split("=".ToCharArray());
+                                        var pair = r.Split("=".ToCharArray(),2);
                                         return new KeyValuePair<string, string>(pair.ElementAtOrDefault(0), pair.ElementAtOrDefault(1));
                                     })
                         .ToDictionary(r => r.Key, r => r.Value);

@@ -19,9 +19,9 @@ namespace Incoding.MSpecContrib
         #region Fields
 
         readonly List<string> ignoreProperties = new List<string>
-                                                     {
-                                                             "Id"
-                                                     };
+                                                 {
+                                                         "Id"
+                                                 };
 
         readonly IRepository repository;
 
@@ -32,8 +32,6 @@ namespace Incoding.MSpecContrib
         TEntity preEntity;
 
         TEntity original;
-
-        Action<ICompareFactoryDsl<TEntity, TEntity>> comparator;
 
         #endregion
 
@@ -76,10 +74,10 @@ namespace Incoding.MSpecContrib
         public PersistenceSpecification<TEntity> CheckProperty<TValue>(Expression<Func<TEntity, TValue>> prop) where TValue : new()
         {
             return CheckProperty(prop, Pleasure.Generator.Invent<TValue>(dsl =>
-                                                                             {
-                                                                                 if (typeof(TValue).IsImplement<IEntity>())
-                                                                                     dsl.Ignore("Id", "auto");
-                                                                             }));
+                                                                         {
+                                                                             if (typeof(TValue).IsImplement<IEntity>())
+                                                                                 dsl.Ignore("Id", "auto");
+                                                                         }));
         }
 
         public void VerifyMappingAndSchema(Action<PersistenceSpecification<TEntity>> configure = null)
@@ -89,16 +87,22 @@ namespace Incoding.MSpecContrib
             if (this.preEntity == null)
             {
                 string allDuplicate = this.properties.Where(r => this.properties.Count(s => s == r) > 1)
-                                          .Distinct()
-                                          .AsString(",");
+                        .Distinct()
+                        .AsString(",");
                 if (!string.IsNullOrWhiteSpace(allDuplicate))
                     throw new SpecificationException("Duplicate fields:{0}".F(allDuplicate));
 
+                string allCheckInIgnore = this.ignoreProperties.Where(r => this.properties.Contains(r))
+                        .Distinct()
+                        .AsString(",");
+                if (!string.IsNullOrWhiteSpace(allCheckInIgnore))
+                    throw new SpecificationException("Fields:{0} was ignore and can't check".F(allCheckInIgnore));
+
                 var allMissing = this.original.GetType()
-                                     .GetProperties(this.bindingFlags)
-                                     .Where(r => r.CanWrite)
-                                     .Where(s => !this.properties.Contains(s.Name) && !this.ignoreProperties.Contains(s.Name))
-                                     .Where(r => !r.Name.EqualsWithInvariant("Id"));
+                        .GetProperties(this.bindingFlags)
+                        .Where(r => r.CanWrite)
+                        .Where(s => !this.properties.Contains(s.Name) && !this.ignoreProperties.Contains(s.Name))
+                        .Where(r => !r.Name.EqualsWithInvariant("Id"));
 
                 foreach (var missing in allMissing)
                     missing.SetValue(this.original, Pleasure.Generator.Invent(missing.PropertyType), null);
@@ -112,13 +116,14 @@ namespace Incoding.MSpecContrib
             var propertyId = this.original.GetType().GetProperties().First(r => r.Name.EqualsWithInvariant("Id"));
             var id = propertyId.GetValue(this.original, new object[] { });
             var entityFromDb = this.repository.GetById<TEntity>(id);
-            entityFromDb.ShouldEqualWeak(this.original, dsl =>
-                                                            {
-                                                                foreach (var ignoreProperty in this.ignoreProperties)
-                                                                    dsl.Ignore(ignoreProperty, "Fixed");
+            if (entityFromDb == null)
+                throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 
-                                                                this.comparator.Do(action => action(dsl));
-                                                            });
+            entityFromDb.ShouldEqualWeak(this.original, dsl =>
+                                                        {
+                                                            foreach (var ignoreProperty in this.ignoreProperties)
+                                                                dsl.Ignore(ignoreProperty, "Fixed");
+                                                        });
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()
@@ -130,12 +135,6 @@ namespace Incoding.MSpecContrib
         public PersistenceSpecification<TEntity> WithEntity(TEntity entity)
         {
             this.preEntity = entity;
-            return this;
-        }
-
-        public PersistenceSpecification<TEntity> Comparator(Action<ICompareFactoryDsl<TEntity, TEntity>> action)
-        {
-            this.comparator = action;
             return this;
         }
 

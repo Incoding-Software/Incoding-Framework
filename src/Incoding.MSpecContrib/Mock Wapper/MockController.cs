@@ -72,7 +72,7 @@ namespace Incoding.MSpecContrib
             var res = new MockController<TController>(controller, dispatcher);
             res.httpContext.SetupGet(r => r.Request.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
 
-            return res;
+            return res; 
         }
 
         #endregion

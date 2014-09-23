@@ -183,7 +183,9 @@
 
         Option, 
 
-        OptGroup
+        OptGroup,
+
+        Pre
     }
 
     // ReSharper restore UnusedMember.Global

@@ -78,9 +78,7 @@ namespace Incoding.UnitTest.MSpecGroup
             public Dictionary<string, string> DictionaryValue { get; set; }
 
             public Dictionary<string, object> DictionaryObjectValue { get; set; }
-
-            public DayOfWeek DayOfWeek { get; set; }
-
+            
             public double DoubleValue { get; set; }
 
             public double? DoubleValueNullable { get; set; }
@@ -93,13 +91,14 @@ namespace Incoding.UnitTest.MSpecGroup
 
             public DayOfWeek EnumValue { get; set; }
 
+            public DayOfWeek EnumAsNullableValue { get; set; }
+
             public object ObjValue { get; set; }
 
             public Guid GuidValue { get; set; }
 
             public Guid? GuidValueNullable { get; set; }
-            
-            
+
             #endregion
         }
 

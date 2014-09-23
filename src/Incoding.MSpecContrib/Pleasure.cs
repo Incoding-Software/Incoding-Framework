@@ -219,7 +219,7 @@ namespace Incoding.MSpecContrib
             {
                 return PositiveNumber(0, 100) >= 50;
             }
-
+            
             public static byte[] Bytes(int size = 100)
             {
                 var bytes = new byte[size];
@@ -229,6 +229,7 @@ namespace Incoding.MSpecContrib
                 return bytes;
             }
 
+            [Obsolete("Please use Pleasure.Generator.Invent<DateTime>()")]
             public static DateTime DateTime()
             {
                 int year = GetRandom().Next(1800, 2100);
@@ -254,6 +255,7 @@ namespace Incoding.MSpecContrib
             {
                 return (TEnum)System.Enum.Parse(typeof(TEnum), EnumAsInt(typeof(TEnum)).ToString(), true);
             }
+
 
             public static int EnumAsInt(Type enumType)
             {

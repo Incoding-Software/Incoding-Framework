@@ -180,27 +180,27 @@
         /// <summary>
         ///     Specifies the URL of the file that will process the input control when the form is submitted (for type="submit" and type="image")
         /// </summary>
-        FormAction = 34359738368, 
+        Action = 34359738368, 
 
         /// <summary>
         ///     Specifies how the form-data should be encoded when submitting it to the server (for type="submit" and type="image")
         /// </summary>
-        FormEncType = 68719476736, 
+        EncType = 68719476736, 
 
         /// <summary>
         ///     Defines the HTTP method for sending data to the action URL (for type="submit" and type="image")
         /// </summary>
-        FormMethod = 137438953472, 
+        Method = 137438953472, 
 
         /// <summary>
         ///     Defines that form elements should not be validated when submitted
         /// </summary>
-        FormNoValidate = 274877906944, 
+        NoValidate = 274877906944, 
 
         /// <summary>
         ///     Specifies where to display the response that is received after submitting the form (for type="submit" and type="image")
         /// </summary>
-        FormTarget = 549755813888, 
+        Target = 549755813888, 
 
         /// <summary>
         ///     Specifies the height of an input element (only for type="image")

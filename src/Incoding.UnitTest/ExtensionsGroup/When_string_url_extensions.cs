@@ -4,6 +4,7 @@
 
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
+    using Incoding.MvcContrib;
     using Machine.Specifications;
 
     #endregion
@@ -41,6 +42,15 @@
                                                                   Pleasure.Do(i => "http://domain.com".AppendToQueryString(route), 1000)
                                                                           .ShouldBeLessThan(150);
                                                               };
+
+
+        It should_be_append_to_query_stirng_with_name_selector = () => "/PDWBIS/Dispatcher/Query?incType=GetContactFailedAttemptsQuery&Type=$('[name=\"Type\"]')"
+                                                                               .AppendToQueryString(new {Type2 =  Selector.Jquery.Name("Test") })
+                                                                               .ShouldEqual("/PDWBIS/Dispatcher/Query?incType=GetContactFailedAttemptsQuery&Type=$('[name=\"Type\"]')&Type2=$('[name=\"Test\"]')");  
+        
+        It should_be_append_to_query_stirng_with_special_symbol = () => "/PDWBIS/Dispatcher/Query?incType=GetContactFailedAttemptsQuery&Type=?="
+                                                                               .AppendToQueryString(new {Type2 =  1 })
+                                                                               .ShouldEqual("/PDWBIS/Dispatcher/Query?incType=GetContactFailedAttemptsQuery&Type=?=&Type2=1");
 
         It should_be_append_to_query_string_without_encode = () => "http://domain.com"
                                                                            .AppendToQueryString(new

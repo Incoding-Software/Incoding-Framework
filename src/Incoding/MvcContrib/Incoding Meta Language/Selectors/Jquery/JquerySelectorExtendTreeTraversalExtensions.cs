@@ -32,7 +32,7 @@
         /// </param>
         public static JquerySelectorExtend Add(this JquerySelectorExtend original, JquerySelectorExtend selector)
         {
-            return original.Method("add", selector);
+            return AddTree(original, jquerySelector => selector, "add");
         }
 
         /// <summary>
@@ -93,6 +93,20 @@
             return original.Closest(selector => selector.Tag(tag));
         }
 
+
+        /// <summary>
+        ///     For each element in the set, get the first element that expression the action by testing the element itself and traversing up through its ancestors in the DOM tree.
+        /// </summary>
+        /// <param name="original">
+        /// </param>
+        /// <param name="expression">
+        ///     Jquery expression
+        /// </param>
+        public static JquerySelectorExtend Closest(this JquerySelectorExtend original, JqueryExpression expression)
+        {
+            return original.Closest(selector => selector.Expression(expression));
+        }
+
         /// <summary>
         ///     Reduce the set of matched elements to those that match the action or pass the function's test.
         /// </summary>
@@ -111,6 +125,15 @@
         public static JquerySelectorExtend Filter(this JquerySelectorExtend original, HtmlTag tag)
         {
             return original.Filter(selector => selector.Tag(tag));
+        }
+
+
+        /// <summary>
+        ///     Reduce the set of expression to those that match the action or pass the function's test.
+        /// </summary>
+        public static JquerySelectorExtend Filter(this JquerySelectorExtend original, JqueryExpression expression)
+        {
+            return original.Filter(selector => selector.Expression(expression));
         }
 
         /// <summary>
@@ -135,6 +158,18 @@
         public static JquerySelectorExtend Find(this JquerySelectorExtend original, HtmlTag tag)
         {
             return original.Find(selector => selector.Tag(tag));
+        }
+
+        /// <summary>
+        ///     Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="expression">
+        ///     Jquery expression
+        /// </param>
+        public static JquerySelectorExtend Find(this JquerySelectorExtend original, JqueryExpression expression)
+        {
+            return original.Find(selector => selector.Expression(expression));
         }
 
         /// <summary>
@@ -394,9 +429,15 @@
             if (action == null)
                 original.AddMethod("{0}".F(type));
             else
-                original.AddMethod(type, action(Selector.Jquery));
+            {
+                var selector = action(Selector.Jquery);
+                if (selector.IsSimple)
+                    original.AddMethod(type, selector.ToSelector());
+                else
+                    original.AddMethod(type, selector);
+            }
 
-            return original;
+            return new JquerySelectorExtend(original);
         }
     }
 }

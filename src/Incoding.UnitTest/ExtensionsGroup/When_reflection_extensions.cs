@@ -7,6 +7,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     using System.Linq.Expressions;
     using System.Management.Instrumentation;
     using Incoding.Block.Logging;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.UnitTest.Block;
@@ -19,6 +20,14 @@ namespace Incoding.UnitTest.ExtensionsGroup
     public class When_reflection_extensions
     {
         #region Fake classes
+
+        class FakeQuery : QueryBase<string>
+        {
+            protected override string ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         interface IGenericType { }
 
@@ -107,6 +116,8 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
         It should_not_be_implement_interface = () => typeof(ClipboardLogger).IsImplement<ICloneable>().ShouldBeFalse();
 
+        It should_be_implement_query = () => typeof(FakeQuery).IsImplement(typeof(QueryBase<string>)).ShouldBeTrue();
+
         It should_be_implement_deep = () => typeof(ArgumentException).IsImplement<object>().ShouldBeTrue();
 
         It should_be_implement_generic_1 = () => typeof(GenericSubscriber).IsImplement(typeof(IGenericHandler<GenericType1>)).ShouldBeTrue();
@@ -124,72 +135,72 @@ namespace Incoding.UnitTest.ExtensionsGroup
         It should_be_first_attributes_with_default = () => typeof(FakeCacheKey).FirstOrDefaultAttribute<CLSCompliantAttribute>().ShouldBeNull();
 
         It should_be_get_member_name = () =>
-                                           {
-                                               Expression<Func<ArgumentException, object>> expression = exception => exception.Message;
-                                               expression.GetMemberName().ShouldEqual("Message");
-                                           };
+                                       {
+                                           Expression<Func<ArgumentException, object>> expression = exception => exception.Message;
+                                           expression.GetMemberName().ShouldEqual("Message");
+                                       };
 
         It should_be_get_member_name_from_convert = () =>
-                                                        {
-                                                            Expression<Func<ArgumentException, object>> expression = exception => exception.Data;
-                                                            expression.GetMemberName().ShouldEqual("Data");
-                                                        };
+                                                    {
+                                                        Expression<Func<ArgumentException, object>> expression = exception => exception.Data;
+                                                        expression.GetMemberName().ShouldEqual("Data");
+                                                    };
 
         It should_be_get_member_name_complex_object = () =>
-                                                          {
-                                                              Expression<Func<ArgumentException, object>> expression = exception => exception.InnerException.Data;
-                                                              expression.GetMemberName().ShouldEqual("InnerException.Data");
-                                                          };
+                                                      {
+                                                          Expression<Func<ArgumentException, object>> expression = exception => exception.InnerException.Data;
+                                                          expression.GetMemberName().ShouldEqual("InnerException.Data");
+                                                      };
 
         It should_be_get_member_name_complex_object_one_char = () =>
-                                                                   {
-                                                                       Expression<Func<ArgumentException, object>> expression = r => r.InnerException.Data;
-                                                                       expression.GetMemberName().ShouldEqual("InnerException.Data");
-                                                                   };
+                                                               {
+                                                                   Expression<Func<ArgumentException, object>> expression = r => r.InnerException.Data;
+                                                                   expression.GetMemberName().ShouldEqual("InnerException.Data");
+                                                               };
 
         It should_be_get_member_name_with_complex_field = () =>
-                                                              {
-                                                                  Expression<Func<ArgumentException, object>> expression = exception => exception.InnerException.Message;
-                                                                  expression.GetMemberName().ShouldEqual("InnerException.Message");
-                                                              };
+                                                          {
+                                                              Expression<Func<ArgumentException, object>> expression = exception => exception.InnerException.Message;
+                                                              expression.GetMemberName().ShouldEqual("InnerException.Message");
+                                                          };
 
         It should_be_set_value_to_field_with_camelcase = () => new FakeSetValueClass()
-                                                                       .SetValue("privateField", Pleasure.Generator.TheSameString())
-                                                                       .GetPrivateFiled()
-                                                                       .ShouldEqual(Pleasure.Generator.TheSameString());
+                .SetValue("privateField", Pleasure.Generator.TheSameString())
+                .GetPrivateFiled()
+                .ShouldEqual(Pleasure.Generator.TheSameString());
 
         It should_be_set_value_to_readonly_field = () => new FakeSetValueClass()
-                                                                 .SetValue("readOnlyPrivateField", Pleasure.Generator.TheSameString())
-                                                                 .GetReadOnlyPrivateFiled()
-                                                                 .ShouldEqual(Pleasure.Generator.TheSameString());
+                .SetValue("readOnlyPrivateField", Pleasure.Generator.TheSameString())
+                .GetReadOnlyPrivateFiled()
+                .ShouldEqual(Pleasure.Generator.TheSameString());
 
         It should_be_set_value_to_property = () => new FakeSetValueClass()
-                                                           .SetValue("ProtectedProperty", Pleasure.Generator.TheSameString())
-                                                           .GetProtected().ShouldEqual(Pleasure.Generator.TheSameString());
+                .SetValue("ProtectedProperty", Pleasure.Generator.TheSameString())
+                .GetProtected().ShouldEqual(Pleasure.Generator.TheSameString());
 
         It should_be_set_field_with_wrong_name = () => Catch.Exception(() => new FakeSetValueClass().SetValue("NotFoundProperty", "Value"))
-                                                            .ShouldBeOfType<InstanceNotFoundException>();
+                .ShouldBeOfType<InstanceNotFoundException>();
 
         It should_be_try_get_value_with_wrong_name = () => new FakeSetValueClass()
-                                                                   .TryGetValue("NotFoundField")
-                                                                   .ShouldBeNull();
+                .TryGetValue("NotFoundField")
+                .ShouldBeNull();
 
         It should_be_try_get_value = () => new FakeSetValueClass()
-                                                   .SetPrivateField(Pleasure.Generator.TheSameString())
-                                                   .TryGetValue("privateField")
-                                                   .ShouldEqual(Pleasure.Generator.TheSameString());
+                .SetPrivateField(Pleasure.Generator.TheSameString())
+                .TryGetValue("privateField")
+                .ShouldEqual(Pleasure.Generator.TheSameString());
 
         It should_be_try_get_value_static = () => new FakeSetValueClass()
-                                                          .TryGetValue("staticValue")
-                                                          .ShouldEqual("staticValue");
+                .TryGetValue("staticValue")
+                .ShouldEqual("staticValue");
 
         It should_be_is_typical_type = () =>
-                                           {
-                                               DateTime.Now.GetType().IsTypicalType().ShouldBeTrue();
-                                               5.GetType().IsTypicalType().ShouldBeTrue();
-                                               "5".GetType().IsTypicalType().ShouldBeTrue();
-                                               typeof(DayOfWeek).IsTypicalType().ShouldBeTrue();
-                                               new FakeSetValueClass().GetType().IsTypicalType().ShouldBeFalse();
-                                           };
+                                       {
+                                           DateTime.Now.GetType().IsTypicalType().ShouldBeTrue();
+                                           5.GetType().IsTypicalType().ShouldBeTrue();
+                                           "5".GetType().IsTypicalType().ShouldBeTrue();
+                                           typeof(DayOfWeek).IsTypicalType().ShouldBeTrue();
+                                           new FakeSetValueClass().GetType().IsTypicalType().ShouldBeFalse();
+                                       };
     }
 }

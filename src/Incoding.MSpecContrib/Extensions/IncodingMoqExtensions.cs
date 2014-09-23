@@ -26,14 +26,6 @@ namespace Incoding.MSpecContrib
             StubPush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting())), callCount);
         }
 
-        public static void StubDelay<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageDelaySetting delaySetting = null, int callCount = 1) where TCommand : CommandBase
-        {
-            StubPush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, new MessageExecuteSetting
-                                                                                                                             {
-                                                                                                                                     Delay = delaySetting ?? new MessageDelaySetting()
-                                                                                                                             })), callCount);
-        }
-
         public static void ShouldBeDelay<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageDelaySetting delaySetting = null, int callCount = 1) where TCommand : CommandBase
         {
             ShouldBePush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, new MessageExecuteSetting
@@ -117,6 +109,13 @@ namespace Incoding.MSpecContrib
         {
             repository
                     .Setup(r => r.GetById<TEntity>(id))
+                    .Returns(entity);
+        }
+
+        public static void StubLoadById<TEntity>(this Mock<IRepository> repository, object id, TEntity entity) where TEntity : class, IEntity, new()
+        {
+            repository
+                    .Setup(r => r.LoadById<TEntity>(id))
                     .Returns(entity);
         }
 

@@ -22,11 +22,13 @@
                                      .TextArea(boxControl =>
                                                    {
                                                        boxControl.Cols = 10;
-                                                       boxControl.Rows = 30;                                                       
+                                                       boxControl.Rows = 30;
+                                                       boxControl.MaxLenght = 15;
                                                    })
                                      .ToHtmlString();
                          };
 
-        It should_be_render = () => result.ShouldEqual("<textarea cols=\"10\" id=\"Prop\" name=\"Prop\" rows=\"30\">\r\nTheSameString</textarea>");
+        It should_be_render = () => result.ShouldEqual(@"<textarea cols=""10"" id=""Prop"" maxlength=""15"" name=""Prop"" rows=""30"">
+TheSameString</textarea>");
     }
 }

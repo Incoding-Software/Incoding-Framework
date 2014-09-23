@@ -20,6 +20,8 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        public int MaxLenght { set { this.attributes.Set(HtmlAttribute.MaxLength.ToStringLower(), value); } }
+
         #region Constructors
 
         public IncPasswordControl(HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)

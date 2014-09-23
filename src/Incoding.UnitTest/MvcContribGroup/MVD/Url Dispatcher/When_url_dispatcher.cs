@@ -77,6 +77,17 @@
             ////ncrunch: no coverage end        
         }
 
+        class FakeMultipleGenericQuery<T, T2> : QueryBase<string>
+        {
+            ////ncrunch: no coverage start
+            protected override string ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            ////ncrunch: no coverage end        
+        }
+
         class FakeBytesQuery : QueryBase<byte[]>
         {
             #region Properties
@@ -124,8 +135,8 @@
                                       routeData.Values.Add("Controller", "Controller");
 
                                       var routes = new RouteCollection();
-                                      routes.MapRoute(name: "Default", 
-                                                      url: "{controller}/{action}/{id}", 
+                                      routes.MapRoute(name: "Default",
+                                                      url: "{controller}/{action}/{id}",
                                                       defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional });
 
                                       httpContext = Pleasure.Mock<HttpContextBase>(mock => mock.Setup(r => r.Request.ApplicationPath).Returns("/"));
@@ -137,22 +148,21 @@
 
         It should_be_push_composite = () =>
                                           {
-                                              const string actionUrl = "/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand2";
+                                              const string actionUrl = "/Dispatcher/Composite?incType=FakeCommand%2CFakeCommand2";
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                               urlDispatcher.Push(new FakeCommand { DecodeValue = "{{1}}" })
                                                            .Push(new FakeCommand2 { Command2Value = Pleasure.Generator.TheSameString() })
                                                            .ToString()
-                                                           .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
+                                                           .ShouldEqual("/Dispatcher/Composite?incType=FakeCommand%2CFakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
                                           };
 
         It should_be_push_same_command_on_composite = () =>
                                                           {
-                                                              const string actionUrl = "/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand";
+                                                              const string actionUrl = "/Dispatcher/Composite?incType=FakeCommand";
                                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                                              urlDispatcher.Push(new FakeCommand { DecodeValue = Pleasure.Generator.TheSameString() })
-                                                                           .Push(new FakeCommand { DecodeValue = Pleasure.Generator.TheSameString() })
+                                                              urlDispatcher.Push(new FakeCommand { DecodeValue = "value1" }).Push(new FakeCommand { DecodeValue = "value2" })
                                                                            .ToString()
-                                                                           .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand&DecodeValue=TheSameString");
+                                                                           .ShouldEqual("/Dispatcher/Composite?incType=FakeCommand&%5b0%5d.DecodeValue=value1&%5b1%5d.DecodeValue=value2");
                                                           };
 
         It should_be_push = () =>
@@ -161,8 +171,8 @@
                                     httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                     urlDispatcher.Push(new FakeCommand
                                                            {
-                                                                   DecodeValue = "{{1}}", 
-                                                                   EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
+                                                                   DecodeValue = "{{1}}",
+                                                                   EncodeValue = HttpUtility.UrlEncode("{{1}}"),
                                                            })
                                                  .ToString()
                                                  .ShouldEqual("/Dispatcher/Push?incType=FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
@@ -174,8 +184,8 @@
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                               string pushAsString = urlDispatcher.Push(new FakeCommand
                                                                                            {
-                                                                                                   DecodeValue = "{{1}}", 
-                                                                                                   EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
+                                                                                                   DecodeValue = "{{1}}",
+                                                                                                   EncodeValue = HttpUtility.UrlEncode("{{1}}"),
                                                                                            });
                                               pushAsString.ShouldEqual("/Dispatcher/Push?incType=FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                           };
@@ -230,8 +240,8 @@
                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                              urlDispatcher.Query(new FakeBytesQuery
                                                                      {
-                                                                             DecodeValue = "{{1}}", 
-                                                                             EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
+                                                                             DecodeValue = "{{1}}",
+                                                                             EncodeValue = HttpUtility.UrlEncode("{{1}}"),
                                                                      })
                                                           .AsFile(incContentType: "img", incFileDownloadName: "file")
                                                           .ShouldEqual("/Dispatcher/QueryToFile?incType=FakeBytesQuery&incContentType=img&incFileDownloadName=file&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
@@ -243,8 +253,8 @@
                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                              urlDispatcher.Query(new FakeQuery
                                                                      {
-                                                                             DecodeValue = "{{1}}", 
-                                                                             EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
+                                                                             DecodeValue = "{{1}}",
+                                                                             EncodeValue = HttpUtility.UrlEncode("{{1}}"),
                                                                      })
                                                           .AsJson()
                                                           .ShouldEqual("/Dispatcher/Query?incType=FakeQuery&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
@@ -269,14 +279,23 @@
                                                                           .ShouldEqual(actionUrl);
                                                          };
 
-        It should_be_query_generic = () =>
-                                         {
-                                             const string actionUrl = "/Dispatcher/Query?incType=FakeGenericQuery%601&incGeneric=IncEntityBase";
-                                             httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                             urlDispatcher.Query(new FakeGenericQuery<IncEntityBase>())
-                                                          .AsJson()
-                                                          .ShouldEqual(actionUrl);
-                                         };
+        It should_be_query_single_generic = () =>
+                                                {
+                                                    const string actionUrl = "/Dispatcher/Query?incType=FakeGenericQuery%601&incGeneric=IncEntityBase";
+                                                    httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
+                                                    urlDispatcher.Query(new FakeGenericQuery<IncEntityBase>())
+                                                                 .AsJson()
+                                                                 .ShouldEqual(actionUrl);
+                                                };
+
+        It should_be_query_multiple_generic = () =>
+                                                  {
+                                                      const string actionUrl = "/Dispatcher/Query?incType=FakeMultipleGenericQuery%602&incGeneric=IncEntityBase%2CString";
+                                                      httpContext.Setup(r => r.Response.ApplyAppPathModifier(actionUrl)).Returns(actionUrl);
+                                                      urlDispatcher.Query(new FakeMultipleGenericQuery<IncEntityBase, string>())
+                                                                   .AsJson()
+                                                                   .ShouldEqual(actionUrl); 
+                                                  };
 
         It should_be_query_to_view = () =>
                                          {

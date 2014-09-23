@@ -45,7 +45,7 @@
 
         Because of = () =>
                          {
-                             result = controller.Composite("{0},{1}".F(HttpUtility.UrlEncode(typeof(FakePushComposite1ByNameCommand).Name), 
+                             result = controller.Composite("{0},{1}".F(HttpUtility.UrlEncode(typeof(FakePushComposite1ByNameCommand).Name),
                                                                        HttpUtility.UrlEncode(typeof(FakePushComposite2ByNameCommand).Name)));
                          };
 

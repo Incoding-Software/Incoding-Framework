@@ -62,37 +62,82 @@
             return Build("{{#if " + this.level + field.GetMemberName() + "}}true{{else}}false{{/if}}");
         }
 
-        public string Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse)
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse)
         {
-            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + isTrue + "{{else}}" + isFalse + "{{/if}}");
+            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + isTrue + "{{else}}" + isFalse + "{{/if}}").ToMvcHtmlString();
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse.ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue, isFalse.ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, string isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse);
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.Invoke(null).ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse.Invoke(null).ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue, isFalse.Invoke(null).ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, string isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse);
+        }
+
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
         {
             return IsInline(field, content.ToHtmlString());
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
         {
             return NotInline(field, content.ToHtmlString());
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
         {
             return IsInline(field, content.Invoke(null).ToHtmlString());
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
         {
             return NotInline(field, content.Invoke(null).ToHtmlString());
         }
 
-        public string ForRaw(string field)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, string content)
         {
-            return Build("{{{" + this.level + field + "}}}");
+            return Build("{{#unless " + this.level + field.GetMemberName() + "}}" + content + "{{/unless}}").ToMvcHtmlString();
         }
 
-        public string ForRaw(Expression<Func<TModel, object>> field)
+        public MvcHtmlString ForRaw(string field)
+        {
+            return Build("{{{" + this.level + field + "}}}").ToMvcHtmlString();
+        }
+
+        public MvcHtmlString ForRaw(Expression<Func<TModel, object>> field)
         {
             return ForRaw(field.GetMemberName());
         }
@@ -112,15 +157,12 @@
             return BuildNew<TModel>(field.GetMemberName(), HandlebarsType.Unless);
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, string content)
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, string content)
         {
-            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + content + "{{/if}}");
+            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + content + "{{/if}}").ToMvcHtmlString();
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, string content)
-        {
-            return Build("{{#unless " + this.level + field.GetMemberName() + "}}" + content + "{{/unless}}");
-        }
+
 
         #endregion
 
@@ -151,11 +193,11 @@
 
     public enum HandlebarsType
     {
-        If, 
+        If,
 
-        Unless, 
+        Unless,
 
-        Each, 
+        Each,
     }
 
     #endregion

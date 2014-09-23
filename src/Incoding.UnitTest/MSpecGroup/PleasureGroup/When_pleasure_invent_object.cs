@@ -28,6 +28,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_by_type = () => Pleasure.Generator.Invent(typeof(FakeGenerateObject))
                                              .ShouldNotBeNull();
+                
     }
 
 

@@ -1,0 +1,20 @@
+﻿
+        @{
+            var tmplId = Guid.NewGuid().ToString();
+            using (var template = Html.Incoding().ScriptTemplate<KeyValueVm>(tmplId))
+            {
+                using (var each = template.ForEach())
+                {
+                    @each.IsInline(vm => vm.Selected,@<text><h3>3</h3></text>)
+                }
+            }
+        }
+        
+        @(Html.When(JqueryBind.InitIncoding)              
+              .Direct(new KeyValueVm()
+                          {
+                                  Selected = true
+                          })
+              .OnSuccess(dsl => dsl.Self().Core().Insert.WithTemplateById(tmplId).Html())
+              .AsHtmlAttributes()
+              .ToDiv())

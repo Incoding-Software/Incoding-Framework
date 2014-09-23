@@ -2,10 +2,8 @@ namespace Incoding.CQRS
 {
     #region << Using >>
 
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using Incoding.Data;
-    using Incoding.Quality;
     using JetBrains.Annotations;
 
     #endregion
@@ -14,7 +12,7 @@ namespace Incoding.CQRS
     {
         #region Constructors
 
-        [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor), ExcludeFromCodeCoverage]
+        [UsedImplicitly, ExcludeFromCodeCoverage]
         public DeleteEntityByIdCommand() { }
 
         public DeleteEntityByIdCommand(string id)

@@ -4,6 +4,7 @@ namespace Incoding.MvcContrib
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.WebPages;
@@ -11,6 +12,7 @@ namespace Incoding.MvcContrib
 
     #endregion
 
+    [Obsolete("Please migrate to handlebars or another template engine", false)]
     public class TemplateMustacheSyntax<TModel> : ITemplateSyntax<TModel>
     {
         #region Fields
@@ -33,9 +35,9 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        ////ncrunch: no coverage start
         #region ITemplateSyntax<TModel> Members
 
+        [ExcludeFromCodeCoverage]
         public ITemplateSyntax<TModel> Up()
         {
             throw new NotImplementedException();
@@ -46,7 +48,6 @@ namespace Incoding.MvcContrib
             return "{{" + field + "}}";
         }
 
-        ////ncrunch: no coverage end
         public string For(Expression<Func<TModel, object>> field)
         {
             return For(field.GetMemberName());
@@ -57,39 +58,79 @@ namespace Incoding.MvcContrib
             return "{{" + field.GetMemberName() + "}}";
         }
 
-        public string Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse)
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse)
         {
-            return IsInline(field, isTrue) + NotInline(field, isFalse);
+            return (IsInline(field, isTrue).ToHtmlString() + NotInline(field, isFalse).ToHtmlString()).ToMvcHtmlString();
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse.ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue, isFalse.ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, string isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse);
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.Invoke(null).ToHtmlString());
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, MvcHtmlString isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.ToHtmlString());            
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue.ToHtmlString(), isFalse.Invoke(null).ToHtmlString());  
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, Func<object, HelperResult> isFalse)
+        {
+            return Inline(field, isTrue, isFalse.Invoke(null).ToHtmlString());  
+        }
+
+        public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, string isFalse)
+        {
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse);
+        }
+
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
         {
             string memberName = field.GetMemberName();
-            return "{{#" + memberName + "}}" + content.ToHtmlString() + "{{/" + memberName + "}}";
+            return ("{{#" + memberName + "}}" + content.ToHtmlString() + "{{/" + memberName + "}}").ToMvcHtmlString();
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content)
         {
             string memberName = field.GetMemberName();
-            return "{{^" + memberName + "}}" + content.ToHtmlString() + "{{/" + memberName + "}}";
+            return ("{{^" + memberName + "}}" + content.ToHtmlString() + "{{/" + memberName + "}}").ToMvcHtmlString();
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
         {
             return IsInline(field, new MvcHtmlString(content.Invoke(null).ToHtmlString()));
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content)
         {
             return NotInline(field, new MvcHtmlString(content.Invoke(null).ToHtmlString()));
         }
 
-        public string ForRaw(string field)
+        public MvcHtmlString ForRaw(string field)
         {
-            return "{{{" + field + "}}}";
+            return ("{{{" + field + "}}}").ToMvcHtmlString();
         }
 
-        public string ForRaw(Expression<Func<TModel, object>> field)
+        public MvcHtmlString ForRaw(Expression<Func<TModel, object>> field)
         {
             return ForRaw(field.GetMemberName());
         }
@@ -109,12 +150,12 @@ namespace Incoding.MvcContrib
             return new TemplateMustacheSyntax<TModel>(this.htmlHelper, field.GetMemberName(), false);
         }
 
-        public string IsInline(Expression<Func<TModel, object>> field, string content)
+        public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, string content)
         {
             return IsInline(field, MvcHtmlString.Create(content));
         }
 
-        public string NotInline(Expression<Func<TModel, object>> field, string content)
+        public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, string content)
         {
             return NotInline(field, MvcHtmlString.Create(content));
         }

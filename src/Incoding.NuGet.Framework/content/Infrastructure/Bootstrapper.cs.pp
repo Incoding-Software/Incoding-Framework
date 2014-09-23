@@ -46,9 +46,7 @@
 
                                                                                                          registry.Scan(r =>
                                                                                                                            {
-                                                                                                                               r.AssembliesFromApplicationBaseDirectory(p => p.GetTypes().Any(type => type.IsImplement(typeof(AbstractValidator<>)) ||
-                                                                                                                                                                                                      type.IsImplement<ISetUp>() ||
-                                                                                                                                                                                                      type.IsImplement(typeof(IEventSubscriber<>))));
+                                                                                                                               r.TheCallingAssembly();
                                                                                                                                r.WithDefaultConventions();
 
                                                                                                                                r.ConnectImplementationsToTypesClosing(typeof(AbstractValidator<>));

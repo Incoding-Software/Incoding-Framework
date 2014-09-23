@@ -16,11 +16,13 @@ namespace Incoding.MvcContrib
         public IncHorizontalControl(IncLabelControl label, TInput input, IncControlBase validation)
         {
             Label = label;
-            Label.AddClass("control-label");
+            Label.AddClass(IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3 ? "control-label col-md-3" : "control-label");
             Input = input;
+            if (IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3)
+                Input.AddClass("form-control");
             Validation = validation;
             HelpBlock = new IncHelpBlockControl();
-            AddClass("control-group");
+            AddClass(IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3 ? "form-group col-md-12" : "control-group");
         }
 
         #endregion
@@ -43,7 +45,7 @@ namespace Incoding.MvcContrib
 
             stringBuilder.Append(Label.ToHtmlString());
 
-            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), new RouteValueDictionary(new { @class = "controls" }));
+            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), new RouteValueDictionary(new { @class = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3 ? "col-md-9" : "controls" }));
             stringBuilder.Append(controlContainer);
 
             stringBuilder.Append(Validation.ToHtmlString());

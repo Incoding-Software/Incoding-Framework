@@ -20,6 +20,11 @@
         internal JquerySelector(string selector)
                 : base(selector) { }
 
+        internal JquerySelector(JquerySelector selector)
+                : base((Selector)selector) { }
+
+        internal bool IsSimple { get { return !this.methods.Any(); } }
+
         #endregion
 
         #region Factory constructors
@@ -112,12 +117,17 @@
 
         public JquerySelectorExtend Expression(JqueryExpression expression)
         {
-            foreach (var exist in Enum.GetValues(typeof(JqueryExpression))
-                                      .Cast<JqueryExpression>()
-                                      .Where(r => expression.HasFlag(r)))
-                AlsoSelector(":{0}".F(exist.ToJqueryString()));
+            if (this.methods.Any())
+                AddMethod("filter", Jquery.Expression(expression).ToSelector());
+            else
+            {
+                foreach (var exist in Enum.GetValues(typeof(JqueryExpression))
+                                          .Cast<JqueryExpression>()
+                                          .Where(r => expression.HasFlag(r)))
+                    AlsoSelector(":{0}".F(exist.ToJqueryString()));
+            }
 
-            return new JquerySelectorExtend(this.selector);
+            return new JquerySelectorExtend(this);
         }
 
         /// <summary>

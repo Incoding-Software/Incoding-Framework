@@ -259,6 +259,9 @@
     <Content Include="Views\Labs\Event Selector\Event_Type.cshtml" />
     <Content Include="Views\Labs\Bind\Inc_Ajax_Error.cshtml" />
     <Content Include="Views\Labs\Issue\inc_271.cshtml" />
+    <Content Include="Views\Labs\Issue\inc_340.cshtml" />
+    <Content Include="Views\Labs\Issue\inc_361.cshtml" />
+    <Content Include="Views\Labs\Reproduce_want_fix\inc_368.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

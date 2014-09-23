@@ -3,9 +3,12 @@
     #region << Using >>
 
     using System.Data;
+    using System.Diagnostics.CodeAnalysis;
+    using JetBrains.Annotations;
 
     #endregion
 
+    [UsedImplicitly, ExcludeFromCodeCoverage]
     public class EntityFrameworkUnitOfWorkFactory : IUnitOfWorkFactory
     {
         #region Fields

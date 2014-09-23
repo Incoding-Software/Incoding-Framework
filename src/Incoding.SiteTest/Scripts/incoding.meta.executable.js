@@ -92,7 +92,7 @@ ExecutableBase.prototype = {
         $(current.ands).each(function() {
 
             var hasAny = false;
-
+            
             $(this).each(function() {
 
                 hasAny = ConditionalFactory.Create(this, current).isSatisfied(data);

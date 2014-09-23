@@ -102,7 +102,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                           .ShouldEqualData(new Dictionary<string, object>
                                                                                {
                                                                                        { "insertType", "text" }, 
-                                                                                       { "template", "$('.new').parent($('area'))" }
+                                                                                       { "template", "$('.new').parent('area')" }
                                                                                });
 
 

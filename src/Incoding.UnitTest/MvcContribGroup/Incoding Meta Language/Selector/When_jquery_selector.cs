@@ -316,7 +316,7 @@
                                              .Self()
                                              .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
                                              .ToString()
-                                             .ShouldEqual("$(this.self).find($('input[type=\"text\"]'))");
+                                             .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
 
 
     }

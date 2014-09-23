@@ -21,12 +21,11 @@
                                                 .ShowSql())
                     .Mappings(configuration => configuration.FluentMappings.AddFromAssembly(typeof(Bootstrapper).Assembly));
 
-            NHibernatePleasure.StartSession(configure, true);
+           PleasureForData.StartNhibernate(configure, true);
         }
 
         public void OnAssemblyComplete()
-        {
-		  NHibernatePleasure.StopAllSession();
+        {		  
         }
 
         #endregion

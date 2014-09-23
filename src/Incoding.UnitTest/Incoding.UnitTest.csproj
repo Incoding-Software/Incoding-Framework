@@ -246,6 +246,7 @@
     <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_success.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Common\Response\When_inc_bool_response.cs" />
+    <Compile Include="CQRSGroup\Common\Response\When_inc_int_response.cs" />
     <Compile Include="CQRSGroup\Dispatcher\Behavior_default_dispatcher_push_with_connection_string.cs" />
     <Compile Include="CQRSGroup\Dispatcher\Behavior_default_dispatcher_push_with_mute_event.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_complex.cs" />
@@ -361,7 +362,10 @@
     </Compile>
     <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_base_class.cs" />
     <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_instance.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_load_by_id.cs" />
     <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_push.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_push_multiple.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_query.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
@@ -408,13 +412,14 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_data.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_url.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_data_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_event_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_java_script_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_issue.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_location_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_geolocation_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_date_time_selector.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_add_method.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_equal.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_value_extensions.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_cast.cs" />
@@ -507,6 +512,7 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Other\When_base_dispatcher_controller_push_concurrency.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Other\When_base_dispatcher_controller_push_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_by_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_by_name_with_group.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\Context_dispatcher_controller_render.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_clear_model_state.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Exceptions\When_base_dispatcher_controller_ambiguous_generic_instance.cs" />
@@ -769,7 +775,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

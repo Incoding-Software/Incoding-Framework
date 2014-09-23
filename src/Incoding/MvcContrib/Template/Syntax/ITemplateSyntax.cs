@@ -20,23 +20,39 @@ namespace Incoding.MvcContrib
 
         string For(Expression<Func<TModel, bool>> field);
 
-        string Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse);
 
-        string IsInline(Expression<Func<TModel, object>> field, string content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, MvcHtmlString isFalse);
 
-        string NotInline(Expression<Func<TModel, object>> field, string content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, MvcHtmlString isFalse);
 
-        string IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, string isFalse);
 
-        string NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, Func<object, HelperResult> isFalse);
 
-        string IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, MvcHtmlString isFalse);
 
-        string NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, Func<object, HelperResult> isFalse);
 
-        string ForRaw(string field);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, Func<object, HelperResult> isFalse);
 
-        string ForRaw(Expression<Func<TModel, object>> field);
+        MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, string isFalse);
+
+        MvcHtmlString IsInline(Expression<Func<TModel, object>> field, string content);
+
+        MvcHtmlString IsInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
+
+        MvcHtmlString IsInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
+
+        MvcHtmlString NotInline(Expression<Func<TModel, object>> field, string content);
+
+        MvcHtmlString NotInline(Expression<Func<TModel, object>> field, MvcHtmlString content);
+
+        MvcHtmlString NotInline(Expression<Func<TModel, object>> field, Func<object, HelperResult> content);
+
+        MvcHtmlString ForRaw(string field);
+
+        MvcHtmlString ForRaw(Expression<Func<TModel, object>> field);
 
         ITemplateSyntax<TNewModel> ForEach<TNewModel>(Expression<Func<TModel, IEnumerable<TNewModel>>> field);
 

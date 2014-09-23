@@ -26,7 +26,7 @@
                                           .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                           .GetActions<ExecutableValidationParse>()
                                           .First()["target"]
-                                          .ShouldEqual("$(this.self).closest($('tr'))");
+                                          .ShouldEqual("$(this.self).closest('tr')");
 
         It should_be_reset_target = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   .Do()
@@ -79,7 +79,7 @@
                                                                         .Core().Form.Validation.Parse())
                                                    .GetActions<ExecutableValidationParse>()
                                                    .First()["target"]
-                                                   .ShouldEqual("$(this.self).closest($('tr')).add($('#Next'))");
+                                                   .ShouldEqual("$(this.self).closest('tr').add('#Next')");
 
         It should_be_with_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do()
@@ -87,7 +87,7 @@
                                                  .OnSuccess(dsl => dsl.With(r => r.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                                  .GetActions<ExecutableValidationParse>()
                                                  .First()["target"]
-                                                 .ShouldEqual("$(this.self).closest($('tr'))");
+                                                 .ShouldEqual("$(this.self).closest('tr')");
 
         It should_be_with_id = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                              .Do()
@@ -135,6 +135,6 @@
                                                .OnSuccess(dsl => dsl.WithSelf(extend => extend.Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
                                                .GetActions<ExecutableValidationParse>()
                                                .First()["target"]
-                                               .ShouldEqual("$(this.self).closest($('tr'))");
+                                               .ShouldEqual("$(this.self).closest('tr')");
     }
 }

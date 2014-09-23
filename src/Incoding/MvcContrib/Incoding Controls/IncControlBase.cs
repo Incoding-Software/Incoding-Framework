@@ -28,6 +28,18 @@ namespace Incoding.MvcContrib
         /// </summary>
         public int TabIndex { set { this.attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
+        public bool ReadOnly
+        {
+            set
+            {
+                string key = HtmlAttribute.Readonly.ToStringLower();
+                if (value)
+                    this.attributes.Set(key, key);
+                else
+                    this.attributes.Remove(key);
+            }
+        }
+
         public Action<IIncodingMetaLanguageCallbackBodyDsl> OnEvent { get; set; }
 
         public Action<IIncodingMetaLanguageCallbackBodyDsl> OnInit { get; set; }
@@ -39,14 +51,6 @@ namespace Incoding.MvcContrib
         #region Api Methods
 
         public abstract MvcHtmlString ToHtmlString();
-
-        /// <summary>
-        ///     <see cref="HtmlAttribute.AutoComplete" />
-        /// </summary>
-        public void DisableAutoComplete()
-        {
-            SetAttr(HtmlAttribute.AutoComplete, "off");
-        }
 
         /// <summary>
         ///     <see cref="HtmlAttribute.AutoComplete" />

@@ -1,5 +1,7 @@
-﻿@using Incoding.CQRS
+﻿@using System.Linq.Expressions
+@using Incoding.CQRS
 @using Incoding.SiteTest
+@using Incoding.Extensions
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,18 +30,33 @@
     </head>
         
     <body>
+        <div id="second">            
+        </div>
+        <div id="inner"></div>
+        @{
+            Func<Expression<Func<KeyValueVm, object>>, string> getName = (prop) => prop.GetMemberName();
+            string tmplId = Guid.NewGuid().ToString();
+        }
+        @using (var template = Html.Incoding().ScriptTemplate<KeyValueVm>(tmplId))
+        {
+            using (var each = template.ForEach())
+            {
+                <label for="@getName(r => r.Text)">@each.For(r => r.Text)</label>
+                <input value="@each.For(r => r.Text)" name="@getName(r => r.Text)"/>
+            }
+        }
         
-        <input type="text" id="14595DCB-DA76-431B-B2B1-C03C1C1258C1"/>
 
-        @(Html.When(JqueryBind.Click)              
-              .Direct()
-              .OnSuccess(dsl => dsl.With(r=>r.Id("14595DCB-DA76-431B-B2B1-C03C1C1258C1")).Behaviors(inDsl =>
-                                                                          {
-                                                                              inDsl.Core().JQuery.Attributes.Val("Test");
-                                                                              inDsl.Core().JQuery.Attributes.Val("Test 2");
-                                                                          }))
-              .AsHtmlAttributes()
-              .ToButton("Test"))
+        @(Html.When(JqueryBind.InitIncoding)
+                              .Do()
+                              .Direct()
+                              .OnSuccess(dsl => dsl.Utilities.Window.Alert("Init"))
+                              .When(JqueryBind.Change | JqueryBind.InitIncoding)
+                              .Do()
+                              .Direct()
+                              .OnSuccess(dsl => dsl.Utilities.Window.Alert("Change Init"))
+                              .AsHtmlAttributes()
+                              .ToCheckBox(false))
     </body>
 
 </html>

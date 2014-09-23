@@ -5,6 +5,8 @@
     using System;
     using System.Web;
     using Incoding.CQRS;
+    using Incoding.Data;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -43,6 +45,46 @@
                                   };
 
         Because of = () => { result = controller.Query(HttpUtility.UrlEncode(typeof(FakeGenericByNameQuery<>).Name), HttpUtility.UrlEncode(typeof(string).Name), false); };
+
+        It should_be_result = () => result.ShouldBeIncodingSuccess<string>(s => s.ShouldEqual(queryResult));
+    }
+
+    [Subject(typeof(DispatcherControllerBase))]
+    public class When_base_dispatcher_controller_query_multiple_generic_by_name : Context_dispatcher_controller
+    {
+        #region Fake classes
+
+        public class FakeGenericByNameQuery<T, T2> : QueryBase<T>
+        {
+            ////ncrunch: no coverage start
+            protected override T ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            ////ncrunch: no coverage end        
+        }
+
+        #endregion
+
+        #region Establish value
+
+        static string queryResult;
+
+        #endregion
+
+        Establish establish = () =>
+                                  {
+                                      Establish(types: new[] { typeof(FakeGenericByNameQuery<string, IncEntityBase>) });
+                                      queryResult = Pleasure.Generator.String();
+                                      dispatcher.StubQuery(new FakeGenericByNameQuery<string, IncEntityBase>(), queryResult);
+                                  };
+
+        Because of = () =>
+                         {
+                             result = controller.Query(HttpUtility.UrlEncode(typeof(FakeGenericByNameQuery<string, IncEntityBase>).Name), "{0},{1}".F(HttpUtility.UrlEncode(typeof(string).Name),
+                                                                                                                                                      HttpUtility.UrlEncode(typeof(IncEntityBase).Name)), false);
+                         };
 
         It should_be_result = () => result.ShouldBeIncodingSuccess<string>(s => s.ShouldEqual(queryResult));
     }

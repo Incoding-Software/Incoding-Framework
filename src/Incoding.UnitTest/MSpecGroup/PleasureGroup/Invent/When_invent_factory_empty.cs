@@ -43,6 +43,8 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_empty_enum = () => ((int)inventEmpty.EnumValue).ShouldEqual(0);
 
+        It should_be_empty_enum_as_nullable = () => ((int)inventEmpty.EnumAsNullableValue).ShouldEqual(0);
+
         It should_be_not_found_empty = () =>
                                            {
                                                var invent = new InventFactory<FakeGenerateObject>();

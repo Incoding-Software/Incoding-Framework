@@ -273,9 +273,12 @@
     <Compile Include="ContractAbbreviateAttribute.cs" />
     <Compile Include="ContractArgumentValidatorAttribute.cs" />
     <Compile Include="ContractOptionAttribute.cs" />
+    <Compile Include="CQRS\Common\Command\AddCookieCommand.cs" />
     <Compile Include="CQRS\Common\Command\DeleteEntityByIdCommandT.cs" />
+    <Compile Include="CQRS\Common\Query\GetCookiesAsStringQuery.cs" />
     <Compile Include="CQRS\Common\Query\HasEntitiesQuery.cs" />
     <Compile Include="CQRS\Common\Response\IncBoolResponse.cs" />
+    <Compile Include="CQRS\Common\Response\IncIntResponse.cs" />
     <Compile Include="CQRS\Common\Response\IncStructureResponse.cs" />
     <Compile Include="CQRS\Core\CommandBase.cs" />
     <Compile Include="CQRS\Common\Command\DeleteEntityByIdCommand.cs" />
@@ -432,6 +435,7 @@
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryEasing.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\JqueryShowOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JuqeryEffect.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Selectors\DataSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\EventSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\IJavaScriptSelector.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Selectors\JavaScript\JSCoordsSelector.cs" />

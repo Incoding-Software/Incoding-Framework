@@ -1,0 +1,17 @@
+﻿<div id="second">            
+</div>
+<div id="inner"></div>
+
+@(Html.When(JqueryBind.Click)
+      .Direct()
+      .OnSuccess(dsl =>
+                     {
+                         dsl.WithId("second")
+                            .Behaviors(inDsl =>
+                                           {
+                                               inDsl.Core().JQuery.Manipulation.Html(@<text>Test</text>);
+                                               dsl.WithId("inner").Core().JQuery.Manipulation.Html(@<text>Med</text>);
+                                           });
+                     })
+      .AsHtmlAttributes()
+      .ToButton("Test"))

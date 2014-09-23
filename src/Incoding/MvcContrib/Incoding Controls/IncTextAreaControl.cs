@@ -48,6 +48,8 @@
             set { this.attributes.Set(HtmlAttribute.Rows.ToStringLower(), value.ToString()); }
         }
 
+        public int MaxLenght { set { this.attributes.Set(HtmlAttribute.MaxLength.ToStringLower(), value); } }
+
         #endregion
 
         public override MvcHtmlString ToHtmlString()

@@ -37,6 +37,19 @@ namespace Incoding.MvcContrib
         /// </summary>
         public string Placeholder { set { this.attributes.Set(HtmlAttribute.Placeholder.ToStringLower(), value); } }
 
+        public int MaxLenght { set { this.attributes.Set(HtmlAttribute.MaxLength.ToStringLower(), value); } }
+
+        public bool Autocomplete
+        {
+            set
+            {
+                if (value)
+                    this.attributes.Set(HtmlAttribute.AutoComplete.ToStringLower(), HtmlAttribute.AutoComplete.ToString());
+                else
+                    this.attributes.Remove(HtmlAttribute.AutoComplete.ToStringLower());
+            }
+        }
+
         #endregion
 
         public override MvcHtmlString ToHtmlString()

@@ -47,11 +47,9 @@ namespace Incoding.CQRS
             var allRepositoryMethod = Repository.GetType().GetMethods();
 
             var entity = allRepositoryMethod
-                                 .First(r => r.Name.EqualsWithInvariant("GetById"))
-                                 .MakeGenericMethod(entityType)
-                                 .Invoke(Repository, new object[] { Id }) as IEntity;
-
-            EventBroker.Publish(new OnBeforeDeleteEntityEvent(entity));
+                    .First(r => r.Name.EqualsWithInvariant("GetById"))
+                    .MakeGenericMethod(entityType)
+                    .Invoke(Repository, new object[] { Id }) as IEntity;
 
             allRepositoryMethod
                     .First(r => r.Name.EqualsWithInvariant("Delete") && r.GetParameters()[0].Name.EqualsWithInvariant("entity")).MakeGenericMethod(entityType)

@@ -58,6 +58,12 @@
                                                                          {
                                                                              if (isAjax)
                                                                                  mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
+
+                                                                             mock.SetupGet(r => r.Form).Returns(new NameValueCollection()
+                                                                                                                    {
+                                                                                                                            { "[0].Name", "Value" },
+                                                                                                                            { "[1].Name", "Value" },
+                                                                                                                    });
                                                                          });
             controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock => mock.SetupGet(r => r.Request).Returns(requestBase)), new RouteData(), controller);
             controller.ValueProvider = Pleasure.MockStrictAsObject<IValueProvider>(mock => mock.Setup(r => r.GetValue(Pleasure.MockIt.IsAny<string>())).Returns(new ValueProviderResult(string.Empty, string.Empty, Thread.CurrentThread.CurrentCulture)));

@@ -20,6 +20,6 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         Because of = () => meta.Target = Selector.Jquery.Id("Id");
 
-        It should_be_add_target = () => meta.Target.ToString().ShouldEqual("$(this.self).add($('#Id'))");
+        It should_be_add_target = () => meta.Target.ToString().ShouldEqual("$(this.self).add('#Id')");
     }
 }

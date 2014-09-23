@@ -85,4 +85,52 @@
 
         #endregion
     }
+
+    [JsonObject(IsReference = true, ItemReferenceLoopHandling = ReferenceLoopHandling.Ignore)]
+    public class DbEntityWithoutMapping : IncEntityBase
+    {
+        #region Constructors
+
+        public DbEntityWithoutMapping()
+        {
+            Id = Guid.NewGuid();
+            Items = new List<DbEntityItem>();
+        }
+
+        #endregion
+
+        #region Properties
+
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public new virtual Guid Id { get; set; }
+
+        public virtual string Value { get; set; }
+
+        public virtual int? ValueNullable { get; set; }
+
+        [JsonIgnore]
+        public virtual IList<DbEntityItem> Items { get; set; }
+
+        [JsonIgnore]
+        public virtual DbEntityReference Reference { get; set; }
+
+        #endregion
+
+        #region Nested classes
+
+        [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true), ExcludeFromCodeCoverage]
+        public class Map : NHibernateEntityMap<DbEntityWithoutMapping>
+        {
+            #region Constructors
+
+            public Map()
+            {
+                Id(r => r.Id).GeneratedBy.Assigned();
+            }
+
+            #endregion
+        }
+
+        #endregion
+    }
 }

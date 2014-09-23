@@ -40,12 +40,12 @@ namespace Incoding.UnitTest.MSpecGroup
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      var input = Pleasure.Generator.Invent<FakeMockMessage>();
-                                      mockMessage = MockQuery<FakeMockMessage, FakeEntityForNew>
-                                              .When(input)
-                                              .StubGetById(input.Id, Pleasure.MockAsObject<FakeEntityForNew>());
-                                  };
+                              {
+                                  var input = Pleasure.Generator.Invent<FakeMockMessage>();
+                                  mockMessage = MockQuery<FakeMockMessage, FakeEntityForNew>
+                                          .When(input)
+                                          .StubGetById(input.Id, Pleasure.MockAsObject<FakeEntityForNew>());
+                              };
 
         Because of = () => mockMessage.Original.Execute();
 
