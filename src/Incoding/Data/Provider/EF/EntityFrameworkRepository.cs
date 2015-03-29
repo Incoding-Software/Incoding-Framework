@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Threading.Tasks;
     using Incoding.Extensions;
 
     #endregion
@@ -15,15 +14,15 @@
     {
         #region Fields
 
-        readonly Lazy<DbContext> session;
+        Lazy<DbContext> session;
 
         #endregion
 
         #region Constructors
 
-        public EntityFrameworkRepository(IEntityFrameworkSessionFactory sessionFactory)
+        public EntityFrameworkRepository(/*IEntityFrameworkSessionFactory sessionFactory*/)
         {
-            this.session = new Lazy<DbContext>(sessionFactory.GetCurrent);
+            //this.session = new Lazy<DbContext>(sessionFactory.GetCurrent);
         }
 
         #endregion
@@ -33,6 +32,16 @@
         public void ExecuteSql(string sql)
         {
             this.session.Value.Database.ExecuteSqlCommand(sql);
+        }
+
+        public TProvider GetProvider<TProvider>() where TProvider : class
+        {
+            return this.session.Value as TProvider;
+        }
+
+        public void SetProvider(object provider)
+        {
+            this.session = (Lazy<DbContext>)provider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
@@ -92,11 +101,6 @@
         public IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
             return this.session.Value.Set<TEntity>().AsQueryable().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
-        }
-
-        public Task<IQueryable<TEntity>> QueryAsync<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
-        {
-            throw new NotImplementedException();
         }
 
         public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()

@@ -24,6 +24,6 @@
 
         It should_be_resolve_once = () => provider.Verify(r => r.TryGet<IRepository>(), Times.Once());
 
-        It should_be_safety = () => exception.ShouldBeNull();
+        It should_be_safety = () => exception.ShouldNotBeNull();
     }
 }

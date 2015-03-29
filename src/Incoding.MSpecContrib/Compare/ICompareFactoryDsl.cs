@@ -42,6 +42,9 @@ namespace Incoding.MSpecContrib
 
         ICompareFactoryDsl<TActual, TExpected> IncludeAllFields();
 
+        ICompareFactoryDsl<TActual, TExpected> SetMaxRecursionDeep(int deep);
+        ICompareFactoryDsl<TActual, TExpected> IgnoreRecursionError();
+
         ICompareFactoryDsl<TActual, TExpected> NotNull(Expression<Func<TActual, object>> actualProp);
     }
 

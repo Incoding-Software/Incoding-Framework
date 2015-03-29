@@ -21,22 +21,22 @@
 
         #endregion
 
-        It should_be_create_with_exist_session = () =>
-                                                     {
-                                                         var incDbContext = new IncDbContext("IncRealEFDb");
-                                                         SetCurrentSession(incDbContext);
-                                                         new EntityFrameworkSessionFactory(() => incDbContext)
-                                                                 .GetCurrent()
-                                                                 .ShouldNotBeNull();
-                                                     };
+        //It should_be_create_with_exist_session = () =>
+        //                                             {
+        //                                                 var incDbContext = new IncDbContext("IncRealEFDb");
+        //                                                 SetCurrentSession(incDbContext);
+        //                                                 new EntityFrameworkSessionFactory(() => incDbContext)
+        //                                                         .GetCurrent()
+        //                                                         .ShouldNotBeNull();
+        //                                             };
 
-        It should_be_get_current_without_open = () =>
-                                                    {
-                                                        SetCurrentSession(null);
-                                                        Catch.Exception(() => new EntityFrameworkSessionFactory(() => new IncDbContext("IncRealEFDb"))
-                                                                                      .GetCurrent())
-                                                             .ShouldNotBeNull();
-                                                    };
+        //It should_be_get_current_without_open = () =>
+        //                                            {
+        //                                                SetCurrentSession(null);
+        //                                                Catch.Exception(() => new EntityFrameworkSessionFactory(() => new IncDbContext("IncRealEFDb"))
+        //                                                                              .GetCurrent())
+        //                                                     .ShouldNotBeNull();
+        //                                            };
 
         It should_be_open = () =>
                                 {

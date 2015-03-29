@@ -27,6 +27,7 @@
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public new virtual Guid Id { get; set; }
+        public virtual string Name { get; set; }
 
         #endregion
 
@@ -40,6 +41,7 @@
             public Map()
             {
                 Id(r => r.Id).GeneratedBy.Assigned();
+                Map(r => r.Name);
             }
 
             #endregion

@@ -15,5 +15,7 @@
         void Commit();
 
         void Open();
+
+        object GetSession();
     }
 }

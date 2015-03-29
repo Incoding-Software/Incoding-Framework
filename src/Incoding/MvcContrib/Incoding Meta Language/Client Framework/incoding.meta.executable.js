@@ -382,9 +382,11 @@ ExecutableValidationParse.prototype.internalExecute = function() {
     $.validator.unobtrusive.parse(form);
 
     //bug in fluent validation. fixed for input
-    $('[data-val-equalto-other]', form).each(function() {
+    $('[data-val-equalto-other]', form).each(function () {
         var equalTo = '#' + $(this).data('val-equalto-other').replaceAll('*.', 'Input_');
-        $(this).rules("add", { required : true, equalTo : equalTo });
+        if ($(equalTo).length > 0) {
+            $(this).rules("add", { required: true, equalTo: equalTo });
+        }
     });
 };
 
@@ -538,12 +540,13 @@ ExecutableStoreFetch.prototype.internalExecute = function() {
     var fparam = $.url(window.location.href).fparam();
 
     $.eachFormElements(this.target, function() {
-        var key = prefix + $(this).prop('name');
+        var name = $(this).prop('name');
+        var key = prefix + name;
         var value = '';
         if (fparam.hasOwnProperty(key)) {
             value = fparam[key];
         }
-        ExecutableHelper.Instance.TrySetValue(this, value);
+        ExecutableHelper.Instance.TrySetValue($.byName(name), value);
     });
 
 };
@@ -562,7 +565,8 @@ ExecutableStoreManipulate.prototype.internalExecute = function(data) {
     switch (current.jsonData.type) {
         case 'hash':
             var url = $.url(document.location.href);
-
+            url.encodeAllParams();
+            
             var methods = $.parseJSON(current.jsonData.methods);
             $(methods).each(function() {
                 switch (this.verb) {

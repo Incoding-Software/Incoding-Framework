@@ -148,21 +148,21 @@
 
         It should_be_push_composite = () =>
                                           {
-                                              const string actionUrl = "/Dispatcher/Composite?incType=FakeCommand%2CFakeCommand2";
+                                              const string actionUrl = "/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand2";
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                               urlDispatcher.Push(new FakeCommand { DecodeValue = "{{1}}" })
                                                            .Push(new FakeCommand2 { Command2Value = Pleasure.Generator.TheSameString() })
                                                            .ToString()
-                                                           .ShouldEqual("/Dispatcher/Composite?incType=FakeCommand%2CFakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
+                                                           .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand%2CFakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
                                           };
 
         It should_be_push_same_command_on_composite = () =>
                                                           {
-                                                              const string actionUrl = "/Dispatcher/Composite?incType=FakeCommand";
+                                                              const string actionUrl = "/Dispatcher/Composite?incTypes=FakeCommand";
                                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                                               urlDispatcher.Push(new FakeCommand { DecodeValue = "value1" }).Push(new FakeCommand { DecodeValue = "value2" })
                                                                            .ToString()
-                                                                           .ShouldEqual("/Dispatcher/Composite?incType=FakeCommand&%5b0%5d.DecodeValue=value1&%5b1%5d.DecodeValue=value2");
+                                                                           .ShouldEqual("/Dispatcher/Composite?incTypes=FakeCommand&%5b0%5d.DecodeValue=value1&%5b1%5d.DecodeValue=value2");
                                                           };
 
         It should_be_push = () =>

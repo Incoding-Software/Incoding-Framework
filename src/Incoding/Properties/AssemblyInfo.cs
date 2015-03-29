@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Incoding Software")]
 [assembly: AssemblyProduct("Incoding Framework")]
 [assembly: AssemblyCopyright("Incoding Software Copyright © 2013")]
-[assembly: AssemblyKeyFile("IncFramework.snk")]
+//[assembly: AssemblyKeyFile("IncFramework.snk")]
 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.

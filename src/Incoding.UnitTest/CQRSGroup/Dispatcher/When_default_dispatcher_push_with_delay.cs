@@ -54,7 +54,7 @@
                                       IoCFactory.Instance.StubTryResolve(mockDispatcher.Object);
                                   };
 
-        Because of = () => dispatcher.Push(message, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.Tuning(r => r.Delay, new MessageDelaySetting())));
+        Because of = () => dispatcher.Push(message, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => { }));
 
         It should_be_push_add_delay_to_scheduler = () => mockDispatcher.ShouldBePush<AddDelayToSchedulerCommand>(command =>
                                                                                                                      {

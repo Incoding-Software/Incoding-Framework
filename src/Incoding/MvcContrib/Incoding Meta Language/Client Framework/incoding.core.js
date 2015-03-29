@@ -188,7 +188,7 @@ $.extend({
         }
     },
     eachFormElements : function(ob, evaluated) {
-        var inputTag = 'input,select';
+        var inputTag = 'input,select,textarea';
         var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
         var targets;
         if ($(ob).is('input,select')) {

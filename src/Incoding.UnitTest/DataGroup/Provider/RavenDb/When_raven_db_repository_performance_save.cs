@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using System;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -82,8 +84,9 @@
                                   {
                                       var mockAsObject = Pleasure.MockAsObject<IDocumentSession>(mock => mock.Setup(r => r.Advanced.HasChanged(Pleasure.MockIt.IsAny<FakeEntity>())).Returns(false));
 
-                                      var sessionFactory = Pleasure.MockAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(mockAsObject));
-                                      repository = new RavenDbRepository(sessionFactory);
+                                      //var sessionFactory = Pleasure.MockAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(mockAsObject));
+                                      repository = new RavenDbRepository(/*sessionFactory*/);
+                                      repository.SetProvider(new Lazy<IDocumentSession>(() => mockAsObject));
 
                                       fakeEntity = Pleasure.Generator.Invent<FakeEntity>(dsl => dsl.GenerateTo(r => r.Reference)
                                                                                                    .GenerateTo(r => r.Items));

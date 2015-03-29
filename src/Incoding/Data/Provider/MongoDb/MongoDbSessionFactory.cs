@@ -43,15 +43,7 @@
         #endregion
 
         #region IMongoDbSessionFactory Members
-
-        public MongoDatabaseDisposable GetCurrent()
-        {
-            if (currentSession != null)
-                return currentSession;
-
-            throw new InvalidOperationException(SpecificationMessageRes.Session_Factory_Not_Open);
-        }
-
+        
         public MongoDatabaseDisposable Open(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))

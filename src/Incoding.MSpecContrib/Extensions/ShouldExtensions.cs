@@ -136,7 +136,7 @@ namespace Incoding.MSpecContrib
             action.Do(r => r(factory));
             factory.Compare(left, right);
             if (!factory.IsCompare())
-                throw new SpecificationException(factory.GetDifferencesAsString());
+                throw new InternalSpecificationException(factory.GetDifferencesAsString());
         }
 
         public static void ShouldEqualWeakDual<TActual, TExpected>(this TActual left, TExpected right, Action<ICompareFactoryDsl<TActual, TExpected>> leftAction = null, Action<ICompareFactoryDsl<TExpected, TActual>> rightAction = null)

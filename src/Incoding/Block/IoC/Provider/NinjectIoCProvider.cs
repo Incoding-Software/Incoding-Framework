@@ -51,7 +51,7 @@ namespace Incoding.Block.IoC
             this.kernel.Unbind<TInstance>();
         }
 
-        public void Forward<TNew>(TNew newInstance)
+        public void Forward<TNew>(TNew newInstance) where TNew : class
         {
             Eject<TNew>();
             this.kernel.Bind<TNew>().ToConstant(newInstance);

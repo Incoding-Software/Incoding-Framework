@@ -16,6 +16,7 @@
 
     #endregion
 
+
     // ReSharper disable Mvc.ViewNotResolved
     // ReSharper disable MemberCanBeProtected.Global
     public class DispatcherControllerBase : IncControllerBase
@@ -98,6 +99,7 @@
 
         public virtual ActionResult Render(string incView, string incType, string incGeneric, bool? incIsModel)
         {
+            TryUpdateModel("aq");
             incView = HttpUtility.UrlDecode(incView);
             object model = null;
 
@@ -130,7 +132,7 @@
         public virtual ActionResult Composite(string incTypes)
         {
             if (string.IsNullOrWhiteSpace(incTypes))
-                throw new ArgumentNullException("incType", "Argument can't be empty ( action composite )");
+                throw new ArgumentNullException("incTypes");
 
             var splits = incTypes.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             bool isGroup = splits.Count() == 1;
@@ -148,10 +150,10 @@
             }
 
             return TryPush(composite =>
-                               {
-                                   foreach (var commandBase in commands)
-                                       composite.Quote(commandBase);
-                               }, setting => setting.SuccessResult = () => IncodingResult.Success(commands.Select(r => r.Result)));
+                           {
+                               foreach (var commandBase in commands)
+                                   composite.Quote(commandBase);
+                           }, setting => setting.SuccessResult = () => IncodingResult.Success(commands.Select(r => r.Result)));
         }
 
         public virtual ActionResult QueryToFile(string incType, string incGeneric, string incContentType, string incFileDownloadName)
@@ -179,13 +181,13 @@
 
             var instance = Activator.CreateInstance(instanceType);
             GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
-                     .Where(r => r.Name == "TryUpdateModel" &&
-                                 r.GetParameters().Length == 1)
-                     .DoEach(info => info.MakeGenericMethod(instanceType)
-                                         .Invoke(this, new[] { instance }));
+                     .Single(r => r.Name == "TryUpdateModel" && r.GetParameters().Length == 1)
+                     .MakeGenericMethod(instanceType)
+                     .Invoke(this, new[] { instance });
 
             return instance;
         }
+
 
         Type FindTypeByName(string name, bool isGeneric)
         {

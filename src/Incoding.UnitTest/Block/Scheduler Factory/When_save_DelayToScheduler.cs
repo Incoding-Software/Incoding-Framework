@@ -14,7 +14,7 @@
     [Subject(typeof(DelayToScheduler)),Isolated]
     public class When_save_DelayToScheduler : SpecWithPersistenceSpecification<DelayToScheduler>
     {
-        It should_be_nhibernate = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildNhibernateRepository(MSpecAssemblyContext.NhibernateFluent()))
+        It should_be_nhibernate = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildNhibernateRepository())
                                                 .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
 
         It should_be_ef = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildEFRepository(new IncDbContext("IncRealEFDb", typeof(DelayToScheduler).Assembly), false))

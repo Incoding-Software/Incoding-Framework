@@ -26,20 +26,32 @@
         public ConditionalData(Expression<Func<TModel, bool>> expression, bool and)
                 : base(ConditionalOfType.Data.ToString(), and)
         {
-            if (expression.Body is BinaryExpression)
-                SetBinary(expression.Body as BinaryExpression);
-            else if (expression.Body is MethodCallExpression)
-                SetMethodCall(expression.Body as MethodCallExpression);
-            else if (expression.Body.NodeType == ExpressionType.MemberAccess)
-                SetMemberAccess(expression.Body as MemberExpression);
-            else                                                                                                                                                                                                        
-                    ////ncrunch: no coverage start
-                throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(expression.Body.GetType().FullName));
+            var unary = expression.Body as UnaryExpression;
+            if (unary != null)
+            {
+                this.inverse = true;
+                Init(unary.Operand);
+            }
+            else
+                Init(expression.Body);
 
             ////ncrunch: no coverage end
         }
 
         #endregion
+
+        void Init(Expression body)
+        {
+            if (body is BinaryExpression)
+                SetBinary(body as BinaryExpression);
+            else if (body is MethodCallExpression)
+                SetMethodCall(body as MethodCallExpression);
+            else if (body.NodeType == ExpressionType.MemberAccess)
+                SetMemberAccess(body as MemberExpression);
+            else
+                    ////ncrunch: no coverage start
+                throw new ArgumentOutOfRangeException("body", "Not found logic for {0}".F(body.GetType().FullName));
+        }
 
         void SetMemberAccess(MemberExpression memberExpression)
         {
@@ -81,14 +93,17 @@
         {
             string propertyName = string.Empty;
             string invokeValue = string.Empty;
-            if (expression.Left.NodeType == ExpressionType.MemberAccess)
-                propertyName = ((MemberExpression)expression.Left).Member.Name;
-            else if (expression.Right.NodeType == ExpressionType.MemberAccess)
-                propertyName = ((MemberExpression)expression.Right).Member.Name;
+            var left = expression.Left.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression.Left).Operand : expression.Left;
+            var right = expression.Right.NodeType == ExpressionType.Convert ? ((UnaryExpression)expression.Right).Operand : expression.Right;
 
-            invokeValue = expression.Left.NodeType.IsAnyEquals(ExpressionType.Constant, ExpressionType.Call)
-                                  ? GetValue(expression.Left).ToString()
-                                  : GetValue(expression.Right).ToString();
+            if (left.NodeType == ExpressionType.MemberAccess)
+                propertyName = ((MemberExpression)left).Member.Name;
+            else if (right.NodeType == ExpressionType.MemberAccess)
+                propertyName = ((MemberExpression)right).Member.Name;
+
+            invokeValue = left.NodeType.IsAnyEquals(ExpressionType.Constant, ExpressionType.Call)
+                                  ? GetValue(left).ToString()
+                                  : GetValue(right).ToString();
 
             Set(propertyName, invokeValue, expression.NodeType.ToStringLower());
         }

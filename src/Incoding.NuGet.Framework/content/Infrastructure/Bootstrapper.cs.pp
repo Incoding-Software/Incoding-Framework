@@ -17,6 +17,8 @@
     using Incoding.Extensions;
     using Incoding.MvcContrib;
     using NHibernate.Context;
+	using NHibernate.Tool.hbm2ddl;
+	using StructureMap.Graph;
 
     public static class Bootstrapper
     {
@@ -30,18 +32,18 @@
 
             IoCFactory.Instance.Initialize(init => init.WithProvider(new StructureMapIoCProvider(registry =>
                                                                                                      {
-                                                                                                         registry.For<IDispatcher>().Singleton().Use<DefaultDispatcher>();
-                                                                                                         registry.For<IEventBroker>().Singleton().Use<DefaultEventBroker>();
+                                                                                                         registry.For<IDispatcher>().Use<DefaultDispatcher>();
+                                                                                                         registry.For<IEventBroker>().Use<DefaultEventBroker>();
                                                                                                          registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()
                                                                                                                  .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
                                                                                                                  .Mappings(configuration => configuration.FluentMappings.AddFromAssembly(typeof(Bootstrapper).Assembly))
-                                                                                                                 .CurrentSessionContext<ThreadStaticSessionContext>();
-                                                                                                         registry.For<IManagerDataBase>().Singleton().Use(() => new NhibernateManagerDataBase(configure));
+																												 .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
+                                                                                                                 .CurrentSessionContext<NhibernateSessionContext>();                                                                                                         
                                                                                                          registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
-                                                                                                         registry.For<IUnitOfWorkFactory>().Singleton().Use<NhibernateUnitOfWorkFactory>();
+                                                                                                         registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();
                                                                                                          registry.For<IRepository>().Use<NhibernateRepository>();
 
                                                                                                          registry.Scan(r =>

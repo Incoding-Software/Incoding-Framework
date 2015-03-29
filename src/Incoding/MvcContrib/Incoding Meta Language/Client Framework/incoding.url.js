@@ -137,6 +137,17 @@ function purl(existsUrl) {
             return this.data.param.fragment.hasOwnProperty(key) ? ExecutableHelper.UrlDecode(this.data.param.fragment[key]) : '';
         },
         
+        encodeAllParams: function () {
+            var self = this;
+            var params = self.fparam();
+            $.eachProperties(params, function () {
+                var key = this.split('__')[1];
+                var prefix = this.split('__')[0];
+                var value = params[this.toString()];
+                self.setFparam(key, value, prefix);
+            });
+        },
+
         // set fragment parameters
         setFparam : function(param, value, prefix) {
             var fullParam = "{0}__{1}".f(prefix, param);

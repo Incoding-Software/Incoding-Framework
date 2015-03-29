@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Runtime.Serialization;
     using Incoding.Block.IoC;
     using Incoding.Data;
     using Incoding.EventBroker;
@@ -14,6 +15,90 @@
 
     public abstract class MessageBase<TResult> : IMessage<TResult>
     {
+        #region Constructors
+
+        protected MessageBase()
+        {
+            Result = default(TResult);
+            this.lazyRepository = new Lazy<IRepository>(() =>
+                                                        {
+                                                            Setting.With(r => r.unitOfWork).Do(work => work.Open());
+                                                            IRepository repository = string.IsNullOrWhiteSpace(Setting.With(r => r.DataBaseInstance))
+                                                                                             ? IoCFactory.Instance.TryResolve<IRepository>()
+                                                                                             : IoCFactory.Instance.TryResolveByNamed<IRepository>(Setting.DataBaseInstance);
+                                                            // we are sure that UnitOfWork will open corresponding Session object
+                                                            repository.SetProvider(Setting.With(r => r.unitOfWork).GetSession());
+                                                            return repository;
+                                                        });
+            this.lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
+            this.messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(Setting.With(r => r.outerDispatcher), Setting));
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        protected class MessageDispatcher
+        {
+            #region Constructors
+
+            public MessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
+            {
+                if (dispatcher == null)
+                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
+                this.dispatcher = dispatcher;
+                this.outerSetting = setting;
+            }
+
+            #endregion
+
+            #region Fields
+
+            readonly IDispatcher dispatcher;
+
+            readonly MessageExecuteSetting outerSetting;
+
+            #endregion
+
+            #region Api Methods
+
+            public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null) where TQueryResult : class
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection,
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                return this.dispatcher.Query(query, setting);
+            }
+
+            public void Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection,
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                this.dispatcher.Push(command, new MessageExecuteSetting());
+            }
+
+            public void Delay(CommandBase command, Action<MessageDelaySetting> configuration = null)
+            {
+                command.Setting = command.Setting ?? new MessageExecuteSetting
+                                                     {
+                                                             Connection = outerSetting.Connection,
+                                                             DataBaseInstance = outerSetting.DataBaseInstance
+                                                     };
+                this.dispatcher.Delay(command, configuration);
+            }
+
+            #endregion
+        }
+
+        #endregion
+
         #region Fields
 
         readonly Lazy<IRepository> lazyRepository;
@@ -21,25 +106,6 @@
         readonly Lazy<IEventBroker> lazyEventBroker;
 
         readonly Lazy<MessageDispatcher> messageDispatcher;
-
-        #endregion
-
-        #region Constructors
-
-        protected MessageBase()
-        {
-            Result = default(TResult);
-            this.lazyRepository = new Lazy<IRepository>(() =>
-                                                            {
-                                                                Setting.With(r => r.UnitOfWork)
-                                                                       .Do(work => work.Open());
-                                                                return string.IsNullOrWhiteSpace(Setting.With(r => r.DataBaseInstance))
-                                                                               ? IoCFactory.Instance.TryResolve<IRepository>()
-                                                                               : IoCFactory.Instance.TryResolveByNamed<IRepository>(Setting.DataBaseInstance);
-                                                            });
-            this.lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
-            this.messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(Setting.With(r => r.UnitOfWork)));
-        }
 
         #endregion
 
@@ -58,68 +124,13 @@
 
         #region IMessage<TResult> Members
 
-        [IgnoreCompare("Design fixed"), JsonIgnore]
+        [IgnoreCompare("Design fixed"), JsonIgnore, IgnoreDataMember]
         public virtual TResult Result { get; protected set; }
 
-        [IgnoreCompare("Design fixed")]
+        [IgnoreCompare("Design fixed"), IgnoreDataMember]
         public MessageExecuteSetting Setting { get; set; }
 
         public abstract void Execute();
-
-        #endregion
-
-        #region Nested classes
-
-        protected class MessageDispatcher
-        {
-            #region Fields
-
-            readonly IUnitOfWork unitOfWork;
-
-            readonly IDispatcher dispatcher;
-
-            #endregion
-
-            #region Constructors
-
-            public MessageDispatcher(IUnitOfWork unitOfWork)
-            {
-                this.unitOfWork = unitOfWork;
-                this.dispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
-            }
-
-            #endregion
-
-            #region Api Methods
-
-            public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null) where TQueryResult : class
-            {
-                var setting = new MessageExecuteSetting
-                                  {
-                                          UnitOfWork = this.unitOfWork
-                                  };
-                configuration.Do(action => action(setting));
-                return this.dispatcher.Query(query, setting);
-            }
-
-            public void Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
-            {
-                var setting = new MessageExecuteSetting();
-                configuration.Do(action => action(setting));
-                this.dispatcher.Push(command, new MessageExecuteSetting
-                                                  {
-                                                          UnitOfWork = this.unitOfWork,
-                                                          Delay = setting.Delay
-                                                  });
-            }
-
-            public void Delay(CommandBase command, Action<MessageDelaySetting> configuration = null)
-            {
-                this.dispatcher.Delay(command, configuration);
-            }
-
-            #endregion
-        }
 
         #endregion
     }

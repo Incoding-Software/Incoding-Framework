@@ -49,7 +49,7 @@
 
         Establish establish = () =>
                                   {
-                                      quoteSetting2 = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.GenerateTo(r => r.Delay));
+                                      quoteSetting2 = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => {});
 
                                       quote1 = Pleasure.Generator.Invent<FakeCommand>();
                                       quote2 = Pleasure.Generator.Invent<FakeCommand>();
@@ -68,12 +68,6 @@
                                                                    .OnComplete(message => { })
                                                                    .OnError((message, exception) => { })
                                                                    .Mute(quoteSetting2.Mute)
-                                                                   .AsDelay(setting =>
-                                                                                {
-                                                                                    setting.Connection = quoteSetting2.Delay.Connection;
-                                                                                    setting.DataBaseInstance = quoteSetting2.Delay.DataBaseInstance;
-                                                                                    setting.UID = quoteSetting2.Delay.UID;
-                                                                                })
                                                                    .Quote(quote3);
                          };
 

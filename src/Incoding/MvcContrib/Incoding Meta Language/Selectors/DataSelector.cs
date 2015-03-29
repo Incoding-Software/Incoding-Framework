@@ -13,9 +13,11 @@
         #region Constructors
 
         internal ResultSelector()
-                : base("||data||") { }
+                : base("||result||") { }
 
         #endregion
+
+        #region Api Methods
 
         public ResultSelector For<T>(Expression<Func<T, object>> property)
         {
@@ -24,9 +26,10 @@
 
         public ResultSelector For(string property)
         {
-            this.selector = "||result*{0}||".F(property);
+            selector = "||result*{0}||".F(property);
             return this;
         }
 
+        #endregion
     }
 }

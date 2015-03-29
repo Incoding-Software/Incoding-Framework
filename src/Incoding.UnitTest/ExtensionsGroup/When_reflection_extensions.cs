@@ -56,13 +56,23 @@ namespace Incoding.UnitTest.ExtensionsGroup
             readonly string readOnlyPrivateField;
 
             string privateField;
+            int privateIntField;
+            int? privateIntNullableField;
+
+            private object classField;
 
             #endregion
+
+            internal class FakeInnerClass
+            {
+                public string Val { get; set; }
+            }
 
             #region Properties
 
             [UsedImplicitly]
             public string PrivateField { get; set; }
+            
 
             // ReSharper disable MemberCanBePrivate.Local
             protected string ProtectedProperty { get; set; }
@@ -90,6 +100,24 @@ namespace Incoding.UnitTest.ExtensionsGroup
             public FakeSetValueClass SetPrivateField(string value)
             {
                 this.privateField = value;
+                return this;
+            }
+
+            public FakeSetValueClass SetPrivateIntField(int value)
+            {
+                this.privateIntField = value;
+                return this;
+            }
+
+            public FakeSetValueClass SetPrivateIntNullableField(int? value)
+            {
+                this.privateIntNullableField = value;
+                return this;
+            }
+
+            public FakeSetValueClass SetPrivateClassNullableField(FakeInnerClass value)
+            {
+                this.classField = value;
                 return this;
             }
 
@@ -193,6 +221,26 @@ namespace Incoding.UnitTest.ExtensionsGroup
         It should_be_try_get_value_static = () => new FakeSetValueClass()
                 .TryGetValue("staticValue")
                 .ShouldEqual("staticValue");
+
+        It should_be_try_get_value_int_private = () => new FakeSetValueClass().SetPrivateIntField(5)
+                .TryGetValue<int>("privateIntField")
+                .ShouldEqual(5);
+
+        It should_be_try_get_value_int_nullable_private = () => new FakeSetValueClass().SetPrivateIntNullableField(null)
+                .TryGetValue<int?>("privateIntNullableField")
+                .ShouldBeNull();
+
+        It should_be_try_get_value_int_nullable_val_private = () => new FakeSetValueClass().SetPrivateIntNullableField(6)
+                .TryGetValue<int?>("privateIntNullableField")
+                .ShouldEqual(6);
+
+        It should_be_try_get_value_class_nullable_private = () => new FakeSetValueClass().SetPrivateClassNullableField(null)
+                .TryGetValue<FakeSetValueClass.FakeInnerClass>("classField")
+                .ShouldBeNull();
+
+        It should_be_try_get_value_class_nullable_val_private = () => new FakeSetValueClass().SetPrivateClassNullableField(new FakeSetValueClass.FakeInnerClass() { Val = "asd"})
+                .TryGetValue<FakeSetValueClass>("classField")
+                .ShouldEqualWeak(new FakeSetValueClass.FakeInnerClass() { Val = "asd" });
 
         It should_be_is_typical_type = () =>
                                        {

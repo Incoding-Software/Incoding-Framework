@@ -19,8 +19,8 @@
             repository.Flush();
             if (repository is NhibernateRepository)
             {
-                var session = repository.TryGetValue("session") as ISession;
-                session.Clear();
+                var session = repository.TryGetValue("session") as Lazy<ISession>;
+                session.Value.Clear();
             }
         }
 
@@ -28,10 +28,10 @@
         {
             if (repository is NhibernateRepository)
             {
-                var session = repository.TryGetValue("session") as ISession;
-                session.Close();
+                var session = repository.TryGetValue("session") as Lazy<ISession>;
+                session.Value.Close();
                 doWithoutSession();
-                repository.SetValue("session", session.SessionFactory.OpenSession());
+                repository.SetValue("session",new Lazy<ISession>(() => session.Value.SessionFactory.OpenSession()));
             }
         }
 

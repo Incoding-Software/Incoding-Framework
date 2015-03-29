@@ -129,6 +129,11 @@ namespace Incoding.Extensions
             return fieldInfo != null ? fieldInfo.GetValue(ob) : null;
         }
 
+        public static TResult TryGetValue<TResult>(this object ob, string property)
+        {
+            return (TResult)ob.TryGetValue(property);
+        }
+
         #endregion
 
         static MemberInfo GetMemberInfo(object ob, string property, BindingFlags bindings)

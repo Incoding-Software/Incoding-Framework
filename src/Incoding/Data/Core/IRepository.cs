@@ -4,7 +4,6 @@ namespace Incoding.Data
 
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     #endregion
 
@@ -13,6 +12,10 @@ namespace Incoding.Data
         #region Methods
 
         void ExecuteSql(string sql);
+
+        TProvider GetProvider<TProvider>() where TProvider:class;
+
+        void SetProvider(object provider);
 
         /// <summary>
         ///     Persist the given entity instance
@@ -74,7 +77,6 @@ namespace Incoding.Data
         /// <param name="id">Primary key</param>
         /// <returns> Instance entity </returns>
         TEntity GetById<TEntity>(object id) where TEntity : class, IEntity, new();
-        
 
         /// <summary>
         ///     Getting entity instance from persist or cache
@@ -106,29 +108,6 @@ namespace Incoding.Data
         ///     Queryable collections ( pending request )
         /// </returns>
         IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new();
-
-        /// <summary>
-        ///     Query entities with specifications
-        /// </summary>
-        /// <typeparam name="TEntity">
-        ///     Strong type entity
-        /// </typeparam>
-        /// <param name="orderSpecification">
-        ///     Specification how sort entities
-        /// </param>
-        /// <param name="whereSpecification">
-        ///     Specification how filter entities
-        /// </param>
-        /// <param name="fetchSpecification">
-        ///     Specification why join with entities ( many to many , many to one , one to one )
-        /// </param>
-        /// <param name="paginatedSpecification">
-        ///     Specification how much skip and take entities
-        /// </param>
-        /// <returns>
-        ///     Queryable collections ( pending request )
-        /// </returns>
-        Task<IQueryable<TEntity>> QueryAsync<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new();
 
         /// <summary>
         ///     Query page by page

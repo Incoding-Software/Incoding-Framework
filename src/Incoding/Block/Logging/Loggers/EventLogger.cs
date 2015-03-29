@@ -1,3 +1,5 @@
+using System.Security;
+
 namespace Incoding.Block.Logging
 {
     #region << Using >>

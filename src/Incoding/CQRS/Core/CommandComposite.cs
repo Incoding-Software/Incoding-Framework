@@ -44,14 +44,6 @@
             return this;
         }
 
-        public ISettingCommandComposite AsDelay(Action<MessageDelaySetting> configuration = null)
-        {
-            var delay = new MessageDelaySetting();
-            configuration.Do(action => action(delay));
-            this.parts[this.parts.Count - 1].Setting.Delay = delay;
-            return this;
-        }
-
         public ISettingCommandComposite OnBefore(Action<IMessage<object>> action)
         {
             this.parts[this.parts.Count - 1].Setting.OnBefore = action;

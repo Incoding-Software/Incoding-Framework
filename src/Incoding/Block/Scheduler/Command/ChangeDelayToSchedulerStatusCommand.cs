@@ -1,4 +1,6 @@
-﻿namespace Incoding.Block
+﻿using Incoding.Maybe;
+
+namespace Incoding.Block
 {
     #region << Using >>
 
@@ -17,6 +19,8 @@
 
         public string Description { get; set; }
 
+        public bool UpdateNextStart { get; set; }
+
         #endregion
 
         public override void Execute()
@@ -25,6 +29,15 @@
             {
                 delay.Status = Status;
                 delay.Description = Description;
+                if (UpdateNextStart)
+                {
+                    var nextStartsOn = delay.Recurrence.With(r => r.NextDt());
+                    if (nextStartsOn.HasValue && delay.Status == DelayOfStatus.Success)
+                    {
+                        delay.StartsOn = nextStartsOn.Value;
+                        delay.Status = DelayOfStatus.New;
+                    }
+                }
             }
         }
     }

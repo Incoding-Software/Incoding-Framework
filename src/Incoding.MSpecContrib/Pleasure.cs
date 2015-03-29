@@ -228,8 +228,7 @@ namespace Incoding.MSpecContrib
 
                 return bytes;
             }
-
-            [Obsolete("Please use Pleasure.Generator.Invent<DateTime>()")]
+            
             public static DateTime DateTime()
             {
                 int year = GetRandom().Next(1800, 2100);

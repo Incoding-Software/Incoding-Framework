@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using System;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -20,7 +22,9 @@
         protected static IRepository GetRepository()
         {
             var openSession = MSpecAssemblyContext.NhibernateFluent<CallSessionContext>().BuildSessionFactory().OpenSession();
-            return new NhibernateRepository(Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(openSession)));
+            var nhibernateRepository = new NhibernateRepository(/*Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(openSession))*/);
+            nhibernateRepository.SetProvider(new Lazy<ISession>(() => openSession));
+            return nhibernateRepository;
         }
 
         #endregion

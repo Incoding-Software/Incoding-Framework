@@ -1,3 +1,5 @@
+using System.Security;
+
 namespace Incoding.UnitTest.Block
 {
     #region << Using >>
@@ -21,7 +23,7 @@ namespace Incoding.UnitTest.Block
         #endregion
 
         Establish establish = () =>
-                                  {                                      
+                                  {
                                       logger = new EventLogger(sourceName, testLog, EventLogEntryType.Information);
                                   };
 

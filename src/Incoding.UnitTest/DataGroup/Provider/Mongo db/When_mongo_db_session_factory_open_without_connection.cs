@@ -29,6 +29,6 @@
 
         It should_be_set_current = () => mongo.TryGetValue("currentSession").ShouldBeTheSameAs(session);
 
-        It should_be_get_current = () => mongo.GetCurrent().ShouldBeTheSameAs(session);
+        //It should_be_get_current = () => mongo.GetCurrent().ShouldBeTheSameAs(session);
     }
 }

@@ -8,7 +8,6 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
-    using System.Threading.Tasks;
     using Incoding.Extensions;
     using Incoding.Quality;
     using JetBrains.Annotations;
@@ -23,15 +22,15 @@
     {
         #region Fields
 
-        readonly MongoDatabase database;
+        Lazy<MongoDatabaseDisposable> database;
 
         #endregion
 
         #region Constructors
 
-        public MongoDbRepository(IMongoDbSessionFactory sessionFactory)
+        public MongoDbRepository(/*IMongoDbSessionFactory sessionFactory*/)
         {
-            this.database = sessionFactory.GetCurrent().Instance;
+            //this.database = sessionFactory.GetCurrent().Instance;
         }
 
         #endregion
@@ -42,6 +41,16 @@
         public void ExecuteSql(string sql)
         {
             throw new NotImplementedException();
+        }
+
+        public TProvider GetProvider<TProvider>() where TProvider : class
+        {
+            return database.Value as TProvider;
+        }
+
+        public void SetProvider(object provider)
+        {
+            database = (Lazy<MongoDatabaseDisposable>)provider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
@@ -151,11 +160,6 @@
                     .Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
-        public Task<IQueryable<TEntity>> QueryAsync<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
-        {
-            throw new NotImplementedException();
-        }
-
         public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()
         {
             return GetCollection<TEntity>()
@@ -167,7 +171,7 @@
 
         MongoCollection<TEntity> GetCollection<TEntity>()
         {
-            return this.database.GetCollection<TEntity>(typeof(TEntity).Name);
+            return this.database.Value.Instance.GetCollection<TEntity>(typeof(TEntity).Name);
         }
     }
 }

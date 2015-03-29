@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using Incoding.Extensions;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -26,8 +28,9 @@
                                       unitOfWork = Pleasure.Mock<IUnitOfWork>(mock => mock.Setup(r => r.IsOpen()).Returns(false));
                                       message.Setting = new MessageExecuteSetting
                                                             {
-                                                                    UnitOfWork = unitOfWork.Object
+                                                                    //UnitOfWork = unitOfWork.Object
                                                             };
+                                      message.Setting.SetValue("unitOfWork", unitOfWork.Object);
                                   };
 
         Because of = () => message.Execute();

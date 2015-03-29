@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WatiN</id>
+    <version>2.1.0</version>
+    <title>WatiN</title>
+    <authors>Jeroen van Menen</authors>
+    <owners>Jeroen van Menen</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>http://watin.org/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Write automated tests for your web applications using the WatiN framework and execute them through Internet Explorer and FireFox.</description>
+    <summary>Write automated tests for your web applications using the WatiN framework and execute them through Internet Explorer and FireFox.</summary>
+    <tags>watin web testing automation ie firefox internet explorer</tags>
+  </metadata>
+</package>

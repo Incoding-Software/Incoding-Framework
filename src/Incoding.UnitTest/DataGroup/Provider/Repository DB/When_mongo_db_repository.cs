@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using System;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -22,7 +24,9 @@
             BsonClassMap.RegisterClassMap<IncEntityBase>(map => map.UnmapProperty(r => r.Id));
             var url = new MongoUrl(ConfigurationManager.ConnectionStrings["IncRealMongoDb"].ConnectionString);
             var database = new MongoClient(url).GetServer().GetDatabase(url.DatabaseName);
-            return new MongoDbRepository(Pleasure.MockStrictAsObject<IMongoDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(new MongoDatabaseDisposable(database))));
+            var mongoDbRepository = new MongoDbRepository(/*Pleasure.MockStrictAsObject<IMongoDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(new MongoDatabaseDisposable(database)))*/);
+            mongoDbRepository.SetProvider(new Lazy<MongoDatabaseDisposable>(() => new MongoDatabaseDisposable(database)));
+            return mongoDbRepository;
         }
 
         #endregion

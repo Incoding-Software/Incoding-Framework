@@ -34,14 +34,6 @@
 
         #region IRavenDbSessionFactory Members
 
-        public IDocumentSession GetCurrent()
-        {
-            if (currentSession == null)
-                throw new InvalidOperationException("Database access logic cannot be used, if session not opened. Implicitly session usage not allowed now. Please open session explicitly through UnitOfWorkFactory.Create method");
-
-            return currentSession;
-        }
-
         public IDocumentSession Open(string connection)
         {
             currentSession = !string.IsNullOrWhiteSpace(connection)

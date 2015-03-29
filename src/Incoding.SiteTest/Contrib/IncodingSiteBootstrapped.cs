@@ -33,7 +33,7 @@
                                                                                                                  .Configure()
                                                                                                                  .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
                                                                                                                  .Mappings(configuration => configuration.FluentMappings
-                                                                                                                                                         .Add<DelayToScheduler.Map>()                                                                                                                                                         
+                                                                                                                                                         .Add<DelayToScheduler.Map>()
                                                                                                                                                          .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly))
                                                                                                                  .CurrentSessionContext<ThreadStaticSessionContext>();
                                                                                                          registry.For<IManagerDataBase>().Singleton().Use(() => new NhibernateManagerDataBase(configure));

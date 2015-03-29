@@ -46,7 +46,7 @@
 
         Establish establish = () =>
                                   {
-                                      original = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => factoryDsl.GenerateTo(r => r.Delay)));
+                                      original = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
                                       delay = new DelayToScheduler
                                                   {
                                                           Command = original.ToJsonString(),

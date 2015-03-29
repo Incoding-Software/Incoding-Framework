@@ -13,7 +13,7 @@ namespace Incoding.Block.IoC
 
         void Eject<TInstance>();
 
-        void Forward<TNew>(TNew newInstance);
+        void Forward<TNew>(TNew newInstance) where TNew : class;
 
         TInstance Get<TInstance>(Type type) where TInstance : class;
 

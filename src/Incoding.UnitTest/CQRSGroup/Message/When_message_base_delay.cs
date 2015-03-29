@@ -34,8 +34,7 @@
                 Dispatcher.Delay(new FakeCommand(), setting =>
                                                         {
                                                             setting.Connection = delaySetting.Connection;
-                                                            setting.DataBaseInstance = delaySetting.DataBaseInstance;
-                                                            setting.Policy = delaySetting.Policy;
+                                                            setting.DataBaseInstance = delaySetting.DataBaseInstance;                                                            
                                                             setting.UID = delaySetting.UID;
                                                         });
             }
@@ -55,8 +54,8 @@
 
         Establish establish = () =>
                                   {
-                                      delaySetting = Pleasure.Generator.Invent<MessageDelaySetting>(dsl => dsl.Tuning(r => r.Policy, ActionPolicy.Repeat(2)));
-                                      message = Pleasure.Generator.Invent<FakeMessage>(dsl => dsl.GenerateTo(r => r.Setting, inventFactoryDsl => inventFactoryDsl.Tuning(r => r.UnitOfWork, Pleasure.MockAsObject<IUnitOfWork>())));
+                                      delaySetting = Pleasure.Generator.Invent<MessageDelaySetting>();
+                                      message = Pleasure.Generator.Invent<FakeMessage>(dsl => dsl.GenerateTo(r => r.Setting, inventFactoryDsl => {}));
                                       dispatcher = Pleasure.Mock<IDispatcher>();
                                       IoCFactory.Instance.StubTryResolve(dispatcher.Object);
                                   };
@@ -65,7 +64,7 @@
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeCommand(), new MessageExecuteSetting
                                                                                  {
-                                                                                         Delay = delaySetting
+                                                                                         //Delay = delaySetting
                                                                                  });
     }
 }

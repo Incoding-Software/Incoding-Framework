@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using System;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -36,21 +38,25 @@
 
         protected static IRepository GetRepository()
         {
-            return new RavenDbRepository(Pleasure.MockAsObject<IRavenDbSessionFactory>(mock =>
-                                                                                           {
-                                                                                               var docSession = new DocumentStore
-                                                                                                                    {
-                                                                                                                            Url = "http://localhost:8080/", 
-                                                                                                                            DefaultDatabase = "IncTest", 
-                                                                                                                    };
-                                                                                               docSession.Conventions.AllowQueriesOnId = true;
-                                                                                               docSession.Conventions.MaxNumberOfRequestsPerSession = 1000;
-                                                                                               docSession.Initialize();
-                                                                                               docSession.RegisterListener(new NoStaleQueriesListener());
+            var docSession = new DocumentStore
+            {
+                Url = "http://localhost:8080/",
+                DefaultDatabase = "IncTest",
+            };
+            docSession.Conventions.AllowQueriesOnId = true;
+            docSession.Conventions.MaxNumberOfRequestsPerSession = 1000;
+            docSession.Initialize();
+            docSession.RegisterListener(new NoStaleQueriesListener());
 
-                                                                                               var session = docSession.OpenSession();
-                                                                                               mock.Setup(r => r.GetCurrent()).Returns(session);
-                                                                                           }));
+            var session = docSession.OpenSession();
+
+            var ravenDbRepository = new RavenDbRepository(/*Pleasure.MockAsObject<IRavenDbSessionFactory>(mock =>
+                                                                                           {
+                                                                                               
+                                                                                               //mock.Setup(r => r.GetCurrent()).Returns(session);
+                                                                                           })*/);
+            ravenDbRepository.SetProvider(new Lazy<IDocumentSession>(() => session));
+            return ravenDbRepository;
         }
 
         #endregion

@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using Incoding.Extensions;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -48,13 +50,12 @@
 
         Establish establish = () =>
                                   {
-                                      message = Pleasure.Generator.Invent<FakeMessage>(dsl => dsl.GenerateTo(r => r.Setting, inventFactoryDsl => inventFactoryDsl.GenerateTo(r => r.Delay)
-                                                                                                                                                                 .Tuning(r => r.UnitOfWork, Pleasure.MockAsObject<IUnitOfWork>())));
+                                      message = Pleasure.Generator.Invent<FakeMessage>(dsl => dsl.GenerateTo(r => r.Setting, inventFactoryDsl => {}));
 
                                       dispatcher = Pleasure.Mock<IDispatcher>();
                                       dispatcher.StubQuery(new FakeQuery(), Pleasure.Generator.TheSameString(), new MessageExecuteSetting
                                                                                                                     {
-                                                                                                                            UnitOfWork = message.Setting.UnitOfWork,
+                                                                                                                            //UnitOfWork = message.Setting.UnitOfWork,
                                                                                                                     });
                                       IoCFactory.Instance.StubTryResolve(dispatcher.Object);
                                   };

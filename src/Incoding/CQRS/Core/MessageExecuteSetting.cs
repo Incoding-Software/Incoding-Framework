@@ -13,6 +13,9 @@
 
     public class MessageExecuteSetting
     {
+        internal IDispatcher outerDispatcher;
+        internal IUnitOfWork unitOfWork;
+
         #region Constructors
 
         public MessageExecuteSetting() { }
@@ -26,9 +29,6 @@
 
         public MessageExecuteSetting(MessageExecuteSetting executeSetting)
         {
-            Delay = executeSetting.Delay;
-            if (executeSetting.UnitOfWork.With(r => r.IsOpen()))
-                UnitOfWork = executeSetting.UnitOfWork;
             Mute = executeSetting.Mute;
             OnBefore = executeSetting.OnBefore;
             OnComplete = executeSetting.OnComplete;
@@ -42,12 +42,7 @@
         #endregion
 
         #region Properties
-
-        public MessageDelaySetting Delay { get; set; }
-
-        [JsonIgnore]
-        public IUnitOfWork UnitOfWork { get; set; }
-
+        
         public MuteEvent Mute { get; set; }
 
         [IgnoreCompare("is not possible"), JsonIgnore]
@@ -75,8 +70,7 @@
             unchecked
             {
                 return ((DataBaseInstance != null ? DataBaseInstance.GetHashCode() : 0) * 397) ^
-                       (Connection != null ? Connection.GetHashCode() : 0) ^
-                       (Delay != null ? Delay.GetHashCode() : 0);
+                       (Connection != null ? Connection.GetHashCode() : 0);
             }
         }
 
@@ -91,8 +85,7 @@
                 return false;
 
             return string.Equals(DataBaseInstance, other.DataBaseInstance) &&
-                   string.Equals(Connection, other.Connection) &&
-                   (Delay.With(r => r.GetHashCode()) == other.Delay.With(r => r.GetHashCode()));
+                   string.Equals(Connection, other.Connection);
         }
 
         #endregion

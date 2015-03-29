@@ -1,4 +1,6 @@
-﻿namespace Incoding.MSpecContrib
+﻿using Incoding.Block.IoC;
+
+namespace Incoding.MSpecContrib
 {
     #region << Using >>
 
@@ -24,7 +26,10 @@
         #region Fields
 
         [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true)]
-        Establish establish = () => { persistenceSpecification = new PersistenceSpecification<TEntity>(SpecWithRepository.Repository); };
+        Establish establish = () =>
+        {
+            persistenceSpecification = new PersistenceSpecification<TEntity>(SpecWithRepository.Repository);
+        };
 
         #endregion
     }

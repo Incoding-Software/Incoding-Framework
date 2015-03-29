@@ -2,10 +2,8 @@
 {
     using System;
 
-    public interface ISessionFactory<TSession>:IDisposable
+    public interface ISessionFactory<out TSession>
     {
-        TSession GetCurrent();
-
         TSession Open(string connectionString);        
     }
 }

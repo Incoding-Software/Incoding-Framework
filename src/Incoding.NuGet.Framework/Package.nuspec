@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.Framework</id>
-    <version>1.3.0.789-beta</version>
+    <version>1.3.0.844</version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -16,19 +16,19 @@
     <releaseNotes>      
     </releaseNotes>
     <summary>
-      Server side ( domain ) incoding framework
+      Incoding Framework back-end
     </summary>
     <language>en-US</language>
     <projectUrl>http://incframework.com</projectUrl>
     <iconUrl>http://incframework.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2013 - 2014</copyright>
+    <copyright>Copyright  2013 - 2015</copyright>
     <dependencies>
       <group targetFramework="net40">
-        <dependency id="structuremap" version="2.6.4.1" />                 
-          <dependency id="FluentNHibernate" version="1.4.0.0" />          
-          <dependency id="JetBrains.Annotations" version="7.0" />
+        <dependency id="structuremap" version="3.1.4.0" />                 
+        <dependency id="FluentNHibernate" version="2.0.1.0" />          
+        <dependency id="JetBrains.Annotations" version="9.1.1.0" />
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
         </group>            
     </dependencies>

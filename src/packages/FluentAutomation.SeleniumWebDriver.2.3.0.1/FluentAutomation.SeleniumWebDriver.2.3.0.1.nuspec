@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>FluentAutomation.SeleniumWebDriver</id>
+    <version>2.3.0.1</version>
+    <title>Fluent Automation API for Selenium WebDriver</title>
+    <authors>Brandon Stirnaman</authors>
+    <owners>Brandon Stirnaman</owners>
+    <projectUrl>http://fluent.stirno.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fluent Automation is a simplified DSL for web application automation testing.</description>
+    <releaseNotes>PageObject fixes, updated ChromeDriver and PhantomJS. Docs at http://fluent.stirno.com/docs/</releaseNotes>
+    <copyright>Copyright © Brandon Stirnaman 2014</copyright>
+    <language>en-US</language>
+    <tags>PhantomJS Phantom WatiN Selenium Fluent Automation API</tags>
+    <dependencies>
+      <dependency id="FluentAutomation.Core" version="2.3.0.1" />
+      <dependency id="Newtonsoft.Json" version="5.0.5" />
+      <dependency id="Selenium.Support" version="2.39.0" />
+    </dependencies>
+  </metadata>
+</package>

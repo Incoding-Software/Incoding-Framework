@@ -2,6 +2,8 @@
 {
     #region << Using >>
 
+    using System.Security.Policy;
+    using System.Web;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -22,5 +24,11 @@
         It should_be_confirm = () => Selector.JS.Confirm("My message '")
                                           .ToString()
                                           .ShouldEqual("||javascript*confirm('My message \\'')||");
+
+        It should_be_inc_432 = () => Selector.JS.Call("StringAsFormatByInc", Selector.JS.Eval("resultData.Name"))
+                                             .ToString()
+                                             .ShouldEqual("");
+
+        //.ShouldEqual("||javascript*StringAsFormatByInc(||javascript*resultData.Name||)||");
     }
 }

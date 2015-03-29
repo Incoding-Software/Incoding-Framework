@@ -14,8 +14,6 @@
 
         ISettingCommandComposite Mute(MuteEvent mute);
 
-        ISettingCommandComposite AsDelay(Action<MessageDelaySetting> configuration = null);
-
         ISettingCommandComposite OnBefore(Action<IMessage<object>> action);
 
         ISettingCommandComposite OnAfter(Action<IMessage<object>> action);

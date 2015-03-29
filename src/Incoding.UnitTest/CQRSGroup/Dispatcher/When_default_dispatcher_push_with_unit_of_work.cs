@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using Incoding.Extensions;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -40,8 +42,8 @@
 
         Because of = () => dispatcher.Push(message, new MessageExecuteSetting
                                                         {
-                                                                UnitOfWork = existUnitOfWork.Object
-                                                        });
+                                                                //UnitOfWork = existUnitOfWork.Object
+                                                        }.SetValue("unitOfWork", existUnitOfWork.Object));
 
         It should_be_factory_create = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>()), Times.Never());
 

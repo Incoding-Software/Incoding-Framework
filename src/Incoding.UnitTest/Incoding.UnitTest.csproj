@@ -107,15 +107,17 @@
     <Reference Include="FluentAutomation.WatiN">
       <HintPath>..\packages\FluentAutomation.WatiN.2.3.0.1\lib\net40\FluentAutomation.WatiN.dll</HintPath>
     </Reference>
-    <Reference Include="FluentNHibernate">
-      <HintPath>..\packages\FluentNHibernate.1.4.0.0\lib\net35\FluentNHibernate.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentValidation, Version=3.4.6.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+    <Reference Include="FluentNHibernate, Version=1.4.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentValidation-Signed.3.4.6.0\lib\Net40\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    <Reference Include="FluentValidation, Version=5.5.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentValidation-Signed.5.5.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Interop.SHDocVw">
       <HintPath>..\packages\WatiN.2.1.0\lib\net40\Interop.SHDocVw.dll</HintPath>
@@ -162,12 +164,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NCrunch.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
@@ -188,7 +191,11 @@
       <HintPath>..\packages\RavenDB.Database.2.5.2851\lib\net40\Raven.Database.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap.3.1.4.143\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\packages\structuremap.3.1.4.143\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -204,8 +211,14 @@
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20505.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -235,6 +248,8 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_get_cache_with_exists_cache_after_reload_caching_factory.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_with_always_expires.cs" />
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
+    <Compile Include="Block\Scheduler Factory\When_reccurrence.cs" />
+    <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_available_starts_on.cs" />
     <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status_by_uid.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_uid.cs" />
     <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_with_global_throw.cs" />
@@ -285,20 +300,14 @@
     <Compile Include="DataGroup\Provider\Establish Domain\Relation Concept Entity\DbEntityReference.cs" />
     <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_open.cs" />
     <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_open_without_connection.cs" />
-    <Compile Include="DataGroup\Provider\Mongo db\When_mongo_db_session_factory_without_session.cs" />
-    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_dispose.cs" />
     <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_open_session_with_connection_string.cs" />
     <Compile Include="DataGroup\Provider\Nhibernate\When_nhibernate_unit_of_work.cs" />
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_base_class_no_establish.cs" />
+    <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_base_class_no_establish.cs" />
     <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_repository_performance_save.cs" />
     <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_unit_of_work_factory_create.cs" />
     <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_scenario.cs" />
     <Compile Include="DataGroup\Provider\RavenDb\When_raven_db_session_factory.cs" />
-    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_get_current_session.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_get_current_session_without_open_session.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DataGroup\Provider\Nhibernate\Session Factory\When_nhibernate_session_factory_open_session.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -350,6 +359,9 @@
     <Compile Include="MSpecGroup\Extensions\Moq Extensions\When_incoding_moq_extensions_repository_stub_query.cs" />
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_identity_query.cs" />
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_similar_query.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_save_id_in_entity.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_save_action_entity.cs" />
+    <Compile Include="MSpecGroup\Mock Message\When_mock_message_stub_save_entity.cs" />
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_empty_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification.cs" />
     <Compile Include="MSpecGroup\Mock Message\StubQuery\When_mock_message_stub_query_paginated_specification_wrong.cs" />
@@ -513,6 +525,7 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Other\When_base_dispatcher_controller_push_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_by_name.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_by_name_with_group.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_with_empty_inc_types.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\Context_dispatcher_controller_render.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_clear_model_state.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Exceptions\When_base_dispatcher_controller_ambiguous_generic_instance.cs" />
@@ -768,6 +781,9 @@
   <ItemGroup>
     <Folder Include="MvcContribGroup\Incoding Meta Language\Performance\" />
     <Folder Include="UtilitiesGroup\SerializerWrapperGroup\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

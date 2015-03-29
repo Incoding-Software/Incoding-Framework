@@ -26,7 +26,7 @@ namespace Incoding.Block.IoC
 
         #region Api Methods
 
-        public void Forward<TInstance>(TInstance newInstance)
+        public void Forward<TInstance>(TInstance newInstance) where TInstance : class
         {
             this.init.Provider.Forward(newInstance);
         }

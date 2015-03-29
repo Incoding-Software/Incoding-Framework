@@ -4,6 +4,7 @@
 
     using System;
     using System.Linq;
+    using System.Threading;
     using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
@@ -71,14 +72,16 @@
             {
                 AddMap<City>(cities => from city in cities
                                        select new { });
+                AddMap<Country>(countries => from country in countries
+                                             select new { });
 
                 TransformResults = (database, results) => results.Select(r => new City
-                                                                                  {
-                                                                                          Id = r.Id,
-                                                                                          Country = database.Load<Country>(r.CountryId),
-                                                                                          CountryId = r.CountryId,
-                                                                                          Name = r.Name
-                                                                                  });
+                                                                              {
+                                                                                      Id = r.Id, 
+                                                                                      Country = database.Load<Country>(r.CountryId), 
+                                                                                      CountryId = r.CountryId, 
+                                                                                      Name = r.Name
+                                                                              });
             }
 
             #endregion
@@ -103,67 +106,68 @@
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      documentStore = new DocumentStore
-                                                          {
-                                                                  Url = "http://localhost:8080/",
-                                                                  DefaultDatabase = "IncTest",
-                                                          };
-                                      documentStore.Conventions.AllowQueriesOnId = true;
-                                      documentStore.Conventions.MaxNumberOfRequestsPerSession = 1000;
-                                      documentStore.Initialize();
-                                      IndexCreation.CreateIndexes(typeof(CityIndex).Assembly, documentStore);
+                              {
+                                  documentStore = new DocumentStore
+                                                  {
+                                                          Url = "http://localhost:8080/", 
+                                                          DefaultDatabase = "IncTest", 
+                                                  };
+                                  documentStore.Conventions.AllowQueriesOnId = true;
+                                  documentStore.Conventions.MaxNumberOfRequestsPerSession = 1000;
+                                  documentStore.Initialize();
+                                  IndexCreation.CreateIndexes(typeof(CityIndex).Assembly, documentStore);
 
-                                      country = new Country
-                                                    {
-                                                            Title = "Russian"
-                                                    };
+                                  country = new Country
+                                            {
+                                                    Title = "Russian"
+                                            };
 
-                                      city = new City
-                                                 {
-                                                         Name = "Taganrog",
-                                                         CountryId = country.Id,
-                                                 };
-                                  };
+                                  city = new City
+                                         {
+                                                 Name = "Taganrog", 
+                                                 CountryId = country.Id, 
+                                         };
+                              };
 
         Because of = () =>
+                     {
+                         using (var session = documentStore.OpenSession())
                          {
-                             using (var session = documentStore.OpenSession())
-                             {
-                                 session.Store(country);
-                                 session.Store(city);
-                                 session.SaveChanges();
-                             }
-                         };
+                             session.Store(country);
+                             session.Store(city);
+                             session.SaveChanges();
+                         }
+                     };
 
         It should_be_query_city_with_index = () =>
+                                             {
+                                                 Thread.Sleep(1000);
+                                                 using (var session = documentStore.OpenSession())
                                                  {
-                                                     using (var session = documentStore.OpenSession())
-                                                     {
-                                                         var cityFromDb = session.Query<City, CityIndex>()
-                                                                                 .FirstOrDefault();
-                                                         cityFromDb.Country.ShouldNotBeNull();
-                                                     }
-                                                 };
+                                                     var cityFromDb = session.Query<City, CityIndex>()
+                                                                             .FirstOrDefault();
+                                                     cityFromDb.Country.ShouldNotBeNull();
+                                                 }
+                                             };
 
         It should_be_query_city = () =>
+                                  {
+                                      using (var session = documentStore.OpenSession())
                                       {
-                                          using (var session = documentStore.OpenSession())
-                                          {
-                                              var cityFromDb = session.Query<City>()
-                                                                      .FirstOrDefault(r => r.Id == city.Id);
-                                              cityFromDb.ShouldEqualWeak(city);
-                                          }
-                                      };
+                                          var cityFromDb = session.Query<City>()
+                                                                  .FirstOrDefault(r => r.Id == city.Id);
+                                          cityFromDb.ShouldEqualWeak(city);
+                                      }
+                                  };
 
         It should_be_query_country = () =>
+                                     {
+                                         using (var session = documentStore.OpenSession())
                                          {
-                                             using (var session = documentStore.OpenSession())
-                                             {
-                                                 session.Query<Country>()
-                                                        .FirstOrDefault(r => r.Id == country.Id)
-                                                        .ShouldEqualWeak(country);
-                                             }
-                                         };
+                                             session.Query<Country>()
+                                                    .FirstOrDefault(r => r.Id == country.Id)
+                                                    .ShouldEqualWeak(country);
+                                         }
+                                     };
     }
 }

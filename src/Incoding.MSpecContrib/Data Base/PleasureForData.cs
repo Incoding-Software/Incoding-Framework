@@ -1,3 +1,6 @@
+using NHibernate;
+using Raven.Client;
+
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -19,10 +22,23 @@ namespace Incoding.MSpecContrib
     {
         #region Factory constructors
 
-        public static void StartNhibernate(FluentConfiguration fluentConfiguration, bool reloadDb = true)
+        public static void StartNhibernate(FluentConfiguration instanceBuilderConfiguration, bool reloadDb = true)
         {
-            SpecWithRepository.Repository = BuildNhibernateRepository(fluentConfiguration, reloadDb);
+            if (reloadDb)
+            {
+                IManagerDataBase managerDataBase = new NhibernateManagerDataBase(instanceBuilderConfiguration);
+                if (!managerDataBase.IsExist())
+                    managerDataBase.Create();
+
+                managerDataBase.Update();
+            }
+
+            SessionFactory = new NhibernateSessionFactory(instanceBuilderConfiguration);
+            
+            SpecWithRepository.Repository = BuildNhibernateRepository();
         }
+
+        public static NhibernateSessionFactory SessionFactory { get; set; }
 
         public static void StartEF(IncDbContext dbContext, bool reloadDb = true)
         {
@@ -34,7 +50,9 @@ namespace Incoding.MSpecContrib
         public static IRepository BuildRavenDbRepository(DocumentStore document)
         {
             var documentSession = document.Initialize().OpenSession();
-            return new RavenDbRepository(Pleasure.MockStrictAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(documentSession)));
+            var buildRavenDbRepository = new RavenDbRepository(/*Pleasure.MockStrictAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(documentSession))*/);
+            buildRavenDbRepository.SetProvider(new Lazy<IDocumentSession>(() => documentSession));
+            return buildRavenDbRepository;
         }
 
         public static IRepository BuildEFRepository(IncDbContext dbContext, bool reloadDb = true)
@@ -49,7 +67,9 @@ namespace Incoding.MSpecContrib
                 else
                     Database.SetInitializer(new NullDatabaseInitializer<IncDbContext>());
 
-                return new EntityFrameworkRepository(Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(dbContext)));
+                var entityFrameworkRepository = new EntityFrameworkRepository(/*Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(dbContext))*/);
+                entityFrameworkRepository.SetProvider(new Lazy<DbContext>(() => dbContext));
+                return entityFrameworkRepository;
             }
                     
                     
@@ -66,27 +86,16 @@ namespace Incoding.MSpecContrib
             ////ncrunch: no coverage end      
         }
 
-        public static IRepository BuildNhibernateRepository(FluentConfiguration instanceBuilderConfiguration, bool reloadDb = true)
+        public static IRepository BuildNhibernateRepository()
         {
             try
             {
-                if (reloadDb)
-                {
-                    IManagerDataBase managerDataBase = new NhibernateManagerDataBase(instanceBuilderConfiguration);
-                    if (!managerDataBase.IsExist())
-                        managerDataBase.Create();
-
-                    managerDataBase.Update();
-                }
-
-                return new NhibernateRepository(Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(new SessionSource(instanceBuilderConfiguration).CreateSession())));
+                var nhibernateRepository = new NhibernateRepository();
+                nhibernateRepository.SetProvider(new Lazy<ISession>(() => SessionFactory.Open(null)));
+                nhibernateRepository.GetProvider<ISession>().CacheMode = CacheMode.Ignore;
+                return nhibernateRepository;//Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(new SessionSource(instanceBuilderConfiguration).CreateSession())));
             }
-                    
-                    
-                    
-                    
-                    
-                    ////ncrunch: no coverage start
+            ////ncrunch: no coverage start
             catch (Exception e)
             {
                 Clipboard.SetText("Exception in  build configuration {0}".F(e));
@@ -109,7 +118,9 @@ namespace Incoding.MSpecContrib
             if (!BsonClassMap.IsClassMapRegistered(typeof(IncEntityBase)))
                 BsonClassMap.RegisterClassMap<IncEntityBase>(map => map.UnmapProperty(r => r.Id));
             var session = new MongoDatabaseDisposable(db.GetDatabase(mongoUrl.DatabaseName));
-            return new MongoDbRepository(Pleasure.MockStrictAsObject<IMongoDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(session)));
+            var buildMongoDbRepository = new MongoDbRepository(/*Pleasure.MockStrictAsObject<IMongoDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(session))*/);
+            buildMongoDbRepository.SetProvider(session);
+            return buildMongoDbRepository;
         }
     }
 }

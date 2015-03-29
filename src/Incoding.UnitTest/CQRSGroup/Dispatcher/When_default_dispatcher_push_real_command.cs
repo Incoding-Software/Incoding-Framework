@@ -58,8 +58,8 @@
                                                                 DataBaseInstance = Pleasure.Generator.TheSameString()
                                                         });
 
-        It should_be_set_unit_of_work = () => message.Setting.UnitOfWork
-                                                     .ShouldNotBeNull();
+        //It should_be_set_unit_of_work = () => message.Setting.UnitOfWork
+        //                                             .ShouldNotBeNull();
 
         It should_be_set_data_base_instance = () => message.Setting.DataBaseInstance.ShouldBeTheSameString();
     }

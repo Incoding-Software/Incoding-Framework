@@ -61,6 +61,11 @@
                 InternalOpen();
         }
 
+        public object GetSession()
+        {
+            return session;
+        }
+
         #endregion
 
         #region Disposable
@@ -73,7 +78,6 @@
                 this.session.Value.Dispose();
             }
 
-            this.sessionFactory.Dispose();
             this.disposed = true;
         }
 

@@ -1,3 +1,5 @@
+using Incoding.Data;
+
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -34,6 +36,9 @@ namespace Incoding.MSpecContrib
 
         readonly Dictionary<string, Action<TActual>> forwardsToPredicate = new Dictionary<string, Action<TActual>>();
 
+        private int maxRecursionDeep = 128;
+        private bool ignoreRecursionError = false;
+
         bool includeNotPublic;
 
         #endregion
@@ -48,7 +53,7 @@ namespace Incoding.MSpecContrib
 
             return Forward(actualProp.GetMemberName(), expectedProp);
         }
-
+                
         public ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(string actualProp, Expression<Func<TExpected, TValue>> expectedProp)
         {
             Guard.NotNullOrWhiteSpace("actualProp", actualProp);
@@ -125,6 +130,18 @@ namespace Incoding.MSpecContrib
             return this;
         }
 
+        public ICompareFactoryDsl<TActual, TExpected> SetMaxRecursionDeep(int deep)
+        {
+            this.maxRecursionDeep = deep;
+            return this;
+        }
+
+        public ICompareFactoryDsl<TActual, TExpected> IgnoreRecursionError()
+        {
+            this.ignoreRecursionError = true;
+            return this;
+        }
+
         public ICompareFactoryDsl<TActual, TExpected> NotNull(Expression<Func<TActual, object>> actualProp)
         {
             return ForwardToAction(actualProp, actual => actual.TryGetValue(actualProp.GetMemberName()).ShouldNotBeNull());
@@ -185,7 +202,7 @@ namespace Incoding.MSpecContrib
                 InternalShouldEqual(actual, expected, "Actual", "Expected");
                 return;
             }
-
+            
             if (actual is Type && expected is Type)
             {
                 var actualAsType = actual as Type;
@@ -292,16 +309,20 @@ namespace Incoding.MSpecContrib
                 {
                     string actualMessage = (actual == null) ? "null" : actual.ToString();
                     string expectedMessage = (expected == null) ? "null" : expected.ToString();
-                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, actualMessage, expectedMessage));
+                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, actualMessage,
+                        expectedMessage));
                     return;
                 }
 
-                if (actual is IEnumerable && !actual.GetType().IsAnyEquals(typeof(string)))
+                Type actualType = actual.GetType();
+                if (actual is IEnumerable && !actualType.IsAnyEquals(typeof (string)))
                 {
                     var actualEnumerable = actual as IEnumerable;
                     var expectedEnumerable = expected as IEnumerable;
 
-                    InternalShouldEqual(actualEnumerable.Cast<object>().Count(), expectedEnumerable.Cast<object>().Count(), "Count from {0}".F(actualName), "Count from {0}".F(expectedName));
+                    InternalShouldEqual(actualEnumerable.Cast<object>().Count(),
+                        expectedEnumerable.Cast<object>().Count(), "Count from {0}".F(actualName),
+                        "Count from {0}".F(expectedName));
 
                     var actualEnumerator = actualEnumerable.GetEnumerator();
 
@@ -309,21 +330,25 @@ namespace Incoding.MSpecContrib
 
                     int index = 0;
                     while (actualEnumerator.MoveNext() && expectedEnumerator.MoveNext())
-                    {                        
-                        InternalShouldEqual(actualEnumerator.Current, expectedEnumerator.Current, "Item {0} from {1}".F(index, actualName), "Item {0} from {1}".F(index, expectedName));
+                    {
+                        InternalShouldEqual(actualEnumerator.Current, expectedEnumerator.Current,
+                            "Item {0} from {1}".F(index, actualName), "Item {0} from {1}".F(index, expectedName));
                         index++;
                     }
 
                     return;
                 }
 
-                if (actual.GetType() != expected.GetType())
+                Type expectedType = expected.GetType();
+                if (actualType != expectedType && !actualType.IsInstanceOfType(expected) &&
+                    !expectedType.IsInstanceOfType(actual))
                 {
-                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, "type {0}".F(actual.GetType()), "type {0}".F(expected.GetType())));
+                    FixedDifferent(CreateCompareActualVsExpected(actualName, expectedName, "type {0}".F(actualType),
+                        "type {0}".F(expectedType)));
                     return;
                 }
 
-                if (actual.GetType().IsImplement<IDbConnection>())
+                if (actualType.IsImplement<IDbConnection>())
                 {
                     var actualConnection = actual as IDbConnection;
                     var expectedConnection = expected as IDbConnection;
@@ -331,22 +356,35 @@ namespace Incoding.MSpecContrib
                     return;
                 }
 
-                if (actual.GetType().IsTypicalType())
+                if (actualType.IsTypicalType())
                 {
                     actual.ShouldEqual(expected);
                     return;
                 }
 
-                Console.WriteLine("Start {0}", actual.GetType());
+                Console.WriteLine("Start {0}", actualType);
 
                 if (ReferenceEquals(actual, expected))
                     return;
 
+                if (maxRecursionDeep <= 0)
+                {
+                    if (!ignoreRecursionError)
+                        FixedDifferent("Stack Overflow is coming... Recursion detected. Check deep of recursion.");
+                    return;
+                }
                 actual.ShouldEqualWeak(expected, dsl =>
-                                                     {
-                                                         if (actual.GetType().BaseType.FullName.Contains("Incoding.Specification"))
-                                                             dsl.IncludeAllFields();
-                                                     });
+                {
+                    if (actualType.BaseType.FullName.Contains("Incoding.Specification"))
+                        dsl.IncludeAllFields();
+                    dsl.SetMaxRecursionDeep(maxRecursionDeep - 1);
+                    if (ignoreRecursionError)
+                        dsl.IgnoreRecursionError();
+                });
+            }
+            catch (InternalSpecificationException ex)
+            {
+                FixedDifferent(ex.Message);
             }
             catch (SpecificationException)
             {

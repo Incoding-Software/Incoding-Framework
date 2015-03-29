@@ -95,7 +95,7 @@ function TestHelper() {
                 $(res).append(option);
             });
         }
-        
+
         appendSetFixtures(res);
         return res;
     };
@@ -127,8 +127,8 @@ function TestHelper() {
         return checkBox;
     };
 
-    this.SandboxSpan = function() {
-        var span = this.CreateSpan();
+    this.SandboxTag = function(tag, content) {
+        var span = $('<{0}>'.f(tag)).html(content);
         appendSetFixtures(span);
         return span;
     };
@@ -159,13 +159,7 @@ function TestHelper() {
         return res;
 
     };
-    this.CreateDiv = function() {
-        return $('<div>');
-    };
 
-    this.CreateSpan = function() {
-        return $('<span>');
-    };
     this.SandboxA = function(href) {
         var res = $('<a>').prop({ id : 'sandobxA', href : href });
         setFixtures(res);
@@ -1214,8 +1208,8 @@ describe('Incoding', function() {
                     });
 
                     $($('div').get(0)).keydown(function(e) {
-                        event = e;
-                    })
+                            event = e;
+                        })
                         .trigger(originalEvent);
                     ExecutableHelper.Instance.event = event;
                 });
@@ -1333,7 +1327,7 @@ describe('Incoding', function() {
 
                         expect(ExecutableFactory.Create.callCount).toEqual(1);
 
-                    });                    
+                    });
 
                     it('Should be with empty incoding', function() {
 
@@ -1382,8 +1376,10 @@ describe('Incoding', function() {
                         });
 
                         it('Should be bind once', function() {
-                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([{ type : 'ExecutableDirectAction', data : { onBind : 'click' } },
-                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } }]));
+                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([
+                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } },
+                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } }
+                            ]));
                             fakeExecute.onBind = 'click';
 
                             engine.parse(instanceSandBox);
@@ -1634,7 +1630,7 @@ describe('Incoding', function() {
                         try {
                             new IncodingResult({ fiedl1 : 'Aws', Field2 : 'Aws3' });
                         }
-                        catch(e) {
+                        catch (e) {
                             expect(e).toEqual('Not valid json result');
                         }
 
@@ -1718,7 +1714,7 @@ describe('Incoding', function() {
                 describe('When ExecutableHelper TrySetValue', function() {
 
                     it('Should be set val to span', function() {
-                        var element = TestHelper.Instance.SandboxSpan();
+                        var element = TestHelper.Instance.SandboxTag('span');
                         var data = 'Data';
 
                         ExecutableHelper.Instance.TrySetValue(element, data);
@@ -1763,7 +1759,7 @@ describe('Incoding', function() {
                         var elementWithoutData = TestHelper.Instance.SandboxRadioButton(true, '123');
 
                         ExecutableHelper.Instance.TrySetValue(elementWithData, data);
-                     
+
                         expect(elementWithData).toHaveProp('checked', true);
                         expect(elementWithoutData).toHaveProp('checked', false);
                     });
@@ -1776,8 +1772,8 @@ describe('Incoding', function() {
                         var elementWithoutData = $('<input>').attr({ name : 'customer[1].IsChecked', type : 'radio', value : '123' })
                             .prop('checked', true);
                         appendSetFixtures(elementWithData.add(elementWithoutData));
-                        
-                        ExecutableHelper.Instance.TrySetValue(elementWithData, data);                     
+
+                        ExecutableHelper.Instance.TrySetValue(elementWithData, data);
 
                         expect(elementWithData).toHaveProp('checked', true);
                         expect(elementWithoutData).toHaveProp('checked', false);
@@ -1815,6 +1811,20 @@ describe('Incoding', function() {
                         });
 
                         it('Should be set multiselect', function() {
+
+                            var element = TestHelper.Instance.SandboxMultiSelect([
+                                { value : 1, selected : false },
+                                { value : 2, selected : true },
+                                { value : 3, selected : true },
+                                { value : 4, selected : false }
+                            ]);
+
+                            ExecutableHelper.Instance.TrySetValue(element, '1,4');
+
+                            expect($(element).val()).toEqual(['1', '4']);
+                        });
+
+                        it('Should be set in textbox with multiple attribute', function () {
 
                             var element = TestHelper.Instance.SandboxMultiSelect([
                                 { value : 1, selected : false },
@@ -1997,6 +2007,15 @@ describe('Incoding', function() {
 
                         });
 
+                        it('Should be content tag', function() {
+                            $(['span', 'div', 'h3']).each(function() {
+                                var content = 'value';
+                                var element = TestHelper.Instance.SandboxTag(this, content);
+                                var val = ExecutableHelper.Instance.TryGetVal(element);
+                                expect(content).toEqual(val);
+                            });                            
+                        });
+
                         it('Should be not found element', function() {
                             var val = ExecutableHelper.Instance.TryGetVal('$("[name=123sandboxTextBox123]")');
                             expect(val).toEqual('');
@@ -2008,7 +2027,6 @@ describe('Incoding', function() {
 
                             var val = ExecutableHelper.Instance.TryGetVal('$("[name=sandboxTextBox]")');
                             expect(val).toEqual(original);
-
                         });
 
                         it('Should be checkbox true', function() {
@@ -2054,6 +2072,13 @@ describe('Incoding', function() {
                             expect(val).toEqual('1');
                         });
 
+                        it('Should be select without selected', function () {
+                            var val = ExecutableHelper.Instance.TryGetVal($(TestHelper.Instance.SandboxSelect())
+                                .append(TestHelper.Instance.CreateOption(1, false), TestHelper.Instance.CreateOption(2, false)));
+
+                            expect(val).toEqual('');
+                        });
+
                         it('Should be selects', function() {
                             TestHelper.Instance.SandboxSelect([{ value : 'value', selected : true }, { value : 'value', selected : false }]);
                             TestHelper.Instance.SandboxSelect([{ value : 'value2', selected : false }, { value : 'value3', selected : true }]);
@@ -2078,7 +2103,7 @@ describe('Incoding', function() {
                             expect(val).toEqual('1');
                         });
 
-                        it('Should be multiple select', function () {
+                        it('Should be multiple select', function() {
                             var selector = $(TestHelper.Instance.SandboxMultiSelect())
                                 .append(TestHelper.Instance.CreateOption(1, true), TestHelper.Instance.CreateOption(2, true), TestHelper.Instance.CreateOption(3, false));
 
@@ -2120,923 +2145,138 @@ describe('Incoding', function() {
 
                     });
 
-                    describe('When special', function() {
+                describe('When special', function() {
 
-                        it('Should be double special', function() {
-                            var cookiesVal = 'cookiesVal';
-                            $.cookie('*abc', cookiesVal);
-                            var val = ExecutableHelper.Instance.TryGetVal('||cookie**abc||');
-                            expect(val).toEqual(cookiesVal);
-                        });
-
-                        it('Should be query string', function() {
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString').val());
-                            expect(val).toEqual('incValue');
-                        });
-
-                        it('Should be query string with undefined', function() {
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString_Undefined').val());
-                            expect(val).toEqual('');
-                        });
-
-                        it('Should be hash query string', function() {
-                            window.location.hash = "!Index/Home?incodingParam=aws";
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_HashQueryString').val());
-                            expect(val).toEqual('aws');
-                        });
-
-                        it('Should be hash query string with undefined', function() {
-                            window.location.hash = "";
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_HashQueryString_Undefined').val());
-                            expect(val).toEqual('');
-                        });
-
-                        it('Should be hash', function() {
-                            window.location.hash = "!Index/Home?";
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Hash').val());
-                            expect(val).toEqual('Index/Home');
-                        });
-
-                        it('Should be cookie', function() {
-                            var cookiesVal = 'cookiesVal';
-                            $.cookie('incodingParam', cookiesVal);
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Cookie').val());
-                            expect(val).toEqual(cookiesVal);
-                        });
-
-                        it('Should be ajax', function() {
-                            var actualvalue = 'actualValue';
-                            TestHelper.Instance.SandboxTextBox({ value : actualvalue });
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Ajax').val());
-                            expect(val).toEqual(actualvalue);
-                        });
-
-                        it('Should be build url', function() {
-                            var actualvalue = 'actualValue';
-                            TestHelper.Instance.SandboxTextBox({ value : actualvalue });
-
-                            var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Build_Url').val());
-                            expect(val).toEqual('/Jasmine/GetValue?Value=actualValue');
-                        });
-
+                    it('Should be double special', function() {
+                        var cookiesVal = 'cookiesVal';
+                        $.cookie('*abc', cookiesVal);
+                        var val = ExecutableHelper.Instance.TryGetVal('||cookie**abc||');
+                        expect(val).toEqual(cookiesVal);
                     });
 
-                    describe('When Js', function() {
+                    it('Should be query string', function() {
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString').val());
+                        expect(val).toEqual('incValue');
+                    });
 
-                        describe('When DateTime', function() {
+                    it('Should be query string with undefined', function() {
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_QueryString_Undefined').val());
+                        expect(val).toEqual('');
+                    });
 
-                            it('Should be getFullYear', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetFullYear').val());
-                                expect(res).toEqual(new Date().getFullYear());
-                            });
+                    it('Should be hash query string', function() {
+                        window.location.hash = "!Index/Home?incodingParam=aws";
 
-                            it('Should be GetDay', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetDay').val());
-                                expect(res).toEqual(new Date().getDay());
-                            });
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_HashQueryString').val());
+                        expect(val).toEqual('aws');
+                    });
 
-                            it('Should be GetTimezoneOffset', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetTimezoneOffset').val());
-                                expect(res).toEqual(new Date().getTimezoneOffset());
-                            });
+                    it('Should be hash query string with undefined', function() {
+                        window.location.hash = "";
 
-                            it('Should be GetTimezoneOffset', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetTimezoneOffset').val());
-                                expect(res).toEqual(new Date().getTimezoneOffset());
-                            });
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_HashQueryString_Undefined').val());
+                        expect(val).toEqual('');
+                    });
 
-                            it('Should be ToDateString', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_ToDateString').val());
-                                expect(res).toEqual(new Date().toDateString());
-                            });
+                    it('Should be hash', function() {
+                        window.location.hash = "!Index/Home?";
 
-                            it('Should be ToTimeString', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_ToTimeString').val());
-                                expect(res).toEqual(new Date().toTimeString());
-                            });
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Hash').val());
+                        expect(val).toEqual('Index/Home');
+                    });
 
-                        });
+                    it('Should be cookie', function() {
+                        var cookiesVal = 'cookiesVal';
+                        $.cookie('incodingParam', cookiesVal);
 
-                        describe('When Location', function() {
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Cookie').val());
+                        expect(val).toEqual(cookiesVal);
+                    });
 
-                            it('Should be Href', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Href').val());
-                                expect(res).toEqual(window.location.href);
-                            });
+                    it('Should be ajax', function() {
+                        var actualvalue = 'actualValue';
+                        TestHelper.Instance.SandboxTextBox({ value : actualvalue });
 
-                            it('Should be Host', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Host').val());
-                                expect(res).toEqual(window.location.host);
-                            });
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Ajax').val());
+                        expect(val).toEqual(actualvalue);
+                    });
 
-                            it('Should be HostName', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_HostName').val());
-                                expect(res).toEqual(window.location.hostname);
-                            });
+                    it('Should be build url', function() {
+                        var actualvalue = 'actualValue';
+                        TestHelper.Instance.SandboxTextBox({ value : actualvalue });
 
-                            it('Should be PathName', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_PathName').val());
-                                expect(res).toEqual(window.location.pathname);
-                            });
-
-                            it('Should be Protocol', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Protocol').val());
-                                expect(res).toEqual(window.location.protocol);
-                            });
-
-                            it('Should be Search', function() {
-                                var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Search').val());
-                                expect(res).toEqual(window.location.search);
-                            });
-
-                        });
-
+                        var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Build_Url').val());
+                        expect(val).toEqual('/Jasmine/GetValue?Value=actualValue');
                     });
 
                 });
 
-                describe('When ExecutableHelper Compare', function() {
+                describe('When Js', function() {
 
-                    it('Should be exception if not found method', function() {
-                        expect(function() {
-                            ExecutableHelper.Compare('AA', 'aa', 'notfoundmethod');
-                        }).toThrow(new IncClientException({ message : "Can't compare by method notfoundmethod" }, {}));
-                    });
+                    describe('When DateTime', function() {
 
-                    describe('Common', function() {
-
-                        it('Should be equal bool with string', function() {
-                            expect(ExecutableHelper.Compare(true, 'True', 'equal')).toBeTruthy();
+                        it('Should be getFullYear', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetFullYear').val());
+                            expect(res).toEqual(new Date().getFullYear());
                         });
 
-                        it('Should be equal undefined with string empty', function() {
-                            expect(ExecutableHelper.Compare(undefined, '', 'equal')).toBeTruthy();
+                        it('Should be GetDay', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetDay').val());
+                            expect(res).toEqual(new Date().getDay());
                         });
 
-                        it('Should be equal string empty with undefined', function() {
-                            expect(ExecutableHelper.Compare('', undefined, 'equal')).toBeTruthy();
+                        it('Should be GetTimezoneOffset', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetTimezoneOffset').val());
+                            expect(res).toEqual(new Date().getTimezoneOffset());
                         });
 
-                        it('Should be equal string with undefined', function() {
-                            expect(ExecutableHelper.Compare('awws', undefined, 'equal')).toBeFalsy();
+                        it('Should be GetTimezoneOffset', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_GetTimezoneOffset').val());
+                            expect(res).toEqual(new Date().getTimezoneOffset());
                         });
 
-                        it('Should be equal string with int', function() {
-                            expect(ExecutableHelper.Compare('10', 10, 'equal')).toBeTruthy();
+                        it('Should be ToDateString', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_ToDateString').val());
+                            expect(res).toEqual(new Date().toDateString());
                         });
 
-                        it('Should be equal with ignore case', function() {
-                            expect(ExecutableHelper.Compare('AA', 'aa', 'equal')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('Equal', function() {
-
-                        it('Should be equal true', function() {
-                            expect(ExecutableHelper.Compare('aws', 'aws', 'equal')).toBeTruthy();
-                        });
-
-                        it('Should be equal false', function() {
-                            expect(ExecutableHelper.Compare('aws', 'aws1', 'equal')).toBeFalsy();
+                        it('Should be ToTimeString', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_DateTime_ToTimeString').val());
+                            expect(res).toEqual(new Date().toTimeString());
                         });
 
                     });
 
-                    describe('Is Empty', function() {
+                    describe('When Location', function() {
 
-                        it('Should be empty array true', function() {
-                            expect(ExecutableHelper.Compare([], undefined, 'isempty')).toBeTruthy();
+                        it('Should be Href', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Href').val());
+                            expect(res).toEqual(window.location.href);
                         });
 
-                        it('Should be empty array false', function() {
-                            expect(ExecutableHelper.Compare([1, 2], undefined, 'isempty')).toBeFalsy();
+                        it('Should be Host', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Host').val());
+                            expect(res).toEqual(window.location.host);
                         });
 
-                        it('Should be empty object true', function() {
-                            expect(ExecutableHelper.Compare({}, undefined, 'isempty')).toBeTruthy();
+                        it('Should be HostName', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_HostName').val());
+                            expect(res).toEqual(window.location.hostname);
                         });
 
-                        it('Should be empty object false', function() {
-                            expect(ExecutableHelper.Compare({ prop : 'aws' }, undefined, 'isempty')).toBeFalsy();
+                        it('Should be PathName', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_PathName').val());
+                            expect(res).toEqual(window.location.pathname);
                         });
 
-                    });
-
-                    describe('NotEqual', function() {
-
-                        it('Should be not equal false', function() {
-                            expect(ExecutableHelper.Compare('aws', 'aws', 'notequal')).toBeFalsy();
+                        it('Should be Protocol', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Protocol').val());
+                            expect(res).toEqual(window.location.protocol);
                         });
 
-                        it('Should be not equal true', function() {
-                            expect(ExecutableHelper.Compare('aws', 'aws1', 'notequal')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('LessThan', function() {
-
-                        it('Should be less than false', function() {
-                            expect(ExecutableHelper.Compare(10, '5', 'lessthan')).toBeFalsy();
-                        });
-
-                        it('Should be less than true', function() {
-                            expect(ExecutableHelper.Compare(5, '10', 'lessthan')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('LessThanOrEqual', function() {
-
-                        it('Should be less than false', function() {
-                            expect(ExecutableHelper.Compare(10, '5', 'lessthanorequal')).toBeFalsy();
-                        });
-
-                        it('Should be less than true', function() {
-                            expect(ExecutableHelper.Compare(5, '10', 'lessthanorequal')).toBeTruthy();
-                        });
-
-                        it('Should be less than true equal', function() {
-                            expect(ExecutableHelper.Compare(5, '5', 'lessthanorequal')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('GreaterThan', function() {
-
-                        it('Should be greater than false', function() {
-                            expect(ExecutableHelper.Compare(5, '10', 'greaterthan')).toBeFalsy();
-                        });
-
-                        it('Should be greater than true', function() {
-                            expect(ExecutableHelper.Compare(10, '5', 'greaterthan')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('GreaterThanOrEqual', function() {
-
-                        it('Should be greater than false', function() {
-                            expect(ExecutableHelper.Compare(5, '10', 'greaterthanorequal')).toBeFalsy();
-                        });
-
-                        it('Should be greater than true', function() {
-                            expect(ExecutableHelper.Compare(10, '5', 'greaterthanorequal')).toBeTruthy();
-                        });
-
-                        it('Should be greater than true equal', function() {
-                            expect(ExecutableHelper.Compare(10, '10', 'greaterthanorequal')).toBeTruthy();
-                        });
-
-                    });
-
-                    describe('Contains', function() {
-
-                        it('Should be contains true', function() {
-                            expect(ExecutableHelper.Compare('Vlad', 'ad', 'iscontains')).toBeTruthy();
-                        });
-
-                        it('Should be contains false', function() {
-                            expect(ExecutableHelper.Compare('Vlad', 'sd', 'iscontains')).toBeFalsy();
-                        });
-
-                    });
-
-                });
-
-                describe('When ExecutableHelper RedirectTo', function() {
-
-                    var isBind;
-
-                    beforeEach(function() {
-                        isBind = false;
-                        $(document).bind(IncSpecialBinds.IncChangeUrl, function() {
-                            isBind = true;
-                        });
-                    });
-
-                    it('Should be redirect', function() {
-
-                        runs(function() {
-                            document.location.hash = 'aws';
-                            var anotherUrl = document.location.href.replace(document.location.hash, '#!' + Date.now().toString());
-                            ExecutableHelper.RedirectTo(anotherUrl);
-                        });
-
-                        waits(200);
-
-                        runs(function() {
-                            expect(isBind).toBeTruthy();
-                        });
-                    });
-
-                    it('Should be redirect to self', function() {
-                        runs(function() {
-                            ExecutableHelper.RedirectTo(document.location.href);
-                        });
-
-                        waits(100);
-
-                        runs(function() {
-                            expect(isBind).toBeTruthy();
-                        });
-                    });
-
-                    it('Should be redirect to self with encode', function() {
-                        runs(function() {
-                            document.location.hash = '~/Areas/Admin/Views/Category/Index.cshtml'; //set encode value
-                            var selfEncode = '{0}!#{1}'.f(document.location.href.split("#")[0], '~%2FAreas%2FAdmin%2FViews%2FCategory%2FIndex.cshtml');
-                            ExecutableHelper.RedirectTo(selfEncode);
-                        });
-
-                        waits(100);
-
-                        runs(function() {
-                            expect(isBind).toBeTruthy();
-                        });
-                    });
-
-                });
-
-                describe('When ExecutableHelper Filter', function() {
-
-                    it('Should be array', function() {
-
-                        var filter = {
-                            isSatisfied : function(item) {
-                                return item == 534;
-                            }
-                        };
-
-                        var res = ExecutableHelper.Filter([12, 534, 4], filter);
-
-                        expect(res).toEqual([534]);
-                    });
-
-                    it('Should be object satisfied', function() {
-
-                        var filter = {
-                            isSatisfied : function(item) {
-                                return item == 534;
-                            }
-                        };
-
-                        var res = ExecutableHelper.Filter(534, filter);
-
-                        expect(res).toEqual(534);
-                    });
-
-                    it('Should not be object satisfied', function() {
-
-                        var filter = {
-                            isSatisfied : function(item) {
-                                return item == 534;
-                            }
-                        };
-
-                        var res = ExecutableHelper.Filter(200, filter);
-
-                        expect(res).toEqual({});
-                    });
-
-                });
-
-                describe('When ExecutableHelper IsNullOrEmpty', function() {
-
-                    it('Should be empty string', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty('')).toBeTruthy();
-                    });
-
-                    it('Should be "undefined"', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty("undefined")).toBeTruthy();
-                    });
-
-                    it('Should be "undefined" as object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(undefined)).toBeTruthy();
-                    });
-
-                    it('Should be empty object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty({})).toBeTruthy();
-                    });
-
-                    it('Should be null', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(null)).toBeTruthy();
-                    });
-
-                    it('Should be undefined', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(undefined)).toBeTruthy();
-                    });
-
-                    it('Should be empty array', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty([])).toBeTruthy();
-                    });
-
-                    it('Should be empty array object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(Array())).toBeTruthy();
-                    });
-
-                    it('Should not be empty string', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty('aws')).toBeFalsy();
-                    });
-
-                    it('Should not be empty string object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(String('aws'))).toBeFalsy();
-                    });
-
-                    it('Should not be empty number', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(5)).toBeFalsy();
-                    });
-
-                    it('Should not be empty number object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(Number(5))).toBeFalsy();
-                    });
-
-                    it('Should not be empty date object', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty(Date('12/12/12/'))).toBeFalsy();
-                    });
-
-                    it('Should not be empty array', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty([1])).toBeFalsy();
-                    });
-
-                    it('Should not be empty array object', function() {
-                        var array = Array();
-                        array.push(1);
-                        expect(ExecutableHelper.IsNullOrEmpty(array)).toBeFalsy();
-                    });
-
-                    it('Should not empty object with property', function() {
-                        expect(ExecutableHelper.IsNullOrEmpty({ prop : 'aws' })).toBeFalsy();
-                    });
-
-                });
-
-                describe('When ExecutableHelper Encode and Decode', function() {
-
-                    var original = 'aws&?/=:#123@';
-
-                    it('Should be encode', function() {
-
-                        var afterIncEncode = ExecutableHelper.UrlEncode(original);
-                        var afterEncode = encodeURIComponent(original);
-
-                        expect(afterIncEncode).toEqual(afterEncode);
-                    });
-
-                    it('Should be encode with empty', function() {
-                        var afterIncEncode = ExecutableHelper.UrlEncode('');
-                        expect(afterIncEncode).toEqual(afterIncEncode);
-                    });
-
-                    it('Should be encode with undefined', function() {
-                        var afterIncEncode = ExecutableHelper.UrlEncode(undefined);
-                        expect(afterIncEncode).toEqual(afterIncEncode);
-                    });
-
-                    it('Should be encode array', function() {
-
-                        var originalArray = [original];
-                        var afterIncEncode = ExecutableHelper.UrlEncode(originalArray);
-                        var afterEncode = [encodeURIComponent(original)];
-
-                        expect(afterIncEncode).toEqual(afterEncode);
-                    });
-
-                    it('Should be encode with value special cahr', function() {
-                        original = '&?/=:#@';
-
-                        var afterIncEncode = ExecutableHelper.UrlEncode(original);
-                        var afterEncode = encodeURIComponent(original);
-
-                        expect(afterIncEncode).toEqual(afterEncode);
-                    });
-
-                    it('Should be decode', function() {
-                        var decode = ExecutableHelper.UrlDecode(encodeURIComponent(original));
-                        expect(decode).toEqual(original);
-                    });
-
-                });
-
-            });
-
-        });
-
-        describe('When TemplateFactory', function() {
-
-            var builder, evaluatedSelector, compile, item, selectorKey;
-
-            beforeEach(function() {
-                evaluatedSelector = function() {
-                    return 'selector';
-                };
-                compile = 'compile';
-                item = { id : 1 };
-                selectorKey = 'selectorKey';
-                builder = new IncMustacheTemplate();
-                spyOn(builder, 'render');
-                spyOn(builder, 'compile').andReturn(compile);
-
-                navigator.Ie8 = false;
-                TemplateFactory.Version = '';
-                localStorage.removeItem(selectorKey);
-            });
-
-            it('Should be ToHtml item', function() {
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, item);
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
-            });
-
-            it('Should be ToHtml empty', function() {
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, '');
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : '' });
-            });
-
-            it('Should be ToHtml null', function() {
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, {});
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : {} });
-            });
-
-            it('Should be ToHtml items', function() {
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [item]);
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
-            });
-
-            it('Should be ToHtml compile from local storage', function() {
-                localStorage.setItem(selectorKey, 1);
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
-            });
-
-            it('Should be ToHtml compile from local storage with version', function() {
-                localStorage.setItem(selectorKey + 'aws', 1);
-                TemplateFactory.Version = 'aws';
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
-            });
-
-            it('Should be ToHtml ie8', function() {
-                navigator.Ie8 = true;
-                spyOn(localStorage, 'getItem').andReturn('1');
-                spyOn(localStorage, 'setItem');
-
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-
-                expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
-                expect(localStorage.getItem).toHaveBeenCalledWith(selectorKey + 'ie8');
-                expect(localStorage.setItem).not.toHaveBeenCalled();
-            });
-
-            it('Should be ToHtml local storage get with throw', function() {
-                spyOn(localStorage, 'getItem').andThrow();
-                spyOn(localStorage, 'setItem');
-
-                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
-                expect(localStorage.setItem).toHaveBeenCalledWith(selectorKey, compile);
-            });
-
-            it('Should be ToHtml local storage set with empty evaluated selector', function() {
-                spyOn(localStorage, 'getItem').andReturn('');
-
-                expect(function() {
-                    TemplateFactory.ToHtml(builder, selectorKey, function() {
-                        return '';
-                    }, { data : [item] });
-                }).toThrow('Template is empty');
-
-            });
-
-            it('Should be ToHtml local storage set with throw quota', function() {
-                spyOn(localStorage, 'setItem').andThrow({ name : 'QUOTA_EXCEEDED_ERR' });
-                spyOn(localStorage, 'clear');
-
-                expect(function() {
-                    TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-                }).not.toThrow();
-
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
-                expect(localStorage.clear).toHaveBeenCalled();
-            });
-
-            it('Should be ToHtml local storage set with throw', function() {
-                spyOn(localStorage, 'setItem').andThrow('SpecificationException');
-                spyOn(localStorage, 'clear');
-
-                expect(function() {
-                    TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
-                }).not.toThrow();
-
-                expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
-                expect(localStorage.clear).not.toHaveBeenCalled();
-            });
-
-        });
-
-        describe('Template', function() {
-
-            var item, items, compileTemplate, engine;
-
-            beforeEach(function() {
-                item = { data : { title : "Joe" } };
-                items = { data : [{ title : "Joe" }, { title : "Joe" }] };
-            });
-
-            describe('When Mustaches', function() {
-
-                beforeEach(function() {
-                    engine = new IncMustacheTemplate();
-                    compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
-                });
-
-                it('Should be render from localStorage', function() {
-
-                    localStorage.setItem('tempMustache', compileTemplate);
-                    var view = engine.render(localStorage.getItem('tempMustache'), item);
-                    expect(view).toEqual(' Joe "spends" ');
-
-                });
-
-                it('Should be render item', function() {
-
-                    var view = engine.render(compileTemplate, item);
-                    expect(view).toEqual(' Joe "spends" ');
-
-                });
-
-                it('Should be render array item', function() {
-
-                    var view = engine.render(compileTemplate, items);
-                    expect(view).toEqual(' Joe "spends"  Joe "spends" ');
-                });
-
-            });
-
-            describe('When Handlebars', function() {
-
-                beforeEach(function() {
-                    engine = new IncHandlerbarsTemplate();
-                    compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
-                });
-
-                it('Should be render item', function() {
-
-                    var view = engine.render(compileTemplate, item);
-                    expect(view).toEqual(' Joe "spends" ');
-
-                });
-
-                it('Should be render from localStorage', function() {
-
-                    localStorage.setItem('tempHanldebars', compileTemplate);
-                    var view = engine.render(localStorage.getItem('tempHanldebars'), item);
-                    expect(view).toEqual(' Joe "spends" ');
-
-                });
-
-                it('Should be render array item', function() {
-
-                    var view = engine.render(compileTemplate, items);
-                    expect(view).toEqual(' Joe "spends"  Joe "spends" ');
-                });
-
-            });
-
-        });
-
-        describe('Executable', function() {
-
-            describe('When ExecutableBase', function() {
-
-                it('Should be initialize default', function() {
-                    var executable = new ExecutableBase();
-                    expect(executable.onBind).toEqual('');
-                    expect(executable.self).toEqual('');
-                    expect(executable.timeOut).toEqual(0);
-                    expect(executable.interval).toEqual(0);
-                    expect(executable.intervalId).toEqual('');
-                    expect(executable.target).toEqual('');
-                    expect(executable.ands).toEqual(null);
-                    expect(executable.getTarget()).toEqual('');
-                });
-
-                describe('Execute', function() {
-
-                    var executable, expectedData;
-
-                    beforeEach(function() {
-                        expectedData = 'aws';
-                        executable = new ExecutableBase();
-                        executable.timeOut = 0;
-                        executable.isValid = function(data) {
-                            return data == expectedData;
-                        };
-                        executable.getTarget = function() {
-                            return 5;
-                        };
-                    });
-
-                    it('Should be execute', function() {
-                        var callExecute = false;
-                        executable.internalExecute = function(data) {
-                            callExecute = data == expectedData;
-                        };
-
-                        executable.execute(expectedData);
-
-                        expect(callExecute).toBeTruthy();
-                        expect(executable.target).toEqual(5);
-                    });
-
-                    it('Should be execute broken valid', function() {
-                        executable.isValid = function() {
-                            return false;
-                        };
-                        var callExecute = false;
-                        executable.internalExecute = function(data) {
-                            callExecute = true;
-                        };
-
-                        executable.execute(expectedData);
-
-                        expect(callExecute).toBeFalsy();
-                        expect(executable.target).toEqual(5);
-                    });
-
-                    it('Should be execute time out', function() {
-                        ExecutableHelper.Compare;
-                        var callCount = 0;
-                        executable.internalExecute = function(data) {
-                            if (data == expectedData) {
-                                callCount++;
-                            }
-                        };
-                        executable.timeOut = 500;
-
-                        runs(function() {
-                            executable.execute(expectedData);
-                            expect(callCount).toEqual(0);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(callCount).toEqual(1);
-                        });
-
-                        waits(1500);
-
-                        runs(function() {
-                            expect(callCount).toEqual(1);
-                        });
-
-                    });
-
-                    it('Should be execute interval', function() {
-                        ExecutableHelper.Compare;
-                        var callCount = 0;
-                        executable.internalExecute = function(data) {
-                            if (data == expectedData) {
-                                callCount++;
-                            }
-                        };
-                        executable.interval = 500;
-                        executable.intervalId = '156EE3CE_9799_4BCB_9EE7_7FA61FC277B8';
-
-                        runs(function() {
-                            executable.execute(expectedData);
-                            expect(callCount).toEqual(0);
-                            expect(ExecutableBase.IntervalIds[executable.intervalId]).toBeGreaterThan(1);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(callCount).toEqual(1);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(callCount).toEqual(2);
-                            window.clearInterval(ExecutableBase.IntervalIds[executable.intervalId]);
-                        });
-
-                        waits(1500);
-
-                        runs(function() {
-                            expect(callCount).toEqual(2);
-                        });
-
-                    });
-
-                });
-
-                describe('TryGetVal', function() {
-
-                    var executable, target, value;
-
-                    beforeEach(function() {
-                        value = 'value';
-                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn(value);
-
-                        target = TestHelper.Instance.SandboxTextBox();
-                        executable = new ExecutableBase();
-                        executable.self = instanceSandBox;
-                        executable.target = target;
-                    });
-
-                    it('Should be variable as value', function() {
-                        var res = executable.tryGetVal('$(aws');
-                        expect(res).toEqual(value);
-                        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('$(aws');
-                    });
-
-                    it('Should be variable as jquery object', function() {
-                        var res = executable.tryGetVal(instanceSandBox);
-                        expect(res).toEqual(value);
-                        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(instanceSandBox);
-                    });
-
-                });
-
-                describe('IsValid', function() {
-
-                    var executable;
-
-                    beforeEach(function() {
-                        executable = new ExecutableBase();
-                    });
-
-                    it('Should be null ands', function() {
-                        expect(executable.isValid()).toBeTruthy();
-                    });
-
-                    describe('Ands', function() {
-                        var trueConditional, falseConditional, expectedData;
-
-                        beforeEach(function() {
-                            expectedData = 'aws';
-
-                            trueConditional = {
-                                isSatisfied : function(data) {
-                                }
-                            };
-                            spyOn(trueConditional, 'isSatisfied').andReturn(true);
-
-                            falseConditional = {
-                                isSatisfied : function(data) {
-                                }
-                            };
-                            spyOn(falseConditional, 'isSatisfied').andReturn(false);
-
-                            spyOn(ConditionalFactory, 'Create').andCallFake(function(conditional) {
-                                return conditional.type ? trueConditional : falseConditional;
-                            });
-                        });
-
-                        it('Should be first group all true', function() {
-                            executable.ands = [[{ type : true }, { type : true }], [{ type : false }]];
-
-                            expect(executable.isValid(expectedData)).toBeTruthy();
-
-                            expect(trueConditional.isSatisfied.callCount).toEqual(2);
-                            expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
-                            expect(falseConditional.isSatisfied).not.toHaveBeenCalled();
-
-                        });
-
-                        it('Should be last group all true', function() {
-                            executable.ands = [[{ type : false }], [{ type : true }, { type : true }]];
-
-                            expect(executable.isValid(expectedData)).toBeTruthy();
-                            expect(trueConditional.isSatisfied.callCount).toEqual(2);
-                            expect(falseConditional.isSatisfied.callCount).toEqual(1);
-                            expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
-                        });
-
-                        it('Should be group has false', function() {
-                            executable.ands = [[{ type : true }, { type : false }]];
-
-                            expect(executable.isValid(expectedData)).toBeFalsy();
-                            expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
-                            expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
-
-                        });
-
-                        it('Should be group false', function() {
-                            executable.ands = [[{ type : false }, { type : false }]];
-
-                            expect(executable.isValid(expectedData)).toBeFalsy();
-                            expect(falseConditional.isSatisfied.callCount).toEqual(1);
-                            expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+                        it('Should be Search', function() {
+                            var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Js_Location_Search').val());
+                            expect(res).toEqual(window.location.search);
                         });
 
                     });
@@ -3045,216 +2285,1295 @@ describe('Incoding', function() {
 
             });
 
-            describe('When ExecutableActionBase', function() {
+            describe('When ExecutableHelper Compare', function() {
 
-                var action, result, state;
-
-                beforeEach(function() {
-
-                    state = {
-                        success : [jasmine.createSpyObj('callback', ['execute'])],
-                        error : [jasmine.createSpyObj('callback', ['execute'])],
-                        complete : [jasmine.createSpyObj('callback', ['execute'])],
-                        breakes : [jasmine.createSpyObj('callback', ['execute'])],
-                    };
-                    result = { redirectTo : '', success : true, data : 'data' };
-
-                    action = new ExecutableActionBase();
-                    action.jsonData = {};
-                    spyOn(ExecutableHelper, "RedirectTo");
-                });
-
-                it('Should be throw', function() {
-                    state.success[0] = {
-                        execute : function() {
-                        }
-                    };
-                    spyOn(state.success[0], 'execute').andThrow('SpecificationException');
-                    navigator.Ie8 = false;
-
+                it('Should be exception if not found method', function() {
                     expect(function() {
-                        action.complete(result, state);
-                    }).toThrow('SpecificationException');
+                        ExecutableHelper.Compare('AA', 'aa', 'notfoundmethod');
+                    }).toThrow(new IncClientException({ message : "Can't compare by method notfoundmethod" }, {}));
                 });
 
-                it('Should be mute throw for ie 8', function() {
-                    state.success[0] = {
-                        execute : function() {
-                        }
-                    };
-                    spyOn(state.success[0], 'execute').andThrow('SpecificationException');
-                    spyOn(console, 'log');
-                    navigator.Ie8 = true;
+                describe('Common', function() {
 
-                    expect(function() {
-                        action.complete(result, state);
-                    }).not.toThrow();
-                    expect(console.log).toHaveBeenCalledWith('Incoding exception: SpecificationException');
+                    it('Should be equal bool with string', function() {
+                        expect(ExecutableHelper.Compare(true, 'True', 'equal')).toBeTruthy();
+                    });
+
+                    it('Should be equal undefined with string empty', function() {
+                        expect(ExecutableHelper.Compare(undefined, '', 'equal')).toBeTruthy();
+                    });
+
+                    it('Should be equal string empty with undefined', function() {
+                        expect(ExecutableHelper.Compare('', undefined, 'equal')).toBeTruthy();
+                    });
+
+                    it('Should be equal string with undefined', function() {
+                        expect(ExecutableHelper.Compare('awws', undefined, 'equal')).toBeFalsy();
+                    });
+
+                    it('Should be equal string with int', function() {
+                        expect(ExecutableHelper.Compare('10', 10, 'equal')).toBeTruthy();
+                    });
+
+                    it('Should be equal with ignore case', function() {
+                        expect(ExecutableHelper.Compare('AA', 'aa', 'equal')).toBeTruthy();
+                    });
+
+                });
+
+                describe('Equal', function() {
+
+                    it('Should be equal true', function() {
+                        expect(ExecutableHelper.Compare('aws', 'aws', 'equal')).toBeTruthy();
+                    });
+
+                    it('Should be equal false', function() {
+                        expect(ExecutableHelper.Compare('aws', 'aws1', 'equal')).toBeFalsy();
+                    });
+
+                });
+
+                describe('Is Empty', function() {
+
+                    it('Should be empty array true', function() {
+                        expect(ExecutableHelper.Compare([], undefined, 'isempty')).toBeTruthy();
+                    });
+
+                    it('Should be empty array false', function() {
+                        expect(ExecutableHelper.Compare([1, 2], undefined, 'isempty')).toBeFalsy();
+                    });
+
+                    it('Should be empty object true', function() {
+                        expect(ExecutableHelper.Compare({}, undefined, 'isempty')).toBeTruthy();
+                    });
+
+                    it('Should be empty object false', function() {
+                        expect(ExecutableHelper.Compare({ prop : 'aws' }, undefined, 'isempty')).toBeFalsy();
+                    });
+
+                });
+
+                describe('NotEqual', function() {
+
+                    it('Should be not equal false', function() {
+                        expect(ExecutableHelper.Compare('aws', 'aws', 'notequal')).toBeFalsy();
+                    });
+
+                    it('Should be not equal true', function() {
+                        expect(ExecutableHelper.Compare('aws', 'aws1', 'notequal')).toBeTruthy();
+                    });
+
+                });
+
+                describe('LessThan', function() {
+
+                    it('Should be less than false', function() {
+                        expect(ExecutableHelper.Compare(10, '5', 'lessthan')).toBeFalsy();
+                    });
+
+                    it('Should be less than true', function() {
+                        expect(ExecutableHelper.Compare(5, '10', 'lessthan')).toBeTruthy();
+                    });
+
+                });
+
+                describe('LessThanOrEqual', function() {
+
+                    it('Should be less than false', function() {
+                        expect(ExecutableHelper.Compare(10, '5', 'lessthanorequal')).toBeFalsy();
+                    });
+
+                    it('Should be less than true', function() {
+                        expect(ExecutableHelper.Compare(5, '10', 'lessthanorequal')).toBeTruthy();
+                    });
+
+                    it('Should be less than true equal', function() {
+                        expect(ExecutableHelper.Compare(5, '5', 'lessthanorequal')).toBeTruthy();
+                    });
+
+                });
+
+                describe('GreaterThan', function() {
+
+                    it('Should be greater than false', function() {
+                        expect(ExecutableHelper.Compare(5, '10', 'greaterthan')).toBeFalsy();
+                    });
+
+                    it('Should be greater than true', function() {
+                        expect(ExecutableHelper.Compare(10, '5', 'greaterthan')).toBeTruthy();
+                    });
+
+                });
+
+                describe('GreaterThanOrEqual', function() {
+
+                    it('Should be greater than false', function() {
+                        expect(ExecutableHelper.Compare(5, '10', 'greaterthanorequal')).toBeFalsy();
+                    });
+
+                    it('Should be greater than true', function() {
+                        expect(ExecutableHelper.Compare(10, '5', 'greaterthanorequal')).toBeTruthy();
+                    });
+
+                    it('Should be greater than true equal', function() {
+                        expect(ExecutableHelper.Compare(10, '10', 'greaterthanorequal')).toBeTruthy();
+                    });
+
+                });
+
+                describe('Contains', function() {
+
+                    it('Should be contains true', function() {
+                        expect(ExecutableHelper.Compare('Vlad', 'ad', 'iscontains')).toBeTruthy();
+                    });
+
+                    it('Should be contains false', function() {
+                        expect(ExecutableHelper.Compare('Vlad', 'sd', 'iscontains')).toBeFalsy();
+                    });
+
+                });
+
+            });
+
+            describe('When ExecutableHelper RedirectTo', function() {
+
+                var isBind;
+
+                beforeEach(function() {
+                    isBind = false;
+                    $(document).bind(IncSpecialBinds.IncChangeUrl, function() {
+                        isBind = true;
+                    });
                 });
 
                 it('Should be redirect', function() {
-                    result.redirectTo = 'url';
 
-                    action.complete(result, state);
+                    runs(function() {
+                        document.location.hash = 'aws';
+                        var anotherUrl = document.location.href.replace(document.location.hash, '#!' + Date.now().toString());
+                        ExecutableHelper.RedirectTo(anotherUrl);
+                    });
 
-                    expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith(result.redirectTo);
-                    expect(state.success[0].execute).not.toHaveBeenCalled();
-                    expect(state.error[0].execute).not.toHaveBeenCalled();
-                    expect(state.complete[0].execute).not.toHaveBeenCalled();
-                    expect(state.breakes[0].execute).not.toHaveBeenCalled();
+                    waits(200);
+
+                    runs(function() {
+                        expect(isBind).toBeTruthy();
+                    });
                 });
 
-                it('Should be filter ', function() {
-                    var filter = 'filter';
-                    spyOn(ConditionalFactory, 'Create').andReturn(filter);
-                    spyOn(ExecutableHelper, 'Filter');
+                it('Should be redirect to self', function() {
+                    runs(function() {
+                        ExecutableHelper.RedirectTo(document.location.href);
+                    });
 
-                    action.jsonData.filterResult = 'filterResult';
+                    waits(100);
 
-                    action.complete(result, state);
-
-                    expect(ConditionalFactory.Create).toHaveBeenCalledWith(action.jsonData.filterResult, action);
-                    expect(ExecutableHelper.Filter).toHaveBeenCalledWith(result.data, filter);
+                    runs(function() {
+                        expect(isBind).toBeTruthy();
+                    });
                 });
 
-                it('Should be success', function() {
-                    action.complete(result, state);
+                it('Should be redirect to self with encode', function() {
+                    runs(function() {
+                        document.location.hash = '~/Areas/Admin/Views/Category/Index.cshtml'; //set encode value
+                        var selfEncode = '{0}!#{1}'.f(document.location.href.split("#")[0], '~%2FAreas%2FAdmin%2FViews%2FCategory%2FIndex.cshtml');
+                        ExecutableHelper.RedirectTo(selfEncode);
+                    });
 
-                    expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                    expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.error[0].execute).not.toHaveBeenCalled();
-                    expect(state.breakes[0].execute).not.toHaveBeenCalled();
-                });
+                    waits(100);
 
-                it('Should be success with break', function() {
-                    state.success[0] = {
-                        execute : function() {
-                        }
-                    };
-                    spyOn(state.success[0], 'execute').andThrow(new IncClientException());
-
-                    action.complete(result, state);
-
-                    expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-
-                    expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.error[0].execute).not.toHaveBeenCalled();
-                });
-
-                it('Should be error', function() {
-                    result.success = false;
-
-                    action.complete(result, state);
-
-                    expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                    expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.success[0].execute).not.toHaveBeenCalled();
-                    expect(state.breakes[0].execute).not.toHaveBeenCalled();
-                });
-
-                it('Should be error with break', function() {
-                    result.success = false;
-                    state.error[0] = {
-                        execute : function() {
-                        }
-                    };
-                    spyOn(state.error[0], 'execute').andThrow(new IncClientException());
-
-                    action.complete(result, state);
-
-                    expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                    expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.success[0].execute).not.toHaveBeenCalled();
-                });
-
-                it('Should be complete with break', function() {
-                    state.complete[0] = {
-                        execute : function() {
-                        }
-                    };
-                    spyOn(state.complete[0], 'execute').andThrow(new IncClientException());
-
-                    action.complete(result, state);
-
-                    expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                    expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                    expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                    runs(function() {
+                        expect(isBind).toBeTruthy();
+                    });
                 });
 
             });
 
-            describe('Action', function() {
+            describe('When ExecutableHelper Filter', function() {
 
-                var fakeSuccess, fakeError, fakeComplete, state;
+                it('Should be array', function() {
+
+                    var filter = {
+                        isSatisfied : function(item) {
+                            return item == 534;
+                        }
+                    };
+
+                    var res = ExecutableHelper.Filter([12, 534, 4], filter);
+
+                    expect(res).toEqual([534]);
+                });
+
+                it('Should be object satisfied', function() {
+
+                    var filter = {
+                        isSatisfied : function(item) {
+                            return item == 534;
+                        }
+                    };
+
+                    var res = ExecutableHelper.Filter(534, filter);
+
+                    expect(res).toEqual(534);
+                });
+
+                it('Should not be object satisfied', function() {
+
+                    var filter = {
+                        isSatisfied : function(item) {
+                            return item == 534;
+                        }
+                    };
+
+                    var res = ExecutableHelper.Filter(200, filter);
+
+                    expect(res).toEqual({});
+                });
+
+            });
+
+            describe('When ExecutableHelper IsNullOrEmpty', function() {
+
+                it('Should be empty string', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty('')).toBeTruthy();
+                });
+
+                it('Should be "undefined"', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty("undefined")).toBeTruthy();
+                });
+
+                it('Should be "undefined" as object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(undefined)).toBeTruthy();
+                });
+
+                it('Should be empty object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty({})).toBeTruthy();
+                });
+
+                it('Should be null', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(null)).toBeTruthy();
+                });
+
+                it('Should be undefined', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(undefined)).toBeTruthy();
+                });
+
+                it('Should be empty array', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty([])).toBeTruthy();
+                });
+
+                it('Should be empty array object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(Array())).toBeTruthy();
+                });
+
+                it('Should not be empty string', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty('aws')).toBeFalsy();
+                });
+
+                it('Should not be empty string object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(String('aws'))).toBeFalsy();
+                });
+
+                it('Should not be empty number', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(5)).toBeFalsy();
+                });
+
+                it('Should not be empty number object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(Number(5))).toBeFalsy();
+                });
+
+                it('Should not be empty date object', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty(Date('12/12/12/'))).toBeFalsy();
+                });
+
+                it('Should not be empty array', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty([1])).toBeFalsy();
+                });
+
+                it('Should not be empty array object', function() {
+                    var array = Array();
+                    array.push(1);
+                    expect(ExecutableHelper.IsNullOrEmpty(array)).toBeFalsy();
+                });
+
+                it('Should not empty object with property', function() {
+                    expect(ExecutableHelper.IsNullOrEmpty({ prop : 'aws' })).toBeFalsy();
+                });
+
+            });
+
+            describe('When ExecutableHelper Encode and Decode', function() {
+
+                var original = 'aws&?/=:#123@';
+
+                it('Should be encode', function() {
+
+                    var afterIncEncode = ExecutableHelper.UrlEncode(original);
+                    var afterEncode = encodeURIComponent(original);
+
+                    expect(afterIncEncode).toEqual(afterEncode);
+                });
+
+                it('Should be encode with empty', function() {
+                    var afterIncEncode = ExecutableHelper.UrlEncode('');
+                    expect(afterIncEncode).toEqual(afterIncEncode);
+                });
+
+                it('Should be encode with undefined', function() {
+                    var afterIncEncode = ExecutableHelper.UrlEncode(undefined);
+                    expect(afterIncEncode).toEqual(afterIncEncode);
+                });
+
+                it('Should be encode array', function() {
+
+                    var originalArray = [original];
+                    var afterIncEncode = ExecutableHelper.UrlEncode(originalArray);
+                    var afterEncode = [encodeURIComponent(original)];
+
+                    expect(afterIncEncode).toEqual(afterEncode);
+                });
+
+                it('Should be encode with value special cahr', function() {
+                    original = '&?/=:#@';
+
+                    var afterIncEncode = ExecutableHelper.UrlEncode(original);
+                    var afterEncode = encodeURIComponent(original);
+
+                    expect(afterIncEncode).toEqual(afterEncode);
+                });
+
+                it('Should be decode', function() {
+                    var decode = ExecutableHelper.UrlDecode(encodeURIComponent(original));
+                    expect(decode).toEqual(original);
+                });
+
+            });
+
+        });
+
+    });
+
+    describe('When TemplateFactory', function() {
+
+        var builder, evaluatedSelector, compile, item, selectorKey;
+
+        beforeEach(function() {
+            evaluatedSelector = function() {
+                return 'selector';
+            };
+            compile = 'compile';
+            item = { id : 1 };
+            selectorKey = 'selectorKey';
+            builder = new IncMustacheTemplate();
+            spyOn(builder, 'render');
+            spyOn(builder, 'compile').andReturn(compile);
+
+            navigator.Ie8 = false;
+            TemplateFactory.Version = '';
+            localStorage.removeItem(selectorKey);
+        });
+
+        it('Should be ToHtml item', function() {
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, item);
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+        });
+
+        it('Should be ToHtml empty', function() {
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, '');
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : '' });
+        });
+
+        it('Should be ToHtml null', function() {
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, {});
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : {} });
+        });
+
+        it('Should be ToHtml items', function() {
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [item]);
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+        });
+
+        it('Should be ToHtml compile from local storage', function() {
+            localStorage.setItem(selectorKey, 1);
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+            expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+        });
+
+        it('Should be ToHtml compile from local storage with version', function() {
+            localStorage.setItem(selectorKey + 'aws', 1);
+            TemplateFactory.Version = 'aws';
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+            expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+        });
+
+        it('Should be ToHtml ie8', function() {
+            navigator.Ie8 = true;
+            spyOn(localStorage, 'getItem').andReturn('1');
+            spyOn(localStorage, 'setItem');
+
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+
+            expect(builder.render).toHaveBeenCalledWith('1', { data : [item] });
+            expect(localStorage.getItem).toHaveBeenCalledWith(selectorKey + 'ie8');
+            expect(localStorage.setItem).not.toHaveBeenCalled();
+        });
+
+        it('Should be ToHtml local storage get with throw', function() {
+            spyOn(localStorage, 'getItem').andThrow();
+            spyOn(localStorage, 'setItem');
+
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+            expect(localStorage.setItem).toHaveBeenCalledWith(selectorKey, compile);
+        });
+
+        it('Should be ToHtml local storage set with empty evaluated selector', function() {
+            spyOn(localStorage, 'getItem').andReturn('');
+
+            expect(function() {
+                TemplateFactory.ToHtml(builder, selectorKey, function() {
+                    return '';
+                }, { data : [item] });
+            }).toThrow('Template is empty');
+
+        });
+
+        it('Should be ToHtml local storage set with throw quota', function() {
+            spyOn(localStorage, 'setItem').andThrow({ name : 'QUOTA_EXCEEDED_ERR' });
+            spyOn(localStorage, 'clear');
+
+            expect(function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+            }).not.toThrow();
+
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+            expect(localStorage.clear).toHaveBeenCalled();
+        });
+
+        it('Should be ToHtml local storage set with throw', function() {
+            spyOn(localStorage, 'setItem').andThrow('SpecificationException');
+            spyOn(localStorage, 'clear');
+
+            expect(function() {
+                TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+            }).not.toThrow();
+
+            expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
+            expect(localStorage.clear).not.toHaveBeenCalled();
+        });
+
+    });
+
+    describe('Template', function() {
+
+        var item, items, compileTemplate, engine;
+
+        beforeEach(function() {
+            item = { data : { title : "Joe" } };
+            items = { data : [{ title : "Joe" }, { title : "Joe" }] };
+        });
+
+        describe('When Mustaches', function() {
+
+            beforeEach(function() {
+                engine = new IncMustacheTemplate();
+                compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
+            });
+
+            it('Should be render from localStorage', function() {
+
+                localStorage.setItem('tempMustache', compileTemplate);
+                var view = engine.render(localStorage.getItem('tempMustache'), item);
+                expect(view).toEqual(' Joe "spends" ');
+
+            });
+
+            it('Should be render item', function() {
+
+                var view = engine.render(compileTemplate, item);
+                expect(view).toEqual(' Joe "spends" ');
+
+            });
+
+            it('Should be render array item', function() {
+
+                var view = engine.render(compileTemplate, items);
+                expect(view).toEqual(' Joe "spends"  Joe "spends" ');
+            });
+
+        });
+
+        describe('When Handlebars', function() {
+
+            beforeEach(function() {
+                engine = new IncHandlerbarsTemplate();
+                compileTemplate = engine.compile('{{#data}} {{title}} "spends" {{/data}}');
+            });
+
+            it('Should be render item', function() {
+
+                var view = engine.render(compileTemplate, item);
+                expect(view).toEqual(' Joe "spends" ');
+
+            });
+
+            it('Should be render from localStorage', function() {
+
+                localStorage.setItem('tempHanldebars', compileTemplate);
+                var view = engine.render(localStorage.getItem('tempHanldebars'), item);
+                expect(view).toEqual(' Joe "spends" ');
+
+            });
+
+            it('Should be render array item', function() {
+
+                var view = engine.render(compileTemplate, items);
+                expect(view).toEqual(' Joe "spends"  Joe "spends" ');
+            });
+
+        });
+
+    });
+
+    describe('Executable', function() {
+
+        describe('When ExecutableBase', function() {
+
+            it('Should be initialize default', function() {
+                var executable = new ExecutableBase();
+                expect(executable.onBind).toEqual('');
+                expect(executable.self).toEqual('');
+                expect(executable.timeOut).toEqual(0);
+                expect(executable.interval).toEqual(0);
+                expect(executable.intervalId).toEqual('');
+                expect(executable.target).toEqual('');
+                expect(executable.ands).toEqual(null);
+                expect(executable.getTarget()).toEqual('');
+            });
+
+            describe('Execute', function() {
+
+                var executable, expectedData;
+
+                beforeEach(function() {
+                    expectedData = 'aws';
+                    executable = new ExecutableBase();
+                    executable.timeOut = 0;
+                    executable.isValid = function(data) {
+                        return data == expectedData;
+                    };
+                    executable.getTarget = function() {
+                        return 5;
+                    };
+                });
+
+                it('Should be execute', function() {
+                    var callExecute = false;
+                    executable.internalExecute = function(data) {
+                        callExecute = data == expectedData;
+                    };
+
+                    executable.execute(expectedData);
+
+                    expect(callExecute).toBeTruthy();
+                    expect(executable.target).toEqual(5);
+                });
+
+                it('Should be execute broken valid', function() {
+                    executable.isValid = function() {
+                        return false;
+                    };
+                    var callExecute = false;
+                    executable.internalExecute = function(data) {
+                        callExecute = true;
+                    };
+
+                    executable.execute(expectedData);
+
+                    expect(callExecute).toBeFalsy();
+                    expect(executable.target).toEqual(5);
+                });
+
+                it('Should be execute time out', function() {
+                    ExecutableHelper.Compare;
+                    var callCount = 0;
+                    executable.internalExecute = function(data) {
+                        if (data == expectedData) {
+                            callCount++;
+                        }
+                    };
+                    executable.timeOut = 500;
+
+                    runs(function() {
+                        executable.execute(expectedData);
+                        expect(callCount).toEqual(0);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(callCount).toEqual(1);
+                    });
+
+                    waits(1500);
+
+                    runs(function() {
+                        expect(callCount).toEqual(1);
+                    });
+
+                });
+
+                it('Should be execute interval', function() {
+                    ExecutableHelper.Compare;
+                    var callCount = 0;
+                    executable.internalExecute = function(data) {
+                        if (data == expectedData) {
+                            callCount++;
+                        }
+                    };
+                    executable.interval = 500;
+                    executable.intervalId = '156EE3CE_9799_4BCB_9EE7_7FA61FC277B8';
+
+                    runs(function() {
+                        executable.execute(expectedData);
+                        expect(callCount).toEqual(0);
+                        expect(ExecutableBase.IntervalIds[executable.intervalId]).toBeGreaterThan(1);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(callCount).toEqual(1);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(callCount).toEqual(2);
+                        window.clearInterval(ExecutableBase.IntervalIds[executable.intervalId]);
+                    });
+
+                    waits(1500);
+
+                    runs(function() {
+                        expect(callCount).toEqual(2);
+                    });
+
+                });
+
+            });
+
+            describe('TryGetVal', function() {
+
+                var executable, target, value;
+
+                beforeEach(function() {
+                    value = 'value';
+                    spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn(value);
+
+                    target = TestHelper.Instance.SandboxTextBox();
+                    executable = new ExecutableBase();
+                    executable.self = instanceSandBox;
+                    executable.target = target;
+                });
+
+                it('Should be variable as value', function() {
+                    var res = executable.tryGetVal('$(aws');
+                    expect(res).toEqual(value);
+                    expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('$(aws');
+                });
+
+                it('Should be variable as jquery object', function() {
+                    var res = executable.tryGetVal(instanceSandBox);
+                    expect(res).toEqual(value);
+                    expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(instanceSandBox);
+                });
+
+            });
+
+            describe('IsValid', function() {
+
+                var executable;
+
+                beforeEach(function() {
+                    executable = new ExecutableBase();
+                });
+
+                it('Should be null ands', function() {
+                    expect(executable.isValid()).toBeTruthy();
+                });
+
+                describe('Ands', function() {
+                    var trueConditional, falseConditional, expectedData;
+
+                    beforeEach(function() {
+                        expectedData = 'aws';
+
+                        trueConditional = {
+                            isSatisfied : function(data) {
+                            }
+                        };
+                        spyOn(trueConditional, 'isSatisfied').andReturn(true);
+
+                        falseConditional = {
+                            isSatisfied : function(data) {
+                            }
+                        };
+                        spyOn(falseConditional, 'isSatisfied').andReturn(false);
+
+                        spyOn(ConditionalFactory, 'Create').andCallFake(function(conditional) {
+                            return conditional.type ? trueConditional : falseConditional;
+                        });
+                    });
+
+                    it('Should be first group all true', function() {
+                        executable.ands = [[{ type : true }, { type : true }], [{ type : false }]];
+
+                        expect(executable.isValid(expectedData)).toBeTruthy();
+
+                        expect(trueConditional.isSatisfied.callCount).toEqual(2);
+                        expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+                        expect(falseConditional.isSatisfied).not.toHaveBeenCalled();
+
+                    });
+
+                    it('Should be last group all true', function() {
+                        executable.ands = [[{ type : false }], [{ type : true }, { type : true }]];
+
+                        expect(executable.isValid(expectedData)).toBeTruthy();
+                        expect(trueConditional.isSatisfied.callCount).toEqual(2);
+                        expect(falseConditional.isSatisfied.callCount).toEqual(1);
+                        expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+                    });
+
+                    it('Should be group has false', function() {
+                        executable.ands = [[{ type : true }, { type : false }]];
+
+                        expect(executable.isValid(expectedData)).toBeFalsy();
+                        expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+                        expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+
+                    });
+
+                    it('Should be group false', function() {
+                        executable.ands = [[{ type : false }, { type : false }]];
+
+                        expect(executable.isValid(expectedData)).toBeFalsy();
+                        expect(falseConditional.isSatisfied.callCount).toEqual(1);
+                        expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
+                    });
+
+                });
+
+            });
+
+        });
+
+        describe('When ExecutableActionBase', function() {
+
+            var action, result, state;
+
+            beforeEach(function() {
+
+                state = {
+                    success : [jasmine.createSpyObj('callback', ['execute'])],
+                    error : [jasmine.createSpyObj('callback', ['execute'])],
+                    complete : [jasmine.createSpyObj('callback', ['execute'])],
+                    breakes : [jasmine.createSpyObj('callback', ['execute'])],
+                };
+                result = { redirectTo : '', success : true, data : 'data' };
+
+                action = new ExecutableActionBase();
+                action.jsonData = {};
+                spyOn(ExecutableHelper, "RedirectTo");
+            });
+
+            it('Should be throw', function() {
+                state.success[0] = {
+                    execute : function() {
+                    }
+                };
+                spyOn(state.success[0], 'execute').andThrow('SpecificationException');
+                navigator.Ie8 = false;
+
+                expect(function() {
+                    action.complete(result, state);
+                }).toThrow('SpecificationException');
+            });
+
+            it('Should be mute throw for ie 8', function() {
+                state.success[0] = {
+                    execute : function() {
+                    }
+                };
+                spyOn(state.success[0], 'execute').andThrow('SpecificationException');
+                spyOn(console, 'log');
+                navigator.Ie8 = true;
+
+                expect(function() {
+                    action.complete(result, state);
+                }).not.toThrow();
+                expect(console.log).toHaveBeenCalledWith('Incoding exception: SpecificationException');
+            });
+
+            it('Should be redirect', function() {
+                result.redirectTo = 'url';
+
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith(result.redirectTo);
+                expect(state.success[0].execute).not.toHaveBeenCalled();
+                expect(state.error[0].execute).not.toHaveBeenCalled();
+                expect(state.complete[0].execute).not.toHaveBeenCalled();
+                expect(state.breakes[0].execute).not.toHaveBeenCalled();
+            });
+
+            it('Should be filter ', function() {
+                var filter = 'filter';
+                spyOn(ConditionalFactory, 'Create').andReturn(filter);
+                spyOn(ExecutableHelper, 'Filter');
+
+                action.jsonData.filterResult = 'filterResult';
+
+                action.complete(result, state);
+
+                expect(ConditionalFactory.Create).toHaveBeenCalledWith(action.jsonData.filterResult, action);
+                expect(ExecutableHelper.Filter).toHaveBeenCalledWith(result.data, filter);
+            });
+
+            it('Should be success', function() {
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
+                expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.error[0].execute).not.toHaveBeenCalled();
+                expect(state.breakes[0].execute).not.toHaveBeenCalled();
+            });
+
+            it('Should be success with break', function() {
+                state.success[0] = {
+                    execute : function() {
+                    }
+                };
+                spyOn(state.success[0], 'execute').andThrow(new IncClientException());
+
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
+
+                expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.error[0].execute).not.toHaveBeenCalled();
+            });
+
+            it('Should be error', function() {
+                result.success = false;
+
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
+                expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.success[0].execute).not.toHaveBeenCalled();
+                expect(state.breakes[0].execute).not.toHaveBeenCalled();
+            });
+
+            it('Should be error with break', function() {
+                result.success = false;
+                state.error[0] = {
+                    execute : function() {
+                    }
+                };
+                spyOn(state.error[0], 'execute').andThrow(new IncClientException());
+
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
+                expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.success[0].execute).not.toHaveBeenCalled();
+            });
+
+            it('Should be complete with break', function() {
+                state.complete[0] = {
+                    execute : function() {
+                    }
+                };
+                spyOn(state.complete[0], 'execute').andThrow(new IncClientException());
+
+                action.complete(result, state);
+
+                expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
+                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+            });
+
+        });
+
+        describe('Action', function() {
+
+            var fakeSuccess, fakeError, fakeComplete, state;
+
+            beforeEach(function() {
+
+                fakeSuccess = new ExecutableBase();
+                fakeComplete = new ExecutableBase();
+                fakeError = new ExecutableBase();
+
+                spyOn(fakeSuccess, 'execute');
+                spyOn(fakeError, 'execute');
+                spyOn(fakeComplete, 'execute');
+
+                state = { success : [fakeSuccess], error : [fakeError], complete : [fakeComplete] };
+            });
+
+            describe('When ExecutableDirectAction', function() {
+
+                var action;
+
+                beforeEach(function() {
+                    action = new ExecutableDirectAction();
+                    action.self = instanceSandBox;
+                    action.target = instanceSandBox;
+                });
+
+                it('Should be execute result empty', function() {
+                    action.jsonData = $.parseJSON($('#ExecutableDirectAction').val());
+
+                    action.internalExecute(state);
+
+                    expect(fakeComplete.execute).toHaveBeenCalledWith(IncodingResult.Empty.data);
+                    expect(fakeError.execute).not.toHaveBeenCalled();
+                });
+
+                it('Should be execute result success', function() {
+
+                    action.jsonData = $.parseJSON($('#ExecutableDirectActionWithSucces').val());
+
+                    action.internalExecute(state);
+
+                    expect(fakeSuccess.execute).toHaveBeenCalledWith('data');
+                    expect(fakeComplete.execute).toHaveBeenCalledWith('data');
+                    expect(fakeError.execute).not.toHaveBeenCalled();
+                });
+
+                it('Should be execute result error', function() {
+
+                    action.jsonData = $.parseJSON($('#ExecutableDirectActionWithError').val());
+
+                    action.internalExecute(state);
+
+                    expect(fakeError.execute).toHaveBeenCalledWith('data');
+                    expect(fakeSuccess.execute).not.toHaveBeenCalled();
+                    expect(fakeComplete.execute).toHaveBeenCalled();
+                });
+
+                it('Should be execute result redirect', function() {
+
+                    spyOn(ExecutableHelper, "RedirectTo");
+                    action.jsonData = $.parseJSON($('#ExecutableDirectActionWithRedirect').val());
+
+                    action.internalExecute(state);
+
+                    expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith('redirectTo');
+                    expect(fakeSuccess.execute).not.toHaveBeenCalled();
+                    expect(fakeComplete.execute).not.toHaveBeenCalled();
+                    expect(fakeError.execute).not.toHaveBeenCalled();
+                });
+
+            });
+
+            describe('When ExecutableEventAction', function() {
+                var eventAction;
+                beforeEach(function() {
+                    eventAction = new ExecutableEventAction();
+                    eventAction.jsonData = { target : '' };
+                    eventAction.self = instanceSandBox;
+                    eventAction.target = instanceSandBox;
+                });
+
+                it('Should be success', function() {
+
+                    var jsonData = { data : 'aws', redirectTo : '', success : true };
+                    var eventState = { eventResult : new IncodingResult(jsonData) };
+
+                    $.extend(eventState, state);
+
+                    eventAction.internalExecute(eventState);
+
+                    expect(fakeSuccess.execute).toHaveBeenCalledWith(jsonData.data);
+                    expect(fakeComplete.execute).toHaveBeenCalledWith(jsonData.data);
+                    expect(fakeError.execute).not.toHaveBeenCalled();
+                });
+
+            });
+
+            describe('When ExecutableAjaxAction', function() {
+
+                var fakeUrl, action;
 
                 beforeEach(function() {
 
-                    fakeSuccess = new ExecutableBase();
-                    fakeComplete = new ExecutableBase();
-                    fakeError = new ExecutableBase();
+                    $.mockjaxClear();
 
-                    spyOn(fakeSuccess, 'execute');
-                    spyOn(fakeError, 'execute');
-                    spyOn(fakeComplete, 'execute');
+                    fakeUrl = 'Url/Test';
 
-                    state = { success : [fakeSuccess], error : [fakeError], complete : [fakeComplete] };
+                    action = new ExecutableAjaxAction();
+                    action.self = instanceSandBox;
+                    action.target = instanceSandBox;
                 });
 
-                describe('When ExecutableDirectAction', function() {
+                it('Should be execute without data', function() {
 
-                    var action;
-
-                    beforeEach(function() {
-                        action = new ExecutableDirectAction();
-                        action.self = instanceSandBox;
-                        action.target = instanceSandBox;
+                    action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithoutData').val());
+                    $.mockjax({
+                        url : fakeUrl,
+                        data : [],
+                        type : 'GET',
+                        responseText : { data : 'Success', success : true, redirectTo : '' }
                     });
 
-                    it('Should be execute result empty', function() {
-                        action.jsonData = $.parseJSON($('#ExecutableDirectAction').val());
-
+                    runs(function() {
+                        action.jsonData.ajax.data = [];
                         action.internalExecute(state);
+                    });
 
-                        expect(fakeComplete.execute).toHaveBeenCalledWith(IncodingResult.Empty.data);
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
+                    });
+                });
+
+                it('Should be execute', function() {
+                    var valBy = 'Value';
+                    spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
+                        if (value == valBy) {
+                            return valBy;
+                        }
+                    });
+                    action.jsonData = $.parseJSON($('#ExecutableAjaxAction').val());
+                    $.mockjax({
+                        url : fakeUrl,
+                        data : [{ Name : valBy }],
+                        type : 'GET',
+                        responseText : { data : 'Success', success : true, redirectTo : '' }
+                    });
+
+                    runs(function() {
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
+                        expect(fakeComplete.execute).toHaveBeenCalledWith('Success');
+                        expect(fakeError.execute).not.toHaveBeenCalled();
+                        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
+                    });
+                });
+
+                it('Should be execute with hash', function() {
+                    var valBy = 'Value';
+                    spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
+                        if (value == valBy) {
+                            return valBy;
+                        }
+                    });
+                    action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithHash').val());
+                    $.mockjax({
+                        url : 'hash/fakeUrl',
+                        data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
+                        type : 'GET',
+                        responseText : {
+                            data : 'WithUrlFromHash',
+                            success : true,
+                            redirectTo : ''
+                        }
+                    });
+
+                    runs(function() {
+                        window.location.hash = 'hash/fakeUrl?Name2=Value2/Name3=Value3';
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalledWith('WithUrlFromHash');
+                        expect(fakeComplete.execute).toHaveBeenCalledWith('WithUrlFromHash');
+                        expect(fakeError.execute).not.toHaveBeenCalled();
+                        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
+                    });
+
+                });
+
+                it('Should be execute with only query string hash', function() {
+                    action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithOnlyQueryStringHash').val());
+                    $.mockjax({
+                        url : fakeUrl,
+                        data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
+                        type : 'GET',
+                        responseText : {
+                            data : 'WithQueryStringHash',
+                            success : true,
+                            redirectTo : ''
+                        }
+                    });
+                    runs(function() {
+
+                        window.location.hash = 'Name2=Value2/Name3=Value3';
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalledWith('WithQueryStringHash');
+                        expect(fakeComplete.execute).toHaveBeenCalledWith('WithQueryStringHash');
                         expect(fakeError.execute).not.toHaveBeenCalled();
                     });
 
-                    it('Should be execute result success', function() {
+                });
 
-                        action.jsonData = $.parseJSON($('#ExecutableDirectActionWithSucces').val());
+            });
 
-                        action.internalExecute(state);
+            describe('When ExecutableSubmitAction', function() {
 
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith('data');
-                        expect(fakeComplete.execute).toHaveBeenCalledWith('data');
-                        expect(fakeError.execute).not.toHaveBeenCalled();
+                var form, inputField, submitButton, action;
+
+                var setAjaxMock = function(response) {
+                    $.mockjax({
+                        url : 'http://localhost:64225/Url/Test',
+                        data : 'name=value',
+                        type : 'POST',
+                        responseText : response
                     });
 
-                    it('Should be execute result error', function() {
+                };
 
-                        action.jsonData = $.parseJSON($('#ExecutableDirectActionWithError').val());
+                beforeEach(function() {
 
+                    form = $('<form>').attr({ action : 'http://localhost:64225/Url/Test', method : 'POST', id : 'formSubmit' });
+                    inputField = $('<input>').attr({ type : 'textbox', id : 'id', name : 'name', value : 'value' });
+                    submitButton = $('<input>').attr({ type : 'submit' });
+                    form.append(inputField).append(submitButton);
+                    appendSetFixtures(form);
+
+                    action = new ExecutableSubmitAction();
+                    action.self = submitButton;
+                    action.target = submitButton;
+                });
+
+                it('Should be success', function() {
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxComplete);
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxSuccess);
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxBefore);
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxError);
+                    action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
+
+                    var data = { data : 'Message', success : true, redirectTo : '' };
+                    runs(function() {
+                        setAjaxMock(data);
                         action.internalExecute(state);
+                    });
 
-                        expect(fakeError.execute).toHaveBeenCalledWith('data');
-                        expect(fakeSuccess.execute).not.toHaveBeenCalled();
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
                         expect(fakeComplete.execute).toHaveBeenCalled();
+                        expect(fakeError.execute).not.toHaveBeenCalled();
+
+                        var xhr = new IncodingResult({ success : true, data : { ResponseText : data, StatusCode : 200, StatusText : 'OK' }, redirectTo : '' });
+                        expect(IncSpecialBinds.IncAjaxSuccess).toHaveBeenTriggeredOn(document, xhr);
+                        expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document, xhr);
+                        expect(IncSpecialBinds.IncAjaxBefore).toHaveBeenTriggeredOn(document);
+                        expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
                     });
 
-                    it('Should be execute result redirect', function() {
+                });
 
-                        spyOn(ExecutableHelper, "RedirectTo");
-                        action.jsonData = $.parseJSON($('#ExecutableDirectActionWithRedirect').val());
+                it('Should be error', function() {
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxError);
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxComplete);
+                    action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
+                    runs(function() {
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(IncSpecialBinds.IncAjaxError).toHaveBeenTriggeredOn(document);
+                        expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document);
+                    });
+
+                });
+
+                it('Should be success with url', function() {
+                    action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithUrl').val());
+                    $('<form>').removeAttr('action');
+
+                    runs(function() {
+                        $.mockjax({
+                            url : 'http://localhost:64225/Submit/Get?name=value&CustomParam=123',
+                            type : 'GET',
+                            responseText : { data : 'Message', success : true, redirectTo : '' }
+                        });
 
                         action.internalExecute(state);
+                    });
 
-                        expect(ExecutableHelper.RedirectTo).toHaveBeenCalledWith('redirectTo');
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
+                    });
+
+                });
+
+                it('Should be success with form', function() {
+                    action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithForm').val());
+                    spyOnEvent(document, IncSpecialBinds.IncAjaxBefore);
+
+                    runs(function() {
+                        setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
+                        expect(fakeComplete.execute).toHaveBeenCalled();
+                        expect(fakeError.execute).not.toHaveBeenCalled();
+                    });
+
+                });
+
+                it('Should be broken validate', function() {
+                    action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
+                    spyOn($.fn, 'valid').andReturn(false);
+                    var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
+                    spyOn($.fn, 'validate').andReturn(validate);
+
+                    runs(function() {
+                        setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
+                        action.internalExecute(state);
+                    });
+
+                    waits(500);
+
+                    runs(function() {
+                        expect($.fn.valid).toHaveBeenCalled();
+                        expect(validate.focusInvalid).toHaveBeenCalled();
+
                         expect(fakeSuccess.execute).not.toHaveBeenCalled();
                         expect(fakeComplete.execute).not.toHaveBeenCalled();
                         expect(fakeError.execute).not.toHaveBeenCalled();
@@ -3262,1415 +3581,1135 @@ describe('Incoding', function() {
 
                 });
 
-                describe('When ExecutableEventAction', function() {
-                    var eventAction;
+            });
+
+        });
+
+        describe('Executables', function() {
+
+            describe('When ExecutableInsert', function() {
+
+                var insert;
+                beforeEach(function() {
+                    spyOn(IncodingEngine.Current, 'parse');
+                    spyOnEvent(document, IncSpecialBinds.IncInsert);
+
+                    insert = new ExecutableInsert();
+                    insert.self = instanceSandBox;
+                    insert.target = instanceSandBox;
+                });
+
+                describe('When with data', function() {
+
                     beforeEach(function() {
-                        eventAction = new ExecutableEventAction();
-                        eventAction.jsonData = { target : '' };
-                        eventAction.self = instanceSandBox;
-                        eventAction.target = instanceSandBox;
+                        insert.jsonData = $.parseJSON($('#ExecutableInsert').val());
                     });
 
-                    it('Should be success', function() {
+                    it('Should be insert undifiend', function() {
+                        insert.internalExecute(undefined);
+                        expect(instanceSandBox).toHaveHtml('');
+                    });
 
-                        var jsonData = { data : 'aws', redirectTo : '', success : true };
-                        var eventState = { eventResult : new IncodingResult(jsonData) };
+                    it('Should be insert html', function() {
+                        insert.internalExecute('Content');
+                        expect(instanceSandBox).toHaveHtml('Content');
+                    });
 
-                        $.extend(eventState, state);
+                    it('Should be insert string object', function() {
+                        insert.internalExecute(new String('Content'));
+                        expect(instanceSandBox).toHaveHtml('Content');
+                    });
 
-                        eventAction.internalExecute(eventState);
-
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith(jsonData.data);
-                        expect(fakeComplete.execute).toHaveBeenCalledWith(jsonData.data);
-                        expect(fakeError.execute).not.toHaveBeenCalled();
+                    it('Should be insert object', function() {
+                        insert.internalExecute(1);
+                        expect(instanceSandBox).toHaveHtml('1');
                     });
 
                 });
 
-                describe('When ExecutableAjaxAction', function() {
-
-                    var fakeUrl, action;
+                describe('When with property', function() {
 
                     beforeEach(function() {
-
-                        $.mockjaxClear();
-
-                        fakeUrl = 'Url/Test';
-
-                        action = new ExecutableAjaxAction();
-                        action.self = instanceSandBox;
-                        action.target = instanceSandBox;
+                        insert.jsonData = $.parseJSON($('#ExecutableInsertWithProperty').val());
                     });
 
-                    it('Should be execute without data', function() {
+                    it('Should be insert object', function() {
+                        insert.internalExecute({ prop1 : 1, Prop2 : 2 });
 
-                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithoutData').val());
-                        $.mockjax({
-                            url : fakeUrl,
-                            data : [],
-                            type : 'GET',
-                            responseText : { data : 'Success', success : true, redirectTo : '' }
-                        });
-
-                        runs(function() {
-                            action.jsonData.ajax.data = [];
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
-                        });
+                        expect(instanceSandBox).toHaveHtml('2');
                     });
 
-                    it('Should be execute', function() {
-                        var valBy = 'Value';
-                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
-                            if (value == valBy) {
-                                return valBy;
-                            }
-                        });
-                        action.jsonData = $.parseJSON($('#ExecutableAjaxAction').val());
-                        $.mockjax({
-                            url : fakeUrl,
-                            data : [{ Name : valBy }],
-                            type : 'GET',
-                            responseText : { data : 'Success', success : true, redirectTo : '' }
-                        });
+                    it('Should be insert array', function() {
+                        insert.internalExecute([{ prop1 : 1, Prop2 : 2 }]);
 
-                        runs(function() {
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
-                            expect(fakeComplete.execute).toHaveBeenCalledWith('Success');
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
-                        });
+                        expect(instanceSandBox).toHaveHtml('2');
                     });
 
-                    it('Should be execute with hash', function() {
-                        var valBy = 'Value';
-                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
-                            if (value == valBy) {
-                                return valBy;
-                            }
-                        });
-                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithHash').val());
-                        $.mockjax({
-                            url : 'hash/fakeUrl',
-                            data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
-                            type : 'GET',
-                            responseText : {
-                                data : 'WithUrlFromHash',
-                                success : true,
-                                redirectTo : ''
-                            }
-                        });
+                    it('Should be insert big array', function() {
+                        insert.internalExecute([{ Prop2 : 1 }, { Prop2 : 2 }, { Prop2 : 3 }]);
 
-                        runs(function() {
-                            window.location.hash = 'hash/fakeUrl?Name2=Value2/Name3=Value3';
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalledWith('WithUrlFromHash');
-                            expect(fakeComplete.execute).toHaveBeenCalledWith('WithUrlFromHash');
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-                            expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
-                        });
-
+                        expect(instanceSandBox).toHaveHtml('1');
                     });
 
-                    it('Should be execute with only query string hash', function() {
-                        action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithOnlyQueryStringHash').val());
-                        $.mockjax({
-                            url : fakeUrl,
-                            data : [{ Name : 'Value' }, { Name2 : 'Value2' }, { Name3 : 'Value3' }],
-                            type : 'GET',
-                            responseText : {
-                                data : 'WithQueryStringHash',
-                                success : true,
-                                redirectTo : ''
-                            }
-                        });
-                        runs(function() {
+                    it('Should be insert empty object', function() {
+                        insert.internalExecute({});
 
-                            window.location.hash = 'Name2=Value2/Name3=Value3';
-                            action.internalExecute(state);
-                        });
+                        expect(instanceSandBox).toHaveHtml({});
+                    });
 
-                        waits(500);
+                    it('Should be insert empty array', function() {
+                        insert.internalExecute([]);
 
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalledWith('WithQueryStringHash');
-                            expect(fakeComplete.execute).toHaveBeenCalledWith('WithQueryStringHash');
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-                        });
-
+                        expect(instanceSandBox).toHaveHtml({});
                     });
 
                 });
 
-                describe('When ExecutableSubmitAction', function() {
+                describe('When with prepare', function() {
 
-                    var form, inputField, submitButton, action;
-
-                    var setAjaxMock = function(response) {
-                        $.mockjax({
-                            url : 'http://localhost:64225/Url/Test',
-                            data : 'name=value',
-                            type : 'POST',
-                            responseText : response
-                        });
-
-                    };
+                    var isValue1, isValue2;
 
                     beforeEach(function() {
+                        isValue1 = false;
+                        isValue2 = false;
+                        insert.tryGetVal = function(value) {
+                            if (value === 1) {
+                                isValue1 = true;
+                            }
+                            if (value === 2) {
+                                isValue2 = true;
+                            }
+                        };
 
-                        form = $('<form>').attr({ action : 'http://localhost:64225/Url/Test', method : 'POST', id : 'formSubmit' });
-                        inputField = $('<input>').attr({ type : 'textbox', id : 'id', name : 'name', value : 'value' });
-                        submitButton = $('<input>').attr({ type : 'submit' });
-                        form.append(inputField).append(submitButton);
-                        appendSetFixtures(form);
-
-                        action = new ExecutableSubmitAction();
-                        action.self = submitButton;
-                        action.target = submitButton;
+                        insert.jsonData = $.parseJSON($('#ExecutableInsertWithPrepare').val());
                     });
 
-                    it('Should be success', function() {
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxComplete);
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxSuccess);
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxBefore);
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxError);
-                        action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
+                    it('Should be insert array', function() {
+                        insert.internalExecute([{ prop1 : 1 }, { prop1 : 2 }]);
 
-                        var data = { data : 'Message', success : true, redirectTo : '' };
-                        runs(function() {
-                            setAjaxMock(data);
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalled();
-                            expect(fakeComplete.execute).toHaveBeenCalled();
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-
-                            var xhr = new IncodingResult({ success : true, data : { ResponseText : data, StatusCode : 200, StatusText : 'OK' }, redirectTo : '' });
-                            expect(IncSpecialBinds.IncAjaxSuccess).toHaveBeenTriggeredOn(document, xhr);
-                            expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document, xhr);
-                            expect(IncSpecialBinds.IncAjaxBefore).toHaveBeenTriggeredOn(document);
-                            expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
-                        });
-
+                        expect(isValue1).toBeTruthy();
+                        expect(isValue2).toBeTruthy();
                     });
 
-                    it('Should be error', function() {
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxError);
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxComplete);
-                        action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
-                        runs(function() {
-                            action.internalExecute(state);
-                        });
+                    it('Should be insert object', function() {
+                        insert.internalExecute({ prop1 : 1, prop2 : 2 });
 
-                        waits(500);
-
-                        runs(function() {
-                            expect(IncSpecialBinds.IncAjaxError).toHaveBeenTriggeredOn(document);
-                            expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document);
-                        });
-
+                        expect(isValue1).toBeTruthy();
+                        expect(isValue2).toBeTruthy();
                     });
 
-                    it('Should be success with url', function() {
-                        action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithUrl').val());
-                        $('<form>').removeAttr('action');
+                });
 
-                        runs(function() {
-                            $.mockjax({
-                                url : 'http://localhost:64225/Submit/Get?name=value&CustomParam=123',
-                                type : 'GET',
-                                responseText : { data : 'Message', success : true, redirectTo : '' }
-                            });
+                describe('When insert with template', function() {
 
-                            action.internalExecute(state);
-                        });
+                    var incTemplate;
 
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalled();
-                        });
-
+                    beforeEach(function() {
+                        incTemplate = 'renderContent';
+                        spyOn(TemplateFactory, 'ToHtml').andReturn(incTemplate);
                     });
 
-                    it('Should be success with form', function() {
-                        action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithForm').val());
-                        spyOnEvent(document, IncSpecialBinds.IncAjaxBefore);
+                    it('Should be template selector', function() {
+                        insert.tryGetVal = function(value) {
+                            return value;
+                        };
+                        insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateSelector').val());
+                        insert.internalExecute({ item : 1 });
 
-                        runs(function() {
-                            setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect(fakeSuccess.execute).toHaveBeenCalled();
-                            expect(fakeComplete.execute).toHaveBeenCalled();
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-                        });
-
+                        expect(instanceSandBox).toHaveHtml(incTemplate);
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('selectorId');
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('selectorId');
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
                     });
 
-                    it('Should be broken validate', function() {
-                        action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
-                        spyOn($.fn, 'valid').andReturn(false);
-                        var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
-                        spyOn($.fn, 'validate').andReturn(validate);
+                    it('Should be template ajax', function() {
+                        insert.tryGetVal = function(value) {
+                            if (value.startsWith('||buildurl*')) {
+                                return 'isKey';
+                            }
+                            else {
+                                return value;
+                            }
+                        };
+                        insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateAjax').val());
+                        insert.internalExecute({ item : 1 });
 
-                        runs(function() {
-                            setAjaxMock({ data : 'Message', success : true, redirectTo : '' });
-                            action.internalExecute(state);
-                        });
-
-                        waits(500);
-
-                        runs(function() {
-                            expect($.fn.valid).toHaveBeenCalled();
-                            expect(validate.focusInvalid).toHaveBeenCalled();
-
-                            expect(fakeSuccess.execute).not.toHaveBeenCalled();
-                            expect(fakeComplete.execute).not.toHaveBeenCalled();
-                            expect(fakeError.execute).not.toHaveBeenCalled();
-                        });
-
+                        expect(instanceSandBox).toHaveHtml(incTemplate);
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('isKey');
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('||ajax*{"data":[{"name":"Value","selector":"$(\'#sandboxTextBox\')"}],"url":"/Jasmine/GetValue","type":"GET","async":false}||');
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
                     });
 
+                });
+
+                afterEach(function() {
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(instanceSandBox);
+                    expect(IncSpecialBinds.IncInsert).toHaveBeenTriggeredOn(document);
                 });
 
             });
 
-            describe('Executables', function() {
+            describe('When ExecutableTrigger', function() {
 
-                describe('When ExecutableInsert', function() {
+                var trigger;
 
-                    var insert;
-                    beforeEach(function() {
-                        spyOn(IncodingEngine.Current, 'parse');
-                        spyOnEvent(document, IncSpecialBinds.IncInsert);
+                beforeEach(function() {
 
-                        insert = new ExecutableInsert();
-                        insert.self = instanceSandBox;
-                        insert.target = instanceSandBox;
-                    });
+                    trigger = new ExecutableTrigger();
+                    trigger.jsonData = $.parseJSON($('#ExecutableTrigger').val());;
+                    trigger.self = instanceSandBox;
+                    trigger.target = instanceSandBox;
 
-                    describe('When with data', function() {
+                    spyOnEvent(instanceSandBox, trigger.jsonData.trigger);
+                });
 
-                        beforeEach(function() {
-                            insert.jsonData = $.parseJSON($('#ExecutableInsert').val());
-                        });
+                it('Should be trigger with data as undefined', function() {
+                    trigger.internalExecute(undefined);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : undefined, redirectTo : '' }));
+                });
 
-                        it('Should be insert undifiend', function() {
-                            insert.internalExecute(undefined);
-                            expect(instanceSandBox).toHaveHtml('');
-                        });
+                it('Should be trigger with data as object', function() {
+                    trigger.internalExecute({ is : true });
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : { is : true }, redirectTo : '' }));
+                });
 
-                        it('Should be insert html', function() {
-                            insert.internalExecute('Content');
-                            expect(instanceSandBox).toHaveHtml('Content');
-                        });
+                it('Should be trigger with data as string', function() {
+                    trigger.internalExecute('content');
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 'content', redirectTo : '' }));
+                });
 
-                        it('Should be insert string object', function() {
-                            insert.internalExecute(new String('Content'));
-                            expect(instanceSandBox).toHaveHtml('Content');
-                        });
+                it('Should be trigger with data as int', function() {
+                    trigger.internalExecute(5);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
+                });
 
-                        it('Should be insert object', function() {
-                            insert.internalExecute(1);
-                            expect(instanceSandBox).toHaveHtml('1');
-                        });
+                it('Should be trigger with data as int object', function() {
+                    trigger.internalExecute(Number(5));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
+                });
 
-                    });
+                it('Should be trigger with data as bool', function() {
+                    trigger.internalExecute(true);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                });
 
-                    describe('When with property', function() {
+                it('Should be trigger with data as bool object', function() {
+                    trigger.internalExecute(Boolean(true));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                });
 
-                        beforeEach(function() {
-                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithProperty').val());
-                        });
+                it('Should be trigger data as  array', function() {
+                    trigger.internalExecute([5, 6]);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : [5, 6], redirectTo : '' }));
+                });
 
-                        it('Should be insert object', function() {
-                            insert.internalExecute({ prop1 : 1, Prop2 : 2 });
+                it('Should be trigger data as  date time', function() {
+                    var currentTime = new Date().now;
+                    trigger.internalExecute(currentTime);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : currentTime, redirectTo : '' }));
+                });
 
-                            expect(instanceSandBox).toHaveHtml('2');
-                        });
+                it('Should be trigger with property data', function() {
+                    trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());;
+                    trigger.internalExecute({ is : true });
 
-                        it('Should be insert array', function() {
-                            insert.internalExecute([{ prop1 : 1, Prop2 : 2 }]);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                });
 
-                            expect(instanceSandBox).toHaveHtml('2');
-                        });
+                it('Should be trigger with property empty data', function() {
+                    trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());;
+                    trigger.internalExecute({});
 
-                        it('Should be insert big array', function() {
-                            insert.internalExecute([{ Prop2 : 1 }, { Prop2 : 2 }, { Prop2 : 3 }]);
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : '', redirectTo : '' }));
+                });
 
-                            expect(instanceSandBox).toHaveHtml('1');
-                        });
+            });
 
-                        it('Should be insert empty object', function() {
-                            insert.internalExecute({});
+            describe('When ExecutableValidationParse', function() {
 
-                            expect(instanceSandBox).toHaveHtml({});
-                        });
+                var form, element, submitButton, validation;
 
-                        it('Should be insert empty array', function() {
-                            insert.internalExecute([]);
+                beforeEach(function() {
 
-                            expect(instanceSandBox).toHaveHtml({});
-                        });
+                    form = $('<form>');
+                    element = $('<input>')
+                        .attr({ id : 'inputId', type : 'textbox', name : 'inputName' })
+                        .attr('data-val', true)
+                        .attr('data-val-required', 'message');
 
-                    });
+                    submitButton = $('<input>');
 
-                    describe('When with prepare', function() {
+                    $(form).append(element).append(submitButton);
+                    $('body').append(form);
 
-                        var isValue1, isValue2;
+                    validation = new ExecutableValidationParse();
+                    validation.self = submitButton;
+                    validation.target = form;
+                });
 
-                        beforeEach(function() {
-                            isValue1 = false;
-                            isValue2 = false;
-                            insert.tryGetVal = function(value) {
-                                if (value === 1) {
-                                    isValue1 = true;
-                                }
-                                if (value === 2) {
-                                    isValue2 = true;
-                                }
-                            };
+                it('Should be not valid', function() {
+                    validation.internalExecute();
+                    $(element).val('');
 
-                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithPrepare').val());
-                        });
+                    expect($(form).valid()).toBeFalsy();
+                });
 
-                        it('Should be insert array', function() {
-                            insert.internalExecute([{ prop1 : 1 }, { prop1 : 2 }]);
+                it('Should be valid', function() {
+                    validation.internalExecute();
+                    $(element).val('text');
 
-                            expect(isValue1).toBeTruthy();
-                            expect(isValue2).toBeTruthy();
-                        });
+                    expect($(form).valid()).toBeTruthy();
+                });
 
-                        it('Should be insert object', function() {
-                            insert.internalExecute({ prop1 : 1, prop2 : 2 });
+                it('Should be found form if form wrap another tag', function() {
 
-                            expect(isValue1).toBeTruthy();
-                            expect(isValue2).toBeTruthy();
-                        });
+                    validation.target = $(form).wrap('<div>');
+                    validation.internalExecute();
+                    $(element).val('');
 
-                    });
+                    expect($(form).valid()).toBeFalsy();
+                });
 
-                    describe('When insert with template', function() {
+                afterEach(function() {
+                    $(form).remove();
+                });
+            });
 
-                        var incTemplate;
+            describe('When ExecutableValidationRefresh', function() {
 
-                        beforeEach(function() {
-                            incTemplate = 'renderContent';
-                            spyOn(TemplateFactory, 'ToHtml').andReturn(incTemplate);
-                        });
+                var inputErrorClass = 'input-validation-error';
+                var messageErrorClass = 'field-validation-error';
+                var messageValidClass = 'field-validation-valid';
+                var input, span, form, validationRefresh;
 
-                        it('Should be template selector', function() {
-                            insert.tryGetVal = function(value) {
-                                return value;
-                            };
-                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateSelector').val());
-                            insert.internalExecute({ item : 1 });
+                beforeEach(function() {
+                    input = $('<input>').attr({ name : 'Input.Email' });
+                    span = $('<span>').attr('data-valmsg-for', 'input.Email');
 
-                            expect(instanceSandBox).toHaveHtml(incTemplate);
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('selectorId');
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('selectorId');
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
-                        });
+                    form = $('<form>')
+                        .append(input)
+                        .append(span);
 
-                        it('Should be template ajax', function() {
-                            insert.tryGetVal = function(value) {
-                                if (value.startsWith('||buildurl*')) {
-                                    return 'isKey';
-                                }
-                                else {
-                                    return value;
-                                }
-                            };
-                            insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateAjax').val());
-                            insert.internalExecute({ item : 1 });
+                    appendSetFixtures(form);
 
-                            expect(instanceSandBox).toHaveHtml(incTemplate);
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('isKey');
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('||ajax*{"data":[{"name":"Value","selector":"$(\'#sandboxTextBox\')"}],"url":"/Jasmine/GetValue","type":"GET","async":false}||');
-                            expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
-                        });
-
-                    });
-
-                    afterEach(function() {
-                        expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(instanceSandBox);
-                        expect(IncSpecialBinds.IncInsert).toHaveBeenTriggeredOn(document);
-                    });
+                    validationRefresh = new ExecutableValidationRefresh();
+                    validationRefresh.target = form;
 
                 });
 
-                describe('When ExecutableTrigger', function() {
+                it('Should be is not valid', function() {
+                    var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
+                    spyOn($.fn, 'validate').andReturn(validate);
+                    $(span).addClass(messageValidClass);
 
-                    var trigger;
+                    validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : '<b>errroMessage</b>', isValid : false }]);
 
-                    beforeEach(function() {
+                    expect(input).toHaveClass(inputErrorClass);
 
-                        trigger = new ExecutableTrigger();
-                        trigger.jsonData = $.parseJSON($('#ExecutableTrigger').val());
-                        ;
-                        trigger.self = instanceSandBox;
-                        trigger.target = instanceSandBox;
+                    expect(span).toHaveClass(messageErrorClass);
+                    expect(span).toHaveHtml('<b>errroMessage</b>');
+                    expect(span).not.toHaveClass(messageValidClass);
+                    expect(validate.focusInvalid).toHaveBeenCalled();
+                });
 
-                        spyOnEvent(instanceSandBox, trigger.jsonData.trigger);
-                    });
+                it('Should be is valid', function() {
 
-                    it('Should be trigger with data as undefined', function() {
-                        trigger.internalExecute(undefined);
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : undefined, redirectTo : '' }));
-                    });
+                    $(span).addClass(messageErrorClass);
+                    $(input).addClass(inputErrorClass);
 
-                    it('Should be trigger with data as object', function() {
-                        trigger.internalExecute({ is : true });
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : { is : true }, redirectTo : '' }));
-                    });
+                    validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : 'errroMessage', isValid : true }]);
 
-                    it('Should be trigger with data as string', function() {
-                        trigger.internalExecute('content');
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 'content', redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with data as int', function() {
-                        trigger.internalExecute(5);
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with data as int object', function() {
-                        trigger.internalExecute(Number(5));
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with data as bool', function() {
-                        trigger.internalExecute(true);
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with data as bool object', function() {
-                        trigger.internalExecute(Boolean(true));
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger data as  array', function() {
-                        trigger.internalExecute([5, 6]);
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : [5, 6], redirectTo : '' }));
-                    });
-
-                    it('Should be trigger data as  date time', function() {
-                        var currentTime = new Date().now;
-                        trigger.internalExecute(currentTime);
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : currentTime, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with property data', function() {
-                        trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());
-                        ;
-                        trigger.internalExecute({ is : true });
-
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
-                    });
-
-                    it('Should be trigger with property empty data', function() {
-                        trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());
-                        ;
-                        trigger.internalExecute({});
-
-                        expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : '', redirectTo : '' }));
-                    });
+                    expect(input).not.toHaveClass(inputErrorClass);
+                    expect(span).not.toHaveClass(messageErrorClass);
+                    expect(span).toHaveClass(messageValidClass);
 
                 });
 
-                describe('When ExecutableValidationParse', function() {
-
-                    var form, element, submitButton, validation;
-
-                    beforeEach(function() {
-
-                        form = $('<form>');
-                        element = $('<input>')
-                            .attr({ id : 'inputId', type : 'textbox', name : 'inputName' })
-                            .attr('data-val', true)
-                            .attr('data-val-required', 'message');
-
-                        submitButton = $('<input>');
-
-                        $(form).append(element).append(submitButton);
-                        $('body').append(form);
-
-                        validation = new ExecutableValidationParse();
-                        validation.self = submitButton;
-                        validation.target = form;
-                    });
-
-                    it('Should be not valid', function() {
-                        validation.internalExecute();
-                        $(element).val('');
-
-                        expect($(form).valid()).toBeFalsy();
-                    });
-
-                    it('Should be valid', function() {
-                        validation.internalExecute();
-                        $(element).val('text');
-
-                        expect($(form).valid()).toBeTruthy();
-                    });
-
-                    it('Should be found form if form wrap another tag', function() {
-
-                        validation.target = $(form).wrap('<div>');
-                        validation.internalExecute();
-                        $(element).val('');
-
-                        expect($(form).valid()).toBeFalsy();
-                    });
-
-                    afterEach(function() {
-                        $(form).remove();
-                    });
+                afterEach(function() {
+                    $(form).remove();
                 });
 
-                describe('When ExecutableValidationRefresh', function() {
+            });
 
-                    var inputErrorClass = 'input-validation-error';
-                    var messageErrorClass = 'field-validation-error';
-                    var messageValidClass = 'field-validation-valid';
-                    var input, span, form, validationRefresh;
-
-                    beforeEach(function() {
-                        input = $('<input>').attr({ name : 'Input.Email' });
-                        span = $('<span>').attr('data-valmsg-for', 'input.Email');
-
-                        form = $('<form>')
-                            .append(input)
-                            .append(span);
-
-                        appendSetFixtures(form);
-
-                        validationRefresh = new ExecutableValidationRefresh();
-                        validationRefresh.target = form;
-
-                    });
-
-                    it('Should be is not valid', function() {
-                        var validate = jasmine.createSpyObj('validate', ['focusInvalid']);
-                        spyOn($.fn, 'validate').andReturn(validate);
-                        $(span).addClass(messageValidClass);
-
-                        validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : '<b>errroMessage</b>', isValid : false }]);
-
-                        expect(input).toHaveClass(inputErrorClass);
-
-                        expect(span).toHaveClass(messageErrorClass);
-                        expect(span).toHaveHtml('<b>errroMessage</b>');
-                        expect(span).not.toHaveClass(messageValidClass);
-                        expect(validate.focusInvalid).toHaveBeenCalled();
-                    });
-
-                    it('Should be is valid', function() {
-
-                        $(span).addClass(messageErrorClass);
-                        $(input).addClass(inputErrorClass);
-
-                        validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : 'errroMessage', isValid : true }]);
-
-                        expect(input).not.toHaveClass(inputErrorClass);
-                        expect(span).not.toHaveClass(messageErrorClass);
-                        expect(span).toHaveClass(messageValidClass);
-
-                    });
-
-                    afterEach(function() {
-                        $(form).remove();
-                    });
-
+            describe('When ExecutableEval', function() {
+                var evalEx;
+                beforeEach(function() {
+                    evalEx = new ExecutableEval();
+                    evalEx.jsonData = $.parseJSON($('#ExecutableEval').val());
+                    evalEx.target = instanceSandBox;
                 });
 
-                describe('When ExecutableEval', function() {
-                    var evalEx;
-                    beforeEach(function() {
-                        evalEx = new ExecutableEval();
-                        evalEx.jsonData = $.parseJSON($('#ExecutableEval').val());
-                        evalEx.target = instanceSandBox;
-                    });
+                it('Should be eval', function() {
+                    evalEx.internalExecute('data');
+                    expect(newFakeEvalVariable).toEqual('data');
+                });
+            });
 
-                    it('Should be eval', function() {
-                        evalEx.internalExecute('data');
-                        expect(newFakeEvalVariable).toEqual('data');
-                    });
+            describe('When ExecutableEvalMethod', function() {
+                var evalEx;
+                beforeEach(function() {
+                    evalEx = new ExecutableEvalMethod();
+                    evalEx.jsonData = $.parseJSON($('#ExecutableEvalMethod').val());
+                    evalEx.self = instanceSandBox;
+                    evalEx.target = instanceSandBox;
                 });
 
-                describe('When ExecutableEvalMethod', function() {
-                    var evalEx;
-                    beforeEach(function() {
-                        evalEx = new ExecutableEvalMethod();
-                        evalEx.jsonData = $.parseJSON($('#ExecutableEvalMethod').val());
-                        evalEx.self = instanceSandBox;
-                        evalEx.target = instanceSandBox;
-                    });
+                it('Should be eval', function() {
+                    evalEx.internalExecute('data');
 
-                    it('Should be eval', function() {
-                        evalEx.internalExecute('data');
+                    expect(testEvalResult.arg1).toEqual('arg1');
+                    expect(testEvalResult.arg2).toEqual('arg2');
+                    expect(testEvalResult.arg3).toEqual('arg3');
+                });
+            });
 
-                        expect(testEvalResult.arg1).toEqual('arg1');
-                        expect(testEvalResult.arg2).toEqual('arg2');
-                        expect(testEvalResult.arg3).toEqual('arg3');
-                    });
+            describe('When ExecutableBreak', function() {
+
+                var breakEx;
+                beforeEach(function() {
+
+                    breakEx = new ExecutableBreak();
+                    breakEx.jsonData = { ands : [] };
+                    breakEx.self = instanceSandBox;
+                    breakEx.target = instanceSandBox;
                 });
 
-                describe('When ExecutableBreak', function() {
-
-                    var breakEx;
-                    beforeEach(function() {
-
-                        breakEx = new ExecutableBreak();
-                        breakEx.jsonData = { ands : [] };
-                        breakEx.self = instanceSandBox;
-                        breakEx.target = instanceSandBox;
-                    });
-
-                    it('Should be break', function() {
-                        expect(function() {
-                            breakEx.internalExecute();
-                        }).toThrow(new IncClientException());
-                    });
-
+                it('Should be break', function() {
+                    expect(function() {
+                        breakEx.internalExecute();
+                    }).toThrow(new IncClientException());
                 });
 
-                describe('When ExecutableStoreInsert hash', function() {
+            });
 
-                    var hashInsert;
+            describe('When ExecutableStoreInsert hash', function() {
 
-                    beforeEach(function() {
-                        hashInsert = new ExecutableStoreInsert();
-                    });
+                var hashInsert;
 
-                    describe('When container', function() {
-
-                        var valueInput, valueSelect;
-
-                        beforeEach(function() {
-
-                            $(instanceSandBox).append(TestHelper.Instance.SandboxTextBox(),
-                                TestHelper.Instance.SandboxSelect(),
-                                TestHelper.Instance.SandboxSubmit(),
-                                TestHelper.Instance.SandboxInputButton(),
-                                TestHelper.Instance.SandboxReset(),
-                                TestHelper.Instance.SandboxInput());
-
-                            valueInput = '@@input';
-                            valueSelect = 'select';
-
-                            spyOn(ExecutableHelper, 'RedirectTo');
-                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(jObject) {
-                                if (jObject.selector === '[name="sandboxTextBox"]' ||
-                                    jObject.selector === '[name="sandboxTextBox\\[1\\].Value"]' ||
-                                    jObject.selector === '[name="sandboxTextBox\\[2\\].Value"]') {
-                                    return valueInput;
-                                }
-                                if (jObject.selector === '[name="sandboxSelect"]') {
-                                    return valueSelect;
-                                }
-
-                                return undefined;
-                            });
-
-                            window.document.location.hash = 'aws=param';
-                        });
-
-                        it('Should be insert', function() {
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
-                            hashInsert.target = instanceSandBox;
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
-                            expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
-                            expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
-                        });
-
-                        it('Should be insert with decode name', function() {
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
-                            $(instanceSandBox)
-                                .empty()
-                                .append(TestHelper.Instance.SandboxTextBox({ name : 'sandboxTextBox[1].Value', value : valueInput }))
-                                .append(TestHelper.Instance.SandboxTextBox({ name: 'sandboxTextBox[2].Value', value: valueInput }));
-                            hashInsert.target = instanceSandBox;
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('sandboxTextBox[1].Value', 'root')).toEqual(valueInput);
-                            expect(redirectUrl.fparam('sandboxTextBox[2].Value', 'root')).toEqual(valueInput);
-                        });
-
-                        it('Should be insert with multiple', function() {
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
-                            hashInsert.target = $('[name=sandboxTextBox],[name=sandboxSelect]');
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
-                            expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
-                            expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
-                        });
-
-                        it('Should be insert by prefix', function() {
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithPrefix').val());
-                            hashInsert.target = instanceSandBox;
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam().hasOwnProperty('aws__search')).toBeFalsy();
-                            expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
-                            expect(redirectUrl.fparam('sandboxTextBox', 'search')).toEqual(valueInput);
-                            expect(redirectUrl.fparam('sandboxSelect', 'search')).toEqual(valueSelect);
-
-                        });
-
-                        it('Should be insert with replace', function() {
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithReplace').val());
-                            hashInsert.target = instanceSandBox;
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam().hasOwnProperty('aws__root')).toBeFalsy();
-                            expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
-                            expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
-                        });
-
-                        afterEach(function() {
-                            expect(ExecutableHelper.Instance.TryGetVal.callCount).toEqual(2);
-                        });
-
-                    });
-
-                    describe('When element ', function() {
-
-                        beforeEach(function() {
-                            spyOn(ExecutableHelper, 'RedirectTo');
-                            hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
-                            var textBox = TestHelper.Instance.SandboxTextBox();
-                            hashInsert.target = textBox;
-                        });
-
-                        it('Should be insert', function() {
-                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('value');
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('value');
-                        });
-
-                        it('Should be insert with ignore empty', function() {
-                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('');
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
-                        });
-
-                        it('Should be remove hash if empty', function() {
-                            window.location.hash = "!sandboxTextBox=aws";
-                            spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('');
-
-                            hashInsert.internalExecute();
-
-                            var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                            expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
-                        });
-
-                        afterEach(function() {
-                            expect(ExecutableHelper.Instance.TryGetVal.callCount).toEqual(1);
-                        });
-
-                    });
-
+                beforeEach(function() {
+                    hashInsert = new ExecutableStoreInsert();
                 });
 
-                describe('When ExecutableStoreFetch hash', function() {
+                describe('When container', function() {
 
-                    var element, hashFetch;
+                    var valueInput, valueSelect;
 
                     beforeEach(function() {
-                        spyOn(ExecutableHelper.Instance, 'TrySetValue');
-                        element = TestHelper.Instance.SandboxTextBox();
 
-                        hashFetch = new ExecutableStoreFetch();
-                        hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetch').val());
+                        $(instanceSandBox).append(TestHelper.Instance.SandboxTextBox(),
+                            TestHelper.Instance.SandboxSelect(),
+                            TestHelper.Instance.SandboxSubmit(),
+                            TestHelper.Instance.SandboxInputButton(),
+                            TestHelper.Instance.SandboxReset(),
+                            TestHelper.Instance.SandboxInput());
+
+                        valueInput = '@@input';
+                        valueSelect = 'select';
+
+                        spyOn(ExecutableHelper, 'RedirectTo');
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(jObject) {
+                            if (jObject.selector === '[name="sandboxTextBox"]' ||
+                                jObject.selector === '[name="sandboxTextBox\\[1\\].Value"]' ||
+                                jObject.selector === '[name="sandboxTextBox\\[2\\].Value"]') {
+                                return valueInput;
+                            }
+                            if (jObject.selector === '[name="sandboxSelect"]') {
+                                return valueSelect;
+                            }
+
+                            return undefined;
+                        });
+
+                        window.document.location.hash = 'aws=param';
                     });
 
-                    it('Should be fetch element', function() {
-                        hashFetch.target = element;
-                        window.location.hash = "sandboxTextBox=@Test";
+                    it('Should be insert', function() {
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                        hashInsert.target = instanceSandBox;
 
-                        hashFetch.internalExecute();
+                        hashInsert.internalExecute();
 
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '@Test');
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
+                        expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
                     });
 
-                    it('Should be fetch elements', function() {
-                        var textBox = TestHelper.Instance.SandboxTextBox().addClass('fetch');
-                        var select = TestHelper.Instance.SandboxSelect([{ value : 'selectValue', selected : true }]).addClass('fetch');
-                        $(instanceSandBox).append(textBox).append(select);
-
-                        hashFetch.target = $('.fetch');
-                        window.location.hash = "sandboxTextBox=TextBoxValue&sandboxSelect=SelectValue";
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(textBox).get(0), 'TextBoxValue');
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(select).get(0), 'SelectValue');
-                    });
-
-                    it('Should be fetch element without value', function() {
-                        hashFetch.target = element;
-                        window.location.hash = "";
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '');
-                    });
-
-                    it('Should be fetch element with decode', function() {
-                        hashFetch.target = element;
-                        window.location.hash = "sandboxTextBox=%26TestÐóññêèå Áóêâû";
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '&TestÐóññêèå Áóêâû');
-                    });
-
-                    it('Should be fetch element by prefix', function() {
-                        window.location.hash = "sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
-                        hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetchWithPrefix').val());
-                        hashFetch.target = element;
-
-                        hashFetch.internalExecute();
-
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, 'ValueFromPrefix');
-                    });
-
-                    it('Should be fetch container', function() {
-                        $(instanceSandBox).append(element);
-                        hashFetch.target = instanceSandBox;
-                        window.location.hash = "sandboxTextBox=Test";
-
-                        hashFetch.internalExecute();
-
-                        expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[0][0]).attr('name')).toEqual('sandboxTextBox');
-                        expect(ExecutableHelper.Instance.TrySetValue.argsForCall[0][1]).toEqual('Test');
-                        expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(1);
-                    });
-
-                    it('Should be fetch container with multiple', function() {
-                        var textBox = TestHelper.Instance.SandboxTextBox();
-                        var button = TestHelper.Instance.SandboxInputButton();
-                        var radioButton = TestHelper.Instance.SandboxRadioButton(true, 'value');
+                    it('Should be insert with decode name', function() {
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
                         $(instanceSandBox)
-                            .append(textBox)
-                            .append(button)
-                            .append(radioButton);
-                        hashFetch.target = instanceSandBox;
-                        window.location.hash = "sandboxTextBox=Test&sandboxRadiobutton=value";
+                            .empty()
+                            .append(TestHelper.Instance.SandboxTextBox({ name : 'sandboxTextBox[1].Value', value : valueInput }))
+                            .append(TestHelper.Instance.SandboxTextBox({ name : 'sandboxTextBox[2].Value', value : valueInput }));
+                        hashInsert.target = instanceSandBox;
 
-                        hashFetch.internalExecute();
+                        hashInsert.internalExecute();
 
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(textBox).get(0), 'Test');
-                        expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($(radioButton).get(0), 'value');
-                        expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(2);
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('sandboxTextBox[1].Value', 'root')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxTextBox[2].Value', 'root')).toEqual(valueInput);
+                    });
+
+                    it('Should be insert with multiple', function() {
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                        hashInsert.target = $('[name=sandboxTextBox], [name=sandboxSelect]');
+
+                        hashInsert.internalExecute();
+
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
+                        expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
+                    });
+
+                    it('Should be insert by prefix', function() {
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithPrefix').val());
+                        hashInsert.target = instanceSandBox;
+
+                        hashInsert.internalExecute();
+
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam().hasOwnProperty('aws__search')).toBeFalsy();
+                        expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
+                        expect(redirectUrl.fparam('sandboxTextBox', 'search')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxSelect', 'search')).toEqual(valueSelect);
+
+                    });
+
+                    it('Should be insert with replace', function() {
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsertWithReplace').val());
+                        hashInsert.target = instanceSandBox;
+
+                        hashInsert.internalExecute();
+
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam().hasOwnProperty('aws__root')).toBeFalsy();
+                        expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
+                    });
+
+                    afterEach(function() {
+                        expect(ExecutableHelper.Instance.TryGetVal.callCount).toEqual(2);
                     });
 
                 });
 
-                describe('When ExecutableStoreManipulate', function() {
-
-                    var executable;
+                describe('When element ', function() {
 
                     beforeEach(function() {
                         spyOn(ExecutableHelper, 'RedirectTo');
-                        executable = new ExecutableStoreManipulate();
+                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                        var textBox = TestHelper.Instance.SandboxTextBox();
+                        hashInsert.target = textBox;
                     });
 
-                    it('Should be remove', function() {
-                        window.location.hash = "IncHash=Test";
-                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemove').val());
+                    it('Should be insert', function() {
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('value');
 
-                        executable.internalExecute();
+                        hashInsert.internalExecute();
 
-                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                        expect(url.fparam('IncHash', 'root')).toEqual('');
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('value');
                     });
 
-                    it('Should be remove with prefix', function() {
-                        window.location.hash = "search:IncHash=ValueFromPrefix";
-                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemoveWithPrefix').val());
+                    it('Should be insert with ignore empty', function() {
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('');
 
-                        executable.internalExecute();
+                        hashInsert.internalExecute();
 
-                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                        expect(url.fparam('IncHash', 'search')).toEqual('');
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
                     });
 
-                    it('Should be set', function() {
-                        executable.tryGetVal = function(value) {
-                            if (value === "$('#incSelector')") {
-                                return 5;
-                            }
-                        };
-                        executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateSet').val());
+                    it('Should be remove hash if empty', function() {
+                        window.location.hash = "!sandboxTextBox=aws";
+                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andReturn('');
 
-                        executable.internalExecute();
+                        hashInsert.internalExecute();
 
-                        var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                        expect(url.fparam('IncHash', 'root')).toEqual('5');
-                    });
-
-                });
-
-                describe('When ExecutableBind', function() {
-
-                    var executable;
-
-                    beforeEach(function() {
-                        executable = new ExecutableBind();
-                        executable.target = instanceSandBox;
-                    });
-
-                    it('Should be attach', function() {
-                        spyOn(IncodingEngine.Current, 'parse');
-                        $(instanceSandBox).data('incoding-runner', 'runner');
-                        executable.jsonData = $.parseJSON($('#ExecutableBindAttach').val());
-
-                        executable.internalExecute();
-
-                        expect(executable.target).toHaveAttr('incoding', 'meta');
-                        expect(executable.target).not.toHaveData('incoding-runner');
-                        expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(instanceSandBox);
-                    });
-
-                    it('Should be detach', function() {
-                        executable.jsonData = $.parseJSON($('#ExecutableBindDetach').val());
-                        var hasClick = false;
-                        $(executable.target).bind('click', function() {
-                            hasClick = true;
-                        });
-
-                        executable.internalExecute();
-                        $(executable.target).trigger('click');
-
-                        expect(hasClick).toBeFalsy();
-                    });
-
-                    it('Should be detach all', function() {
-                        executable.jsonData = $.parseJSON($('#ExecutableBindDetachAll').val());
-                        var hashAny = false;
-                        $(executable.target).bind('click dbclick', function() {
-                            hashAny = true;
-                        });
-
-                        executable.internalExecute();
-                        $(executable.target).trigger('click');
-                        $(executable.target).trigger('dbclick');
-
-                        expect(hashAny).toBeFalsy();
-                    });
-
-                });
-
-                describe('When ExecutableForm', function() {
-
-                    var executable, form;
-
-                    beforeEach(function() {
-                        form = $('<form>').attr({ id : 'formId' });
-
-                        executable = new ExecutableForm();
-                        executable.target = form;
-                    });
-
-                    it('Should be clear', function() {
-                        spyOn($.fn, 'clearForm');
-
-                        executable.jsonData = $.parseJSON($('#ExecutableFormClear').val());
-                        executable.internalExecute();
-
-                        expect($.fn.clearForm).toHaveBeenCalled();
-                        expect($.fn.clearForm.calls[0].object).toEqual(form);
-                    });
-
-                    it('Should be target element in', function() {
-                        var instanceIn = TestHelper.Instance.SandboxInput();
-                        $(form).append(instanceIn);
-                        executable.target = instanceIn;
-
-                        spyOn($.fn, 'clearForm');
-
-                        executable.jsonData = $.parseJSON($('#ExecutableFormClear').val());
-                        executable.internalExecute();
-
-                        expect($.fn.clearForm).toHaveBeenCalled();
-                        expect($($.fn.clearForm.calls[0].object).get(0)).toEqual($(form).get(0));
-
-                    });
-
-                    it('Should be reset', function() {
-                        spyOn($.fn, 'resetForm');
-
-                        executable.jsonData = $.parseJSON($('#ExecutableFormReset').val());
-                        executable.internalExecute();
-
-                        expect($.fn.resetForm).toHaveBeenCalled();
-                        expect($.fn.resetForm.calls[0].object).toEqual(form);
+                        var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual('');
                     });
 
                     afterEach(function() {
-                        $(form).remove();
+                        expect(ExecutableHelper.Instance.TryGetVal.callCount).toEqual(1);
                     });
 
                 });
 
             });
 
-            describe('Conditionals', function() {
+            describe('When ExecutableStoreFetch hash', function() {
 
-                describe('When ConditionalFactory', function() {
+                var element, hashFetch;
 
-                    it('Should be create by type', function() {
-                        $('input', '#supportedConditional').each(function() {
-                            var type = $(this).val();
-                            var conditional = ConditionalFactory.Create({ type : type }, new ExecutableBase());
-                            expect(conditional).not.toBeNull();
-                        });
+                beforeEach(function() {
+                    spyOn(ExecutableHelper.Instance, 'TrySetValue');
+                    element = TestHelper.Instance.SandboxTextBox();
+
+                    hashFetch = new ExecutableStoreFetch();
+                    hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetch').val());
+                });
+
+                it('Should be fetch element', function() {
+                    hashFetch.target = element;
+                    window.location.hash = "sandboxTextBox=@Test";
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '@Test');
+                });
+
+                it('Should be fetch elements', function() {
+                    var textBox = TestHelper.Instance.SandboxTextBox().addClass('fetch');
+                    var select = TestHelper.Instance.SandboxSelect([{ value : 'selectValue', selected : true }]).addClass('fetch');
+                    $(instanceSandBox).append(textBox).append(select);
+
+                    hashFetch.target = $('.fetch');
+                    window.location.hash = "sandboxTextBox=TextBoxValue&sandboxSelect=SelectValue";
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(textBox.prop('name')), 'TextBoxValue');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(select.prop('name')), 'SelectValue');
+                });
+
+                it('Should be fetch element without value', function() {
+                    hashFetch.target = element;
+                    window.location.hash = "";
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '');
+                });
+
+                it('Should be fetch element with decode', function() {
+                    hashFetch.target = element;
+                    window.location.hash = "sandboxTextBox=%26TestÐóññêèå Áóêâû";
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '&TestÐóññêèå Áóêâû');
+                });
+
+                it('Should be fetch element by prefix', function() {
+                    window.location.hash = "sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
+                    hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetchWithPrefix').val());
+                    hashFetch.target = element;
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), 'ValueFromPrefix');
+                });
+
+                it('Should be fetch container', function() {
+                    $(instanceSandBox).append(element);
+                    hashFetch.target = instanceSandBox;
+                    window.location.hash = "sandboxTextBox=Test";
+
+                    hashFetch.internalExecute();
+
+                    expect($(ExecutableHelper.Instance.TrySetValue.argsForCall[0][0]).attr('name')).toEqual('sandboxTextBox');
+                    expect(ExecutableHelper.Instance.TrySetValue.argsForCall[0][1]).toEqual('Test');
+                    expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(1);
+                });
+
+                it('Should be fetch container with multiple', function() {
+                    var textBox = TestHelper.Instance.SandboxTextBox();
+                    var button = TestHelper.Instance.SandboxInputButton();
+                    var radioButton = TestHelper.Instance.SandboxRadioButton(true, 'value');
+                    $(instanceSandBox)
+                        .append(textBox)
+                        .append(button)
+                        .append(radioButton);
+                    hashFetch.target = instanceSandBox;
+                    window.location.hash = "sandboxTextBox=Test&sandboxRadiobutton=value";
+
+                    hashFetch.internalExecute();
+
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName($(textBox).prop('name')), 'Test');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName($(radioButton).prop('name')), 'value');
+                    expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(2);
+                });
+
+            });
+
+            describe('When ExecutableStoreManipulate', function() {
+
+                var executable;
+
+                beforeEach(function() {
+                    spyOn(ExecutableHelper, 'RedirectTo');
+                    executable = new ExecutableStoreManipulate();
+                });
+
+                it('Should be remove', function() {
+                    window.location.hash = "IncHash=Test";
+                    executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemove').val());
+
+                    executable.internalExecute();
+
+                    var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                    expect(url.fparam('IncHash', 'root')).toEqual('');
+                });
+
+                it('Should be remove with prefix', function() {
+                    window.location.hash = "search:IncHash=ValueFromPrefix";
+                    executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemoveWithPrefix').val());
+
+                    executable.internalExecute();
+
+                    var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                    expect(url.fparam('IncHash', 'search')).toEqual('');
+                });
+
+                it('Should be set', function() {
+                    executable.tryGetVal = function(value) {
+                        if (value === "$('#incSelector')") {
+                            return 5;
+                        }
+                    };
+                    executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateSet').val());
+
+                    executable.internalExecute();
+
+                    var url = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
+                    expect(url.fparam('IncHash', 'root')).toEqual('5');
+                });
+
+            });
+
+            describe('When ExecutableBind', function() {
+
+                var executable;
+
+                beforeEach(function() {
+                    executable = new ExecutableBind();
+                    executable.target = instanceSandBox;
+                });
+
+                it('Should be attach', function() {
+                    spyOn(IncodingEngine.Current, 'parse');
+                    $(instanceSandBox).data('incoding-runner', 'runner');
+                    executable.jsonData = $.parseJSON($('#ExecutableBindAttach').val());
+
+                    executable.internalExecute();
+
+                    expect(executable.target).toHaveAttr('incoding', 'meta');
+                    expect(executable.target).not.toHaveData('incoding-runner');
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(instanceSandBox);
+                });
+
+                it('Should be detach', function() {
+                    executable.jsonData = $.parseJSON($('#ExecutableBindDetach').val());
+                    var hasClick = false;
+                    $(executable.target).bind('click', function() {
+                        hasClick = true;
                     });
 
-                    it('Should be create', function() {
-                        var executable = new ExecutableBreak();
-                        var conditional = ConditionalFactory.Create({ type : 'Eval', code : 'true;', inverse : false }, executable);
+                    executable.internalExecute();
+                    $(executable.target).trigger('click');
 
-                        expect(conditional.jsonData).toEqual({ type : 'Eval', code : 'true;', inverse : false });
-                        expect(conditional.executable).toEqual(executable);
+                    expect(hasClick).toBeFalsy();
+                });
+
+                it('Should be detach all', function() {
+                    executable.jsonData = $.parseJSON($('#ExecutableBindDetachAll').val());
+                    var hashAny = false;
+                    $(executable.target).bind('click dbclick', function() {
+                        hashAny = true;
                     });
+
+                    executable.internalExecute();
+                    $(executable.target).trigger('click');
+                    $(executable.target).trigger('dbclick');
+
+                    expect(hashAny).toBeFalsy();
+                });
+
+            });
+
+            describe('When ExecutableForm', function() {
+
+                var executable, form;
+
+                beforeEach(function() {
+                    form = $('<form>').attr({ id : 'formId' });
+
+                    executable = new ExecutableForm();
+                    executable.target = form;
+                });
+
+                it('Should be clear', function() {
+                    spyOn($.fn, 'clearForm');
+
+                    executable.jsonData = $.parseJSON($('#ExecutableFormClear').val());
+                    executable.internalExecute();
+
+                    expect($.fn.clearForm).toHaveBeenCalled();
+                    expect($.fn.clearForm.calls[0].object).toEqual(form);
+                });
+
+                it('Should be target element in', function() {
+                    var instanceIn = TestHelper.Instance.SandboxInput();
+                    $(form).append(instanceIn);
+                    executable.target = instanceIn;
+
+                    spyOn($.fn, 'clearForm');
+
+                    executable.jsonData = $.parseJSON($('#ExecutableFormClear').val());
+                    executable.internalExecute();
+
+                    expect($.fn.clearForm).toHaveBeenCalled();
+                    expect($($.fn.clearForm.calls[0].object).get(0)).toEqual($(form).get(0));
 
                 });
 
-                describe('When isSatisfied', function() {
-                    var executable, conditional;
+                it('Should be reset', function() {
+                    spyOn($.fn, 'resetForm');
 
-                    beforeEach(function() {
-                        executable = new ExecutableBase();
-                        executable.self = 'self';
-                        spyOn(executable, 'getTarget').andReturn('target');
+                    executable.jsonData = $.parseJSON($('#ExecutableFormReset').val());
+                    executable.internalExecute();
 
-                        conditional = new ConditionalBase();
-                        conditional.executable = executable;
-                        conditional.jsonData = { inverse : false };
-                    });
-
-                    it('Should be isSatisfied true', function() {
-                        conditional.isInternalSatisfied = function(data) {
-                            if (data != 'aws') {
-                                throw 'Incorrect data';
-                            }
-
-                            return true;
-                        };
-                        var isSatisfied = conditional.isSatisfied('aws');
-
-                        expect(isSatisfied).toBeTruthy();
-                        expect(conditional.target).toEqual('target');
-                        expect(conditional.self).toEqual('self');
-                        expect(executable.getTarget).toHaveBeenCalled();
-                    });
-
-                    it('Should be isSatisfied false', function() {
-                        conditional.isInternalSatisfied = function(data) {
-                            if (data != 'aws') {
-                                throw 'Incorrect data';
-                            }
-
-                            return false;
-                        };
-                        var isSatisfied = conditional.isSatisfied('aws');
-
-                        expect(isSatisfied).toBeFalsy();
-                    });
-
-                    it('Should be isSatisfied inverse', function() {
-                        conditional.jsonData = { inverse : true };
-                        conditional.isInternalSatisfied = function(data) {
-                            if (data != 'aws') {
-                                throw 'Incorrect data';
-                            }
-
-                            return false;
-                        };
-                        var isSatisfied = conditional.isSatisfied('aws');
-
-                        expect(isSatisfied).toBeTruthy();
-                    });
-
+                    expect($.fn.resetForm).toHaveBeenCalled();
+                    expect($.fn.resetForm.calls[0].object).toEqual(form);
                 });
 
-                describe('When tryGetVal', function() {
-                    var executable, conditional;
-
-                    beforeEach(function() {
-                        executable = new ExecutableBase();
-                        spyOn(executable, 'tryGetVal').andReturn('value');
-
-                        conditional = new ConditionalEval();
-                        conditional.executable = executable;
-                    });
-
-                    it('Should be tryGetVal exectuable', function() {
-                        var tryGetVal = conditional.tryGetVal('aws');
-
-                        expect(tryGetVal).toEqual('value');
-                        expect(executable.tryGetVal).toHaveBeenCalledWith('aws');
-                    });
-
+                afterEach(function() {
+                    $(form).remove();
                 });
 
-                describe('When ConditionalEval', function() {
+            });
 
-                    var evalConditional;
+        });
 
-                    beforeEach(function() {
-                        evalConditional = new ConditionalEval();
-                    });
+        describe('Conditionals', function() {
 
-                    it('Should be satisfied', function() {
-                        evalConditional.jsonData = $.parseJSON($('#ConditionalEval').val());
-                        var isSatisfied = evalConditional.isInternalSatisfied();
-                        expect(isSatisfied).toBeFalsy();
-                    });
+            describe('When ConditionalFactory', function() {
 
-                    it('Should be with data', function() {
-                        evalConditional.jsonData = $.parseJSON($('#ConditionalEvalData').val());
-                        var isSatisfied = evalConditional.isInternalSatisfied(true);
-                        expect(isSatisfied).toBeTruthy();
+                it('Should be create by type', function() {
+                    $('input', '#supportedConditional').each(function() {
+                        var type = $(this).val();
+                        var conditional = ConditionalFactory.Create({ type : type }, new ExecutableBase());
+                        expect(conditional).not.toBeNull();
                     });
                 });
 
-                describe('When ConditionalIs', function() {
+                it('Should be create', function() {
+                    var executable = new ExecutableBreak();
+                    var conditional = ConditionalFactory.Create({ type : 'Eval', code : 'true;', inverse : false }, executable);
 
-                    var evalConditional;
+                    expect(conditional.jsonData).toEqual({ type : 'Eval', code : 'true;', inverse : false });
+                    expect(conditional.executable).toEqual(executable);
+                });
 
-                    beforeEach(function() {
-                        evalConditional = new ConditionalIs();
-                        evalConditional.jsonData = $.parseJSON($('#ConditionalIs').val());
-                        evalConditional.tryGetVal = function(original) {
-                            return original;
-                        };
+            });
+
+            describe('When isSatisfied', function() {
+                var executable, conditional;
+
+                beforeEach(function() {
+                    executable = new ExecutableBase();
+                    executable.self = 'self';
+                    spyOn(executable, 'getTarget').andReturn('target');
+
+                    conditional = new ConditionalBase();
+                    conditional.executable = executable;
+                    conditional.jsonData = { inverse : false };
+                });
+
+                it('Should be isSatisfied true', function() {
+                    conditional.isInternalSatisfied = function(data) {
+                        if (data != 'aws') {
+                            throw 'Incorrect data';
+                        }
+
+                        return true;
+                    };
+                    var isSatisfied = conditional.isSatisfied('aws');
+
+                    expect(isSatisfied).toBeTruthy();
+                    expect(conditional.target).toEqual('target');
+                    expect(conditional.self).toEqual('self');
+                    expect(executable.getTarget).toHaveBeenCalled();
+                });
+
+                it('Should be isSatisfied false', function() {
+                    conditional.isInternalSatisfied = function(data) {
+                        if (data != 'aws') {
+                            throw 'Incorrect data';
+                        }
+
+                        return false;
+                    };
+                    var isSatisfied = conditional.isSatisfied('aws');
+
+                    expect(isSatisfied).toBeFalsy();
+                });
+
+                it('Should be isSatisfied inverse', function() {
+                    conditional.jsonData = { inverse : true };
+                    conditional.isInternalSatisfied = function(data) {
+                        if (data != 'aws') {
+                            throw 'Incorrect data';
+                        }
+
+                        return false;
+                    };
+                    var isSatisfied = conditional.isSatisfied('aws');
+
+                    expect(isSatisfied).toBeTruthy();
+                });
+
+            });
+
+            describe('When tryGetVal', function() {
+                var executable, conditional;
+
+                beforeEach(function() {
+                    executable = new ExecutableBase();
+                    spyOn(executable, 'tryGetVal').andReturn('value');
+
+                    conditional = new ConditionalEval();
+                    conditional.executable = executable;
+                });
+
+                it('Should be tryGetVal exectuable', function() {
+                    var tryGetVal = conditional.tryGetVal('aws');
+
+                    expect(tryGetVal).toEqual('value');
+                    expect(executable.tryGetVal).toHaveBeenCalledWith('aws');
+                });
+
+            });
+
+            describe('When ConditionalEval', function() {
+
+                var evalConditional;
+
+                beforeEach(function() {
+                    evalConditional = new ConditionalEval();
+                });
+
+                it('Should be satisfied', function() {
+                    evalConditional.jsonData = $.parseJSON($('#ConditionalEval').val());
+                    var isSatisfied = evalConditional.isInternalSatisfied();
+                    expect(isSatisfied).toBeFalsy();
+                });
+
+                it('Should be with data', function() {
+                    evalConditional.jsonData = $.parseJSON($('#ConditionalEvalData').val());
+                    var isSatisfied = evalConditional.isInternalSatisfied(true);
+                    expect(isSatisfied).toBeTruthy();
+                });
+            });
+
+            describe('When ConditionalIs', function() {
+
+                var evalConditional;
+
+                beforeEach(function() {
+                    evalConditional = new ConditionalIs();
+                    evalConditional.jsonData = $.parseJSON($('#ConditionalIs').val());
+                    evalConditional.tryGetVal = function(original) {
+                        return original;
+                    };
+                });
+
+                it('Should be satisfied', function() {
+                    spyOn(ExecutableHelper, 'Compare').andReturn(true);
+
+                    var isSatisfied = evalConditional.isInternalSatisfied();
+
+                    expect(isSatisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith("$('#id')", "5", 'equal');
+                });
+
+            });
+
+            describe('When ConditionalData', function() {
+
+                var existsItem, dataConditional, expectedValue;
+
+                beforeEach(function() {
+
+                    existsItem = { prop1: 1, Text: 2 };
+                    expectedValue = '123';
+                    dataConditional = new ConditionalData();
+                    dataConditional.tryGetVal = function() {
+                        return expectedValue;
+                    };
+
+                    spyOn(ExecutableHelper, 'Compare').andReturn(true);
+                });
+
+                it('Should be satisfied object', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+
+                    var satisfied = dataConditional.isInternalSatisfied(existsItem);
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.Text, expectedValue, dataConditional.jsonData.method);
+                });
+
+
+                it('Should be satisfied object with bool value', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+
+                    var satisfied = dataConditional.isInternalSatisfied({ Text: false });
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(false, expectedValue, dataConditional.jsonData.method);
+                });
+
+                it('Should be satisfied object with undefined property', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+
+                    var satisfied = dataConditional.isInternalSatisfied({});
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith('', expectedValue, dataConditional.jsonData.method);
+                });
+
+                it('Should be satisfied object without property', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
+
+                    var satisfied = dataConditional.isInternalSatisfied(existsItem);
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem, expectedValue, dataConditional.jsonData.method);
+                });
+
+                it('Should be satisfied array', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+                    var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1: 8, Text: 18 }]);
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.Text, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                });
+
+                it('Should be satisfied array with bool value', function () {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
+                    var satisfied = dataConditional.isInternalSatisfied([{ Text: false }, { prop1: 8, Text: 18 }]);
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(false, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                });
+
+                it('Should be satisfied array without property', function() {
+                    dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
+                    var data = [existsItem, { prop1: 8, Text: 18 }];
+
+                    var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1: 8, Text: 18 }]);
+
+                    expect(satisfied).toBeTruthy();
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith(data, dataConditional.jsonData.value, dataConditional.jsonData.method);
+                });
+
+            });
+
+            describe('When ConditionalDataIsId', function() {
+
+                var existsItem, existsElement, property, conditionalDataIds;
+
+                beforeEach(function() {
+
+                    existsItem = { prop1 : 1, prop2 : 'valueFromField' };
+                    property = "prop2";
+                    existsElement = $('<div>').attr({
+                        id : 'valueFromField'
                     });
+                    appendSetFixtures(existsElement);
 
-                    it('Should be satisfied', function() {
-                        spyOn(ExecutableHelper, 'Compare').andReturn(true);
-
-                        var isSatisfied = evalConditional.isInternalSatisfied();
-
-                        expect(isSatisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith("$('#id')", "5", 'equal');
-                    });
+                    conditionalDataIds = new ConditionalDataIsId();
+                    conditionalDataIds.jsonData = { property : property, inverse : false };
+                    conditionalDataIds.self = instanceSandBox;
+                    conditionalDataIds.target = instanceSandBox;
 
                 });
 
-                describe('When ConditionalData', function() {
-
-                    var existsItem, dataConditional, expectedValue;
-
-                    beforeEach(function() {
-
-                        existsItem = { prop1 : 1, JqueryVersion : 2 };
-                        expectedValue = '123';
-                        dataConditional = new ConditionalData();
-                        dataConditional.tryGetVal = function() {
-                            return expectedValue;
-                        };
-
-                        spyOn(ExecutableHelper, 'Compare').andReturn(true);
-                    });
-
-                    it('Should be satisfied object', function() {
-                        dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
-
-                        var satisfied = dataConditional.isInternalSatisfied(existsItem);
-
-                        expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.JqueryVersion, expectedValue, dataConditional.jsonData.method);
-                    });                    
-
-                    it('Should be satisfied object with undefined property', function() {
-                        dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
-
-                        var satisfied = dataConditional.isInternalSatisfied({});
-
-                        expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith('', expectedValue, dataConditional.jsonData.method);
-                    });
-
-                    it('Should be satisfied object without property', function() {
-                        dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
-
-                        var satisfied = dataConditional.isInternalSatisfied(existsItem);
-
-                        expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem, expectedValue, dataConditional.jsonData.method);
-                    });
-
-                    it('Should be satisfied array', function() {
-                        dataConditional.jsonData = $.parseJSON($('#ConditionalData').val());
-                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, JqueryVersion : 18 }]);
-
-                        expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(existsItem.JqueryVersion, dataConditional.jsonData.value, dataConditional.jsonData.method);
-                    });
-
-                    it('Should be satisfied array without property', function() {
-                        dataConditional.jsonData = $.parseJSON($('#ConditionalDataWihtoutProperty').val());
-                        var data = [existsItem, { prop1 : 8, JqueryVersion : 18 }];
-
-                        var satisfied = dataConditional.isInternalSatisfied([existsItem, { prop1 : 8, JqueryVersion : 18 }]);
-
-                        expect(satisfied).toBeTruthy();
-                        expect(ExecutableHelper.Compare).toHaveBeenCalledWith(data, dataConditional.jsonData.value, dataConditional.jsonData.method);
-                    });
-
+                it('Should be satisfied', function() {
+                    var satisfied = conditionalDataIds.isInternalSatisfied(existsItem);
+                    expect(satisfied).toBeTruthy();
                 });
 
-                describe('When ConditionalDataIsId', function() {
-
-                    var existsItem, existsElement, property, conditionalDataIds;
-
-                    beforeEach(function() {
-
-                        existsItem = { prop1 : 1, prop2 : 'valueFromField' };
-                        property = "prop2";
-                        existsElement = $('<div>').attr({
-                            id : 'valueFromField'
-                        });
-                        appendSetFixtures(existsElement);
-
-                        conditionalDataIds = new ConditionalDataIsId();
-                        conditionalDataIds.jsonData = { property : property, inverse : false };
-                        conditionalDataIds.self = instanceSandBox;
-                        conditionalDataIds.target = instanceSandBox;
-
-                    });
-
-                    it('Should be satisfied', function() {
-                        var satisfied = conditionalDataIds.isInternalSatisfied(existsItem);
-                        expect(satisfied).toBeTruthy();
-                    });
-
-                    it('Should be satisfied with array', function() {
-                        var satisfied = conditionalDataIds.isInternalSatisfied([existsItem, { prop1 : 8, prop2 : 18 }]);
-                        expect(satisfied).toBeTruthy();
-                    });
-
+                it('Should be satisfied with array', function() {
+                    var satisfied = conditionalDataIds.isInternalSatisfied([existsItem, { prop1 : 8, prop2 : 18 }]);
+                    expect(satisfied).toBeTruthy();
                 });
 
             });
 
         });
 
-        describe('When JavaScriptCodeTemplate', function() {
+    });
 
-            describe('Target', function() {
+    describe('When JavaScriptCodeTemplate', function() {
 
-                it('Should be Target_Increment', function() {
-                    var incValue = TestHelper.Instance.SandboxTextBox();
-                    $(incValue).val('5');
+        describe('Target', function() {
 
-                    this.target = incValue;
-                    eval($('#Target_Increment').val());
+            it('Should be Target_Increment', function() {
+                var incValue = TestHelper.Instance.SandboxTextBox();
+                $(incValue).val('5');
 
-                    expect($(incValue).val()).toEqual('6');
-                });
+                this.target = incValue;
+                eval($('#Target_Increment').val());
 
-                it('Should be Target_Decrement', function() {
-                    var incValue = TestHelper.Instance.SandboxTextBox();
-                    $(incValue).val('5');
-
-                    this.target = incValue;
-                    eval($('#Target_Decrement').val());
-
-                    expect($(incValue).val()).toEqual('4');
-                });
-
-                it('Should be Target_Val', function() {
-
-                    this.target = TestHelper.Instance.SandboxTextBox();
-                    eval($('#Target_Val').val().f("'aws'"));
-
-                    expect(this.target).toHaveValue('aws');
-                });
-
+                expect($(incValue).val()).toEqual('6');
             });
 
-            it('Should be Window_Clear_Interval', function() {
-                var intervalId = 'inervalId';
-                ExecutableBase.IntervalIds[intervalId] = 1;
-                spyOn(window, 'clearInterval');
+            it('Should be Target_Decrement', function() {
+                var incValue = TestHelper.Instance.SandboxTextBox();
+                $(incValue).val('5');
 
-                eval($('#Window_Clear_Interval').val().f(intervalId));
+                this.target = incValue;
+                eval($('#Target_Decrement').val());
 
-                expect(window.clearInterval).toHaveBeenCalledWith(1);
+                expect($(incValue).val()).toEqual('4');
             });
 
-            it('Should be Document_SetTitle', function() {
+            it('Should be Target_Val', function() {
 
-                var code = $('#Document_SetTitle').val().f("vlad");
-                eval(code);
+                this.target = TestHelper.Instance.SandboxTextBox();
+                eval($('#Target_Val').val().f("'aws'"));
 
-                expect(document.title).toEqual('vlad');
+                expect(this.target).toHaveValue('aws');
             });
 
         });
 
+        it('Should be Window_Clear_Interval', function() {
+            var intervalId = 'inervalId';
+            ExecutableBase.IntervalIds[intervalId] = 1;
+            spyOn(window, 'clearInterval');
+
+            eval($('#Window_Clear_Interval').val().f(intervalId));
+
+            expect(window.clearInterval).toHaveBeenCalledWith(1);
+        });
+
+        it('Should be Document_SetTitle', function() {
+
+            var code = $('#Document_SetTitle').val().f("vlad");
+            eval(code);
+
+            expect(document.title).toEqual('vlad');
+        });
+
     });
 
-    afterEach(function() {
-        $('#jasmine-fixtures').remove();
-        $.mockjaxClear();
-        $(document).unbind();
-    });
+});
 
+afterEach(function() {
+    $('#jasmine-fixtures').remove();
+    $.mockjaxClear();
+    $(document).unbind();
+});
 });
 
 function FakeMapEngine() {

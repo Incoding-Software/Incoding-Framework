@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace Incoding.CQRS
 {
     #region << Using >>
@@ -16,40 +18,61 @@ namespace Incoding.CQRS
 
     public class DefaultDispatcher : IDispatcher
     {
+        private class UnitOfWorkItem
+        {
+            public IUnitOfWork UnitOfWork { get; set; }
+            public bool IsFlush { get; set; }
+        }
+
+        private Dictionary<int, UnitOfWorkItem> unitOfWorkCollection = null;
+        
         #region IDispatcher Members
 
         public void Push(CommandComposite composite)
         {
-            var delays = new List<IMessage<object>>();
-            var eventBroker = IoCFactory.Instance.TryResolve<IEventBroker>();
-            var units = new Dictionary<int, Tuple<IUnitOfWork, bool>>();
-
-            foreach (var groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
+            bool isOuterCycle = false;
+            if (unitOfWorkCollection == null)
             {
-                if (groupMessage.Key.Delay != null)
+                isOuterCycle = true;
+                unitOfWorkCollection = new Dictionary<int, UnitOfWorkItem>();
+            }
+            //var delays = new List<IMessage<object>>();
+            var eventBroker = IoCFactory.Instance.TryResolve<IEventBroker>();
+            //var units = new Dictionary<int, Tuple<IUnitOfWork, bool>>();
+
+            foreach (IGrouping<MessageExecuteSetting, IMessage<object>> groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
+            {
+                var groupMessageKey = groupMessage.Key;
+                List<IMessage<object>> messages = groupMessage.ToList();
+
+                bool isFlush = messages.Any(r => r is CommandBase);
+                IUnitOfWork unitOfWork;
+
+                var unitOfWorkKey = groupMessageKey.GetHashCode();
+                if (unitOfWorkCollection.ContainsKey(unitOfWorkKey))
                 {
-                    delays.AddRange(groupMessage);
-                    continue;
+                    unitOfWork = unitOfWorkCollection[unitOfWorkKey].UnitOfWork;
                 }
-
-                bool isFlush = groupMessage.Any(r => r is CommandBase);
-                var unitOfWork = groupMessage.First().Setting.UnitOfWork;
-
-                if (!unitOfWork.With(r => r.IsOpen()))
+                else 
                 {
-                    var unitOfWorkFactory = string.IsNullOrWhiteSpace(groupMessage.Key.DataBaseInstance)
+                    var unitOfWorkFactory = string.IsNullOrWhiteSpace(groupMessageKey.DataBaseInstance)
                                                     ? IoCFactory.Instance.TryResolve<IUnitOfWorkFactory>()
-                                                    : IoCFactory.Instance.TryResolveByNamed<IUnitOfWorkFactory>(groupMessage.Key.DataBaseInstance);
-                    unitOfWork = unitOfWorkFactory.Create(isFlush ? IsolationLevel.ReadCommitted : IsolationLevel.ReadUncommitted, groupMessage.Key.Connection);
-                    units.Add(groupMessage.Key.GetHashCode(), new Tuple<IUnitOfWork, bool>(unitOfWork, isFlush));
+                                                    : IoCFactory.Instance.TryResolveByNamed<IUnitOfWorkFactory>(groupMessageKey.DataBaseInstance);
+                    unitOfWork = unitOfWorkFactory.Create(isFlush ? IsolationLevel.ReadCommitted : IsolationLevel.ReadUncommitted, groupMessageKey.Connection);
+                    unitOfWorkCollection.Add(groupMessageKey.GetHashCode(), new UnitOfWorkItem
+                    {
+                        UnitOfWork = unitOfWork,
+                        IsFlush = isFlush
+                    });
                 }
-
-                foreach (var part in groupMessage)
+                
+                foreach (IMessage<object> part in messages)
                 {
                     bool isThrow = false;
                     try
                     {
-                        part.Setting.UnitOfWork = unitOfWork;
+                        part.Setting.outerDispatcher = this;
+                        part.Setting.unitOfWork = unitOfWork;
                         part.Setting.OnBefore.Do(action => action(part));
                         if (!part.Setting.Mute.HasFlag(MuteEvent.OnBefore))
                             eventBroker.Publish(new OnBeforeExecuteEvent(part));
@@ -80,35 +103,42 @@ namespace Incoding.CQRS
                             eventBroker.Publish(new OnCompleteExecuteEvent(part));
                         if (isThrow)
                         {
-                            units.Select(r => r.Value)
-                                 .DoEach(tuple => tuple.Item1.Dispose());
+                            if (isOuterCycle)
+                            {
+                                unitOfWorkCollection.Select(r => r.Value)
+                                    .DoEach(r => r.UnitOfWork.Dispose());
+                                unitOfWorkCollection = null;
+                            }
                         }
                     }
                 }
             }
 
-            units.Select(r => r.Value)
-                 .DoEach(tuple =>
-                             {
-                                 if (tuple.Item2)
-                                     tuple.Item1.Commit();
-
-                                 tuple.Item1.Dispose();
-                             });
-
-            foreach (var messages in delays.GroupBy(r => r.Setting.Delay, r => r))
+            if (isOuterCycle)
             {
-                IoCFactory.Instance.TryResolve<IDispatcher>()
-                          .Push(new AddDelayToSchedulerCommand
-                                    {
-                                            Commands = messages
-                                                    .ToList()
-                                    }, new MessageExecuteSetting
-                                           {
-                                                   Connection = messages.Key.Connection,
-                                                   DataBaseInstance = messages.Key.DataBaseInstance
-                                           });
+                unitOfWorkCollection.Select(r => r.Value)
+                    .DoEach(r =>
+                    {
+                        if (r.IsFlush)
+                            r.UnitOfWork.Commit();
+
+                        r.UnitOfWork.Dispose();
+                    });
+                unitOfWorkCollection = null;
             }
+            //foreach (var messages in delays.GroupBy(r => r.Setting.Delay, r => r))
+            //{
+            //    IoCFactory.Instance.TryResolve<IDispatcher>()
+            //              .Push(new AddDelayToSchedulerCommand
+            //                        {
+            //                                Commands = messages
+            //                                        .ToList()
+            //                        }, new MessageExecuteSetting
+            //                               {
+            //                                       Connection = messages.Key.Connection,
+            //                                       DataBaseInstance = messages.Key.DataBaseInstance
+            //                               });
+            //}
         }
 
         public TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null) where TResult : class

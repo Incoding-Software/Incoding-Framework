@@ -65,7 +65,7 @@ function AjaxAdapter() {
                 return;
             }
             
-            var isElementCanArray =  $.byName(name).is('[type=checkbox],select,[type=radio]');
+            var isElementCanArray = $.byName(name.replaceAll("[", "\\[").replaceAll("]", "\\]")).is('[type=checkbox],select,[type=radio]');
             var isValueCanArray = _.isArray(value) || value.toString().contains(',');
 
             if (_.isArray(value) || (isValueCanArray && isElementCanArray)) {
@@ -116,11 +116,6 @@ function ExecutableHelper() {
 
     var getValAction = function(selector) {
 
-        var scripts = $(selector).filter('script');
-        if (scripts.length > 0) {
-            return $.trim($(scripts).html());
-        }
-
         if ($(selector).is(':checkbox')) {
             var onlyCheckbox = $(selector).filter(':checkbox');
             if (onlyCheckbox.length == 1) {
@@ -140,8 +135,7 @@ function ExecutableHelper() {
                 return res;
             }
         }
-
-        if (($(selector).is('select') && $(selector).length > 1)) {
+        else if (($(selector).is('select') && $(selector).length > 1)) {
             var res = [];
             $(selector).each(function() {
                 var val = $(this).val();
@@ -151,8 +145,7 @@ function ExecutableHelper() {
             });
             return res;
         }
-
-        if ($(selector).is('select[multiple]')) {
+        else if ($(selector).is('select[multiple]')) {
             var res = [];
             $($(selector).val()).each(function() {
                 if (!ExecutableHelper.IsNullOrEmpty(this)) {
@@ -161,12 +154,17 @@ function ExecutableHelper() {
             });
             return res;
         }
-
-        if ($(selector).is(':radio')) {
+        else if ($(selector).is(':radio')) {
             return $.byName($(selector).prop('name'), ':checked').val();
         }
+        else if ($(selector).is('select,textarea,input')) {
+            return $(selector).val();
+        }
 
-        return $(selector).val();
+        var something = $(selector).val();
+        return ExecutableHelper.IsNullOrEmpty(something)
+            ? $.trim($(selector).html())
+            : something;
     };
 
     this.self = '';
@@ -289,15 +287,16 @@ function ExecutableHelper() {
             return;
         }
 
-        if ($(element).is('[multiple]')) {
+        if ($(element).is('select[multiple]')) {
             $(element).val(val.split(','));
             return;
         }
 
         if ($(element).is('select') && $(element).length > 1) {
             var arrayVal = _.isArray(val) ? val : val.split(',');
-            $(arrayVal).each(function() {
-                $('option[value="{0}"]'.f(this)).closest('select').val(this.toString()); //this.toString() fixed for ie < 9
+            $(arrayVal).each(function () {
+                if (this.toString() != '') // fix to not update different selects if val is empty
+                    $('option[value="{0}"]'.f(this)).closest('select').val(this.toString()); //this.toString() fixed for ie < 9
             });
             return;
         }
@@ -327,20 +326,16 @@ ExecutableHelper.IsData = function(data, property, evaluated) {
         return evaluated.call(data);
     }
 
-    if (!_.isArray(data)) {
-        return evaluated.call(data[property] || '');
-    }
-
     var res = false;
-    $(data).each(function() {
-        if (evaluated.call(this[property] || '')) {
+    $(!_.isArray(data) ? [data] : data).each(function() {
+        var valueOfProperty = this[property];
+        if (evaluated.call(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty)) {
             res = true;
             return false;
         }
     });
 
     return res;
-
 };
 
 ExecutableHelper.Filter = function(data, filter) {
@@ -426,10 +421,11 @@ ExecutableHelper.IsNullOrEmpty = function(value) {
     return !hasOwnProperty;
 };
 
-ExecutableHelper.RedirectTo = function(destentationUrl) {
+ExecutableHelper.RedirectTo = function (destentationUrl) {
     var decodeUri = decodeURIComponent(destentationUrl);
+    var decodeHash = decodeURIComponent(window.location.hash);
 
-    var isSame = decodeUri.contains('#') && window.location.hash.replace("#", "") == decodeUri.split('#')[1];
+    var isSame = decodeUri.contains('#') && decodeHash.replace("#", "") == decodeUri.split('#')[1];
     if (isSame) {
         $(document).trigger(jQuery.Event(IncSpecialBinds.IncChangeUrl));
         return;
@@ -709,6 +705,17 @@ function purl(existsUrl) {
             return this.data.param.fragment.hasOwnProperty(key) ? ExecutableHelper.UrlDecode(this.data.param.fragment[key]) : '';
         },
         
+        encodeAllParams: function () {
+            var self = this;
+            var params = self.fparam();
+            $.eachProperties(params, function () {
+                var key = this.split('__')[1];
+                var prefix = this.split('__')[0];
+                var value = params[this.toString()];
+                self.setFparam(key, value, prefix);
+            });
+        },
+
         // set fragment parameters
         setFparam : function(param, value, prefix) {
             var fullParam = "{0}__{1}".f(prefix, param);
@@ -1002,7 +1009,7 @@ $.extend({
         }
     },
     eachFormElements : function(ob, evaluated) {
-        var inputTag = 'input,select';
+        var inputTag = 'input,select,textarea';
         var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
         var targets;
         if ($(ob).is('input,select')) {
@@ -1488,7 +1495,7 @@ ExecutableBase.prototype = {
         $(current.ands).each(function() {
 
             var hasAny = false;
-
+            
             $(this).each(function() {
 
                 hasAny = ConditionalFactory.Create(this, current).isSatisfied(data);
@@ -1778,9 +1785,11 @@ ExecutableValidationParse.prototype.internalExecute = function() {
     $.validator.unobtrusive.parse(form);
 
     //bug in fluent validation. fixed for input
-    $('[data-val-equalto-other]', form).each(function() {
+    $('[data-val-equalto-other]', form).each(function () {
         var equalTo = '#' + $(this).data('val-equalto-other').replaceAll('*.', 'Input_');
-        $(this).rules("add", { required : true, equalTo : equalTo });
+        if ($(equalTo).length > 0) {
+            $(this).rules("add", { required: true, equalTo: equalTo });
+        }
     });
 };
 
@@ -1934,12 +1943,13 @@ ExecutableStoreFetch.prototype.internalExecute = function() {
     var fparam = $.url(window.location.href).fparam();
 
     $.eachFormElements(this.target, function() {
-        var key = prefix + $(this).prop('name');
+        var name = $(this).prop('name');
+        var key = prefix + name;
         var value = '';
         if (fparam.hasOwnProperty(key)) {
             value = fparam[key];
         }
-        ExecutableHelper.Instance.TrySetValue(this, value);
+        ExecutableHelper.Instance.TrySetValue($.byName(name), value);
     });
 
 };
@@ -1958,7 +1968,8 @@ ExecutableStoreManipulate.prototype.internalExecute = function(data) {
     switch (current.jsonData.type) {
         case 'hash':
             var url = $.url(document.location.href);
-
+            url.encodeAllParams();
+            
             var methods = $.parseJSON(current.jsonData.methods);
             $(methods).each(function() {
                 switch (this.verb) {

@@ -1,6 +1,6 @@
 ﻿    @using Incoding.Extensions
 @model JasmineIndexContainer
-
+           
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -80,7 +80,7 @@
 
 <body>
     <div id="my-fixture">            
-    </div>
+    </div>    
     @using (Html.Incoding().ScriptTemplate<string>("sandboxScript"))
     {
         <div class="form-row">
@@ -165,7 +165,7 @@
     <input type="hidden" value="@(new ConditionalEval("data", true).GetData().ToJsonString())" id="ConditionalEvalData"/>
 
     <input type="hidden" value="@(new ConditionalIs(() => Selector.Jquery.Id("id") == 5, true).GetData().ToJsonString())" id="ConditionalIs"/>
-    <input type="hidden" value="@(new ConditionalData<JasmineIndexContainer>(container => container.JqueryVersion == "123", true).GetData().ToJsonString())" id="ConditionalData"/>
+    <input type="hidden" value="@(new ConditionalData<KeyValueVm>(container => container.Text == "123", true).GetData().ToJsonString())" id="ConditionalData"/>    
     <input type="hidden" value="@(new ConditionalData<string>(container => container == "123", true).GetData().ToJsonString())" id="ConditionalDataWihtoutProperty"/>
           
     <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateRemove"/>    

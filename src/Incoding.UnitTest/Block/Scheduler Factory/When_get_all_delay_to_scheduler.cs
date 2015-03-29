@@ -7,6 +7,7 @@
     using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -36,7 +37,8 @@
 
                                       mockQuery = MockQuery<GetExpectedDelayToSchedulerQuery, Dictionary<string, List<DelayToScheduler>>>
                                               .When(query)
-                                              .StubQuery(whereSpecification: !new DelayToSchedulerByStatusWhere(DelayOfStatus.Success),
+                                              .StubQuery(whereSpecification: !new DelayToSchedulerByStatusWhere(DelayOfStatus.Success)
+                                                                                      .And(new DelayToSchedulerAvaialbeStartsOnWhereSpec(query.Date)),
                                                          paginatedSpecification: new PaginatedSpecification(1, query.FetchSize),
                                                          entities: entities);
                                   };

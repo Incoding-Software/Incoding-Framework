@@ -43,11 +43,11 @@
                                                   var dispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
                                                   foreach (var pair in dispatcher.Query(new GetExpectedDelayToSchedulerQuery
                                                                                             {
-                                                                                                    FetchSize = init.FetchSize
+                                                                                                    FetchSize = init.FetchSize,
+                                                                                                    Date = DateTime.UtcNow
                                                                                             }, init.Setting))
                                                   {
                                                       var ids = pair.Value.Select(r => r.Id).ToArray();
-
                                                       dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
                                                                           {
                                                                                   Ids = ids,
@@ -61,7 +61,6 @@
                                                           foreach (var delayToScheduler in pair.Value)
                                                           {
                                                               var instanceCommand = delayToScheduler.Instance;
-                                                              policy = instanceCommand.Setting.Delay.Policy;
                                                               composite.Quote(instanceCommand)
                                                                        .WithConnectionString(instanceCommand.Setting.Connection)
                                                                        .WithDateBaseString(instanceCommand.Setting.DataBaseInstance)
@@ -71,7 +70,8 @@
                                                           composite.Quote(new ChangeDelayToSchedulerStatusCommand
                                                                               {
                                                                                       Ids = ids,
-                                                                                      Status = DelayOfStatus.Success
+                                                                                      Status = DelayOfStatus.Success,
+                                                                                      UpdateNextStart = true
                                                                               }, init.Setting);
                                                           policy.Do(() => dispatcher.Push(composite));
                                                       }

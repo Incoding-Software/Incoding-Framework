@@ -48,6 +48,11 @@
             return s.Value;
         }
 
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
         public static bool operator ==(bool left, IncBoolResponse right)
         {
             return new IncBoolResponse(left).Equals(right);

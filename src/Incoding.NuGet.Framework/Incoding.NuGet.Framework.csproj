@@ -103,8 +103,6 @@
     <Folder Include="content\Specifications\Fetch\" />
     <Folder Include="content\Specifications\Order\" />
     <Folder Include="content\Specifications\Where\" />
-    <Folder Include="content\Subscribers\Events\" />
-    <Folder Include="content\Subscribers\Impl\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\net40\Incoding.dll" />

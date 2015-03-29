@@ -1,3 +1,5 @@
+using NHibernate.Cfg;
+
 namespace Incoding.Data
 {
     #region << Using >>
@@ -6,7 +8,6 @@ namespace Incoding.Data
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Threading.Tasks;
     using Incoding.Extensions;
     using NHibernate;
     using NHibernate.Linq;
@@ -18,30 +19,40 @@ namespace Incoding.Data
     {
         #region Fields
 
-        readonly ISession session;
+        Lazy<ISession> session;
 
         #endregion
 
         #region Constructors
 
         [ExcludeFromCodeCoverage]
-        public NhibernateRepository(INhibernateSessionFactory sessionFactory)
+        public NhibernateRepository(/*INhibernateSessionFactory sessionFactory*/)
         {
-            this.session = sessionFactory.GetCurrent();
+            //this.session = sessionFactory.GetCurrent();
         }
 
         #endregion
-
+        
         #region IRepository Members
 
         public void ExecuteSql(string sql)
         {
-            this.session.CreateSQLQuery(sql).ExecuteUpdate();
+            this.session.Value.CreateSQLQuery(sql).ExecuteUpdate();
+        }
+
+        public TProvider GetProvider<TProvider>() where TProvider : class
+        {
+            return session.Value as TProvider;
+        }
+
+        public void SetProvider(object provider)
+        {
+            session = (Lazy<ISession>) provider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Save(entity);
+            this.session.Value.Save(entity);
         }
 
         public void Saves<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity, new()
@@ -52,17 +63,17 @@ namespace Incoding.Data
 
         public void Flush()
         {
-            this.session.Flush();
+            this.session.Value.Flush();
         }
 
         public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.SaveOrUpdate(entity);
+            this.session.Value.SaveOrUpdate(entity);
         }
 
         public void Delete<TEntity>(object id) where TEntity : class, IEntity, new()
         {
-            Delete(this.session.Load<TEntity>(id));
+            Delete(this.session.Value.Load<TEntity>(id));
         }
 
         public void DeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
@@ -71,19 +82,19 @@ namespace Incoding.Data
             string idColumnName = metadata.GetPropertyColumnNames("Id").FirstOrDefault();
             string tableName = metadata.TableName;
             string queryString = "DELETE FROM [{0}] WHERE {1} IN ({2})".F(tableName, idColumnName, ids.Select(o => o.GetType().IsAnyEquals(typeof(string), typeof(Guid)) ? "'{0}'".F(o.ToString()) : o.ToString()).AsString(","));
-            this.session
+            this.session.Value
                 .CreateSQLQuery(queryString)
                 .ExecuteUpdate();
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Delete(entity);
+            this.session.Value.Delete(entity);
         }
 
         public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
-            this.session.CreateSQLQuery("DELETE {0}".F(GetMetaData<TEntity>().TableName))
+            this.session.Value.CreateSQLQuery("DELETE {0}".F(GetMetaData<TEntity>().TableName))
                 .ExecuteUpdate();
         }
 
@@ -92,7 +103,7 @@ namespace Incoding.Data
             if (id == null)
                 return null;
 
-            return this.session.Get<TEntity>(id);
+            return this.session.Value.Get<TEntity>(id);
         }
 
         public TEntity LoadById<TEntity>(object id) where TEntity : class, IEntity, new()
@@ -100,29 +111,24 @@ namespace Incoding.Data
             if (id == null)
                 return null;
 
-            return this.session.Load<TEntity>(id);
+            return this.session.Value.Load<TEntity>(id);
         }
 
         public IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
-            return this.session.Query<TEntity>().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
-        }
-
-        public Task<IQueryable<TEntity>> QueryAsync<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
-        {
-            throw new NotImplementedException();
+            return this.session.Value.Query<TEntity>().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
         public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()
         {
-            return this.session.Query<TEntity>().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
+            return this.session.Value.Query<TEntity>().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
         #endregion
 
         SingleTableEntityPersister GetMetaData<T>()
         {
-            var metadata = this.session.SessionFactory.GetClassMetadata(typeof(T));
+            var metadata = this.session.Value.SessionFactory.GetClassMetadata(typeof(T));
             return (SingleTableEntityPersister)metadata;
         }
     }

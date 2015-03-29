@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest
+﻿using Incoding.Data;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -54,7 +56,7 @@
             var currentUiCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = currentUiCulture;
             Thread.CurrentThread.CurrentCulture = currentUiCulture;
-            PleasureForData.StartNhibernate(NhibernateFluent<ThreadStaticSessionContext>());
+            PleasureForData.StartNhibernate(NhibernateFluent<NhibernateSessionContext>());
         }
 
         public void OnAssemblyComplete() { }

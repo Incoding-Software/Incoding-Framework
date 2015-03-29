@@ -28,7 +28,7 @@
 
         #endregion
 
-        Establish establish = () => { setting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.GenerateTo(r => r.Delay)); };
+        Establish establish = () => { setting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => {}); };
 
         Because of = () => { composite = (CommandComposite)new CommandComposite().Quote(Pleasure.Generator.Invent<FakeCommand>(), setting); };
 

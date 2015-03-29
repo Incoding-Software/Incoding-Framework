@@ -34,14 +34,14 @@
                                                         .VerifyMappingAndSchema();
                                             };
 
-        It should_be_nhibernate = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildNhibernateRepository(MSpecAssemblyContext.NhibernateFluent()))
+        It should_be_nhibernate = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildNhibernateRepository())
                                                 .CheckProperty(r => r.Value, Pleasure.Generator.String())
                                                 .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
                                                 .CheckProperty(r => r.Reference)
                                                 .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
                                                 .VerifyMappingAndSchema();
 
-        It should_be_nhibernate_without_mapping = () => new PersistenceSpecification<DbEntityWithoutMapping>(PleasureForData.BuildNhibernateRepository(MSpecAssemblyContext.NhibernateFluent()))
+        It should_be_nhibernate_without_mapping = () => new PersistenceSpecification<DbEntityWithoutMapping>(PleasureForData.BuildNhibernateRepository())
                                                                 .VerifyMappingAndSchema();
 
         It should_be_mongo_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildMongoDbRepository(ConfigurationManager.ConnectionStrings["IncRealMongoDb"].ConnectionString))

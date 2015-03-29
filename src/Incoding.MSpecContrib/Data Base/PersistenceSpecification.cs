@@ -1,3 +1,5 @@
+using NHibernate.Util;
+
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -46,6 +48,8 @@ namespace Incoding.MSpecContrib
 
         public PersistenceSpecification()
                 : this(SpecWithRepository.Repository) { }
+
+        public IRepository Repository { get { return repository; } }
 
         #endregion
 
@@ -105,17 +109,32 @@ namespace Incoding.MSpecContrib
                         .Where(r => !r.Name.EqualsWithInvariant("Id"));
 
                 foreach (var missing in allMissing)
-                    missing.SetValue(this.original, Pleasure.Generator.Invent(missing.PropertyType), null);
+                {
+                    object invent;
+                    if (missing.PropertyType.IsImplement<IEntity>())
+                    {
+                        invent = ((IQueryable)this.Repository.GetType().GetMethod("Query").MakeGenericMethod(missing.PropertyType).Invoke(this.Repository, new object[] { null, null, null, null }))
+                        //.Cast<object>()
+                        .FirstOrNull();
+                        if(invent == null)
+                            throw new SpecificationException("No elements at database for type '{0}'".F(missing.PropertyType.Name));
+                    }
+                    else
+                        invent = Pleasure.Generator.Invent(missing.PropertyType);
+
+                    missing.SetValue(this.original, invent, null);
+                }
             }
             else
                 this.original = this.preEntity;
 
-            this.repository.Save(this.original);
-            this.repository.Flush();
+            this.Repository.Save(this.original);
+            this.Repository.Flush();
 
             var propertyId = this.original.GetType().GetProperties().First(r => r.Name.EqualsWithInvariant("Id"));
             var id = propertyId.GetValue(this.original, new object[] { });
-            var entityFromDb = this.repository.GetById<TEntity>(id);
+            var cleanRepository = PleasureForData.BuildNhibernateRepository();
+            var entityFromDb = cleanRepository.GetById<TEntity>(id);
             if (entityFromDb == null)
                 throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 
@@ -123,6 +142,8 @@ namespace Incoding.MSpecContrib
                                                         {
                                                             foreach (var ignoreProperty in this.ignoreProperties)
                                                                 dsl.Ignore(ignoreProperty, "Fixed");
+                                                            dsl.IgnoreRecursionError();
+                                                            dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
                                                         });
         }
 

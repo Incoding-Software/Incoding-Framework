@@ -60,8 +60,8 @@
                                   {
                                       var response = new Dictionary<string, List<DelayToScheduler>>();
 
-                                      errorInstance = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => factoryDsl.GenerateTo(r => r.Delay)));
-                                      successInstance = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => factoryDsl.GenerateTo(r => r.Delay)));
+                                      errorInstance = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
+                                      successInstance = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
                                       response.Add(Pleasure.Generator.String(), new List<DelayToScheduler>
                                                                                     {
                                                                                             Pleasure.MockAsObject<DelayToScheduler>(mock =>
@@ -81,10 +81,9 @@
                                                                                     });
 
                                       dispatcher = Pleasure.Mock<IDispatcher>();
-                                      dispatcher.StubQuery(new GetExpectedDelayToSchedulerQuery
-                                                               {
-                                                                       FetchSize = Pleasure.Generator.TheSameNumber(),
-                                                               }, response);
+                                      dispatcher.StubQuery(new GetExpectedDelayToSchedulerQuery { FetchSize = Pleasure.Generator.TheSameNumber() },
+                                                           dsl => dsl.ForwardToAction(s => s.Date, r => r.Date.ShouldBeDate(DateTime.UtcNow)),
+                                                           response);
                                       expectedEx = new ArgumentException(Pleasure.Generator.String());
                                       dispatcher.StubPushAsThrow(errorInstance, expectedEx);
                                       IoCFactory.Instance.StubTryResolve(dispatcher.Object);

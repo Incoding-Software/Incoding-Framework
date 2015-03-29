@@ -1,4 +1,6 @@
-﻿namespace Incoding.UnitTest.MSpecGroup
+﻿using Incoding.Block.IoC;
+
+namespace Incoding.UnitTest.MSpecGroup
 {
     #region << Using >>
 
@@ -76,7 +78,8 @@
         Establish establish = () =>
                                   {
                                       mockMessage = MockCommand<FakeCommand>
-                                              .When(Pleasure.Generator.Invent<FakeCommand>());
+                                              .When(Pleasure.Generator.Invent<FakeCommand>())
+                                              ;
                                   };
 
         Because of = () => mockMessage.Original.Execute();

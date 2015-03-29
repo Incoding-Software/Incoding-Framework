@@ -122,14 +122,12 @@
                                  {
                                      var dispatcher = Pleasure.Mock<IDispatcher>();
                                      var command = Pleasure.Generator.Invent<FakeCommand>();
-                                     var setting = Pleasure.Generator.Invent<MessageDelaySetting>(dsl => dsl.Tuning(r => r.Policy, ActionPolicy.Repeat(2)
-                                                                                                                                               .Interval(1.Seconds())));
+                                     var setting = Pleasure.Generator.Invent<MessageDelaySetting>();
 
                                      dispatcher.Object.Delay(command, delaySetting =>
                                                                           {
                                                                               delaySetting.Connection = setting.Connection;
-                                                                              delaySetting.DataBaseInstance = setting.DataBaseInstance;
-                                                                              delaySetting.Policy = setting.Policy;
+                                                                              delaySetting.DataBaseInstance = setting.DataBaseInstance;                                                                              
                                                                               delaySetting.UID = setting.UID;
                                                                           });
 

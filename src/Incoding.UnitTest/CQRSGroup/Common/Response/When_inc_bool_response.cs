@@ -24,5 +24,7 @@
         It should_not_be_equal_left_bool = () => (true != new IncBoolResponse(true)).ShouldBeFalse();
 
         It should_not_be_equal_right_bool = () => (new IncBoolResponse(true) != false).ShouldBeTrue();
+
+        It should_be_to_string = () => new IncBoolResponse(true).ToString().ShouldEqual(true.ToString());
     }
 }

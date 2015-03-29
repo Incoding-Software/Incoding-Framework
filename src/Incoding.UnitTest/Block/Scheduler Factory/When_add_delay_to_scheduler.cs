@@ -41,18 +41,24 @@
 
         static List<IMessage<object>> fakeCommands;
 
+        static DateTime nextDt;
+
         #endregion
 
         Establish establish = () =>
                                   {
-                                      var sameSetting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.GenerateTo(r => r.Delay));
+                                      var reccurence = Pleasure.MockStrictAsObject<DelayToScheduler.Reccurence>(mock => mock.Setup(r => r.NextDt()).Returns(nextDt));
 
-                                      fakeCommands = Pleasure.ToList(Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.GenerateTo(r => r.Setting, dsl => dsl.GenerateTo(r => r.Delay))), 
-                                                                     Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.Tuning(r => r.Setting, sameSetting)), 
+                                      var sameSetting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => {});
+
+                                      fakeCommands = Pleasure.ToList(Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.GenerateTo(r => r.Setting, dsl => {})),
+                                                                     Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.Tuning(r => r.Setting, sameSetting)),
                                                                      Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.Tuning(r => r.Setting, sameSetting)))
                                                              .Cast<IMessage<object>>()
                                                              .ToList();
-                                      var command = Pleasure.Generator.Invent<AddDelayToSchedulerCommand>(dsl => dsl.Tuning(r => r.Commands, fakeCommands));
+                                      nextDt = Pleasure.Generator.Invent<DateTime>();
+                                      var command = Pleasure.Generator.Invent<AddDelayToSchedulerCommand>(dsl => dsl.Tuning(r => r.Commands, fakeCommands)
+                                                                                                                    .Tuning(r => r.RecurrenceData, reccurence));
 
                                       mockCommand = MockCommand<AddDelayToSchedulerCommand>
                                               .When(command);
@@ -60,24 +66,16 @@
 
         Because of = () => mockCommand.Original.Execute();
 
-        It should_be_save = () =>
-                                {
-                                    Action<int, int> itSave = (index, priority) => mockCommand.ShouldBeSave<DelayToScheduler>(scheduler => scheduler.ShouldEqualWeak(new
-                                                                                                                                                                         {
-                                                                                                                                                                                 Command = fakeCommands[index].ToJsonString(), 
-                                                                                                                                                                                 Type = typeof(FakeCommand).AssemblyQualifiedName, 
-                                                                                                                                                                                 Status = DelayOfStatus.New, 
-                                                                                                                                                                                 Priority = priority
-                                                                                                                                                                         }, 
-                                                                                                                                                                     dsl => dsl.IgnoreBecauseCalculate(r => r.Id)
-                                                                                                                                                                               .ForwardToValue(r => r.UID, fakeCommands[index].Setting.Delay.UID)
-                                                                                                                                                                               .IgnoreBecauseNotUse(r => r.Description)
-                                                                                                                                                                               .IgnoreBecauseCalculate(r => r.Instance)
-                                                                                                                                                                               .ForwardToAction(r => r.GroupKey, toScheduler => toScheduler.GroupKey.ShouldNotBeEmpty())));
-
-                                    itSave(0, 0);
-                                    itSave(1, 1);
-                                    itSave(2, 2);
-                                };
+        It should_be_saves = () => mockCommand.ShouldBeSaves<DelayToScheduler>(scheduler => scheduler.ShouldEqualWeakEach(fakeCommands,
+                                                                                                                          (dsl, i) => dsl.IgnoreBecauseCalculate(r => r.Id)
+                                                                                                                                         .ForwardToValue(r => r.UID, "")
+                                                                                                                                         .ForwardToValue(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
+                                                                                                                                         .ForwardToValue(r => r.Priority, i)
+                                                                                                                                         .ForwardToValue(r => r.StartsOn, nextDt)
+                                                                                                                                         .ForwardToValue(r => r.Status, DelayOfStatus.New)
+                                                                                                                                         .ForwardToValue(r => r.Command, fakeCommands[i].ToJsonString())
+                                                                                                                                         .IgnoreBecauseNotUse(r => r.Description)
+                                                                                                                                         .IgnoreBecauseCalculate(r => r.Instance)
+                                                                                                                                         .ForwardToAction(r => r.GroupKey, toScheduler => toScheduler.GroupKey.ShouldNotBeEmpty())));
     }
 }

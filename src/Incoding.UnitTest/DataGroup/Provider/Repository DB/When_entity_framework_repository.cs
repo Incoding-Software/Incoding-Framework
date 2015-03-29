@@ -1,4 +1,7 @@
-﻿namespace Incoding.UnitTest
+﻿using System;
+using System.Data.Entity;
+
+namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -19,7 +22,9 @@
             var dbContext = new IncDbContext("IncRealEFDb", typeof(DbEntity).Assembly);
             dbContext.Configuration.ValidateOnSaveEnabled = false;
             dbContext.Configuration.LazyLoadingEnabled = true;
-            return new EntityFrameworkRepository(Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(dbContext)));
+            var entityFrameworkRepository = new EntityFrameworkRepository(/*Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(dbContext))*/);
+            entityFrameworkRepository.SetProvider(new Lazy<DbContext>(() => dbContext));
+            return entityFrameworkRepository;
         }
 
         #endregion

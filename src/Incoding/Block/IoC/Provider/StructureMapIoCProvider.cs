@@ -72,7 +72,7 @@ namespace Incoding.Block.IoC
             this.container.EjectAllInstancesOf<TInstance>();
         }
 
-        public void Forward<TInstance>(TInstance newInstance)
+        public void Forward<TInstance>(TInstance newInstance) where TInstance : class
         {
             Eject<TInstance>();
             this.container.Configure(configurationExpression => configurationExpression.For<TInstance>().Use(newInstance));

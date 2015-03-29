@@ -23,16 +23,15 @@
 
         Establish establish = () =>
                                   {
-                                      expected = @"{""Delay"":{""Policy"":{},""DataBaseInstance"":""rn0djxsfm2a@mail.comdvvd1edseas@mail.comx4u32nvmpn"",""Connection"":""q1bvmrbf5hr@mail.comruvlcgg5ldn@mail.com3he51i0baa"",""UID"":""x0fjpjr1qrp@mail.comfehv2irukph@mail.comshqheypvzv""},""Mute"":4,""DataBaseInstance"":""kc21tcm4dhp@mail.comma4sztrrdmd@mail.combf1vp40jfz"",""Connection"":""xnhu0xqqv4a@mail.comclfqqyxxhrs@mail.com4guoiavzrn""}";
+                                      expected = @"{""Mute"":4,""DataBaseInstance"":""kc21tcm4dhp@mail.comma4sztrrdmd@mail.combf1vp40jfz"",""Connection"":""xnhu0xqqv4a@mail.comclfqqyxxhrs@mail.com4guoiavzrn""}";
                                       original = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.MuteCtor()
                                                                                                             .Tuning(r => r.DataBaseInstance, "kc21tcm4dhp@mail.comma4sztrrdmd@mail.combf1vp40jfz")
                                                                                                             .Tuning(r => r.Connection, "xnhu0xqqv4a@mail.comclfqqyxxhrs@mail.com4guoiavzrn")
                                                                                                             .Tuning(r => r.Mute, MuteEvent.OnAfter)
-                                                                                                            .GenerateTo(r => r.Delay, factoryDsl => factoryDsl.MuteCtor()
+                                                                                                            /*.GenerateTo(r => r.Delay, factoryDsl => factoryDsl.MuteCtor()
                                                                                                                                                               .Tuning(r => r.DataBaseInstance, "rn0djxsfm2a@mail.comdvvd1edseas@mail.comx4u32nvmpn")
                                                                                                                                                               .Tuning(r => r.Connection, "q1bvmrbf5hr@mail.comruvlcgg5ldn@mail.com3he51i0baa")
-                                                                                                                                                              .Tuning(r => r.UID, "x0fjpjr1qrp@mail.comfehv2irukph@mail.comshqheypvzv")
-                                                                                                                                                              .Tuning(r => r.Policy, ActionPolicy.Repeat(5).Interval(1.Seconds()))));
+                                                                                                                                                              .Tuning(r => r.UID, "x0fjpjr1qrp@mail.comfehv2irukph@mail.comshqheypvzv"))*/);
                                   };
 
         It should_be_serialize = () => original.ToJsonString().ShouldEqual(expected);

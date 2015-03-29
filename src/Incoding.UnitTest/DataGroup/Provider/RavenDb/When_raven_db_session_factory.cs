@@ -22,21 +22,21 @@
 
         #endregion
 
-        It should_be_current_with_exist = () =>
-                                              {
-                                                  SetCurrentSession(Pleasure.MockStrictAsObject<IDocumentSession>());
-                                                  new RavenDbSessionFactory(Pleasure.MockStrictAsObject<IDocumentStore>())
-                                                          .GetCurrent()
-                                                          .ShouldNotBeNull();
-                                              };
+        //It should_be_current_with_exist = () =>
+        //                                      {
+        //                                          SetCurrentSession(Pleasure.MockStrictAsObject<IDocumentSession>());
+        //                                          new RavenDbSessionFactory(Pleasure.MockStrictAsObject<IDocumentStore>())
+        //                                                  .GetCurrent()
+        //                                                  .ShouldNotBeNull();
+        //                                      };
 
-        It should_be_current_without_open = () =>
-                                                {
-                                                    SetCurrentSession(null);
-                                                    Catch.Exception(() => new RavenDbSessionFactory(Pleasure.MockStrictAsObject<IDocumentStore>())
-                                                                                  .GetCurrent())
-                                                         .ShouldNotBeNull();
-                                                };
+        //It should_be_current_without_open = () =>
+        //                                        {
+        //                                            SetCurrentSession(null);
+        //                                            Catch.Exception(() => new RavenDbSessionFactory(Pleasure.MockStrictAsObject<IDocumentStore>())
+        //                                                                          .GetCurrent())
+        //                                                 .ShouldNotBeNull();
+        //                                        };
 
         It should_be_open = () =>
                                 {

@@ -59,8 +59,8 @@
                                   {
                                       schedulerSetting = Pleasure.Generator.Invent<MessageExecuteSetting>();
                                       var response = new Dictionary<string, List<DelayToScheduler>>();
-                                      instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => factoryDsl.GenerateTo(r => r.Delay)));
-                                      instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => factoryDsl.GenerateTo(r => r.Delay)));
+                                      instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
+                                      instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
                                       response.Add(Pleasure.Generator.String(), new List<DelayToScheduler>
                                                                                     {
                                                                                             Pleasure.MockAsObject<DelayToScheduler>(mock =>

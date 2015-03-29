@@ -40,7 +40,7 @@
 
         Because of = () => dispatcher.Push(message, new MessageExecuteSetting
                                                         {
-                                                                UnitOfWork = existUnitOfWork.Object
+                                                                //UnitOfWork = existUnitOfWork.Object
                                                         });
 
         It should_be_factory_create = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>()), Times.Once());

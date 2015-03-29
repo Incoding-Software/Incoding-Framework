@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Incoding.Block;
+
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -28,10 +31,17 @@ namespace Incoding.MSpecContrib
 
         public static void ShouldBeDelay<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageDelaySetting delaySetting = null, int callCount = 1) where TCommand : CommandBase
         {
-            ShouldBePush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, new MessageExecuteSetting
-                                                                                                                                 {
-                                                                                                                                         Delay = delaySetting ?? new MessageDelaySetting()
-                                                                                                                                 })), callCount);
+            ShouldBePush<AddDelayToSchedulerCommand>(dispatcher, 
+                new AddDelayToSchedulerCommand
+            {
+                Commands = new List<IMessage<object>> {command},
+                UID = delaySetting.UID,
+                RecurrenceData = delaySetting.Reccurence,
+            }, new MessageExecuteSetting
+            {
+                Connection = delaySetting.Connection,
+                DataBaseInstance = delaySetting.DataBaseInstance
+            }, callCount);
         }
 
         public static void ShouldBePush<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount = 1) where TCommand : CommandBase
@@ -93,6 +103,15 @@ namespace Incoding.MSpecContrib
                     .Setup(r => r.Query(Pleasure.MockIt.IsStrong(query), Pleasure.MockIt.IsStrong(executeSetting)))
                     .Returns(result);
         }
+
+        public static void StubQuery<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TResult result, MessageExecuteSetting executeSetting = null)
+                where TQuery : QueryBase<TResult>
+                where TResult : class
+        {
+            dispatcher.Setup(r => r.Query(Pleasure.MockIt.IsStrong(query, dsl), Pleasure.MockIt.IsStrong(executeSetting)))
+                      .Returns(result);
+        }
+
 
         public static void StubQueryAsThrow<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Exception exception, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
         {

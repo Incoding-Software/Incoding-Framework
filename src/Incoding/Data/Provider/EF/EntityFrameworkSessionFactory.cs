@@ -32,15 +32,7 @@
         #endregion
 
         #region IEntityFrameworkSessionFactory Members
-
-        public DbContext GetCurrent()
-        {
-            if (currentSession != null)
-                return currentSession;
-
-            throw new InvalidOperationException(SpecificationMessageRes.Session_Factory_Not_Open);
-        }
-
+        
         public DbContext Open(string connectionString)
         {
             currentSession = this.createDb();

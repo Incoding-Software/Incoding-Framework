@@ -37,8 +37,6 @@
             var nhibernateUnit = new NhibernateUnitOfWork(Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock =>
                                                                                                                      {
                                                                                                                          mock.Setup(r => r.Open(dbConnection)).Returns(session.Object);
-                                                                                                                         if (isDispose)
-                                                                                                                             mock.Setup(r => r.Dispose());
                                                                                                                      }), dbConnection, IsolationLevel.RepeatableRead);
             if (isOpen)
                 nhibernateUnit.Open();
