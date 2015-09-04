@@ -1,3 +1,5 @@
+<a href="http://incframework.com"><img class="aligncenter size-full wp-image-1738" src="http://blog.incframework.com/upload/IncFramework-logo.png" alt="IncFramework-logo" width="920" height="398" /></a>
+
 <p style="text-align: justify;"><em><strong>disclamer:</strong>this article is a step-by-step guide to help you to familiarize with the core functionality of Incoding Framework. Following the guide will result in an application that implements the work with the DB (CRUD + data filters) and fully covered with unit tests.</em></p>
 
 <h1 style="text-align: justify;">Part 0. Introduction</h1>
