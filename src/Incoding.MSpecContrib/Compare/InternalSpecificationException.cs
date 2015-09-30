@@ -1,20 +1,18 @@
-﻿using System;
-using Machine.Specifications;
-
-namespace Incoding.MSpecContrib
+﻿namespace Incoding.MSpecContrib
 {
+    #region << Using >>
+
+    using Machine.Specifications;
+
+    #endregion
+
     public class InternalSpecificationException : SpecificationException
     {
-        public InternalSpecificationException()
-        {
-        }
+        #region Constructors
 
-        public InternalSpecificationException(string message) : base(message)
-        {
-        }
+        public InternalSpecificationException(string message)
+                : base(message) { }
 
-        public InternalSpecificationException(string message, Exception inner) : base(message, inner)
-        {
-        }
+        #endregion
     }
 }

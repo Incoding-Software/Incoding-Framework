@@ -6,16 +6,12 @@
 
     #endregion
 
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable            
     {
-        bool IsOpen();
-
         void Flush();
 
         void Commit();
 
-        void Open();
-
-        object GetSession();
+        IRepository GetRepository();
     }
 }

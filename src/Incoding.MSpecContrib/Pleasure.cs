@@ -495,9 +495,5 @@ namespace Incoding.MSpecContrib
             return stopwatch.ElapsedMilliseconds;
         }
 
-        public static long StopwatchAsSecond(Action action)
-        {
-            return Stopwatch(action) / 1000;
-        }
     }
 }

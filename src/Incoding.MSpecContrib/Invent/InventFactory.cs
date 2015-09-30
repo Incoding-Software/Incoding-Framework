@@ -21,6 +21,8 @@ namespace Incoding.MSpecContrib
 
     public partial class InventFactory<T>
     {
+        const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
         #region Fields
 
         readonly Dictionary<string, Func<object>> tunings = new Dictionary<string, Func<object>>();
@@ -39,7 +41,7 @@ namespace Incoding.MSpecContrib
 
         public T CreateEmpty()
         {
-            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+            
             var allSetProperties = typeof(T).GetProperties(bindingFlags).Where(r => r.CanWrite);
             var instance = Activator.CreateInstance<T>();
 
@@ -83,14 +85,22 @@ namespace Incoding.MSpecContrib
 
         public T CreateInstance()
         {
-            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase | BindingFlags.NonPublic;
+
+            var allPrivateMembers = typeof(T).GetMembers(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
             var members = typeof(T)
                     .GetMembers(bindingFlags)
-                    .Where(r => !r.HasAttribute<IgnoreInventAttribute>() || tunings.Keys.Contains(r.Name))
                     .Where(r =>
                            {
+                               var isNotInTuning = !this.tunings.ContainsKey(r.Name);
+                               if (r.HasAttribute<IgnoreInventAttribute>() && isNotInTuning)
+                                   return false;
+
+                               if (allPrivateMembers.Any(info => info.Name == r.Name) && isNotInTuning)
+                                   return false;
+
                                var prop = r as PropertyInfo;
-                               if (prop != null && ((PropertyInfo)r).CanWrite)
+                               if (prop != null && prop.CanWrite)
                                    return true;
 
                                var field = r as FieldInfo;

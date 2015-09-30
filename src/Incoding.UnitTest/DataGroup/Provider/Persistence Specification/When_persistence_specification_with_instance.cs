@@ -53,7 +53,7 @@
 
         It should_be_raven_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildRavenDbRepository(new DocumentStore
                                                                                                                         {
-                                                                                                                                Url = "http://localhost:8080/",
+                                                                                                                            Url = ConfigurationManager.ConnectionStrings["IncRealRavenDb"].ConnectionString,
                                                                                                                                 DefaultDatabase = "IncTest",
                                                                                                                         }))
                                               .CheckProperty(r => r.Value, Pleasure.Generator.String())

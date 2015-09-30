@@ -55,7 +55,7 @@ namespace Incoding.UnitTest
 
         Establish establish = () =>
                                   {
-                                      executeSetting = Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.IgnoreBecauseAuto(r => r.Mute));
+                                      executeSetting = Pleasure.Generator.Invent<MessageExecuteSetting>();
                                       message = new FakeQuery();
 
                                       unitOfWorkFactory.Setup(r => r.Create(IsolationLevel.ReadUncommitted, executeSetting.Connection)).Returns(unitOfWork.Object);
@@ -75,7 +75,7 @@ namespace Incoding.UnitTest
 
         It should_be_not_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Never());
 
-        It should_be_not_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Never());
+        It should_be_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Once());
 
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose());
 

@@ -1,0 +1,15 @@
+﻿@{
+    var data = new KeyValueVm("text");
+}
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(data)
+      .OnSuccess(dsl => { dsl.Self().Core().Eval("$(this.target).val(this.result.Text)"); })
+      .AsHtmlAttributes()
+      .ToTextBox())
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(data)
+      .OnSuccess(dsl => { dsl.Self().Core().JQuery.Attributes.Val(Selector.Result.For<KeyValueVm>(r=>r.Text)); })
+      .AsHtmlAttributes()
+      .ToTextBox())

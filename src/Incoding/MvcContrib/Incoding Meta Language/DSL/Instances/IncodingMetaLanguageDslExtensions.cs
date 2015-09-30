@@ -18,6 +18,7 @@
             behaviorDsl.UnLock();
         }
 
+        [Obsolete("Please skip because it is redundant")]
         public static IncodingMetaLanguageCoreDsl Core(this IIncodingMetaLanguagePlugInDsl plugInDsl)
         {
             return new IncodingMetaLanguageCoreDsl(plugInDsl);

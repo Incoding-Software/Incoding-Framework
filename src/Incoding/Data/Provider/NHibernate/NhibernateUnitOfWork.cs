@@ -24,25 +24,24 @@ namespace Incoding.Data
 
         protected override void InternalFlush()
         {
-            this.session.Value.Flush();
+            session.Value.Flush();
         }
 
         protected override void InternalCommit()
         {
-            this.transaction.Commit();
-        }
-
-        protected override void InternalOpen()
-        {
-            this.transaction = this.session.Value.BeginTransaction(this.isolationLevel);
+            transaction.Commit();
         }
 
         protected override void InternalSubmit()
         {
-            if (!this.transaction.WasCommitted && !this.transaction.WasRolledBack)
-                this.transaction.Rollback();
+            transaction.Dispose();
+        }
 
-            this.transaction.Dispose();
+        public override IRepository GetRepository()
+        {
+            if (transaction == null)
+                transaction = session.Value.BeginTransaction(isolationLevel);
+            return new NhibernateRepository(session.Value);
         }
     }
 }

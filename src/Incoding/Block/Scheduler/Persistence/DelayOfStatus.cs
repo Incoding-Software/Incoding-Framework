@@ -2,12 +2,12 @@
 {
     public enum DelayOfStatus
     {
-        New, 
+        New = 0, 
 
-        InProgress, 
+        InProgress = 1, 
 
-        Success, 
+        Success = 2, 
 
-        Error
+        Error = 3
     }
 }

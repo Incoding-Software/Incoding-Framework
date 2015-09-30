@@ -1,7 +1,11 @@
 namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
     using System;
     using System.Linq.Expressions;
+
+    #endregion
 
     public interface IIncodingMetaLanguageWithDsl
     {
@@ -19,7 +23,7 @@ namespace Incoding.MvcContrib
 
         IIncodingMetaLanguageCallbackInstancesDsl WithClass(string @class);
 
-        IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Action<JquerySelectorExtend> self);
+        IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Func<JquerySelectorExtend, JquerySelectorExtend> self);
 
         IIncodingMetaLanguageCallbackInstancesDsl Self();
     }

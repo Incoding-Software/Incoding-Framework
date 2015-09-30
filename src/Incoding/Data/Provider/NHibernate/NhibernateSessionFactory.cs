@@ -21,10 +21,11 @@ namespace Incoding.Data
 
         public NhibernateSessionFactory(FluentConfiguration fluentConfiguration)
         {
-            this.sessionFactory = new Lazy<ISessionFactory>(fluentConfiguration.BuildSessionFactory);
+            sessionFactory = new Lazy<ISessionFactory>(fluentConfiguration.BuildSessionFactory);
         }
 
         ////ncrunch: no coverage end
+        [Obsolete("Please use ctor with Fluent Configuration ")]
         public NhibernateSessionFactory(ISessionFactory sessionFactory)
         {
             this.sessionFactory = new Lazy<ISessionFactory>(() => sessionFactory);
@@ -36,7 +37,7 @@ namespace Incoding.Data
 
         public ISession Open(string connectionString)
         {
-            var session = this.sessionFactory.Value.OpenSession();
+            var session = sessionFactory.Value.OpenSession();
             if (!string.IsNullOrWhiteSpace(connectionString))
                 session.Connection.ConnectionString = connectionString;
 

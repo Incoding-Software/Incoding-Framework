@@ -52,44 +52,44 @@
         public IIncodingMetaLanguageEventBuilderDsl AjaxHashGet(string url = "", string prefix = "root")
         {
             return AjaxHash(options =>
-                                {
-                                    if (!string.IsNullOrWhiteSpace(url))
-                                        options.Url = url;
-                                    options.Type = HttpVerbs.Get;
-                                }, prefix);
+                            {
+                                if (!string.IsNullOrWhiteSpace(url))
+                                    options.Url = url;
+                                options.Type = HttpVerbs.Get;
+                            }, prefix);
         }
 
         public IIncodingMetaLanguageEventBuilderDsl AjaxHashPost(string url = "", string prefix = "root")
         {
             return AjaxHash(options =>
-                                {
-                                    if (!string.IsNullOrWhiteSpace(url))
-                                        options.Url = url;
-                                    options.Type = HttpVerbs.Post;
-                                }, prefix);
+                            {
+                                if (!string.IsNullOrWhiteSpace(url))
+                                    options.Url = url;
+                                options.Type = HttpVerbs.Post;
+                            }, prefix);
         }
 
         public IIncodingMetaLanguageEventBuilderDsl AjaxGet(string url)
         {
             return Ajax(options =>
-                            {
-                                options.Url = url;
-                                options.Type = HttpVerbs.Get;
-                            });
+                        {
+                            options.Url = url;
+                            options.Type = HttpVerbs.Get;
+                        });
         }
 
         public IIncodingMetaLanguageEventBuilderDsl AjaxPost(string url)
         {
             return Ajax(options =>
-                            {
-                                options.Url = url;
-                                options.Type = HttpVerbs.Post;
-                            });
+                        {
+                            options.Url = url;
+                            options.Type = HttpVerbs.Post;
+                        });
         }
 
         public IIncodingMetaLanguageEventBuilderDsl Ajax(Action<JqueryAjaxOptions> configuration)
         {
-            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);            
+            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
             configuration(options);
             this.meta.Add(new ExecutableAjaxAction(false, string.Empty, options));
             return this;

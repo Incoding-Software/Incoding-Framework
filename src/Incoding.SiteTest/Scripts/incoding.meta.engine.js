@@ -102,7 +102,7 @@ IncodingRunner.prototype = {
 
         var current = this;
 
-        var filterFunc = function (executable) {            
+        var filterExecutableByEvent = function (executable) {            
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
                 executable.event = event;
@@ -111,13 +111,13 @@ IncodingRunner.prototype = {
         };
 
         try {
-            $($.grep(this.before, filterFunc)).each(function() {
+            $($.grep(this.before, filterExecutableByEvent)).each(function() {
                 this.execute();
             });
         }
         catch(ex) {
             if (ex instanceof IncClientException) {
-                $($.grep(this.breakes, filterFunc)).each(function() {
+                $($.grep(this.breakes, filterExecutableByEvent)).each(function() {
                     this.execute(ex);
                 });
                 return;
@@ -125,12 +125,20 @@ IncodingRunner.prototype = {
             throw ex;
         }
 
-        $($.grep(this.actions, filterFunc)).each(function() {
-            this.execute({
-                success : $.grep(current.success, filterFunc),
-                error : $.grep(current.error, filterFunc),
-                complete : $.grep(current.complete, filterFunc),
-                breakes : $.grep(current.breakes, filterFunc),
+        $($.grep(this.actions, filterExecutableByEvent)).each(function() {
+            var currentAction = this;
+            var filterExecutableByAction = function(executable) {
+                if (executable.onBind !== currentAction.onBind) {
+                    return false;
+                }
+                return filterExecutableByEvent(executable);
+            };
+
+            currentAction.execute({
+                success : $.grep(current.success, filterExecutableByAction),
+                error : $.grep(current.error, filterExecutableByAction),
+                complete : $.grep(current.complete, filterExecutableByAction),
+                breakes : $.grep(current.breakes, filterExecutableByAction),
                 eventResult : result,
                 event : event
             });

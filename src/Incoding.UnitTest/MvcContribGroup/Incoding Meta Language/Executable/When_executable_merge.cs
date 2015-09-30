@@ -78,7 +78,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
                                                           leftD.Value<string>("type").ShouldEqual("Is");
                                                           leftD.Value<bool>("inverse").ShouldEqual(false);
-                                                          leftD.Value<string>("left").ShouldBeTheSameString();
+                                                          leftD.Value<string>("left").ShouldEqual("||value*TheSameString||");
                                                           leftD.Value<string>("right").ShouldEqual(Selector.Jquery.Self().ToString());
                                                           leftD.Value<string>("method").ShouldEqual("equal");
                                                           leftD.Value<bool>("and").ShouldBeTrue();

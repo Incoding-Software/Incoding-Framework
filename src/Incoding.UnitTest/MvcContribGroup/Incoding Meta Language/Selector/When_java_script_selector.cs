@@ -16,6 +16,10 @@
                                           .ToString()
                                           .ShouldEqual("||javascript*123||");
 
+        It should_be_call_encode = () => Selector.JS.Call("StringAsFormatByInc", HttpUtility.UrlDecode("Controller/Action"), Selector.JS.Eval("resultData.Name"))
+                                                 .ToString()
+                                                 .ShouldEqual("");
+
 
         It should_be_call = () => Selector.JS.Call("Method", 5, "aws")
                                           .ToString()
@@ -27,7 +31,7 @@
 
         It should_be_inc_432 = () => Selector.JS.Call("StringAsFormatByInc", Selector.JS.Eval("resultData.Name"))
                                              .ToString()
-                                             .ShouldEqual("");
+                                             .ShouldEqual("||javascript*StringAsFormatByInc(||javascript*resultData.Name||)||");
 
         //.ShouldEqual("||javascript*StringAsFormatByInc(||javascript*resultData.Name||)||");
     }

@@ -44,6 +44,8 @@
 
         protected static ActionResult result;
 
+        protected static Mock<HttpRequestBase> requestBase;
+
         #endregion
 
         protected static void Establish(Type[] types = null, bool isAjax = true)
@@ -54,23 +56,19 @@
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
             controller = new FakeDispatcher();
 
-            var requestBase = Pleasure.MockAsObject<HttpRequestBase>(mock =>
-                                                                         {
-                                                                             if (isAjax)
-                                                                                 mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
-
-                                                                             mock.SetupGet(r => r.Form).Returns(new NameValueCollection()
-                                                                                                                    {
-                                                                                                                            { "[0].Name", "Value" },
-                                                                                                                            { "[1].Name", "Value" },
-                                                                                                                    });
-                                                                         });
-            controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock => mock.SetupGet(r => r.Request).Returns(requestBase)), new RouteData(), controller);
+            requestBase = Pleasure.Mock<HttpRequestBase>(mock =>
+                                                         {
+                                                             mock.SetupGet(r => r.Form).Returns(new NameValueCollection());
+                                                             mock.SetupGet(r => r.QueryString).Returns(new NameValueCollection());
+                                                             if (isAjax)
+                                                                 mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
+                                                         });
+            controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock => mock.SetupGet(r => r.Request).Returns(requestBase.Object)), new RouteData(), controller);
             controller.ValueProvider = Pleasure.MockStrictAsObject<IValueProvider>(mock => mock.Setup(r => r.GetValue(Pleasure.MockIt.IsAny<string>())).Returns(new ValueProviderResult(string.Empty, string.Empty, Thread.CurrentThread.CurrentCulture)));
 
             var modelBinderDictionary = new ModelBinderDictionary();
-            var modelBinder = Pleasure.MockAsObject<IModelBinder>(mock => mock.Setup(r => r.BindModel(Pleasure.MockIt.IsAny<ControllerContext>(),
-                                                                                                      Pleasure.MockIt.IsAny<ModelBindingContext>())));
+            var modelBinder = Pleasure.MockStrictAsObject<IModelBinder>(mock => mock.Setup(r => r.BindModel(Pleasure.MockIt.IsAny<ControllerContext>(), 
+                                                                                                      Pleasure.MockIt.IsAny<ModelBindingContext>())).Returns(null));
             foreach (var type in types.Recovery(new Type[] { }))
                 modelBinderDictionary.Add(type, modelBinder);
             controller.SetValue("Binders", modelBinderDictionary);

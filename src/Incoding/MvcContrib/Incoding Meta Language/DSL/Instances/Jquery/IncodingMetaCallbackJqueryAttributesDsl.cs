@@ -36,12 +36,13 @@
             return Toggle(attribute.ToJqueryString());
         }
 
+
         /// <summary>
         ///     Add or remove attribute
         /// </summary>
         public IExecutableSetting Toggle(string attribute)
         {
-            return this.plugInDsl.Core().JQuery.Call("toggleProp", attribute);
+            return plugInDsl.Core().JQuery.Call("toggleProp", attribute);
         }
 
         /// <summary>
@@ -69,32 +70,81 @@
         }
 
         /// <summary>
-        ///     Add or remove one or more classes from each element in the set of matched elements, depending on either the class's presence or the value of the switch argument.
+        ///     Add or remove one or more classes from each element in the set of matched elements, depending on either the class's
+        ///     presence or the value of the switch argument.
         /// </summary>
         /// <param name="class">
         ///     One or more <c>class</c> names (separated by spaces) to be toggled for each element in the matched set.
         /// </param>
         public IExecutableSetting ToggleClass(string @class)
         {
-            return this.plugInDsl.Core().JQuery.Call("toggleClass", @class);
+            return plugInDsl.Core().JQuery.Call("toggleClass", @class);
         }
 
         /// <summary>
-        ///     <c>Remove</c> a single <c>class</c>, multiple classes, or all classes from each element in the set of matched elements.
+        ///     Add or remove one or more classes from each element in the set of matched elements, depending on either the class's
+        ///     presence or the value of the switch argument.
         /// </summary>
-        /// <param name="class"> One or more space-separated classes to be removed from the class attribute of each matched element. </param>
+        /// <param name="class">
+        ///     Bootstrap classes
+        /// </param>
+        public IExecutableSetting ToggleClass(B @class)
+        {
+            return ToggleClass(@class.ToJqueryString());
+        }
+
+        /// <summary>
+        ///     <c>Remove</c> a single <c>class</c>, multiple classes, or all classes from each element in the set of matched
+        ///     elements.
+        /// </summary>
+        /// <param name="class">
+        ///     One or more space-separated classes to be removed from the class attribute of each matched
+        ///     element.
+        /// </param>
         public IExecutableSetting RemoveClass(string @class)
         {
-            return this.plugInDsl.Core().JQuery.Call("removeClass", @class);
+            return plugInDsl.Core().JQuery.Call("removeClass", @class);
+        }
+
+        /// <summary>
+        ///     <c>Remove</c> a single <c>class</c>, multiple classes, or all classes from each element in the set of matched
+        ///     elements.
+        /// </summary>
+        /// <param name="class">
+        ///     Bootstrap classes
+        /// </param>
+        public IExecutableSetting RemoveClass(B @class)
+        {
+            return RemoveClass(@class.ToJqueryString());
         }
 
         /// <summary>
         ///     Remove an attribute from each element in the set of matched elements.
         /// </summary>
         /// <param name="key">Html attributes</param>
+        [Obsolete("Please use Remove")]
         public IExecutableSetting RemoveAttr(string key)
         {
-            return this.plugInDsl.Core().JQuery.Call("removeAttr", key.ToLower());
+            return plugInDsl.Core().JQuery.Call("removeAttr", key.ToLower());
+        }
+
+        /// <summary>
+        ///     Remove an attribute from each element in the set of matched elements.
+        /// </summary>
+        /// <param name="key">Html attributes</param>
+        public IExecutableSetting Remove(string key)
+        {
+            return plugInDsl.Core().JQuery.Call("removeAttr", key.ToLower());
+        }
+
+        /// <summary>
+        ///     Remove an attribute from each element in the set of matched elements.
+        /// </summary>
+        /// <param name="key">Html attributes</param>
+        [Obsolete("Please use Remove")]
+        public IExecutableSetting Remove(HtmlAttribute key)
+        {
+            return RemoveAttr(key.ToJqueryString());
         }
 
         /// <summary>
@@ -113,9 +163,10 @@
         /// <param name="value">
         ///     <see cref="Selector" />
         /// </param>
+        [Obsolete("Please use Set")]
         public IExecutableSetting SetAttr(string key, Selector value = null)
         {
-            return this.plugInDsl.Core().JQuery.Call("attr", key, value ?? key);
+            return plugInDsl.Core().JQuery.Call("attr", key, value ?? key);
         }
 
         /// <summary>
@@ -125,9 +176,34 @@
         /// <param name="value">
         ///     <see cref="Selector" />
         /// </param>
+        public IExecutableSetting Set(string key, Selector value = null)
+        {
+            return plugInDsl.Core().JQuery.Call("attr", key, value ?? key);
+        }
+
+        /// <summary>
+        ///     Set one attributes for every matched element in context.
+        /// </summary>
+        /// <param name="key">Html attributes</param>
+        /// <param name="value">
+        ///     <see cref="Selector" />
+        /// </param>
+        [Obsolete("Please use Set")]
         public IExecutableSetting SetAttr(HtmlAttribute key, Selector value = null)
         {
-            return SetAttr(key.ToJqueryString(), value);
+            return Set(key.ToJqueryString(), value);
+        }
+
+        /// <summary>
+        ///     Set one attributes for every matched element in context.
+        /// </summary>
+        /// <param name="key">Html attributes</param>
+        /// <param name="value">
+        ///     <see cref="Selector" />
+        /// </param>
+        public IExecutableSetting Set(HtmlAttribute key, Selector value = null)
+        {
+            return Set(key.ToJqueryString(), value);
         }
 
         /// <summary>
@@ -136,7 +212,7 @@
         /// <param name="key">Html attributes</param>
         public IExecutableSetting RemoveProp(string key)
         {
-            return this.plugInDsl.Core().JQuery.Call("removeProp", key);
+            return plugInDsl.Core().JQuery.Call("removeProp", key);
         }
 
         /// <summary>
@@ -157,7 +233,7 @@
         /// </param>
         public IExecutableSetting SetProp(string key, Selector value = null)
         {
-            return this.plugInDsl.Core().JQuery.Call("prop", key, value ?? key);
+            return plugInDsl.Core().JQuery.Call("prop", key, value ?? key);
         }
 
         /// <summary>
@@ -175,25 +251,31 @@
         /// <summary>
         ///     Set the <paramref name="value" /> of each element in the set of matched elements.
         /// </summary>
-        /// <param name="value"> A string of text or an array of strings corresponding to the value of each matched element to set as selected </param>
+        /// <param name="value">
+        ///     A string of text or an array of strings corresponding to the value of each matched element to set
+        ///     as selected
+        /// </param>
         public IExecutableSetting Val(object value)
         {
             if (value is IEnumerable)
-                return this.plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Val.F(value.ToJsonString())));
+                return plugInDsl.Registry(new ExecutableEval(JavaScriptCodeTemplate.Target_Val.F(value.ToJsonString())));
 
-            return this.plugInDsl.Core().JQuery.Call("val", value.Recovery(string.Empty));
+            return plugInDsl.Core().JQuery.Call("val", value.Recovery(string.Empty));
         }
 
         /// <summary>
         ///     Set the <paramref name="value" /> of each element in the set of matched elements.
         /// </summary>
-        /// <param name="value"> A string of text or an array of strings corresponding to the value of each matched element to set as selected </param>
+        /// <param name="value">
+        ///     A string of text or an array of strings corresponding to the value of each matched element to set
+        ///     as selected
+        /// </param>
         public IExecutableSetting Val(Func<JquerySelector, JquerySelectorExtend> value)
         {
             if (value == null)
                 return Val((object)null);
 
-            return this.plugInDsl.Core().JQuery.Call("val", value(Selector.Jquery));
+            return plugInDsl.Core().JQuery.Call("val", value(Selector.Jquery));
         }
 
         /// <summary>
@@ -204,7 +286,16 @@
         /// </param>
         public IExecutableSetting AddClass(string @class)
         {
-            return this.plugInDsl.Core().JQuery.Call("addClass", @class);
+            return plugInDsl.Core().JQuery.Call("addClass", @class);
+        }
+
+        /// <summary>
+        ///     Adds the specified <c>class</c> to each of the set of matched elements
+        /// </summary>
+        /// <param name="class">Twitter bootstrap classes</param>
+        public IExecutableSetting AddClass(B @class)
+        {
+            return AddClass(@class.ToJqueryString());
         }
 
         #endregion

@@ -1,23 +1,25 @@
 ﻿namespace Incoding.Block
 {
+    #region << Using >>
+
     using System;
     using System.Linq.Expressions;
 
-    public class DelayToSchedulerAvaialbeStartsOnWhereSpec : Specification<DelayToScheduler>
+    #endregion
+
+    public class DelayToSchedulerAvailableStartsOnWhereSpec : Specification<DelayToScheduler>
     {
         readonly DateTime date;
 
-        public DelayToSchedulerAvaialbeStartsOnWhereSpec(DateTime date)
+        public DelayToSchedulerAvailableStartsOnWhereSpec(DateTime date)
         {
             this.date = date;
         }
 
         public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
         {
-            var faultBelowe = this.date.AddMinutes(-2);
             var faultAbove = this.date.AddMinutes(2);
-            return scheduler => scheduler.StartsOn >= faultBelowe ||
-                                scheduler.StartsOn <= faultAbove;
+            return scheduler => scheduler.StartsOn <= faultAbove;
         }
     }
 }

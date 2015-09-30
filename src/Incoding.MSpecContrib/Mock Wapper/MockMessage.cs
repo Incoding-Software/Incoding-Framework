@@ -1,5 +1,3 @@
-using Incoding.Extensions;
-
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -10,12 +8,25 @@ namespace Incoding.MSpecContrib
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.EventBroker;
+    using Incoding.Extensions;
     using Machine.Specifications;
     using Moq;
 
     #endregion
 
-    public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage<TResult> where TResult : class
+    public static class MockMessage
+    {
+        #region Factory constructors
+
+        public static void Execute<TResult>(this IMessage<TResult> message)
+        {
+            message.OnExecute(IoCFactory.Instance.TryResolve<IDispatcher>(), IoCFactory.Instance.TryResolve<IUnitOfWork>());
+        }
+
+        #endregion
+    }
+
+    public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage<TResult>
     {
         #region Fields
 
@@ -27,51 +38,41 @@ namespace Incoding.MSpecContrib
 
         readonly List<Action<CommandBase>> actions = new List<Action<CommandBase>>();
 
-        readonly IUnitOfWork unitOfWork;
-
         #endregion
 
         #region Constructors
 
         protected MockMessage(TMessage instanceMessage)
         {
-            this.unitOfWork = Pleasure.MockStrictAsObject<IUnitOfWork>(
-                mock =>
-                {
-                    mock.Setup(x => x.GetSession()).Returns(Pleasure.Generator.String());
-                    mock.Setup(x => x.Open());
-                });
-            instanceMessage.Setting = new MessageExecuteSetting();
-            instanceMessage.Setting.SetValue("unitOfWork", unitOfWork);
-
-            this.repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.SetProvider(unitOfWork)));
-            IoCFactory.Instance.StubTryResolve(this.repository.Object);
-
-            this.eventBroker = Pleasure.MockStrict<IEventBroker>();
-            IoCFactory.Instance.StubTryResolve(this.eventBroker.Object);
-
-            this.dispatcher = Pleasure.MockStrict<IDispatcher>(mock =>
-                                                                   {
-                                                                       mock.StubPush<CommandBase>(@base =>
-                                                                                                      {
-                                                                                                          bool isAny = false;
-                                                                                                          foreach (var action in this.actions)
-                                                                                                          {
-                                                                                                              try
-                                                                                                              {
-                                                                                                                  action(@base);
-                                                                                                                  isAny = true;
-                                                                                                              }
-                                                                                                              catch (Exception) { }
-                                                                                                          }
-
-                                                                                                          isAny.ShouldBeTrue();
-                                                                                                      });
-                                                                   });
-            IoCFactory.Instance.StubTryResolve(this.dispatcher.Object);
-            instanceMessage.Setting.SetValue("outerDispatcher", this.dispatcher.Object);
-
             Original = instanceMessage;
+            Original.Setting = new MessageExecuteSetting();
+            repository = Pleasure.Mock<IRepository>();
+
+            var unitOfWork = Pleasure.MockStrictAsObject<IUnitOfWork>(mock => mock.Setup(x => x.GetRepository()).Returns(repository.Object));
+            IoCFactory.Instance.StubTryResolve(unitOfWork);
+
+            eventBroker = Pleasure.MockStrict<IEventBroker>();
+            IoCFactory.Instance.StubTryResolve(eventBroker.Object);
+
+            dispatcher = Pleasure.MockStrict<IDispatcher>(mock =>
+                                                          {
+                                                              mock.StubPush<CommandBase>(@base =>
+                                                                                         {
+                                                                                             bool isAny = false;
+                                                                                             foreach (var action in actions)
+                                                                                             {
+                                                                                                 try
+                                                                                                 {
+                                                                                                     action(@base);
+                                                                                                     isAny = true;
+                                                                                                 }
+                                                                                                 catch (Exception) { }
+                                                                                             }
+
+                                                                                             isAny.ShouldBeTrue();
+                                                                                         });
+                                                          });
+            IoCFactory.Instance.StubTryResolve(dispatcher.Object);
         }
 
         #endregion
@@ -84,19 +85,21 @@ namespace Incoding.MSpecContrib
 
         #region Api Methods
 
-        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null) where TCommand : CommandBase
+        public void Execute()
         {
-            this.actions.Add(@base =>
-                                 {
-                                     var impCommand = @base as TCommand;
-                                     impCommand.ShouldEqualWeak(command, dsl);
-                                 });
-            return this;
+            Original.Execute();
+            dispatcher.VerifyAll();
+            eventBroker.VerifyAll();
+            repository.VerifyAll();
         }
 
-        public MockMessage<TMessage, TResult> StubProvider<TProvider>(Mock<TProvider> provider) where TProvider : class
+        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null) where TCommand : CommandBase
         {
-            this.repository.Setup(r => r.GetProvider<TProvider>()).Returns(provider.Object);
+            actions.Add(@base =>
+                        {
+                            var impCommand = @base as TCommand;
+                            impCommand.ShouldEqualWeak(command, dsl);
+                        });
             return this;
         }
 
@@ -107,49 +110,49 @@ namespace Incoding.MSpecContrib
 
         public void ShouldBeDeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
         {
-            this.repository.Verify(r => r.DeleteByIds<TEntity>(Pleasure.MockIt.IsStrong(ids)));
+            repository.Verify(r => r.DeleteByIds<TEntity>(Pleasure.MockIt.IsStrong(ids)));
         }
 
         public void ShouldBeDeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
-            this.repository.Verify(r => r.DeleteAll<TEntity>());
+            repository.Verify(r => r.DeleteAll<TEntity>());
         }
 
         public void ShouldBeDelete<TEntity>(object id, int callCount = 1) where TEntity : class, IEntity, new()
         {
-            this.repository.Verify(r => r.Delete<TEntity>(id), Times.Exactly(callCount));
+            repository.Verify(r => r.Delete<TEntity>(id), Times.Exactly(callCount));
         }
 
         public void ShouldBeDelete<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
         {
-            this.repository.Verify(r => r.Delete(Pleasure.MockIt.IsStrong(entity)), Times.Exactly(callCount));
+            repository.Verify(r => r.Delete(Pleasure.MockIt.IsStrong(entity)), Times.Exactly(callCount));
         }
 
         public void ShouldBeSave<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity, new()
         {
             Func<TEntity, bool> match = s =>
-                                            {
-                                                verify(s);
-                                                return true;
-                                            };
+                                        {
+                                            verify(s);
+                                            return true;
+                                        };
 
-            this.repository.Verify(r => r.Save(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
+            repository.Verify(r => r.Save(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
         }
 
         public void ShouldBeSaves<TEntity>(Action<IEnumerable<TEntity>> verify, int callCount = 1) where TEntity : class, IEntity, new()
         {
             Func<IEnumerable<TEntity>, bool> match = s =>
-                                                         {
-                                                             verify(s);
-                                                             return true;
-                                                         };
+                                                     {
+                                                         verify(s);
+                                                         return true;
+                                                     };
 
-            this.repository.Verify(r => r.Saves(Pleasure.MockIt.Is<IEnumerable<TEntity>>(entities => match(entities))), Times.Exactly(callCount));
+            repository.Verify(r => r.Saves(Pleasure.MockIt.Is<IEnumerable<TEntity>>(entities => match(entities))), Times.Exactly(callCount));
         }
 
         public void ShouldBeFlush(int callCount = 1)
         {
-            this.repository.Verify(r => r.Flush(), Times.Exactly(callCount));
+            repository.Verify(r => r.Flush(), Times.Exactly(callCount));
         }
 
         public void ShouldBeSave<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
@@ -170,12 +173,12 @@ namespace Incoding.MSpecContrib
         public void ShouldBeSaveOrUpdate<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity, new()
         {
             Func<TEntity, bool> match = s =>
-                                            {
-                                                verify(s);
-                                                return true;
-                                            };
+                                        {
+                                            verify(s);
+                                            return true;
+                                        };
 
-            this.repository.Verify(r => r.SaveOrUpdate(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
+            repository.Verify(r => r.SaveOrUpdate(Pleasure.MockIt.Is<TEntity>(entity => match(entity))), Times.Exactly(callCount));
         }
 
         public void ShouldBeSaveOrUpdate<TEntity>(TEntity entity, int callCount = 1) where TEntity : class, IEntity, new()
@@ -183,23 +186,23 @@ namespace Incoding.MSpecContrib
             ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldEqualWeak(entity), callCount);
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, TNextResult result) where TQuery : QueryBase<TNextResult> where TNextResult : class
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, TNextResult result) where TQuery : QueryBase<TNextResult> 
         {
-            this.dispatcher.StubQuery(query, result, new MessageExecuteSetting());
+            dispatcher.StubQuery(query, result, new MessageExecuteSetting());
             return this;
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TNextResult result) where TQuery : QueryBase<TNextResult> where TNextResult : class
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TNextResult result) where TQuery : QueryBase<TNextResult> 
         {
             return StubQuery(Pleasure.Generator.Invent<TQuery>(), result);
         }
 
-        public MockMessage<TMessage, TResult> StubQueryAsNull<TQuery, TNextResult>() where TQuery : QueryBase<TNextResult> where TNextResult : class
+        public MockMessage<TMessage, TResult> StubQueryAsNull<TQuery, TNextResult>() where TQuery : QueryBase<TNextResult> 
         {
-            return StubQuery<TQuery, TNextResult>(null);
+            return StubQuery<TQuery, TNextResult>(default(TNextResult));
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(Action<IInventFactoryDsl<TQuery>> configure, TNextResult result) where TQuery : QueryBase<TNextResult> where TNextResult : class
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(Action<IInventFactoryDsl<TQuery>> configure, TNextResult result) where TQuery : QueryBase<TNextResult> 
         {
             return StubQuery(Pleasure.Generator.Invent(configure), result);
         }
@@ -222,19 +225,22 @@ namespace Incoding.MSpecContrib
 
         #region Event broker
 
+        [Obsolete("Please use StubPush")]
         public MockMessage<TMessage, TResult> StubPublish<TEvent>(TEvent expectedEvent) where TEvent : class, IEvent
         {
             return StubPublish<TEvent>(@event => @event.ShouldEqualWeak(expectedEvent));
         }
 
+        [Obsolete("Please use StubPush")]
         public MockMessage<TMessage, TResult> StubPublish<TEvent>() where TEvent : class, IEvent
         {
             return StubPublish<TEvent>(@event => @event.ShouldNotBeNull());
         }
 
+        [Obsolete("Please use StubPush")]
         public MockMessage<TMessage, TResult> StubPublish<TEvent>(Action<TEvent> action) where TEvent : class, IEvent
         {
-            this.eventBroker.Setup(r => r.Publish(Pleasure.MockIt.Is(action)));
+            eventBroker.Setup(r => r.Publish(Pleasure.MockIt.Is(action)));
             return this;
         }
 
@@ -276,26 +282,26 @@ namespace Incoding.MSpecContrib
         public MockMessage<TMessage, TResult> StubSave<TEntity>(TEntity res, object id) where TEntity : class, IEntity, new()
         {
             Action<TEntity> verify = entity =>
-            {
-                entity.ShouldEqualWeak(res, null);
-                entity.SetValue("Id", id);
-            };
+                                     {
+                                         entity.ShouldEqualWeak(res, null);
+                                         entity.SetValue("Id", id);
+                                     };
             return Stub(message => message.repository.Setup(r => r.Save(Pleasure.MockIt.Is<TEntity>(verify))));
         }
 
         public MockMessage<TMessage, TResult> StubSave<TEntity>(Action<TEntity> action, object id) where TEntity : class, IEntity, new()
         {
             Func<TEntity, bool> match = s =>
-            {
-                action(s);
-                return true;
-            };
+                                        {
+                                            action(s);
+                                            return true;
+                                        };
 
             Action<TEntity> verify = entity =>
-            {
-                match(entity);
-                entity.SetValue("Id", id);
-            };
+                                     {
+                                         match(entity);
+                                         entity.SetValue("Id", id);
+                                     };
             return Stub(message => message.repository.Setup(r => r.Save(Pleasure.MockIt.Is<TEntity>(verify))));
         }
 
@@ -304,14 +310,16 @@ namespace Incoding.MSpecContrib
             return Stub(message => message.repository.StubLoadById(id, res));
         }
 
+        [Obsolete("Please use method Execute instead of Original.Execute()",true)]
         public void ShouldBePublished()
         {
-            this.eventBroker.VerifyAll();
+            eventBroker.VerifyAll();
         }
 
+        [Obsolete("Please use method Execute instead of Original.Execute()",true)]
         public void ShouldPushed()
         {
-            this.dispatcher.VerifyAll();
+            dispatcher.VerifyAll();
         }
 
         #endregion

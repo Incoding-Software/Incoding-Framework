@@ -19,7 +19,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(string) });
 
-        Because of = () => { exception = Catch.Exception(() => controller.Push("bad", string.Empty)); };
+        Because of = () => { exception = Catch.Exception(() => controller.Push("bad")); };
 
         It should_be_exception = () => exception.Message.ShouldEqual("Not found any type bad");
     }

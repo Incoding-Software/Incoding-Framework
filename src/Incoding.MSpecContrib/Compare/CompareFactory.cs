@@ -37,6 +37,7 @@ namespace Incoding.MSpecContrib
         readonly Dictionary<string, Action<TActual>> forwardsToPredicate = new Dictionary<string, Action<TActual>>();
 
         private int maxRecursionDeep = 128;
+
         private bool ignoreRecursionError = false;
 
         bool includeNotPublic;

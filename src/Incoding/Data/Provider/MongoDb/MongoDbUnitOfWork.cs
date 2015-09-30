@@ -4,7 +4,6 @@
 
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
-    using Incoding.Extensions;
     using JetBrains.Annotations;
 
     #endregion
@@ -25,9 +24,9 @@
 
         protected override void InternalCommit() { }
 
-        protected override void InternalOpen()
+        public override IRepository GetRepository()
         {
-            this.session.Initialize();
+            return new MongoDbRepository(session.Value);
         }
     }
 }

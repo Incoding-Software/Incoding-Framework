@@ -121,7 +121,7 @@
         ///     Get the current count element of matched elements
         /// </summary>
         public static JquerySelectorExtend Length(this JquerySelectorExtend selector)
-        {
+        {            
             return selector.Property("length");
         }
 
@@ -139,8 +139,9 @@
         /// </summary>
         public static JquerySelectorExtend Method(this JquerySelectorExtend selector, string method, params object[] args)
         {
-            selector.AddMethod(method, args);
-            return new  JquerySelectorExtend(selector);
+            var closureSelector = new JquerySelectorExtend(selector);
+            closureSelector.AddMethod(method, args);
+            return closureSelector;
         }
 
         /// <summary>
@@ -164,9 +165,10 @@
         ///     Get property
         /// </summary>
         public static JquerySelectorExtend Property(this JquerySelectorExtend selector, string prop)
-        {            
-            selector.AddProperty(prop);
-            return new JquerySelectorExtend(selector);
+        {
+            var closureSelector = new JquerySelectorExtend(selector);
+            closureSelector.AddProperty(prop);
+            return closureSelector;
         }
 
         /// <summary>

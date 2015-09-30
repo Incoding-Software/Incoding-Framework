@@ -12,7 +12,7 @@
 
         class FakeCommand : CommandBase
         {
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }

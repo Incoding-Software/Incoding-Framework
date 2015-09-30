@@ -553,7 +553,12 @@ TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data
             }
             catch(e) {
                 if (e.name === 'QUOTA_EXCEEDED_ERR') {
-                    localStorage.clear();
+                    try {
+                        localStorage.clear();
+                    }
+                    catch (e) {
+                        //TODO still searching solution
+                    } 
                 }
             }
         }

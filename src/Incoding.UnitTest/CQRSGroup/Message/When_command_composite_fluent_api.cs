@@ -14,10 +14,10 @@
     {
         #region Fake classes
 
-        [MessageExecuteSetting(Connection = "TheSameConnectionString", DataBaseInstance = "TheSameDataBase", Mute = MuteEvent.OnAfter)]
+        [MessageExecuteSetting(Connection = "TheSameConnectionString", DataBaseInstance = "TheSameDataBase")]
         class FakeCommandWithAttribute : CommandBase
         {
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -25,7 +25,7 @@
 
         class FakeCommand : CommandBase
         {
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -60,14 +60,7 @@
                          {
                              composite = (CommandComposite)new CommandComposite()
                                                                    .Quote(quote1)
-                                                                   .Quote(Pleasure.Generator.Invent<FakeCommand>())
-                                                                   .WithConnectionString(quoteSetting2.Connection)
-                                                                   .WithDateBaseString(quoteSetting2.DataBaseInstance)
-                                                                   .OnAfter(message => { })
-                                                                   .OnBefore(message => { })
-                                                                   .OnComplete(message => { })
-                                                                   .OnError((message, exception) => { })
-                                                                   .Mute(quoteSetting2.Mute)
+                                                                   .Quote(Pleasure.Generator.Invent<FakeCommand>(),quoteSetting2)                                                                   
                                                                    .Quote(quote3);
                          };
 
@@ -80,8 +73,7 @@
         It should_be_quote_3 = () => composite.Parts[2].ShouldEqualWeak(quote3, dsl => dsl.ForwardToValue(r => r.Setting, new MessageExecuteSetting
                                                                                                                               {
                                                                                                                                       Connection = "TheSameConnectionString", 
-                                                                                                                                      DataBaseInstance = "TheSameDataBase", 
-                                                                                                                                      Mute = MuteEvent.OnAfter, 
+                                                                                                                                      DataBaseInstance = "TheSameDataBase",                                                                                                                                       
                                                                                                                               }));
     }
 }

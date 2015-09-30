@@ -1,4 +1,5 @@
 ﻿    @using Incoding.Extensions
+@using Incoding.SiteTest
 @model JasmineIndexContainer
            
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -133,18 +134,19 @@
     <input type="hidden" value="@(new ExecutableAjaxAction(true, "root", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test?Name=Value" }).ToJsonString())" id="ExecutableAjaxActionWithOnlyQueryStringHash"/>
     
 
-    <input type="hidden" value="@(new ExecutableEval("newFakeEvalVariable = data;").ToJsonString())" id="ExecutableEval"/>
+    <input type="hidden" value="@(new ExecutableEval("newFakeEvalVariable = this.result;").ToJsonString())" id="ExecutableEval"/>
     <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "arg1", "arg2", "arg3" }, string.Empty).ToJsonString())" id="ExecutableEvalMethod"/>
     <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "new title", }, string.Empty).ToJsonString())" id="ExecutableEvalMethodWithContext"/>
     
     <input type="hidden" value="@(new ExecutableTrigger("invoke", string.Empty).ToJsonString())" id="ExecutableTrigger"/>
     <input type="hidden" value="@(new ExecutableTrigger("invoke", "is").ToJsonString())" id="ExecutableTriggerWithProperty"/>
 
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false).ToJsonString())" id="ExecutableInsert"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false).ToJsonString())" id="ExecutableInsertWithProperty"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true).ToJsonString())" id="ExecutableInsertWithPrepare"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false).ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })), false).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false,string.Empty).ToJsonString())" id="ExecutableInsert"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false,"Content").ToJsonString())" id="ExecutableInsertWithResult"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false,string.Empty).ToJsonString())" id="ExecutableInsertWithProperty"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true,string.Empty).ToJsonString())" id="ExecutableInsertWithPrepare"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false,string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
+    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })), false,string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
 
 
     <input type="hidden" value="@(new ExecutableForm("clear").ToJsonString())" id="ExecutableFormClear"/>
@@ -183,16 +185,30 @@
     <input type="hidden" value="@Selector.JS.DateTime.GetDay()" id="Selector_Js_DateTime_GetDay"/> 
     <input type="hidden" value="@Selector.JS.DateTime.GetTimezoneOffset()" id="Selector_Js_DateTime_GetTimezoneOffset"/> 
     <input type="hidden" value="@Selector.JS.DateTime.ToDateString()" id="Selector_Js_DateTime_ToDateString"/> 
-    <input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/> 
-    
-    
-    <input type="hidden" value="@Selector.Event.ScreenX" id="Selector_Event_ScreenX"/> 
+    <input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/>
+
+
+    <input type="hidden" value="@(new ValueSelector("aws"))" id="Selector_Value_String"/> 
+
+<input type="hidden" value="@Selector.Event.ScreenX" id="Selector_Event_ScreenX"/> 
     <input type="hidden" value="@Selector.Event.ScreenY" id="Selector_Event_ScreenY"/> 
     <input type="hidden" value="@Selector.Event.Type" id="Selector_Event_Type"/> 
     <input type="hidden" value="@Selector.Event.PageX" id="Selector_Event_PageX"/> 
     <input type="hidden" value="@Selector.Event.PageY" id="Selector_Event_PageY"/> 
-    <input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/> 
-    <input type="hidden" value="@Selector.Event.Which" id="Selector_Event_Which"/> 
+    <input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/>
+<input type="hidden" value="@Selector.Event.Which" id="Selector_Event_Which"/>
+
+
+<input type="hidden" value="@(Selector.Result)" id="Selector_Result_For"/> 
+<input type="hidden" value="@(Selector.Result.For<KeyValueVm>(r=>r.Text))" id="Selector_Result_For_Property"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inner.Value))" id="Selector_Result_For_Complexity"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel[]>(r=>r[0].Value))" id="Selector_Result_For_Array_By_Index_As_Self"/> 
+<input type="hidden" value="@(Selector.Result.For<string[]>(r=>r[0]))" id="Selector_Result_For_Array_By_Index_As_Self_String"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners[1].Value))" id="Selector_Result_For_Array_By_Index"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners.Select(s=>s.Value)))" id="Selector_Result_For_Array_Select"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Strings))" id="Selector_Result_For_Array_String"/> 
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners.Any(model => model.Value == Selector.Jquery.Id("sandboxTextBox"))))" id="Selector_Result_For_Array_Any"/> 
+
     
 
     

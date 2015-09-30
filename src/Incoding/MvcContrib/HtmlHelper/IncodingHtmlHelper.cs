@@ -11,20 +11,12 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public enum BootstrapOfVersion
-    {
-        v2,
-
-        v3
-    }
-
     public class IncodingHtmlHelper
     {
         // ReSharper disable ConvertToConstant.Global
         // ReSharper disable FieldCanBeMadeReadOnly.Global
 
         ////ncrunch: no coverage start
-
         #region Static Fields
 
         public static string DropDownTemplateId = "incodingDropDownTemplate";
@@ -37,7 +29,6 @@ namespace Incoding.MvcContrib
 
         // ReSharper restore FieldCanBeMadeReadOnly.Global
         // ReSharper restore ConvertToConstant.Global
-
         #region Fields
 
         readonly HtmlHelper htmlHelper;
@@ -45,7 +36,6 @@ namespace Incoding.MvcContrib
         #endregion
 
         ////ncrunch: no coverage start
-
         #region Constructors
 
         public IncodingHtmlHelper(HtmlHelper htmlHelper)
@@ -56,7 +46,6 @@ namespace Incoding.MvcContrib
         #endregion
 
         ////ncrunch: no coverage end
-
         #region Api Methods
 
         public MvcHtmlString Script([PathReference] string src)
@@ -67,12 +56,12 @@ namespace Incoding.MvcContrib
 
         public MvcScriptTemplate<TModel> ScriptTemplate<TModel>(string id)
         {
-            return new MvcScriptTemplate<TModel>(this.htmlHelper, id);
+            return new MvcScriptTemplate<TModel>(htmlHelper, id);
         }
 
         public MvcTemplate<TModel> Template<TModel>()
         {
-            return new MvcTemplate<TModel>(this.htmlHelper);
+            return new MvcTemplate<TModel>(htmlHelper);
         }
 
         public MvcHtmlString Link([PathReference] string href)
@@ -192,7 +181,7 @@ namespace Incoding.MvcContrib
 
         public BeginTag BeginTag(HtmlTag tag, object attributes = null)
         {
-            return new BeginTag(this.htmlHelper, tag, AnonymousHelper.ToDictionary(attributes));
+            return new BeginTag(htmlHelper, tag, AnonymousHelper.ToDictionary(attributes));
         }
 
         public MvcHtmlString Tag(HtmlTag tag, string content, object attributes = null)

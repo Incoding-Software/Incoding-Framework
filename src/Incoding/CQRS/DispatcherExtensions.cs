@@ -21,22 +21,6 @@ namespace Incoding.CQRS
             dispatcher.Push(composite);
         }
 
-        public static void Delay(this IDispatcher dispatcher, CommandBase command, Action<MessageDelaySetting> configuration)
-        {
-            var delay = new MessageDelaySetting();
-            configuration.Do(action => action(delay));
-            dispatcher.Push(new AddDelayToSchedulerCommand
-            {
-                Commands = new List<IMessage<object>> {command},
-                UID = delay.UID,
-                RecurrenceData = delay.Reccurence,
-            }, new MessageExecuteSetting
-            {
-                Connection = delay.Connection,
-                DataBaseInstance = delay.DataBaseInstance
-            });
-        }
-
         public static void Push(this IDispatcher dispatcher, CommandBase message, MessageExecuteSetting executeSetting = null)
         {
             dispatcher.Push(composite => composite.Quote(message, executeSetting));

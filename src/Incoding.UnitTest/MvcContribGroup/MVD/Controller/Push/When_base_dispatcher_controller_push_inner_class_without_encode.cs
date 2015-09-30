@@ -21,7 +21,7 @@
 
             public class Inner : CommandBase
             {
-                public override void Execute()
+                protected override void Execute()
                 {
                     throw new NotImplementedException();
                 }
@@ -34,7 +34,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(FakeAddUserCommand.Inner) });
 
-        Because of = () => { result = controller.Push(typeof(FakeAddUserCommand.Inner).FullName, string.Empty); };
+        Because of = () => { result = controller.Push(typeof(FakeAddUserCommand.Inner).FullName); };
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeAddUserCommand.Inner());
 

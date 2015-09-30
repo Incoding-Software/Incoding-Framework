@@ -19,7 +19,7 @@
         public class PerformanceCommand : CommandBase
         {
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -32,7 +32,7 @@
         Establish establish = () => Establish(types: new[] { typeof(PerformanceCommand) });
 
         It should_be_performance = () => Pleasure
-                                                 .Do(i => controller.Push(HttpUtility.UrlEncode(typeof(PerformanceCommand).Name), string.Empty), 1000)
+                                                 .Do(i => controller.Push(HttpUtility.UrlEncode(typeof(PerformanceCommand).Name)), 1000)
                                                  .ShouldBeLessThan(600);
     }
 }

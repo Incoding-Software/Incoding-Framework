@@ -37,7 +37,7 @@ namespace Incoding.CQRS
 
         #region Override
 
-        public override void Execute()
+        protected override void Execute()
         {
             var entityType = Type.GetType(AssemblyQualifiedName);
 

@@ -150,6 +150,15 @@
             #endregion
         }
 
+        class FakeCompareWithRecursion
+        {
+            #region Properties
+
+            public FakeCompareWithRecursion Closure { get; set; }
+
+            #endregion
+        }
+
         class FakeCompareWithSameClass
         {
             #region Properties
@@ -394,6 +403,15 @@
                                               compare.IsCompare().ShouldBeTrue();
                                           };
 
+        It should_be_compare_with_ignore_recursion = () =>
+                                                     {
+                                                         var compare = new CompareFactory<FakeCompareWithRecursion, FakeCompareWithRecursion>();
+                                                         var recursion = new FakeCompareWithRecursion();
+                                                         recursion.Closure = recursion;
+                                                         compare.Compare(recursion, recursion);
+                                                         compare.IsCompare().ShouldBeTrue();
+                                                     };
+
         It should_not_be_compare_with_class = () =>
                                               {
                                                   var compare = new CompareFactory<FakeCompareWithClass, FakeCompareWithClass>();
@@ -621,14 +639,21 @@
         It should_be_compare_with_enum_as_flag = () =>
                                                  {
                                                      var compare = new CompareFactory<FakeCompareWithFlag, FakeCompareWithFlag>();
-                                                     compare.Compare(new FakeCompareWithFlag { OfType = OfType.DownVote }, new FakeCompareWithFlag { OfType = OfType.DownVote });
+                                                     compare.Compare(new FakeCompareWithFlag { OfType = OfType.DownVote | OfType.Login }, new FakeCompareWithFlag { OfType = OfType.DownVote | OfType.Login });
                                                      compare.IsCompare().ShouldBeTrue();
                                                  };
+
+        It should_be_compare_with_enum_as_flag_sort = () =>
+                                                      {
+                                                          var compare = new CompareFactory<FakeCompareWithFlag, FakeCompareWithFlag>();
+                                                          compare.Compare(new FakeCompareWithFlag { OfType = OfType.DownVote | OfType.Login }, new FakeCompareWithFlag { OfType = OfType.Login | OfType.DownVote });
+                                                          compare.IsCompare().ShouldBeTrue();
+                                                      };
 
         It should_be_compare_with_enum_as_flag_false = () =>
                                                        {
                                                            var compare = new CompareFactory<FakeCompareWithFlag, FakeCompareWithFlag>();
-                                                           compare.Compare(new FakeCompareWithFlag { OfType = OfType.Line }, new FakeCompareWithFlag { OfType = OfType.DownVote });
+                                                           compare.Compare(new FakeCompareWithFlag { OfType = OfType.Line | OfType.DownVote }, new FakeCompareWithFlag { OfType = OfType.DownVote });
                                                            compare.IsCompare().ShouldBeFalse();
                                                        };
 

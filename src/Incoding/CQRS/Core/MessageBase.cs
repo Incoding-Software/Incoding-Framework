@@ -4,6 +4,7 @@
 
     using System;
     using System.Runtime.Serialization;
+    using System.Threading.Tasks;
     using Incoding.Block.IoC;
     using Incoding.Data;
     using Incoding.EventBroker;
@@ -15,110 +16,26 @@
 
     public abstract class MessageBase<TResult> : IMessage<TResult>
     {
-        #region Constructors
-
-        protected MessageBase()
-        {
-            Result = default(TResult);
-            this.lazyRepository = new Lazy<IRepository>(() =>
-                                                        {
-                                                            Setting.With(r => r.unitOfWork).Do(work => work.Open());
-                                                            IRepository repository = string.IsNullOrWhiteSpace(Setting.With(r => r.DataBaseInstance))
-                                                                                             ? IoCFactory.Instance.TryResolve<IRepository>()
-                                                                                             : IoCFactory.Instance.TryResolveByNamed<IRepository>(Setting.DataBaseInstance);
-                                                            // we are sure that UnitOfWork will open corresponding Session object
-                                                            repository.SetProvider(Setting.With(r => r.unitOfWork).GetSession());
-                                                            return repository;
-                                                        });
-            this.lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
-            this.messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(Setting.With(r => r.outerDispatcher), Setting));
-        }
-
-        #endregion
-
-        #region Nested classes
-
-        protected class MessageDispatcher
-        {
-            #region Constructors
-
-            public MessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
-            {
-                if (dispatcher == null)
-                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
-                this.dispatcher = dispatcher;
-                this.outerSetting = setting;
-            }
-
-            #endregion
-
-            #region Fields
-
-            readonly IDispatcher dispatcher;
-
-            readonly MessageExecuteSetting outerSetting;
-
-            #endregion
-
-            #region Api Methods
-
-            public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null) where TQueryResult : class
-            {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection,
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
-                return this.dispatcher.Query(query, setting);
-            }
-
-            public void Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
-            {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection,
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
-                this.dispatcher.Push(command, new MessageExecuteSetting());
-            }
-
-            public void Delay(CommandBase command, Action<MessageDelaySetting> configuration = null)
-            {
-                command.Setting = command.Setting ?? new MessageExecuteSetting
-                                                     {
-                                                             Connection = outerSetting.Connection,
-                                                             DataBaseInstance = outerSetting.DataBaseInstance
-                                                     };
-                this.dispatcher.Delay(command, configuration);
-            }
-
-            #endregion
-        }
-
-        #endregion
-
         #region Fields
 
-        readonly Lazy<IRepository> lazyRepository;
+        Lazy<IRepository> lazyRepository;
 
-        readonly Lazy<IEventBroker> lazyEventBroker;
+        Lazy<IEventBroker> lazyEventBroker;
 
-        readonly Lazy<MessageDispatcher> messageDispatcher;
+        Lazy<MessageDispatcher> messageDispatcher;
 
         #endregion
 
         #region Properties
 
-        [IgnoreCompare("System")]
-        protected IRepository Repository { get { return this.lazyRepository.Value; } }
+        [IgnoreCompare("System"), JsonIgnore]
+        protected IRepository Repository { get { return lazyRepository.Value; } }
 
-        [IgnoreCompare("System")]
-        protected MessageDispatcher Dispatcher { get { return this.messageDispatcher.Value; } }
+        [IgnoreCompare("System"), JsonIgnore]
+        protected MessageDispatcher Dispatcher { get { return messageDispatcher.Value; } }
 
-        [IgnoreCompare("System"), Obsolete("Please use Dispatcher.Push or Dispatcher.Query instead events")]
-        protected IEventBroker EventBroker { get { return this.lazyEventBroker.Value; } }
+        [IgnoreCompare("System"), Obsolete("Please use Dispatcher.Push or Dispatcher.Query instead events"), JsonIgnore]
+        protected IEventBroker EventBroker { get { return lazyEventBroker.Value; } }
 
         #endregion
 
@@ -130,8 +47,133 @@
         [IgnoreCompare("Design fixed"), IgnoreDataMember]
         public MessageExecuteSetting Setting { get; set; }
 
-        public abstract void Execute();
+        public virtual void OnExecute(IDispatcher current, IUnitOfWork unitOfWork)
+        {
+            Result = default(TResult);
+            lazyRepository = new Lazy<IRepository>(() => { return unitOfWork.GetRepository(); });
+            lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
+            messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(current, Setting));
+            Execute();
+        }
 
         #endregion
+
+        #region Nested classes
+
+        protected class AsyncMessageDispatcher
+        {
+            #region Fields
+
+            readonly IDispatcher dispatcher;
+
+            readonly MessageExecuteSetting outerSetting;
+
+            #endregion
+
+            #region Constructors
+
+            public AsyncMessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
+            {
+                if (dispatcher == null)
+                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
+                this.dispatcher = dispatcher;
+                outerSetting = setting;
+            }
+
+            #endregion
+
+            #region Api Methods
+
+            public Task<TQueryResult> Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null) where TQueryResult : class
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection, 
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                return Task<TQueryResult>.Factory.StartNew(() => dispatcher.Query(query, setting));
+            }
+
+            public Task<object> Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection, 
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                return Task.Factory.StartNew(() =>
+                                             {
+                                                 dispatcher.Push(command, new MessageExecuteSetting());
+                                                 return command.Result;
+                                             });
+            }
+
+            #endregion
+        }
+
+        protected class MessageDispatcher
+        {
+            #region Fields
+
+            readonly IDispatcher dispatcher;
+
+            readonly MessageExecuteSetting outerSetting;
+
+            #endregion
+
+            #region Constructors
+
+            public MessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
+            {
+                if (dispatcher == null)
+                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
+                this.dispatcher = dispatcher;
+                outerSetting = setting;
+            }
+
+            #endregion
+
+            #region Api Methods
+
+            public AsyncMessageDispatcher Async()
+            {
+                return new AsyncMessageDispatcher(dispatcher, outerSetting);
+            }
+
+            public MessageDispatcher New(MessageExecuteSetting settings = null)
+            {
+                return new MessageDispatcher(IoCFactory.Instance.TryResolve<IDispatcher>(), settings ?? new MessageExecuteSetting());
+            }
+
+            public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null)
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection, 
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                return dispatcher.Query(query, setting);
+            }
+
+            public void Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
+            {
+                var setting = new MessageExecuteSetting
+                              {
+                                      Connection = outerSetting.Connection, 
+                                      DataBaseInstance = outerSetting.DataBaseInstance
+                              };
+                configuration.Do(action => action(setting));
+                dispatcher.Push(command, new MessageExecuteSetting());
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        protected abstract void Execute();
     }
 }

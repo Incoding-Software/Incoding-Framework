@@ -10,6 +10,21 @@
     [Subject(typeof(JquerySelectorExtendTreeTraversalExtensions))]
     public class When_jquery_selector_tree_traversal
     {
+        It should_be_not = () => Selector.Jquery.All()
+                                         .Not(selector => selector.Tag(HtmlTag.P))
+                                         .ToString()
+                                         .ShouldEqual("$('*').not('p')");
+
+        It should_be_not_by_tag = () => Selector.Jquery.All()
+                                                .Not(HtmlTag.P)
+                                                .ToString()
+                                                .ShouldEqual("$('*').not('p')");
+
+        It should_be_not_by_expression = () => Selector.Jquery.All()
+                                                       .Not(JqueryExpression.Button)
+                                                       .ToString()
+                                                       .ShouldEqual("$('*').not(':button')");
+
         It should_be_children_without_selector = () => Selector.Jquery
                                                                .Self()
                                                                .Children(HtmlTag.A).ToString()
@@ -31,14 +46,19 @@
                                              .ShouldEqual("$(this.self).closest('area')");
 
         It should_be_closest_by_tag = () => Selector.Jquery
-                                                              .Self()
-                                                              .Closest(HtmlTag.Abbr).ToString()
-                                                              .ShouldEqual("$(this.self).closest('abbr')");    
-        
+                                                    .Self()
+                                                    .Closest(HtmlTag.Abbr).ToString()
+                                                    .ShouldEqual("$(this.self).closest('abbr')");
+
+        It should_be_closest_by_selector = () => Selector.Jquery
+                                                         .Self()
+                                                         .Closest(Selector.Jquery.Tag(HtmlTag.Abbr)).ToString()
+                                                         .ShouldEqual("$(this.self).closest('abbr')");
+
         It should_be_closest_by_expression = () => Selector.Jquery
-                                                              .Self()
-                                                              .Closest(JqueryExpression.Checked).ToString()
-                                                              .ShouldEqual("$(this.self).closest(':checked')");
+                                                           .Self()
+                                                           .Closest(JqueryExpression.Checked).ToString()
+                                                           .ShouldEqual("$(this.self).closest(':checked')");
 
         It should_be_find = () => Selector.Jquery
                                           .Self()
@@ -46,9 +66,9 @@
                                           .ShouldEqual("$(this.self).find('area')");
 
         It should_be_find_by_tag = () => Selector.Jquery
-                                                           .Self()
-                                                           .Find(HtmlTag.Area).ToString()
-                                                           .ShouldEqual("$(this.self).find('area')");
+                                                 .Self()
+                                                 .Find(HtmlTag.Area).ToString()
+                                                 .ShouldEqual("$(this.self).find('area')");
 
         It should_be_find_by_expression = () => Selector.Jquery
                                                         .Self()
@@ -60,15 +80,15 @@
                                             .Filter(selector => selector.Tag(HtmlTag.Area)).ToString()
                                             .ShouldEqual("$(this.self).filter('area')");
 
-        It should_be_filter_by_tag= () => Selector.Jquery
-                                                             .Self()
-                                                             .Filter(HtmlTag.Article).ToString()
-                                                             .ShouldEqual("$(this.self).filter('article')");     
-        
+        It should_be_filter_by_tag = () => Selector.Jquery
+                                                   .Self()
+                                                   .Filter(HtmlTag.Article).ToString()
+                                                   .ShouldEqual("$(this.self).filter('article')");
+
         It should_be_filter_by_expression = () => Selector.Jquery
-                                                             .Self()
-                                                             .Filter(JqueryExpression.Checked).ToString()
-                                                             .ShouldEqual("$(this.self).filter(':checked')");
+                                                          .Self()
+                                                          .Filter(JqueryExpression.Checked).ToString()
+                                                          .ShouldEqual("$(this.self).filter(':checked')");
 
         It should_be_next = () => Selector.Jquery
                                           .Self()
@@ -171,10 +191,25 @@
                                                                .Siblings().ToString()
                                                                .ShouldEqual("$(this.self).siblings()");
 
+        It should_be_siblings_by_tag = () => Selector.Jquery
+                                                     .Self()
+                                                     .Siblings(HtmlTag.Tr).ToString()
+                                                     .ShouldEqual("$(this.self).siblings('tr')");  
+        
+        It should_be_siblings_by_b = () => Selector.Jquery
+                                                     .Self()
+                                                     .Siblings(B.Hidden).ToString()
+                                                     .ShouldEqual("$(this.self).siblings('.hidden')");
+
         It should_be_add = () => Selector.Jquery
                                          .Self()
                                          .Add(selector => selector.Tag(HtmlTag.Area)).ToString()
                                          .ShouldEqual("$(this.self).add('area')");
+
+        It should_be_add_b = () => Selector.Jquery
+                                           .Self()
+                                           .Add(B.Active).ToString()
+                                           .ShouldEqual("$(this.self).add('.active')");
 
         It should_be_add_selector = () => Selector.Jquery
                                                   .Self()

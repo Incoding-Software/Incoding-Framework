@@ -32,7 +32,7 @@
         <dependency id="jQuery.Form" version="3.46.0" />
         <dependency id="underscore.js" version="1.4.4" />
         <dependency id="Handlebars" version="1.1.2" />
-        <dependency id="jQuery" version="(1.7.2,2.0.0)" />
+        <dependency id="jQuery" version="(1.9.1,2.0.0)" />
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
       </group>
     </dependencies>

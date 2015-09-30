@@ -42,7 +42,7 @@
                                       dispatcher.StubQuery(new FakeByFullNameQuery(), queryResult);
                                   };
 
-        Because of = () => { result = controller.Query(HttpUtility.UrlEncode(typeof(FakeByFullNameQuery).FullName), string.Empty, false); };
+        Because of = () => { result = controller.Query(HttpUtility.UrlEncode(typeof(FakeByFullNameQuery).FullName), false); };
 
         It should_be_result = () => result.ShouldBeIncodingSuccess<string>(s => s.ShouldEqual(queryResult));
     }

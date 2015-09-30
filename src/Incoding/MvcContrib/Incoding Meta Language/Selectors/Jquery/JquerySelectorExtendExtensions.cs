@@ -50,15 +50,6 @@
             return selector.Expression(JqueryExpression.Last);
         }
 
-        /// <summary>
-        ///     Selects all elements that do not match the given <paramref name="notAction" />.
-        /// </summary>
-        public static JquerySelectorExtend Not(this JquerySelectorExtend selector, Func<JquerySelector, JquerySelector> notAction)
-        {
-            var notSelector = Selector.Jquery;
-            notAction(notSelector);
-            return selector.Custom(":not({0})".F(notSelector.ToSelector()));
-        }
 
         public static JquerySelectorExtend Visible(this JquerySelectorExtend selector)
         {

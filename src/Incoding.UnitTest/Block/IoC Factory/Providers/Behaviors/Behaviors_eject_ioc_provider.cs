@@ -11,12 +11,10 @@ namespace Incoding.UnitTest.Block
     [Behaviors]
     public class Behaviors_eject_ioc_provider : Context_IoC_Provider
     {
-        It should_be_disposable_without_exception = () => Catch.Exception(() => ioCProvider.Dispose()).ShouldBeNull();
-
         It should_be_eject = () =>
-                                 {
-                                     ioCProvider.Eject<ILogger>();
-                                     ioCProvider.GetAll<ILogger>(typeof(ILogger)).Count().ShouldEqual(0);
-                                 };
+                             {
+                                 ioCProvider.Eject<ILogger>();
+                                 ioCProvider.GetAll<ILogger>(typeof(ILogger)).Count().ShouldEqual(0);
+                             };
     }
 }

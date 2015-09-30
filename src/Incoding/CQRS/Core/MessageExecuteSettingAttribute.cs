@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Data;
 
     #endregion
 
@@ -19,11 +20,11 @@
 
         #region Properties
 
-        public MuteEvent Mute { get; set; }
-
         public string DataBaseInstance { get; set; }
 
         public string Connection { get; set; }
+
+        public IsolationLevel? IsolationLevel { get; set; }
 
         #endregion
     }

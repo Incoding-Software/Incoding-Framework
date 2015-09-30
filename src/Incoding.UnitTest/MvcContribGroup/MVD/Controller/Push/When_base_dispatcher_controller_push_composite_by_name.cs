@@ -20,7 +20,7 @@
         public class FakePushComposite1ByNameCommand : CommandBase
         {
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -31,7 +31,7 @@
         public class FakePushComposite2ByNameCommand : CommandBase
         {
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -44,10 +44,10 @@
         Establish establish = () => Establish(types: new[] { typeof(FakePushComposite1ByNameCommand), typeof(FakePushComposite2ByNameCommand) });
 
         Because of = () =>
-                         {
-                             result = controller.Composite("{0},{1}".F(HttpUtility.UrlEncode(typeof(FakePushComposite1ByNameCommand).Name),
-                                                                       HttpUtility.UrlEncode(typeof(FakePushComposite2ByNameCommand).Name)));
-                         };
+                     {
+                         result = controller.Push("{0}&{1}".F(typeof(FakePushComposite1ByNameCommand).Name,
+                                                                   typeof(FakePushComposite2ByNameCommand).Name));
+                     };
 
         It should_be_push_1 = () => dispatcher.ShouldBePush(new FakePushComposite1ByNameCommand());
 

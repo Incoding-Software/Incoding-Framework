@@ -2,6 +2,7 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
     using Incoding.Extensions;
     using Incoding.Maybe;
 
@@ -26,11 +27,17 @@ namespace Incoding.MvcContrib
 
         #region Properties
 
+        [Obsolete("Please use Attr")]
         public IncodingMetaCallbackJqueryAttributesDsl Attributes { get { return new IncodingMetaCallbackJqueryAttributesDsl(this.plugInDsl); } }
+        
+        public IncodingMetaCallbackJqueryAttributesDsl Attr { get { return new IncodingMetaCallbackJqueryAttributesDsl(this.plugInDsl); } }
 
         public IncodingMetaCallbackJqueryCssDsl Css { get { return new IncodingMetaCallbackJqueryCssDsl(this.plugInDsl); } }
 
+        [Obsolete("Please use Dom")]
         public IncodingMetaCallbackJqueryManipulationDsl Manipulation { get { return new IncodingMetaCallbackJqueryManipulationDsl(this.plugInDsl); } }
+
+        public IncodingMetaCallbackInsertDsl Dom { get { return new IncodingMetaCallbackInsertDsl(this.plugInDsl); } }
 
         #endregion
 

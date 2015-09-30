@@ -2,6 +2,7 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Routing;
@@ -83,13 +84,20 @@ namespace Incoding.MvcContrib
             return res;
         }
 
-        public void Add(ExecutableBase callback)
+        public void Add(ExecutableBase executable)
         {
-            callback.Add("onBind", OnBind);
-            callback.Add("onStatus", (int)OnCurrentStatus);
-            callback.Add("target", Target.With(r => r.ToString()));
-            callback.Add("onEventStatus", (int)OnEventStatus);
-            this.merges.Add(callback);
+            var errorMessage = executable.GetErrors();
+            if (errorMessage.Any())
+            {
+                throw new ArgumentException("Executable {0} have problem: {1}".F(executable.GetType().Name, errorMessage
+                                                                                                                 .Select(r => "{0}-{1}".F(r.Key, r.Value))
+                                                                                                                 .AsString(",")), "callback");
+            }
+            executable.Add("onBind", OnBind);
+            executable.Add("onStatus", (int)OnCurrentStatus);
+            executable.Add("target", Target.With(r => r.ToString()));
+            executable.Add("onEventStatus", (int)OnEventStatus);
+            this.merges.Add(executable);
             if (!LockTarget)
                 this.target = null;
         }

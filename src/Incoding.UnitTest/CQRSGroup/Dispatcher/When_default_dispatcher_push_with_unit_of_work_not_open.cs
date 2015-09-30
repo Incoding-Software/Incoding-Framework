@@ -19,7 +19,7 @@
 
         class FakeMessage : CommandBase
         {
-            public override void Execute() { }
+            protected override void Execute() { }
         }
 
         #endregion
@@ -35,12 +35,11 @@
         Establish establish = () =>
                                   {
                                       message = new FakeMessage();
-                                      existUnitOfWork = Pleasure.Mock<IUnitOfWork>(mock => mock.Setup(r => r.IsOpen()).Returns(false));
+                                      existUnitOfWork = Pleasure.Mock<IUnitOfWork>();
                                   };
 
         Because of = () => dispatcher.Push(message, new MessageExecuteSetting
-                                                        {
-                                                                //UnitOfWork = existUnitOfWork.Object
+                                                        {                                                                
                                                         });
 
         It should_be_factory_create = () => unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>()), Times.Once());

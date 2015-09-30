@@ -7,20 +7,19 @@
 
     #endregion
 
-    public abstract class UnitOfWorkBase<TSession, TSessionFactory> : IUnitOfWork where TSessionFactory : ISessionFactory<TSession>
-                                                                                  where TSession : IDisposable
+    public abstract class UnitOfWorkBase<TSession, TSessionFactory> : IUnitOfWork
+            where TSessionFactory : ISessionFactory<TSession>
+            where TSession : IDisposable
     {
         #region Fields
-
-        protected readonly TSessionFactory sessionFactory;
 
         protected readonly Lazy<TSession> session;
 
         protected readonly IsolationLevel isolationLevel;
 
-        protected bool isWasCommit;
-
         bool disposed;
+
+        bool isWasFlush;
 
         #endregion
 
@@ -29,41 +28,28 @@
         protected UnitOfWorkBase(TSessionFactory sessionFactory, IsolationLevel isolationLevel, string connectionString)
         {
             this.isolationLevel = isolationLevel;
-            this.sessionFactory = sessionFactory;
-            this.session = new Lazy<TSession>(() => sessionFactory.Open(connectionString));
+            session = new Lazy<TSession>(() => sessionFactory.Open(connectionString));
         }
 
         #endregion
 
         #region IUnitOfWork Members
 
-        public bool IsOpen()
-        {
-            return !this.disposed && this.session.IsValueCreated;
-        }
+        public abstract IRepository GetRepository();
 
         public void Flush()
         {
             if (IsOpen())
+            {
                 InternalFlush();
+                isWasFlush = true;
+            }
         }
 
         public void Commit()
         {
-            if (IsOpen())
+            if (IsOpen() && isWasFlush)
                 InternalCommit();
-            this.isWasCommit = true;
-        }
-
-        public void Open()
-        {
-            if (!IsOpen())
-                InternalOpen();
-        }
-
-        public object GetSession()
-        {
-            return session;
         }
 
         #endregion
@@ -75,10 +61,10 @@
             if (IsOpen())
             {
                 InternalSubmit();
-                this.session.Value.Dispose();
+                session.Value.Dispose();
             }
 
-            this.disposed = true;
+            disposed = true;
         }
 
         #endregion
@@ -89,6 +75,9 @@
 
         protected abstract void InternalCommit();
 
-        protected abstract void InternalOpen();
+        bool IsOpen()
+        {
+            return !disposed && session.IsValueCreated;
+        }
     }
 }

@@ -6,11 +6,11 @@
 
     #endregion
 
-    public class IncodingMetaLanguageCoreDsl
+    public class IncodingMetaLanguageCoreDsl : IIncodingMetaLanguageCoreDsl
     {
         #region Fields
 
-        readonly IIncodingMetaLanguagePlugInDsl plugIn;
+        protected IIncodingMetaLanguagePlugInDsl plugIn;
 
         #endregion
 

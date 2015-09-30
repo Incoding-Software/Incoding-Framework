@@ -14,16 +14,18 @@
     {
         #region Fields
 
-        Lazy<DbContext> session;
+        readonly DbContext session;
 
         #endregion
 
         #region Constructors
 
-        public EntityFrameworkRepository(/*IEntityFrameworkSessionFactory sessionFactory*/)
+        public EntityFrameworkRepository(DbContext session)
         {
-            //this.session = new Lazy<DbContext>(sessionFactory.GetCurrent);
+            this.session = session;
         }
+
+        public EntityFrameworkRepository() { }
 
         #endregion
 
@@ -31,22 +33,17 @@
 
         public void ExecuteSql(string sql)
         {
-            this.session.Value.Database.ExecuteSqlCommand(sql);
+            session.Database.ExecuteSqlCommand(sql);
         }
 
         public TProvider GetProvider<TProvider>() where TProvider : class
         {
-            return this.session.Value as TProvider;
-        }
-
-        public void SetProvider(object provider)
-        {
-            this.session = (Lazy<DbContext>)provider;
+            return session as TProvider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Value.Set<TEntity>().Add(entity);
+            session.Set<TEntity>().Add(entity);
         }
 
         public void Saves<TEntity>(IEnumerable<TEntity> entities) where TEntity : class, IEntity, new()
@@ -57,13 +54,13 @@
 
         public void Flush()
         {
-            this.session.Value.SaveChanges();
+            session.SaveChanges();
         }
 
         public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            if (this.session.Value.Entry(entity).State == EntityState.Detached)
-                this.session.Value.Set<TEntity>().Add(entity);
+            if (session.Entry(entity).State == EntityState.Detached)
+                session.Set<TEntity>().Add(entity);
         }
 
         public void Delete<TEntity>(object id) where TEntity : class, IEntity, new()
@@ -74,38 +71,38 @@
         public void DeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
         {
             string idsAsString = ids.Select(o => o.GetType().IsAnyEquals(typeof(string), typeof(Guid)) ? "'{0}'".F(o.ToString()) : o.ToString()).AsString(",");
-            string queryString = "DELETE FROM {0} WHERE {1} IN ({2})".F(this.session.Value.GetTableName<TEntity>(), "Id", idsAsString);
-            this.session.Value.Database.ExecuteSqlCommand(queryString);
+            string queryString = "DELETE FROM {0} WHERE {1} IN ({2})".F(session.GetTableName<TEntity>(), "Id", idsAsString);
+            session.Database.ExecuteSqlCommand(queryString);
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Value.Set<TEntity>().Remove(entity);
+            session.Set<TEntity>().Remove(entity);
         }
 
         public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
-            this.session.Value.Database.ExecuteSqlCommand("DELETE {0}".F(this.session.Value.GetTableName<TEntity>()));
+            session.Database.ExecuteSqlCommand("DELETE {0}".F(session.GetTableName<TEntity>()));
         }
 
         public TEntity GetById<TEntity>(object id) where TEntity : class, IEntity, new()
         {
-            return this.session.Value.Set<TEntity>().FirstOrDefault(r => r.Id == id);
+            return session.Set<TEntity>().FirstOrDefault(r => r.Id == id);
         }
 
         public TEntity LoadById<TEntity>(object id) where TEntity : class, IEntity, new()
         {
-            return this.session.Value.Set<TEntity>().Find(id);
+            return session.Set<TEntity>().Find(id);
         }
 
         public IQueryable<TEntity> Query<TEntity>(OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null, PaginatedSpecification paginatedSpecification = null) where TEntity : class, IEntity, new()
         {
-            return this.session.Value.Set<TEntity>().AsQueryable().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
+            return session.Set<TEntity>().AsQueryable().Query(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
         public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()
         {
-            return this.session.Value.Set<TEntity>().AsQueryable().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
+            return session.Set<TEntity>().AsQueryable().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
         #endregion

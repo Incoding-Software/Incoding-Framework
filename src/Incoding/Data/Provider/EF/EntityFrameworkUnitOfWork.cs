@@ -15,6 +15,8 @@
 
         DbContextTransaction transaction;
 
+        bool isWasCommit;
+
         #endregion
 
         #region Constructors
@@ -26,25 +28,29 @@
 
         protected override void InternalFlush()
         {
-            this.session.Value.SaveChanges();
-        }
-
-        protected override void InternalOpen()
-        {
-            this.transaction = this.session.Value.Database.BeginTransaction(this.isolationLevel);
+            session.Value.SaveChanges();
         }
 
         protected override void InternalCommit()
         {
-            this.transaction.Commit();
+            transaction.Commit();
+            isWasCommit = true;
         }
 
         protected override void InternalSubmit()
         {
-            if (!this.isWasCommit)
-                this.transaction.Rollback();
+            if (!isWasCommit)
+                transaction.Rollback();
 
-            this.transaction.Dispose();
+            transaction.Dispose();
+        }
+
+        public override IRepository GetRepository()
+        {
+            if (transaction == null)
+                transaction = session.Value.Database.BeginTransaction(isolationLevel);
+
+            return new EntityFrameworkRepository(session.Value);
         }
     }
 }

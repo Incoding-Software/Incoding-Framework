@@ -25,20 +25,20 @@
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      message = Pleasure.Mock<CommandBase>();
-                                      message2 = Pleasure.Mock<CommandBase>();
+                              {
+                                  message = Pleasure.Mock<CommandBase>();
+                                  message2 = Pleasure.Mock<CommandBase>();
 
-                                      composite = new CommandComposite();
-                                      composite.Quote(message.Object);
-                                      composite.Quote(message2.Object);
-                                  };
+                                  composite = new CommandComposite();
+                                  composite.Quote(message.Object);
+                                  composite.Quote(message2.Object);
+                              };
 
         Because of = () => dispatcher.Push(composite);
 
-        It should_be_execute_message_1 = () => message.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute_message_1 = () => message.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
-        It should_be_execute_message_2 = () => message2.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute_message_2 = () => message2.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
         It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.AtLeast(2));
 

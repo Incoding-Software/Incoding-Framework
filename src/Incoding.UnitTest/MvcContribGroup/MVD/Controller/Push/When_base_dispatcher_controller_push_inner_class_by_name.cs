@@ -22,7 +22,7 @@
 
             public class InnerByName : CommandBase
             {
-                public override void Execute()
+                protected override void Execute()
                 {
                     throw new NotImplementedException();
                 }
@@ -35,7 +35,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(FakeInnerByNameCommand.InnerByName) });
 
-        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeInnerByNameCommand.InnerByName).Name), string.Empty); };
+        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeInnerByNameCommand.InnerByName).Name)); };
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeInnerByNameCommand.InnerByName());
 

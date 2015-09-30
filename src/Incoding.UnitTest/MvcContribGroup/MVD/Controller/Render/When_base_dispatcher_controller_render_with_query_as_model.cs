@@ -38,7 +38,7 @@
                                       dispatcher.StubQuery(new FakeRenderQuery(), new FakeAppModel());
                                   };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName, string.Empty, true); };
+        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName,  true); };
 
         It should_be_render = () =>
                                   {

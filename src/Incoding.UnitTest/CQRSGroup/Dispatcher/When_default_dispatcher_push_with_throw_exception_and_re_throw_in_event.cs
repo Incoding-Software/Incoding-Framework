@@ -72,7 +72,7 @@ namespace Incoding.UnitTest
                                                                                                                                            mock.Setup(r => r.GetAll<object>(typeof(IEventSubscriber<>).MakeGenericType(new[] { typeof(OnAfterErrorExecuteEvent) }))).Returns(new List<object> { new DispatcherSubscriber() });
                                                                                                                                        })));
 
-                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<MyException>());
+                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(Pleasure.MockIt.IsAny<IDispatcher>(), Pleasure.MockIt.IsAny<IUnitOfWork>())).Throws<MyException>());
 
                                       dispatcher = new DefaultDispatcher();
                                   };

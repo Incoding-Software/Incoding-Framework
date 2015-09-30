@@ -9,7 +9,7 @@
 
     public static class JquerySelectorExtendTreeTraversalExtensions
     {
-        #region Factory constructors
+        #region Add
 
         /// <summary>
         ///     Add elements to the set of matched elements.
@@ -27,6 +27,18 @@
         ///     Add elements to the set of matched elements.
         /// </summary>
         /// <param name="original"></param>
+        /// <param name="bOfClass">
+        ///     bootstrap of classes
+        /// </param>
+        public static JquerySelectorExtend Add(this JquerySelectorExtend original, B bOfClass)
+        {
+            return original.Add(r => r.Class(bOfClass));
+        }
+
+        /// <summary>
+        ///     Add elements to the set of matched elements.
+        /// </summary>
+        /// <param name="original"></param>
         /// <param name="selector">
         ///     selector to match elements against.
         /// </param>
@@ -34,6 +46,10 @@
         {
             return AddTree(original, jquerySelector => selector, "add");
         }
+
+        #endregion
+
+        #region Children
 
         /// <summary>
         ///     Get the children of each element in the set of matched elements, optionally filtered by a action.
@@ -68,8 +84,13 @@
             return original.Children(null);
         }
 
+        #endregion
+
+        #region Closest
+
         /// <summary>
-        ///     For each element in the set, get the first element that matches the action by testing the element itself and traversing up through its ancestors in the DOM tree.
+        ///     For each element in the set, get the first element that matches the action by testing the element itself and
+        ///     traversing up through its ancestors in the DOM tree.
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -81,7 +102,8 @@
         }
 
         /// <summary>
-        ///     For each element in the set, get the first element that tag the action by testing the element itself and traversing up through its ancestors in the DOM tree.
+        ///     For each element in the set, get the first element that tag the action by testing the element itself and traversing
+        ///     up through its ancestors in the DOM tree.
         /// </summary>
         /// <param name="original">
         /// </param>
@@ -93,9 +115,23 @@
             return original.Closest(selector => selector.Tag(tag));
         }
 
+        /// <summary>
+        ///     For each element in the set, get the first element that tag the action by testing the element itself and traversing
+        ///     up through its ancestors in the DOM tree.
+        /// </summary>
+        /// <param name="original">
+        /// </param>
+        /// <param name="tag">
+        ///     Selector
+        /// </param>
+        public static JquerySelectorExtend Closest(this JquerySelectorExtend original, JquerySelector selector)
+        {
+            return original.Closest(r => selector);
+        }
 
         /// <summary>
-        ///     For each element in the set, get the first element that expression the action by testing the element itself and traversing up through its ancestors in the DOM tree.
+        ///     For each element in the set, get the first element that expression the action by testing the element itself and
+        ///     traversing up through its ancestors in the DOM tree.
         /// </summary>
         /// <param name="original">
         /// </param>
@@ -106,6 +142,10 @@
         {
             return original.Closest(selector => selector.Expression(expression));
         }
+
+        #endregion
+        
+        #region Filter
 
         /// <summary>
         ///     Reduce the set of matched elements to those that match the action or pass the function's test.
@@ -127,7 +167,6 @@
             return original.Filter(selector => selector.Tag(tag));
         }
 
-
         /// <summary>
         ///     Reduce the set of expression to those that match the action or pass the function's test.
         /// </summary>
@@ -136,8 +175,22 @@
             return original.Filter(selector => selector.Expression(expression));
         }
 
+
         /// <summary>
-        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or element
+        ///     Reduce the set of expression to those that match the action or pass the function's test.
+        /// </summary>
+        public static JquerySelectorExtend Filter(this JquerySelectorExtend original, B bOfClass)
+        {
+            return original.Filter(selector => selector.Class(bOfClass));
+        }
+
+        #endregion
+
+        #region Find
+        
+        /// <summary>
+        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+        ///     element
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -172,8 +225,13 @@
             return original.Find(selector => selector.Expression(expression));
         }
 
+        #endregion
+
+        #region All Next
+
         /// <summary>
-        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or element
+        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+        ///     element
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -185,7 +243,8 @@
         }
 
         /// <summary>
-        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or element
+        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+        ///     element
         /// </summary>
         public static JquerySelectorExtend Next(this JquerySelectorExtend original)
         {
@@ -213,7 +272,8 @@
         }
 
         /// <summary>
-        ///     Get all following siblings of each element up to but not including the element matched by the action, DOM node, or jQuery object passed.
+        ///     Get all following siblings of each element up to but not including the element matched by the action, DOM node, or
+        ///     jQuery object passed.
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -225,12 +285,45 @@
         }
 
         /// <summary>
-        ///     Get all following siblings of each element up to but not including the element matched by the action, DOM node, or jQuery object passed.
+        ///     Get all following siblings of each element up to but not including the element matched by the action, DOM node, or
+        ///     jQuery object passed.
         /// </summary>
         public static JquerySelectorExtend NextUntil(this JquerySelectorExtend original)
         {
             return original.NextUntil(null);
         }
+
+        #endregion
+
+        #region Not
+
+        /// <summary>
+        ///     Selects all elements that do not match the given <paramref name="action" />.
+        /// </summary>
+        public static JquerySelectorExtend Not(this JquerySelectorExtend original, Func<JquerySelector, JquerySelector> action)
+        {
+            return AddTree(original, action, "not");
+        }
+
+        /// <summary>
+        ///     Selects all elements that do not match the given <paramref name="action" />.
+        /// </summary>
+        public static JquerySelectorExtend Not(this JquerySelectorExtend original, JqueryExpression expression)
+        {
+            return original.Not(r => r.Expression(expression));
+        }
+
+        /// <summary>
+        ///     Selects all elements that do not match the given <paramref name="action" />.
+        /// </summary>
+        public static JquerySelectorExtend Not(this JquerySelectorExtend original, HtmlTag tag)
+        {
+            return original.Not(r => r.Tag(tag));
+        }
+
+        #endregion
+  
+        #region Parent
 
         /// <summary>
         ///     Get the closest ancestor element that is positioned.
@@ -261,6 +354,9 @@
         {
             return AddTree(original, null, "parent");
         }
+
+
+
 
         /// <summary>
         ///     Get the parent of each element in the current set of tag, optionally filtered by a action.
@@ -308,7 +404,8 @@
         }
 
         /// <summary>
-        ///     Get the ancestors of each element in the current set of matched elements, up to but not including the element matched by the action, DOM node, or jQuery object
+        ///     Get the ancestors of each element in the current set of matched elements, up to but not including the element
+        ///     matched by the action, DOM node, or jQuery object
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -320,15 +417,21 @@
         }
 
         /// <summary>
-        ///     Get the ancestors of each element in the current set of matched elements, up to but not including the element matched by the action, DOM node, or jQuery object
+        ///     Get the ancestors of each element in the current set of matched elements, up to but not including the element
+        ///     matched by the action, DOM node, or jQuery object
         /// </summary>
         public static JquerySelectorExtend ParentsUntil(this JquerySelectorExtend original)
         {
             return original.ParentsUntil(null);
         }
 
+        #endregion
+
+        #region Prev
+
         /// <summary>
-        ///     Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a action.
+        ///     Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a
+        ///     action.
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -340,7 +443,8 @@
         }
 
         /// <summary>
-        ///     Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a action.
+        ///     Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a
+        ///     action.
         /// </summary>
         public static JquerySelectorExtend Prev(this JquerySelectorExtend original)
         {
@@ -368,7 +472,8 @@
         }
 
         /// <summary>
-        ///     Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or jQuery object.
+        ///     Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or
+        ///     jQuery object.
         /// </summary>
         /// <param name="original"></param>
         /// <param name="action">
@@ -380,12 +485,17 @@
         }
 
         /// <summary>
-        ///     Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or jQuery object.
+        ///     Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or
+        ///     jQuery object.
         /// </summary>
         public static JquerySelectorExtend PrevUntil(this JquerySelectorExtend original)
         {
             return original.PrevUntil(null);
         }
+
+        #endregion
+
+        #region Siblings
 
         /// <summary>
         ///     Get the siblings of each element in the set of matched elements, optionally filtered by a action
@@ -399,6 +509,31 @@
             return AddTree(original, action, "siblings");
         }
 
+
+        /// <summary>
+        ///     Get the siblings of each element in the set of matched elements, optionally filtered by a action
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="tag">
+        ///     Html tag
+        /// </param>
+        public static JquerySelectorExtend Siblings(this JquerySelectorExtend original, HtmlTag tag)
+        {
+           return original.Siblings(r => r.Tag(tag));
+        }   
+        
+        /// <summary>
+        ///     Get the siblings of each element in the set of matched elements, optionally filtered by a action
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="bOfClass">
+        ///     Bootstrap class
+        /// </param>
+        public static JquerySelectorExtend Siblings(this JquerySelectorExtend original, B bOfClass)
+        {
+           return original.Siblings(r => r.Class(bOfClass));
+        }
+
         /// <summary>
         ///     Get the siblings of each element in the set of matched elements, optionally filtered by a action
         /// </summary>
@@ -407,15 +542,21 @@
             return original.Siblings(null);
         }
 
+        #endregion
+
+        #region Slice
+
         /// <summary>
         ///     Reduce the set of matched elements to a subset specified by a range of indices.
         /// </summary>
         /// <param name="original"></param>
         /// <param name="start">
-        ///     An integer indicating the 0-based position at which the elements begin to be selected. If negative, it indicates an offset from the end of the set.
+        ///     An integer indicating the 0-based position at which the elements begin to be selected. If negative, it indicates an
+        ///     offset from the end of the set.
         /// </param>
         /// <param name="end">
-        ///     An integer indicating the 0-based position at which the elements stop being selected. If negative, it indicates an offset from the end of the set. If omitted, the range continues until the end of the set.
+        ///     An integer indicating the 0-based position at which the elements stop being selected. If negative, it indicates an
+        ///     offset from the end of the set. If omitted, the range continues until the end of the set.
         /// </param>
         public static JquerySelectorExtend Slice(this JquerySelectorExtend original, Selector start, Selector end = null)
         {

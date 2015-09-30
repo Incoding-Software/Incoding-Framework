@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Configuration;
     using System.Linq;
     using System.Threading;
     using Incoding.Data;
@@ -109,7 +110,7 @@
                               {
                                   documentStore = new DocumentStore
                                                   {
-                                                          Url = "http://localhost:8080/", 
+                                                          Url = ConfigurationManager.ConnectionStrings["IncRealRavenDb"].ConnectionString, 
                                                           DefaultDatabase = "IncTest", 
                                                   };
                                   documentStore.Conventions.AllowQueriesOnId = true;

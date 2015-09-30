@@ -22,13 +22,13 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        Establish establish = () => { message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>()); };
+        Establish establish = () => { message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(dispatcher, unitOfWork.Object)).Throws<ArgumentException>()); };
 
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
 
         It should_be_exception = () => exception.ShouldBeOfType<ArgumentException>();
 
-        It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute = () => message.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
         It should_be_not_commit = () => unitOfWork.Verify(r => r.Commit(), Times.Never());
 

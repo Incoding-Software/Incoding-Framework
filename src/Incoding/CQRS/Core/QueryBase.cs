@@ -4,7 +4,7 @@ namespace Incoding.CQRS
     {
         #region Override
 
-        public override void Execute()
+        protected override void Execute()
         {
             Result = ExecuteResult();
         }

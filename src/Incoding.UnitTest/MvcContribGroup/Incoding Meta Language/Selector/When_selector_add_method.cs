@@ -8,8 +8,10 @@
     #endregion
 
     [Subject(typeof(Selector))]
-    public class When_selector_add_method
+    public class When_selector_method
     {
+
+        
         It should_be_add_method_with_brakes = () => Selector.Jquery
                                                             .Id("test")
                                                             .Method("MyMethod()")

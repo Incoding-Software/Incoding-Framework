@@ -16,9 +16,9 @@ namespace Incoding.UnitTest.Block
     {
         #region Establish value
 
-        const string testLog = "Test Log";
+        const string testLog = "Application";
 
-        static string sourceName = "Incoding Test";
+        static string sourceName = "Application";
 
         #endregion
 

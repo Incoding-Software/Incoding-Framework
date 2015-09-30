@@ -1,62 +1,77 @@
-﻿@using System.Linq.Expressions
-@using Incoding.CQRS
+﻿@using System
 @using Incoding.SiteTest
-@using Incoding.Extensions
 <!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
+<head>
+    <title></title>
 
-        @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
-        @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
 
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
-    
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))    
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))    
-        @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))    
-            
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"))        
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
-    </head>
-        
-    <body>
-        <div id="second">            
-        </div>
-        <div id="inner"></div>
-        @{
-            Func<Expression<Func<KeyValueVm, object>>, string> getName = (prop) => prop.GetMemberName();
-            string tmplId = Guid.NewGuid().ToString();
-        }
-        @using (var template = Html.Incoding().ScriptTemplate<KeyValueVm>(tmplId))
-        {
-            using (var each = template.ForEach())
-            {
-                <label for="@getName(r => r.Text)">@each.For(r => r.Text)</label>
-                <input value="@each.For(r => r.Text)" name="@getName(r => r.Text)"/>
-            }
-        }
-        
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
 
-        @(Html.When(JqueryBind.InitIncoding)
-                              .Do()
-                              .Direct()
-                              .OnSuccess(dsl => dsl.Utilities.Window.Alert("Init"))
-                              .When(JqueryBind.Change | JqueryBind.InitIncoding)
-                              .Do()
-                              .Direct()
-                              .OnSuccess(dsl => dsl.Utilities.Window.Alert("Change Init"))
-                              .AsHtmlAttributes()
-                              .ToCheckBox(false))
-    </body>
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
+</head>
+
+<body>
+<h3>Push</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new SampleOfCQRS.Command() { Value = "Value" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite as array</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 1" })
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 2" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value" })
+                   .Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite mix</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 1" })
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 2" })
+                   .Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push multiple generic</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+
+
+</body>
 
 </html>

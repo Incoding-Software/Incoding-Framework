@@ -14,9 +14,7 @@ namespace Incoding.Data
         void ExecuteSql(string sql);
 
         TProvider GetProvider<TProvider>() where TProvider:class;
-
-        void SetProvider(object provider);
-
+        
         /// <summary>
         ///     Persist the given entity instance
         /// </summary>

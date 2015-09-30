@@ -29,7 +29,7 @@
 
             // ReSharper restore UnusedMember.Local
 
-            public override void Execute() { }
+            protected override void Execute() { }
         }
 
         #endregion

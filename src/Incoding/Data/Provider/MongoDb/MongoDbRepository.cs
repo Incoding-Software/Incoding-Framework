@@ -22,15 +22,15 @@
     {
         #region Fields
 
-        Lazy<MongoDatabaseDisposable> database;
+        readonly MongoDatabaseDisposable database;
 
         #endregion
 
         #region Constructors
 
-        public MongoDbRepository(/*IMongoDbSessionFactory sessionFactory*/)
+        public MongoDbRepository(MongoDatabaseDisposable database)
         {
-            //this.database = sessionFactory.GetCurrent().Instance;
+            this.database = database;
         }
 
         #endregion
@@ -40,17 +40,12 @@
         [UsedImplicitly, Obsolete(ObsoleteMessage.NotSupportForThisImplement, true), ExcludeFromCodeCoverage]
         public void ExecuteSql(string sql)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public TProvider GetProvider<TProvider>() where TProvider : class
         {
-            return database.Value as TProvider;
-        }
-
-        public void SetProvider(object provider)
-        {
-            database = (Lazy<MongoDatabaseDisposable>)provider;
+            return database as TProvider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
@@ -171,7 +166,7 @@
 
         MongoCollection<TEntity> GetCollection<TEntity>()
         {
-            return this.database.Value.Instance.GetCollection<TEntity>(typeof(TEntity).Name);
+            return database.Instance.GetCollection<TEntity>(typeof(TEntity).Name);
         }
     }
 }

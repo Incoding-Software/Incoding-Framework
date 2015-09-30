@@ -6,7 +6,7 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public interface IIncodingMetaLanguageActionDsl 
+    public interface IIncodingMetaLanguageActionDsl
     {
         IIncodingMetaLanguageEventBuilderDsl Ajax(Action<JqueryAjaxOptions> configuration);
 
@@ -16,12 +16,15 @@ namespace Incoding.MvcContrib
 
         IIncodingMetaLanguageEventBuilderDsl AjaxPost(string url);
 
+        [Obsolete("Please use Selector.Event.Result")]
         IIncodingMetaLanguageEventBuilderDsl Event();
 
         IIncodingMetaLanguageEventBuilderDsl Direct();
 
+        [Obsolete(@"Please use method 'Use' with IncodingResult")]
         IIncodingMetaLanguageEventBuilderDsl Direct(IncodingResult result);
 
+        [Obsolete("Deprecated method")]
         IIncodingMetaLanguageEventBuilderDsl Direct(object data);
 
         IIncodingMetaLanguageEventBuilderDsl Submit(Action<JqueryAjaxFormOptions> configuration = null);

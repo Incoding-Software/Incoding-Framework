@@ -11,52 +11,7 @@ namespace Incoding.MvcContrib
 
     public class ConditionalIs : ConditionalBase
     {
-        #region Fields
-
-        string left;
-
-        string right;
-
-        object method;
-
-        #endregion
-
-        #region Constructors
-
-        public ConditionalIs(Expression body, bool and)
-                : base(ConditionalOfType.Is.ToString(), and)
-        {
-            if (body is MethodCallExpression)
-                SetMethodCall(body as MethodCallExpression);
-            else if (body is UnaryExpression)
-                SetUnary(body as UnaryExpression);
-            else if (body is BinaryExpression)
-                SetBinary(body as BinaryExpression);
-            else if (body.Type == typeof(Boolean))
-                SetBoolean(body);
-            else
-                throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(body.GetType()));
-        }
-
-        public ConditionalIs(Expression<Func<bool>> expression, bool and)
-                : this(expression.Body, and) { }
-
-        #endregion
-
-        #region Nested classes
-
-        class IsMethod
-        {
-            #region Constants
-
-            public const string isContains = "iscontains";
-
-            public const string isEmpty = "isempty";
-
-            #endregion
-        }
-
-        #endregion
+        readonly bool fakeMode;
 
         void SetUnary(UnaryExpression expression)
         {
@@ -77,7 +32,9 @@ namespace Incoding.MvcContrib
 
         void SetBoolean(Expression expression)
         {
-            var value = Expression.Lambda(expression).Compile().DynamicInvoke();
+            var value = fakeMode
+                                ? Selector.Result.For(((MemberExpression)expression).Member.Name)
+                                : Expression.Lambda(expression).Compile().DynamicInvoke();
             Set(true, value, ExpressionType.Equal.ToStringLower());
         }
 
@@ -104,8 +61,8 @@ namespace Incoding.MvcContrib
 
         void Set(object l, object r, string m)
         {
-            this.left = l.With(s => s.ToString()).Recovery(string.Empty);
-            this.right = r.With(s => s.ToString()).Recovery(string.Empty);
+            this.left = l is Selector ? l.With(s => s.ToString()).Recovery(string.Empty) : new ValueSelector(l);
+            this.right = r is Selector ? r.With(s => s.ToString()).Recovery(string.Empty) : new ValueSelector(r);
             this.method = m;
         }
 
@@ -118,13 +75,16 @@ namespace Incoding.MvcContrib
                 return;
             }
 
-            Set(GetValue(expression.Left), GetValue(expression.Right), expression.NodeType.ToStringLower());
+            Set(GetValue(expression.Left, this.fakeMode), GetValue(expression.Right), expression.NodeType.ToStringLower());
         }
 
-        object GetValue(Expression expression)
+        object GetValue(Expression expression, bool setMode = false)
         {
+            if (setMode)
+                return Selector.Result.For(((MemberExpression)expression).Member.Name);
+
             return expression.NodeType == ExpressionType.Convert
-                           ? Expression.Lambda((expression as UnaryExpression).Operand).Compile().DynamicInvoke()
+                           ? Expression.Lambda(((UnaryExpression)expression).Operand).Compile().DynamicInvoke()
                            : Expression.Lambda(expression).Compile().DynamicInvoke();
         }
 
@@ -142,14 +102,62 @@ namespace Incoding.MvcContrib
         public override object GetData()
         {
             return new
-                       {
-                               this.type,
-                               this.inverse,
-                               this.left,
-                               this.right,
-                               this.method,
-                               this.and
-                       };
+                   {
+                           this.type,
+                           this.inverse,
+                           this.left,
+                           this.right,
+                           this.method,
+                           this.and
+                   };
         }
+
+        #region Nested classes
+
+        class IsMethod
+        {
+            #region Constants
+
+            public const string isContains = "iscontains";
+
+            public const string isEmpty = "isempty";
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Fields
+
+        string left;
+
+        string right;
+
+        object method;
+
+        #endregion
+
+        #region Constructors
+
+        public ConditionalIs(Expression body, bool and, bool fakeMode = false)
+                : base(ConditionalOfType.Is.ToString(), and)
+        {
+            this.fakeMode = fakeMode;
+            if (body is MethodCallExpression)
+                SetMethodCall(body as MethodCallExpression);
+            else if (body is UnaryExpression)
+                SetUnary(body as UnaryExpression);
+            else if (body is BinaryExpression)
+                SetBinary(body as BinaryExpression);
+            else if (body.Type == typeof(Boolean))
+                SetBoolean(body);
+            else
+                throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(body.GetType()));
+        }
+
+        public ConditionalIs(Expression<Func<bool>> expression, bool and)
+                : this(expression.Body, and) { }
+
+        #endregion
     }
 }

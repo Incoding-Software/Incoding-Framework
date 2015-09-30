@@ -45,5 +45,7 @@ namespace Incoding.UnitTest.Block
         Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
 
         Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
+
+        Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
     }
 }

@@ -19,7 +19,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(string) });
 
-        Because of = () => { exception = Catch.Exception(() => controller.Push("AmbiguousType", string.Empty)); };
+        Because of = () => { exception = Catch.Exception(() => controller.Push("AmbiguousType")); };
 
         It should_be_exception = () => exception.Message.ShouldEqual("Ambiguous type AmbiguousType");
     }

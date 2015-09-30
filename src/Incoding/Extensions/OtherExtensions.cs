@@ -11,10 +11,6 @@ namespace Incoding.Extensions
 
     public static class OtherExtensions
     {
-        public static void Initialize<T>(this Lazy<T> lazy)
-        {
-            lazy.GetType().GetMethod("LazyInitValue", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(lazy, new object[] { });
-        }
 
         public static bool IsEmpty(this Guid? value)
         {

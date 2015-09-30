@@ -15,6 +15,16 @@
 
     public class UrlDispatcher
     {
+        #region Constants
+
+        internal const string separatorByGeneric = "/";
+
+        internal const string separatorByPair = "|";
+
+        internal const string separatorByType = "&";
+
+        #endregion
+
         #region Static Fields
 
         public static bool IsVerifySchema;
@@ -38,30 +48,30 @@
 
         #region Api Methods
 
-        public UrlQueryDispatcher<TQuery> Query<TQuery>(object routes = null) where TQuery : new()
+        public UrlQuery<TQuery> Query<TQuery>(object routes = null) where TQuery : new()
         {
             VerifySchema<TQuery>(routes);
-            return new UrlQueryDispatcher<TQuery>(urlHelper, routes);
+            return new UrlQuery<TQuery>(urlHelper, routes);
         }
 
-        public UrlQueryDispatcher<TQuery> Query<TQuery>(TQuery routes) where TQuery : new()
+        public UrlQuery<TQuery> Query<TQuery>(TQuery routes) where TQuery : new()
         {
             return Query<TQuery>(routes as object);
         }
 
-        public UrlPushDispatcher Push<TCommand>(TCommand routes) where TCommand : new()
+        public UrlPush Push<TCommand>(TCommand routes) where TCommand : new()
         {
             return Push<TCommand>(routes as object);
         }
 
-        public UrlPushDispatcher Push<TCommand>(object routes = null) where TCommand : new()
+        public UrlPush Push<TCommand>(object routes = null) where TCommand : new()
         {
             VerifySchema<TCommand>(routes);
-            var res = new UrlPushDispatcher(urlHelper);
+            var res = new UrlPush(urlHelper);
             return res.Push<TCommand>(routes);
         }
 
-        public string AsView([PathReference] string incView)
+        public string AsView([PathReference, NotNull] string incView)
         {
             return urlHelper.Action("Render", "Dispatcher", new
                                                             {
@@ -69,18 +79,18 @@
                                                             });
         }
 
-        public UrlModelDispatcher<TModel> Model<TModel>() where TModel : new()
+        public UrlModel<TModel> Model<TModel>()
         {
-            return new UrlModelDispatcher<TModel>(urlHelper, null);
+            return new UrlModel<TModel>(urlHelper, null);
         }
 
-        public UrlModelDispatcher<TModel> Model<TModel>(object routes) where TModel : new()
+        public UrlModel<TModel> Model<TModel>(object routes)
         {
             VerifySchema<TModel>(routes);
-            return new UrlModelDispatcher<TModel>(urlHelper, routes);
+            return new UrlModel<TModel>(urlHelper, routes.GetType().IsTypicalType() ? new { incValue = routes } : routes);
         }
 
-        public UrlModelDispatcher<TModel> Model<TModel>(TModel routes) where TModel : class, new()
+        public UrlModel<TModel> Model<TModel>(TModel routes)
         {
             return Model<TModel>(routes as object);
         }
@@ -89,7 +99,7 @@
 
         #region Nested classes
 
-        public class UrlModelDispatcher<TModel>
+        public class UrlModel<TModel>
         {
             #region Fields
 
@@ -103,7 +113,7 @@
 
             #region Constructors
 
-            public UrlModelDispatcher(UrlHelper urlHelper, object model)
+            public UrlModel(UrlHelper urlHelper, object model)
             {
                 defaultRoutes = new RouteValueDictionary
                                 {
@@ -119,7 +129,7 @@
 
             #region Api Methods
 
-            public string AsView([PathReference] string incView)
+            public string AsView([PathReference, NotNull] string incView)
             {
                 defaultRoutes.Add("incView", incView);
                 return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
@@ -129,7 +139,7 @@
             #endregion
         }
 
-        public class UrlQueryDispatcher<TQuery>
+        public class UrlQuery<TQuery>
         {
             #region Fields
 
@@ -143,16 +153,10 @@
 
             #region Constructors
 
-            public UrlQueryDispatcher(UrlHelper urlHelper, object query)
+            public UrlQuery(UrlHelper urlHelper, object query)
             {
                 defaultRoutes = new RouteValueDictionary();
                 defaultRoutes.Add("incType", GetTypeName(typeof(TQuery)));
-                if (typeof(TQuery).IsGenericType)
-                {
-                    defaultRoutes.Add("incGeneric", typeof(TQuery).GetGenericArguments().Select(r => GetTypeName(r))
-                                                                  .AsString(","));
-                }
-
                 this.urlHelper = urlHelper;
                 this.query = AnonymousHelper.ToDictionary(query);
             }
@@ -161,7 +165,7 @@
 
             #region Api Methods
 
-            public UrlQueryDispatcher<TQuery> EnableValidate()
+            public UrlQuery<TQuery> EnableValidate()
             {
                 defaultRoutes.Add("incValidate", true);
                 return this;
@@ -169,11 +173,12 @@
 
             public string AsFile(string incContentType = "", string incFileDownloadName = "")
             {
-                if (!string.IsNullOrWhiteSpace(incContentType))
-                    defaultRoutes.Add("incContentType", incContentType);
-                if (!string.IsNullOrWhiteSpace(incFileDownloadName))
-                    defaultRoutes.Add("incFileDownloadName", incFileDownloadName);
                 return urlHelper.Action("QueryToFile", "Dispatcher", defaultRoutes)
+                                .AppendToQueryString(new
+                                                     {
+                                                             incContentType = incContentType,
+                                                             incFileDownloadName = incFileDownloadName
+                                                     })
                                 .AppendToQueryString(query);
             }
 
@@ -183,10 +188,10 @@
                                 .AppendToQueryString(query);
             }
 
-            public string AsView([PathReference] string incView)
+            public string AsView([PathReference, NotNull] string incView)
             {
                 defaultRoutes.Add("incView", incView);
-                return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
+                return urlHelper.Action("Render", "Dispatcher", defaultRoutes)                                
                                 .AppendToQueryString(query);
             }
 
@@ -198,7 +203,7 @@
             }
         }
 
-        public class UrlPushDispatcher
+        public class UrlPush
         {
             #region Fields
 
@@ -206,11 +211,13 @@
 
             readonly Dictionary<Type, List<object>> dictionary = new Dictionary<Type, List<object>>();
 
+            bool isCompositeAsArray;
+
             #endregion
 
             #region Constructors
 
-            public UrlPushDispatcher(UrlHelper urlHelper)
+            public UrlPush(UrlHelper urlHelper)
             {
                 this.urlHelper = urlHelper;
             }
@@ -219,10 +226,14 @@
 
             #region Api Methods
 
-            public UrlPushDispatcher Push<TCommand>(object routes)
+            public UrlPush Push<TCommand>(object routes)
             {
                 var type = typeof(TCommand);
-                if (dictionary.ContainsKey(type))
+                bool isContains = dictionary.ContainsKey(type);
+                if (isContains)
+                    isCompositeAsArray = true;
+
+                if (isContains)
                     dictionary[type].Add(routes);
                 else
                     dictionary.Add(type, new List<object> { routes });
@@ -230,7 +241,7 @@
                 return this;
             }
 
-            public UrlPushDispatcher Push<TCommand>(TCommand command)
+            public UrlPush Push<TCommand>(TCommand command)
             {
                 return Push<TCommand>(command as object);
             }
@@ -239,30 +250,16 @@
 
             public override string ToString()
             {
-                string baseUrl;
-                if (dictionary.Count == 1 && dictionary.Values.First().Count == 1)
-                {
-                    var pair = dictionary.First();
-                    var commandType = pair.Key;
-                    baseUrl = urlHelper.Action("Push", "Dispatcher", new RouteValueDictionary
-                                                                     {
-                                                                             { "incType", GetTypeName(commandType) }, 
-                                                                             { "incGeneric", commandType.IsGenericType ? GetTypeName(commandType.GetGenericArguments()[0]) : string.Empty }
-                                                                     });
-                }
-                else
-                {
-                    baseUrl = urlHelper.Action("Composite", "Dispatcher", new RouteValueDictionary
-                                                                          {
-                                                                                  {
-                                                                                          "incTypes", dictionary.Select(r => GetTypeName(r.Key))
-                                                                                                               .Distinct()
-                                                                                                               .AsString(",")
-                                                                                  }
-                                                                          });
-                }
+                var routeValues = new RouteValueDictionary { { "incTypes", dictionary.Select(r => GetTypeName(r.Key)).AsString(separatorByType) } };
+                if (isCompositeAsArray)
+                    routeValues.Add("incIsCompositeAsArray", true);
+                return urlHelper.Action("Push", "Dispatcher", routeValues)
+                                .AppendToQueryString(GetQueryString());
+            }
 
-                var routes = new RouteValueDictionary();
+            RouteValueDictionary GetQueryString()
+            {
+                var query = new RouteValueDictionary();
                 foreach (var pair in dictionary)
                 {
                     var valueAsRoutes = pair.Value.Select(AnonymousHelper.ToDictionary)
@@ -273,20 +270,20 @@
                         for (int i = 0; i < valueAsRoutes.Count; i++)
                         {
                             foreach (var keyValue in valueAsRoutes[i].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
-                                routes.Add("[{0}].{1}".F(i, keyValue.Key), keyValue.Value.ToString());
+                                query.Add("[{0}].{1}".F(i, keyValue.Key), keyValue.Value.ToString());
                         }
                     }
                     else
                     {
                         foreach (var keyValue in valueAsRoutes[0].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
-                            routes.Add(keyValue.Key, keyValue.Value.ToString());
+                            query.Add(keyValue.Key, keyValue.Value.ToString());
                     }
                 }
 
-                return baseUrl.AppendToQueryString(routes);
+                return query;
             }
 
-            public static implicit operator string(UrlPushDispatcher s)
+            public static implicit operator string(UrlPush s)
             {
                 return s.ToString();
             }
@@ -309,9 +306,10 @@
 
         static string GetTypeName(Type type)
         {
-            return DispatcherControllerBase.duplicates.Any(r => r == type)
-                           ? type.FullName
-                           : type.Name;
+            string mainName = DispatcherControllerBase.duplicates.Any(r => r == type)
+                                      ? type.FullName
+                                      : type.Name;
+            return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
         }
     }
 }

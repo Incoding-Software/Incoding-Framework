@@ -17,6 +17,13 @@ namespace Incoding.UnitTest.MSpecGroup
 
         protected class FakeGenerateObject
         {
+            string privateValue;
+
+            public string GetPrivateValue()
+            {
+                return privateValue;
+            }
+
             #region Constructors
 
             public FakeGenerateObject()
@@ -27,6 +34,8 @@ namespace Incoding.UnitTest.MSpecGroup
             #endregion
 
             #region Properties
+
+            public string OnlyGet { get { return ""; }  }
 
             [IgnoreInvent("Test")]
             public string IgnoreValueByAttr { get; set; }

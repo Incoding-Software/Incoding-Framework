@@ -3,6 +3,7 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Management.Instrumentation;
@@ -31,6 +32,18 @@ namespace Incoding.Extensions
             return customAttributes.Length == 0
                            ? null
                            : customAttributes[0] as TAttribute;
+        }
+
+        public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
+        {            
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
         }
 
         public static string GetMemberName(this LambdaExpression lambdaExpression)

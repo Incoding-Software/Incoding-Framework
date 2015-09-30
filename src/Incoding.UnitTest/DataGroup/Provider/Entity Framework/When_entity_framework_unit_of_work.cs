@@ -25,9 +25,7 @@
             string connectionString = ConfigurationManager.ConnectionStrings["IncRealEFDb"].ConnectionString;
             var sessionFactory = Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(dbContext.Object));
             var unitOfWork = new EntityFrameworkUnitOfWork(sessionFactory, IsolationLevel.ReadCommitted, connectionString);
-            if (isOpen)
-                unitOfWork.Open();
-
+            
             action(unitOfWork, dbContext);
         }
 

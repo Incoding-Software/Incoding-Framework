@@ -3,6 +3,7 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using Incoding.Extensions;
 
@@ -41,7 +42,11 @@ namespace Incoding.MSpecContrib
         public IInventFactoryDsl<T> Tuning<TValue>(Expression<Func<T, TValue>> property, TValue value)
         {
             Guard.NotNull("property", property);
-            return Tuning(property.GetMemberName(), value);
+            var memberName = property.GetMemberName();
+            Guard.IsConditional("property",typeof(T).GetProperties(bindingFlags)
+                .Where(r=>r.CanWrite)
+                .Select(r=>r.Name).Contains(memberName),"Tuning can be use for CanWrite property/field");            
+            return Tuning(memberName, value);
         }
 
         public IInventFactoryDsl<T> Tuning(string property, object value)

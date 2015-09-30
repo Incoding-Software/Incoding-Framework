@@ -24,24 +24,24 @@
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      logger = Pleasure.Mock<ILogger>();
-                                      LoggingFactory.Instance.Initialize(logging => logging.WithPolicy(policy => policy.For("Test").Use(logger.Object)));
-                                  };
+                              {
+                                  logger = Pleasure.Mock<ILogger>();
+                                  LoggingFactory.Instance.Initialize(logging => logging.WithPolicy(policy => policy.For("Test").Use(logger.Object)));
+                              };
 
         Because of = () =>
-                         {
-                             exception = Catch.Exception(() => SchedulerFactory.Instance.Initialize(scheduler =>
-                                                                                                        {
-                                                                                                            scheduler.Log_Debug = "Test";
-                                                                                                            scheduler.Conditional = () => { throw new ArgumentException(); };
-                                                                                                        }));
-                             Pleasure.Sleep1000Milliseconds();
-                         };
+                     {
+                         exception = Catch.Exception(() => SchedulerFactory.Instance.Initialize(scheduler =>
+                                                                                                {
+                                                                                                    scheduler.Log_Debug = "Test";
+                                                                                                    scheduler.Conditional = () => { throw new ArgumentException(); };
+                                                                                                }));
+                         Pleasure.Sleep1000Milliseconds();
+                     };
 
-        It should_be_do_not_stop = () => exception.ShouldBeNull();
+        It should_not_be_exception = () => exception.ShouldBeNull();
 
-        It should_be_log = () => logger.Verify(r => r.Log(Pleasure.MockIt.IsStrong(new LogMessage(string.Empty, new ArgumentException(), null), dsl => dsl.ForwardToAction(message => message.Exception, message => message.Exception.ShouldNotBeNull())
-                                                                                                                                                          .ForwardToAction(message => message.Message, message => message.Message.ShouldNotBeEmpty()))));
+        It should_be_log_once = () => logger.Verify(r => r.Log(Pleasure.MockIt.IsStrong(new LogMessage(string.Empty, new ArgumentException(), null), dsl => dsl.ForwardToAction(message => message.Exception, message => message.Exception.ShouldNotBeNull())
+                                                                                                                                                               .ForwardToAction(message => message.Message, message => message.Message.ShouldNotBeEmpty()))), Times.Once());
     }
 }

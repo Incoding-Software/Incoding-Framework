@@ -6,6 +6,7 @@
     using System.Web;
     using Incoding.CQRS;
     using Incoding.Data;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -20,7 +21,7 @@
         public class FakeGenericByFullNameCommand<TEntity> : CommandBase
         {
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -32,7 +33,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(FakeGenericByFullNameCommand<IncEntityBase>) });
 
-        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeGenericByFullNameCommand<>).FullName), typeof(IncEntityBase).FullName); };
+        Because of = () => { result = controller.Push("{0}|{1}".F(typeof(FakeGenericByFullNameCommand<>).FullName, typeof(IncEntityBase).FullName)); };
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeGenericByFullNameCommand<IncEntityBase>());
 

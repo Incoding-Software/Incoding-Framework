@@ -32,25 +32,25 @@
                                                   .Do()
                                                   .Direct()
                                                   .OnSuccess(dsl =>
-                                                                 {
-                                                                     dsl.Self().Core().Form.Validation.Parse();
-                                                                     dsl.WithId("Id").Core().Form.Validation.Refresh();
-                                                                     dsl.WithClass("class").Core().Form.Reset();
-                                                                 })
+                                                             {
+                                                                 dsl.Self().Core().Form.Validation.Parse();
+                                                                 dsl.WithId("Id").Core().Form.Validation.Refresh();
+                                                                 dsl.WithClass("class").Core().Form.Reset();
+                                                             })
                                                   .Should(dsl =>
-                                                              {
-                                                                  dsl.GetActions<ExecutableValidationParse>()
-                                                                     .First()["target"]
-                                                                          .ShouldEqual("$(this.self)");
+                                                          {
+                                                              dsl.GetActions<ExecutableValidationParse>()
+                                                                 .First()["target"]
+                                                                      .ShouldEqual("$(this.self)");
 
-                                                                  dsl.GetActions<ExecutableValidationRefresh>()
-                                                                     .First()["target"]
-                                                                          .ShouldEqual("$('#Id')");
+                                                              dsl.GetActions<ExecutableValidationRefresh>()
+                                                                 .First()["target"]
+                                                                      .ShouldEqual("$('#Id')");
 
-                                                                  dsl.GetActions<ExecutableForm>()
-                                                                     .First()["target"]
-                                                                          .ShouldEqual("$('.class')");
-                                                              });
+                                                              dsl.GetActions<ExecutableForm>()
+                                                                 .First()["target"]
+                                                                      .ShouldEqual("$('.class')");
+                                                          });
 
         It should_be_reset_target_after_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                .Do()
@@ -61,15 +61,15 @@
                                                                .Direct()
                                                                .OnSuccess(dsl => dsl.WithId("Id").Core().Form.Validation.Refresh())
                                                                .Should(dsl =>
-                                                                           {
-                                                                               dsl.GetActions<ExecutableValidationParse>()
-                                                                                  .First()["target"]
-                                                                                       .ShouldEqual("$(this.self)");
+                                                                       {
+                                                                           dsl.GetActions<ExecutableValidationParse>()
+                                                                              .First()["target"]
+                                                                                   .ShouldEqual("$(this.self)");
 
-                                                                               dsl.GetActions<ExecutableValidationRefresh>()
-                                                                                  .First()["target"]
-                                                                                       .ShouldEqual("$('#Id')");
-                                                                           });
+                                                                           dsl.GetActions<ExecutableValidationRefresh>()
+                                                                              .First()["target"]
+                                                                                   .ShouldEqual("$('#Id')");
+                                                                       });
 
         It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                    .Do()
@@ -136,5 +136,13 @@
                                                .GetActions<ExecutableValidationParse>()
                                                .First()["target"]
                                                .ShouldEqual("$(this.self).closest('tr')");
+
+        It should_be_with_self_multiple_level = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                              .Do()
+                                                              .Direct()
+                                                              .OnSuccess(dsl => dsl.WithSelf(r => r.Closest(selector => selector.Class("group")).Find(s => s.Class("help"))).Form.Validation.Parse())
+                                                              .GetActions<ExecutableValidationParse>()
+                                                              .First()["target"]
+                                                              .ShouldEqual("$(this.self).closest('.group').find('.help')");
     }
 }

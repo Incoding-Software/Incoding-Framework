@@ -1,0 +1,14 @@
+﻿  @{
+      using (var template = Html.Incoding().Template<KeyValueVm>())
+      {
+          <ul>
+          @using (var each = template.ForEach())
+          {
+              <li>
+                  @each.For(r=>r.Value)
+              </li>   
+          }    
+          </ul>
+          
+      }
+  }

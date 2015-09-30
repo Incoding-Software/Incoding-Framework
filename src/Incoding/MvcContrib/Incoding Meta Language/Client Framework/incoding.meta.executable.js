@@ -40,7 +40,8 @@ function ExecutableBase() {
     this.interval = 0;
     this.intervalId = '';
     this.target = '';
-    this.ands = null;    
+    this.ands = null;
+    this.result = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -49,19 +50,19 @@ function ExecutableBase() {
 
 ExecutableBase.prototype = {
     // ReSharper disable UnusedParameter
-    execute : function(data) {
+    execute : function(state) {
 
         var current = this;
         current.target = current.getTarget();
         
-        if (!current.isValid(data)) {
+        if (!current.isValid()) {
             return;
         }
 
         if (current.timeOut > 0) {
             window.setTimeout(function() {
                 current.target = current.getTarget();
-                current.internalExecute(data);
+                current.internalExecute(state);
             }, current.timeOut);
             return;
         }
@@ -69,17 +70,17 @@ ExecutableBase.prototype = {
         if (current.interval > 0) {
             ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function() {
                 current.target = current.getTarget();
-                current.internalExecute(data);
+                current.internalExecute(state);
             }, current.interval);
             return;
         }
         
-        current.internalExecute(data);        
+        current.internalExecute(state);
     },    
-    internalExecute : function(data) {        
+    internalExecute: function (state) {
     },
     
-    isValid : function(data) {
+    isValid : function() {
 
         var current = this;
 
@@ -95,7 +96,7 @@ ExecutableBase.prototype = {
             
             $(this).each(function() {
 
-                hasAny = ConditionalFactory.Create(this, current).isSatisfied(data);
+                hasAny = ConditionalFactory.Create(this, current).isSatisfied(current.result);
                 if (!hasAny) {
                     return false;
                 }
@@ -110,10 +111,11 @@ ExecutableBase.prototype = {
         return res;
     },
 
-    tryGetVal : function(variable) {
+    tryGetVal: function (variable) {        
         ExecutableHelper.Instance.self = this.self;
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
+        ExecutableHelper.Instance.result = this.result;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -149,8 +151,9 @@ $.extend(ExecutableActionBase.prototype, {
 
         var hasBreak = false;
         var executeState = function () {
-            try {                
-                this.execute(resultData);
+            try {
+                this.result = resultData;
+                this.execute();
             }
             catch (e) {
                 if (e instanceof IncClientException) {
@@ -158,7 +161,7 @@ $.extend(ExecutableActionBase.prototype, {
                     return false;//stop execute
                 }
 
-                console.log('Incoding exception: {0}'.f(e.message ? e.messsage : e));
+                console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
                 if (navigator.Ie8) {
                     return false;//stop execute
                 }
@@ -183,9 +186,9 @@ incodingExtend(ExecutableDirectAction, ExecutableActionBase);
 function ExecutableDirectAction() {
 }
 
-ExecutableDirectAction.prototype.internalExecute = function(data) {
+ExecutableDirectAction.prototype.internalExecute = function(state) {
     var result = ExecutableHelper.IsNullOrEmpty(this.jsonData.result) ? IncodingResult.Empty : new IncodingResult(this.jsonData.result);
-    this.complete(result, data);
+    this.complete(result, state);
 };
 
 //#endregion
@@ -197,8 +200,8 @@ incodingExtend(ExecutableEventAction, ExecutableActionBase);
 function ExecutableEventAction() {
 }
 
-ExecutableEventAction.prototype.internalExecute = function(data) {
-    this.complete(data.eventResult, data);
+ExecutableEventAction.prototype.internalExecute = function(state) {
+    this.complete(state.eventResult, state);
 };
 
 //#endregion
@@ -210,7 +213,7 @@ incodingExtend(ExecutableAjaxAction, ExecutableActionBase);
 function ExecutableAjaxAction() {
 }
 
-ExecutableAjaxAction.prototype.internalExecute = function(data) {
+ExecutableAjaxAction.prototype.internalExecute = function(state) {
 
     var current = this;
 
@@ -234,7 +237,7 @@ ExecutableAjaxAction.prototype.internalExecute = function(data) {
     }
 
     AjaxAdapter.Instance.request(ajaxOptions, function(result) {
-        current.complete(result, data);
+        current.complete(result,state);
     });
 
 };
@@ -248,7 +251,7 @@ incodingExtend(ExecutableSubmitAction, ExecutableActionBase);
 function ExecutableSubmitAction() {
 }
 
-ExecutableSubmitAction.prototype.internalExecute = function(data) {
+ExecutableSubmitAction.prototype.internalExecute = function (state) {
 
     var current = this;
     var formSelector = eval(this.jsonData.formSelector);
@@ -262,7 +265,7 @@ ExecutableSubmitAction.prototype.internalExecute = function(data) {
         success : function(responseText, statusText, xhr, $form) {
             $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(xhr)));                        
             $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
-            current.complete(new IncodingResult(responseText), data);
+            current.complete(new IncodingResult(responseText),state);
         },
         beforeSubmit : function(formData, jqForm, options) {
             var isValid = $(form).valid();
@@ -287,8 +290,6 @@ ExecutableSubmitAction.prototype.internalExecute = function(data) {
 
 //#endregion
 
-//#endregion
-
 //#region Core
 
 //#region class ExecutableInsert extend from ExecutableBase
@@ -300,16 +301,18 @@ function ExecutableInsert() {
 
 // ReSharper disable UnusedLocals
 // ReSharper disable AssignedValueIsNeverUsed
-ExecutableInsert.prototype.internalExecute = function(data) {
+ExecutableInsert.prototype.internalExecute = function() {
 
     var current = this;
 
-    var insertContent = ExecutableHelper.IsNullOrEmpty(data) ? '' : data;
+    var insertContent = ExecutableHelper.IsNullOrEmpty(current.jsonData.result)
+        ? ExecutableHelper.IsNullOrEmpty(this.result) ? '' : this.result
+        : this.tryGetVal(current.jsonData.result);
 
     if (!ExecutableHelper.IsNullOrEmpty(current.jsonData.property)) {
-        var insertObject = data;
-        if (_.isArray(data)) {
-            insertObject = data.length > 0 ? data[0] : {};
+        var insertObject = this.result;
+        if (_.isArray(this.result)) {
+            insertObject = this.result.length > 0 ? this.result[0] : {};
         }
         insertContent = insertObject.hasOwnProperty(current.jsonData.property) ? insertObject[current.jsonData.property] : '';
     }
@@ -340,7 +343,8 @@ ExecutableInsert.prototype.internalExecute = function(data) {
 
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
 
-    IncodingEngine.Current.parse(current.target);
+    var isNotToTarget = current.jsonData.insertType === 'After' || current.jsonData.insertType === 'Before';
+    IncodingEngine.Current.parse(isNotToTarget ? $('body') : current.target);
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
 };
 
@@ -357,11 +361,11 @@ incodingExtend(ExecutableTrigger, ExecutableBase);
 function ExecutableTrigger() {
 }
 
-ExecutableTrigger.prototype.internalExecute = function(data) {
+ExecutableTrigger.prototype.internalExecute = function() {
 
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
-        ? data
-        : data.hasOwnProperty(this.jsonData.property) ? data[this.jsonData.property] : '';
+        ? this.result
+        : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
     $(this.target).trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
 
 };
@@ -399,10 +403,10 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
-ExecutableValidationRefresh.prototype.internalExecute = function(data) {
+ExecutableValidationRefresh.prototype.internalExecute = function() {
 
     var current = this;
-    $(data).each(function() {
+    $(this.result).each(function () {
 
         var name = this.name.toString();
         var input = $('[name]', current.target).filter(function() {
@@ -432,6 +436,11 @@ ExecutableValidationRefresh.prototype.internalExecute = function(data) {
 
     });
 
+    if ($(this.result).length == 0) {
+        $(current.target).find('.input-validation-error').removeClass('input-validation-error');
+        $(current.target).find('.field-validation-error').addClass('field-validation-valid').removeClass('field-validation-error');
+    }
+
     $($(current.target).is('form') ? current.target : $('form', this.target))
         .validate()
         .focusInvalid();
@@ -446,7 +455,7 @@ incodingExtend(ExecutableEval, ExecutableBase);
 function ExecutableEval() {
 }
 
-ExecutableEval.prototype.internalExecute = function(data) {
+ExecutableEval.prototype.internalExecute = function() {
     eval(this.jsonData.code);
 };
 
@@ -459,7 +468,7 @@ incodingExtend(ExecutableEvalMethod, ExecutableBase);
 function ExecutableEvalMethod() {
 }
 
-ExecutableEvalMethod.prototype.internalExecute = function(data) {
+ExecutableEvalMethod.prototype.internalExecute = function() {
 
     var length = this.jsonData.args.length;
 
@@ -484,7 +493,7 @@ incodingExtend(ExecutableBreak, ExecutableBase);
 function ExecutableBreak() {
 }
 
-ExecutableBreak.prototype.internalExecute = function(result) {
+ExecutableBreak.prototype.internalExecute = function() {
     throw new IncClientException();
 };
 
@@ -560,7 +569,7 @@ incodingExtend(ExecutableStoreManipulate, ExecutableBase);
 function ExecutableStoreManipulate() {
 }
 
-ExecutableStoreManipulate.prototype.internalExecute = function(data) {
+ExecutableStoreManipulate.prototype.internalExecute = function() {
     var current = this;
     switch (current.jsonData.type) {
         case 'hash':

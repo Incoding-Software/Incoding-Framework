@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Incoding.SiteTest</RootNamespace>
     <AssemblyName>Incoding.SiteTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -68,6 +68,7 @@
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -77,6 +78,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>false</RegisterForComInterop>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentNHibernate">
@@ -114,9 +116,9 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -173,6 +175,7 @@
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Domain\AddProductCommand.cs" />
     <Compile Include="Domain\Product.cs" />
+    <Compile Include="Domain\Sample.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -257,7 +260,7 @@
     <Content Include="Views\Labs\Issue\inc_233.cshtml" />
     <Content Include="Views\Labs\Issue\Redirect_To_Selector.cshtml" />
     <Content Include="Views\Labs\Template\Handlebars_For_Bool.cshtml" />
-    <Content Include="Views\Labs\Bind\Init.cshtml" />
+    <Content Include="Views\Labs\Bind\Init_In_Init.cshtml" />
     <Content Include="Views\Labs\Utilites\WIndow_Open.cshtml" />
     <Content Include="Views\Labs\Submit\Submit_With_Data.cshtml" />
     <Content Include="Views\Labs\Event Selector\Event_Type.cshtml" />
@@ -266,6 +269,14 @@
     <Content Include="Views\Labs\Issue\inc_340.cshtml" />
     <Content Include="Views\Labs\Issue\inc_361.cshtml" />
     <Content Include="Views\Labs\Reproduce_want_fix\inc_368.cshtml" />
+    <Content Include="Views\Labs\Bind\Init_Multiple_Action.cshtml" />
+    <Content Include="Views\Labs\Issue\Inc_451.cshtml" />
+    <Content Include="Views\Labs\Tmpl\KeyValueVm.cshtml" />
+    <Content Include="Views\Labs\Insert\Insert_Use.cshtml" />
+    <Content Include="Views\Labs\Inc_487_MVD__typcial_model\tmpl_string.cshtml" />
+    <Content Include="Views\Labs\Inc_487_MVD__typcial_model\tmpl_date_time.cshtml" />
+    <Content Include="Views\Labs\Inc_487_MVD__typcial_model\tmpl_bool.cshtml" />
+    <Content Include="Views\Labs\Inc_487_MVD__typcial_model\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -303,16 +314,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>64225</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:13937/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -4,6 +4,7 @@ namespace Incoding.MSpecContrib
 
     using System;
     using System.Linq;
+    using System.Windows.Forms;
 
     #endregion
 
@@ -35,42 +36,15 @@ namespace Incoding.MSpecContrib
             ////ncrunch: no coverage end
         }
 
-        public static int Inverse(this int inverseValue)
+        public static T Inverse<T>(this T inverseValue)
         {
-            return Pleasure.Generator.PositiveNumber(inverseValue + 1);
+            var newValue = Pleasure.Generator.Invent<T>();
+            while (inverseValue.IsEqualWeak(newValue))
+                newValue = Pleasure.Generator.Invent<T>();
+
+            return newValue;
         }
 
-        public static TEnum Inverse<TEnum>(this Enum inverseValue)
-        {
-            var allEnums = Enum.GetValues(typeof(TEnum)).Cast<int>().ToList();
-
-            int min = allEnums.Min();
-            int max = allEnums.Max();
-
-            while (true)
-            {
-                int nextEnum = new Random().Next(min, max);
-
-                ////ncrunch: no coverage start
-                if (!allEnums.Contains(nextEnum))
-                    continue;
-
-                ////ncrunch: no coverage end
-                string enumAsString = allEnums.FirstOrDefault(r => r == nextEnum).ToString();
-                var randomValue = (TEnum)Enum.Parse(typeof(TEnum), enumAsString, true);
-                if (!inverseValue.Equals(randomValue))
-                    return randomValue;
-
-                ////ncrunch: no coverage start
-            }
-
-            ////ncrunch: no coverage end
-        }
-
-        public static bool Inverse(this bool inverseValue)
-        {
-            return !inverseValue;
-        }
 
         public static string InverseCase(this string value)
         {

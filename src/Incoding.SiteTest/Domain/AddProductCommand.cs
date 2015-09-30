@@ -3,6 +3,7 @@
     #region << Using >>
 
     using Incoding.CQRS;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -14,7 +15,7 @@
 
         #endregion
 
-        public override void Execute()
+        protected override void Execute()
         {
             Repository.Save(new Product
                                 {

@@ -11,9 +11,46 @@
 
     #endregion
 
-    [Subject(typeof(DelayToSchedulerAvaialbeStartsOnWhereSpec))]
+    [Subject(typeof(DelayToSchedulerAvailableStartsOnWhereSpec))]
     public class When_delay_to_scheduler_available_starts_on
     {
+        Establish establish = () =>
+                              {
+                                  Func<DateTime, DelayToScheduler> createEntity = (startsOn) => Pleasure.MockAsObject<DelayToScheduler>(mock => { mock.SetupGet(r => r.StartsOn).Returns(startsOn); });
+
+                                  currentDate = DateTime.Now;
+                                  oneMinuteInFeature = currentDate.AddMinutes(1);
+                                  twoMinutesInFeature = currentDate.AddMinutes(2);
+                                  var threeOrMoreMinuteInFeature = currentDate.AddMinutes(Pleasure.Generator.PositiveNumber(minValue: 3, maxValue: 100));
+                                  anyMinuteAgo = currentDate.AddMinutes(-Pleasure.Generator.PositiveNumber(maxValue: 50));
+                                  nextAnyMinuteAgo = currentDate.AddMinutes(-Pleasure.Generator.PositiveNumber(minValue: 51, maxValue: 100));
+                                  fakeCollection = Pleasure.ToQueryable(createEntity(oneMinuteInFeature),
+                                                                        createEntity(twoMinutesInFeature),
+                                                                        createEntity(anyMinuteAgo),                                                                        
+                                                                        createEntity(nextAnyMinuteAgo),                                                                        
+                                                                        createEntity(threeOrMoreMinuteInFeature));
+                              };
+
+        Because of = () =>
+                     {
+                         filterCollection = fakeCollection
+                                 .Where(new DelayToSchedulerAvailableStartsOnWhereSpec(currentDate).IsSatisfiedBy())
+                                 .ToList();
+                     };
+
+        It should_be_filter = () =>
+                              {
+                                  filterCollection.Select(r => r.StartsOn)
+                                                  .OrderByDescending(r => r)
+                                                  .ShouldEqualWeakEach(new[]
+                                                                       {
+                                                                               twoMinutesInFeature,
+                                                                               oneMinuteInFeature,
+                                                                               anyMinuteAgo,
+                                                                               nextAnyMinuteAgo,
+                                                                       });
+                              };
+
         #region Establish value
 
         static IQueryable<DelayToScheduler> fakeCollection;
@@ -24,47 +61,12 @@
 
         static DateTime twoMinutesInFeature;
 
-        static DateTime oneMinutesAgo;
+        static DateTime anyMinuteAgo;
 
-        static DateTime twoMinutesAgo;
+        static DateTime nextAnyMinuteAgo;
 
         static DateTime currentDate;
 
         #endregion
-
-        Establish establish = () =>
-                                  {
-                                      Func<DateTime, DelayToScheduler> createEntity = (startsOn) => Pleasure.MockStrictAsObject<DelayToScheduler>(mock => mock.SetupGet(r => r.StartsOn).Returns(startsOn));
-
-                                      currentDate = DateTime.Now;
-                                      oneMinuteInFeature = currentDate.AddMinutes(1);
-                                      twoMinutesInFeature = currentDate.AddMinutes(2);
-                                      oneMinutesAgo = currentDate.AddMinutes(-1);
-                                      twoMinutesAgo = currentDate.AddMinutes(-2);
-                                      fakeCollection = Pleasure.ToQueryable(createEntity(currentDate.AddMinutes(-5)),
-                                                                            createEntity(oneMinuteInFeature),
-                                                                            createEntity(twoMinutesInFeature),
-                                                                            createEntity(oneMinutesAgo),
-                                                                            createEntity(twoMinutesInFeature),
-                                                                            createEntity(currentDate.AddMinutes(10)));
-                                  };
-
-        Because of = () =>
-                         {
-                             filterCollection = fakeCollection
-                                     .Where(new DelayToSchedulerAvaialbeStartsOnWhereSpec(currentDate).IsSatisfiedBy())
-                                     .ToList();
-                         };
-
-        It should_be_filter = () =>
-                                  {
-                                      filterCollection.Count.ShouldEqual(4);
-                                      filterCollection.Select(r => r.StartsOn)
-                                                      .ShouldEqualWeakEach(new[]
-                                                                               {
-                                                                                       oneMinuteInFeature, twoMinutesInFeature,
-                                                                                       oneMinutesAgo, twoMinutesAgo
-                                                                               });
-                                  };
     }
 }

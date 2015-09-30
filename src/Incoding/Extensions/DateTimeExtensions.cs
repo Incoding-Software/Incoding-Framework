@@ -3,12 +3,127 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
+    using Incoding.Block;
 
     #endregion
 
     public static class DateTimeExtensions
     {
         #region Factory constructors
+
+        public static int ToInt(this GetRecurrencyDateQuery.DayOfWeek value)
+        {
+            switch (value)
+            {
+                case GetRecurrencyDateQuery.DayOfWeek.Monday:
+                    return 1;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Tuesday:
+                    return 2;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Wednesday:
+                    return 3;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Thursday:
+                    return 4;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Friday:
+                    return 5;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Saturday:
+                    return 6;
+
+                case GetRecurrencyDateQuery.DayOfWeek.Sunday:
+                    return 7;
+            }
+
+            return 0;
+        }
+
+        public static int ToInt(this DayOfWeek value)
+        {
+            switch (value)
+            {
+                case DayOfWeek.Monday:
+                    return 1;
+
+                case DayOfWeek.Tuesday:
+                    return 2;
+
+                case DayOfWeek.Wednesday:
+                    return 3;
+
+                case DayOfWeek.Thursday:
+                    return 4;
+
+                case DayOfWeek.Friday:
+                    return 5;
+
+                case DayOfWeek.Saturday:
+                    return 6;
+
+                case DayOfWeek.Sunday:
+                    return 7;
+            }
+
+            return 0;
+        }
+
+
+        public static DayOfWeek ToDayOfWeek(this int value)
+        {
+            switch (value)
+            {
+                case 1:
+                    return DayOfWeek.Monday;
+
+                case 2:
+                    return DayOfWeek.Tuesday;
+
+                case 3:
+                    return DayOfWeek.Wednesday;
+
+                case 4:
+                    return DayOfWeek.Thursday;
+
+                case 5:
+                    return DayOfWeek.Friday;
+
+                case 6:
+                    return DayOfWeek.Saturday;
+
+                case 7:
+                    return DayOfWeek.Sunday;
+            }
+
+            return 0;
+        }
+
+        public static DateTime AddTimeByRepeatType(this DateTime dateTime, GetRecurrencyDateQuery.RepeatType repeatType, int value)
+        {
+            switch (repeatType)
+            {
+                case GetRecurrencyDateQuery.RepeatType.Minutely:
+                    return dateTime.AddMinutes(value);
+
+                case GetRecurrencyDateQuery.RepeatType.Hourly:
+                    return dateTime.AddHours(value);
+
+                case GetRecurrencyDateQuery.RepeatType.Daily:
+                    return dateTime.AddDays(value);
+
+                case GetRecurrencyDateQuery.RepeatType.Weekly:
+                    return dateTime.AddDays(7 * value);
+
+                case GetRecurrencyDateQuery.RepeatType.Monthly:
+                    return dateTime.AddMonths(value);
+
+                case GetRecurrencyDateQuery.RepeatType.Yearly:
+                    return dateTime.AddYears(value);
+            }
+
+            return dateTime;
+        }
 
         public static TimeSpan Hours(this int hours)
         {

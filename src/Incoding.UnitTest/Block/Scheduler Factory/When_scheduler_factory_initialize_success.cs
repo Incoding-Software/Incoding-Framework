@@ -31,7 +31,7 @@
             #endregion
 
             // ReSharper restore UnusedMember.Global
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -55,69 +55,67 @@
 
         #endregion
 
-        Establish establish = () =>
-                                  {
-                                      schedulerSetting = Pleasure.Generator.Invent<MessageExecuteSetting>();
-                                      var response = new Dictionary<string, List<DelayToScheduler>>();
-                                      instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
-                                      instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting, factoryDsl => {}));
-                                      response.Add(Pleasure.Generator.String(), new List<DelayToScheduler>
-                                                                                    {
-                                                                                            Pleasure.MockAsObject<DelayToScheduler>(mock =>
-                                                                                                                                        {
-                                                                                                                                            mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString());
-                                                                                                                                            mock.SetupGet(r => r.Instance).Returns(instance1);
-                                                                                                                                        }), 
-                                                                                            Pleasure.MockAsObject<DelayToScheduler>(mock =>
-                                                                                                                                        {
-                                                                                                                                            mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameNumber().ToString());
-                                                                                                                                            mock.SetupGet(r => r.Instance).Returns(instance2);
-                                                                                                                                        })
-                                                                                    });
+        Cleanup cleanup = () => isStart = false;
 
-                                      dispatcher = Pleasure.Mock<IDispatcher>();
-                                      dispatcher.StubQuery(new GetExpectedDelayToSchedulerQuery
-                                                               {
-                                                                       FetchSize = Pleasure.Generator.TheSameNumber(), 
-                                                               }, response, schedulerSetting);
-                                      IoCFactory.Instance.StubTryResolve(dispatcher.Object);
-                                  };
+        Establish establish = () =>
+                              {
+                                  schedulerSetting = Pleasure.Generator.Invent<MessageExecuteSetting>();
+                                  var response = new Dictionary<string, List<DelayToScheduler>>();
+                                  instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
+                                  instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
+                                  response.Add(Pleasure.Generator.String(), new List<DelayToScheduler>
+                                                                            {
+                                                                                    Pleasure.MockAsObject<DelayToScheduler>(mock =>
+                                                                                                                            {
+                                                                                                                                mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameString());
+                                                                                                                                mock.SetupGet(r => r.Instance).Returns(instance1);
+                                                                                                                            }), 
+                                                                                    Pleasure.MockAsObject<DelayToScheduler>(mock =>
+                                                                                                                            {
+                                                                                                                                mock.SetupGet(r => r.Id).Returns(Pleasure.Generator.TheSameNumber().ToString());
+                                                                                                                                mock.SetupGet(r => r.Instance).Returns(instance2);
+                                                                                                                            })
+                                                                            });
+
+                                  dispatcher = Pleasure.Mock<IDispatcher>();
+                                  var schedulerQuery = new GetExpectedDelayToSchedulerQuery { FetchSize = Pleasure.Generator.TheSameNumber() };
+                                  dispatcher.StubQuery(schedulerQuery, dsl => dsl.ForwardToAction(r => r.Date, query => query.Date.ShouldBeDate(DateTime.UtcNow)), response, schedulerSetting);
+                                  IoCFactory.Instance.StubTryResolve(dispatcher.Object);
+                              };
 
         Because of = () =>
-                         {
-                             SchedulerFactory.Instance.Initialize(initScheduler =>
-                                                                      {
-                                                                          initScheduler.FetchSize = Pleasure.Generator.TheSameNumber();
-                                                                          initScheduler.Conditional = () => isStart;
-                                                                          initScheduler.Setting = schedulerSetting;
-                                                                      });
-                             Thread.Sleep(2.Seconds());
-                         };
-
-        It should_be_push_instance_1 = () => dispatcher.ShouldBePush(instance1);
-
-        It should_be_push_instance_2 = () => dispatcher.ShouldBePush(instance2);
+                     {
+                         SchedulerFactory.Instance.Initialize(initScheduler =>
+                                                              {
+                                                                  initScheduler.FetchSize = Pleasure.Generator.TheSameNumber();
+                                                                  initScheduler.Conditional = () => isStart;
+                                                                  initScheduler.Setting = schedulerSetting;
+                                                              });
+                         Thread.Sleep(2.Seconds());
+                     };
 
         It should_be_change_to_progress = () => dispatcher.ShouldBePush(new ChangeDelayToSchedulerStatusCommand
-                                                                            {
-                                                                                    Ids = new[]
-                                                                                              {
-                                                                                                      Pleasure.Generator.TheSameString(), 
-                                                                                                      Pleasure.Generator.TheSameNumber().ToString()
-                                                                                              }, 
-                                                                                    Status = DelayOfStatus.InProgress
-                                                                            }, schedulerSetting);
+                                                                        {
+                                                                                Ids = new[]
+                                                                                      {
+                                                                                              Pleasure.Generator.TheSameString(), 
+                                                                                              Pleasure.Generator.TheSameNumber().ToString()
+                                                                                      }, 
+                                                                                Status = DelayOfStatus.InProgress
+                                                                        }, schedulerSetting);
 
         It should_be_change_to_success = () => dispatcher.ShouldBePush(new ChangeDelayToSchedulerStatusCommand
-                                                                           {
-                                                                                   Ids = new[]
-                                                                                             {
-                                                                                                     Pleasure.Generator.TheSameString(), 
-                                                                                                     Pleasure.Generator.TheSameNumber().ToString()
-                                                                                             }, 
-                                                                                   Status = DelayOfStatus.Success
-                                                                           }, schedulerSetting);
+                                                                       {
+                                                                               Ids = new[]
+                                                                                     {
+                                                                                             Pleasure.Generator.TheSameString(), 
+                                                                                             Pleasure.Generator.TheSameNumber().ToString()
+                                                                                     }, 
+                                                                               Status = DelayOfStatus.Success
+                                                                       }, schedulerSetting);
 
-        Cleanup cleanup = () => isStart = false;
+        It should_be_push_instance_1 = () => dispatcher.ShouldBePush(instance1, instance1.Setting);
+
+        It should_be_push_instance_2 = () => dispatcher.ShouldBePush(instance2, instance2.Setting);
     }
 }

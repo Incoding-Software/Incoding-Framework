@@ -3,8 +3,6 @@
     #region << Using >>
 
     using System;
-    using Incoding.Extensions;
-    using System.Linq;
 
     #endregion
 
@@ -22,13 +20,14 @@
 
         #region Api Methods
 
-
+        [Obsolete(@"Please use chain method like are Id(""1"").Id(""2""))")]
         public JquerySelectorExtend Also(Func<JquerySelector, JquerySelector> action = null)
         {
             AlsoSelector(action(Jquery).ToSelector());
             return this;
         }
 
+        [Obsolete(@"Please use override method with array like are Class(""1"",""2"")")]
         public JquerySelectorExtend Or(Func<JquerySelector, JquerySelector> action = null)
         {
             OrSelector(action(Jquery).ToSelector());

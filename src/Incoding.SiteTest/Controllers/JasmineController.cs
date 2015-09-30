@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using Incoding.CQRS;
+    using Incoding.Extensions;
     using Incoding.MvcContrib;
     using Incoding.SiteTest.VM;
 
@@ -14,7 +15,6 @@
 
     public class JasmineController : IncControllerBase
     {
-
         #region Http action
 
         [HttpGet]
@@ -29,29 +29,29 @@
             var allExecutable = new List<string>();
 
             allExecutable.AddRange(typeof(ExecutableBase).Assembly
-                                                         .GetTypes()
+                                                         .GetLoadableTypes()
                                                          .Where(r => r.Name.StartsWith("Executable"))
                                                          .Where(r => r.IsClass && !r.IsAbstract)
                                                          .Select(r => r.Name));
 
             var vm = new JasmineIndexContainer
-                         {
-                                 AllSupportedMeta = allExecutable
-                                         .Select(r => r.Replace("Incoding", string.Empty))
-                                         .ToArray(),
-                                 AllSupportedConditional = Enum.GetNames(typeof(ConditionalOfType)),
-                                 JqueryVersion = string.IsNullOrWhiteSpace(jqueryVersion) ? "1.8.0" : jqueryVersion,
-                                 IncSpecialBinds = new List<string>
-                                                       {
-                                                               JqueryBind.Incoding.ToString(),
-                                                               JqueryBind.InitIncoding.ToString(),
-                                                               JqueryBind.IncAjaxBefore.ToString(),
-                                                               JqueryBind.IncAjaxComplete.ToString(),
-                                                               JqueryBind.IncAjaxError.ToString(),
-                                                               JqueryBind.IncAjaxSuccess.ToString(),
-                                                               JqueryBind.IncInsert.ToString()
-                                                       }
-                         };
+                     {
+                             AllSupportedMeta = allExecutable
+                                     .Select(r => r.Replace("Incoding", string.Empty))
+                                     .ToArray(),
+                             AllSupportedConditional = Enum.GetNames(typeof(ConditionalOfType)),
+                             JqueryVersion = string.IsNullOrWhiteSpace(jqueryVersion) ? "1.8.0" : jqueryVersion,
+                             IncSpecialBinds = new List<string>
+                                               {
+                                                       JqueryBind.Incoding.ToString(),
+                                                       JqueryBind.InitIncoding.ToString(),
+                                                       JqueryBind.IncAjaxBefore.ToString(),
+                                                       JqueryBind.IncAjaxComplete.ToString(),
+                                                       JqueryBind.IncAjaxError.ToString(),
+                                                       JqueryBind.IncAjaxSuccess.ToString(),
+                                                       JqueryBind.IncInsert.ToString()
+                                               }
+                     };
 
             return View(vm);
         }

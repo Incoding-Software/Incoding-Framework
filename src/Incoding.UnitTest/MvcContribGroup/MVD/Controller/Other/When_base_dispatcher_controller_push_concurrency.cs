@@ -19,7 +19,7 @@
         public class ConcurrentCommand : CommandBase
         {
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -37,7 +37,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(ConcurrentCommand) });
 
-        Because of = () => { exception = Catch.Exception(() => Pleasure.MultiThread.Do(() => controller.Push(HttpUtility.UrlEncode(typeof(ConcurrentCommand).Name), string.Empty), 100)); };
+        Because of = () => { exception = Catch.Exception(() => Pleasure.MultiThread.Do(() => controller.Push(HttpUtility.UrlEncode(typeof(ConcurrentCommand).Name)), 100)); };
 
         It should_be_without_exception = () => exception.ShouldBeNull();
     }

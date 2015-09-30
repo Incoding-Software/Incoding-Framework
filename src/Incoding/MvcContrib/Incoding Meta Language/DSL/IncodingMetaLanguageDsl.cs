@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web;
@@ -11,7 +12,7 @@
 
     #endregion
 
-    public partial class IncodingMetaLanguageDsl : IIncodingMetaLanguageBindingDsl, IIncodingMetaLanguageEventBuilderDsl, IIncodingMetaLanguageCallbackBodyDsl, IIncodingMetaLanguageCallbackInstancesDsl
+    public partial class IncodingMetaLanguageDsl : IncodingMetaLanguageCoreDsl,IIncodingMetaLanguageBindingDsl, IIncodingMetaLanguageEventBuilderDsl, IIncodingMetaLanguageCallbackBodyDsl, IIncodingMetaLanguageCallbackInstancesDsl
     {
         #region Fields
 
@@ -25,12 +26,19 @@
                 : this(currentBind.ToJqueryString()) { }
 
         public IncodingMetaLanguageDsl(string currentBind)
+            :base(null)
         {
+            this.plugIn = this;
             this.meta = new IncodingMetaContainer();
             When(currentBind);
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            throw new NotImplementedException("Please finishing IML expression with AsHtmlAttributes().ToTag(some)");
+        }
 
         #region IIncodingMetaLanguageBindingDsl Members
 
@@ -42,13 +50,13 @@
 
         public IIncodingMetaLanguageActionDsl PreventDefault()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.PreventDefault;
+            this.meta.OnEventStatus = this.meta.OnEventStatus == IncodingEventCanceled.StopPropagation ? IncodingEventCanceled.All : IncodingEventCanceled.PreventDefault;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl StopPropagation()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.StopPropagation;
+            this.meta.OnEventStatus = this.meta.OnEventStatus == IncodingEventCanceled.PreventDefault ? IncodingEventCanceled.All : IncodingEventCanceled.StopPropagation;
             return this;
         }
 
@@ -110,11 +118,15 @@
             return With(selector => selector.Class(@class));
         }
 
-        public IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Action<JquerySelectorExtend> self)
+        public IIncodingMetaLanguageCallbackInstancesDsl WithClass(B @class)
         {
-            var selector = Selector.Jquery.Self();
-            self(selector);
-            return With(selector);
+            return With(selector => selector.Class(@class));
+        }
+
+        public IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Func<JquerySelectorExtend, JquerySelectorExtend> self)
+        {
+            var selector = Selector.Jquery.Self();            
+            return With(self(selector));
         }
 
         public IIncodingMetaLanguageCallbackInstancesDsl Self()
@@ -127,7 +139,7 @@
         #region IIncodingMetaLanguageCallbackInstancesDsl Members
 
         public IExecutableSetting Registry(ExecutableBase callback)
-        {
+        {            
             this.meta.Add(callback);
             return callback;
         }

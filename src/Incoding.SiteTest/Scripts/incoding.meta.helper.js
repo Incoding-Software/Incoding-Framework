@@ -113,8 +113,13 @@ AjaxAdapter.Instance = new AjaxAdapter();
 //#region class ExecutableHelper
 
 function ExecutableHelper() {
-
-    var getValAction = function(selector) {
+    var isSelector = function(selector) {
+        return selector.startsWith("||") && selector.endWith("||");
+    };
+    var isJquerySelector = function (selector) {
+        return selector.startsWith("$(");
+    };
+    var getJquery = function(selector) {
 
         if ($(selector).is(':checkbox')) {
             var onlyCheckbox = $(selector).filter(':checkbox');
@@ -166,7 +171,71 @@ function ExecutableHelper() {
             ? $.trim($(selector).html())
             : something;
     };
+    var getResult = function (selector, currentResult) {
+        if (ExecutableHelper.IsNullOrEmpty(selector)) {
+            return currentResult;
+        }        
+        var res = [];
+        if (selector.startsWith("[")) {
+            var index = selector.substring(selector.indexOf('[') + 1, selector.indexOf(']'));
+            currentResult = currentResult[index];
+            selector = selector.substring(selector.indexOf(']') + 1, selector.length);
+        }
 
+        $(!_.isArray(currentResult) ? [currentResult] : currentResult).each(function() {
+
+            var valueOfProperty = this;
+            $(selector.split('.')).each(function() {
+                if (ExecutableHelper.IsNullOrEmpty(this)) {
+                    return true;
+                }
+
+                var index = this.substring(this.indexOf('[') + 1, this.indexOf(']'));
+                if (!ExecutableHelper.IsNullOrEmpty(index)) {
+                    var array = valueOfProperty[this.substring(0, this.indexOf('['))];
+                    valueOfProperty = array[index];
+                    return true;
+                }
+
+                var valueOfMethod = this.substring(this.indexOf('(') + 1, this.lastIndexOf(')'));
+                if (!ExecutableHelper.IsNullOrEmpty(valueOfMethod)) {
+                    var nameOfMethod = this.substring(0, this.indexOf('('));
+                    if (nameOfMethod === 'Select') {
+                        var tmpValueOfProperty = [];
+
+                        $(valueOfProperty).each(function() {
+                            tmpValueOfProperty.push(getResult(valueOfMethod, this));
+                        });
+                        valueOfProperty = tmpValueOfProperty;
+
+                    }
+                    if (nameOfMethod === 'Any') {
+                        var res = false;
+                        var splitValue = valueOfMethod.split(' ');
+                        $(valueOfProperty).each(function () {
+                            var helper = $.extend({}, ExecutableHelper.Instance,{result:this});                            
+                            var actual = helper.TryGetVal(splitValue[0]);
+                            var expected = helper.TryGetVal(splitValue[2]);
+                            var method = splitValue[1];
+                            res = ExecutableHelper.Compare(actual, expected, method);
+                            return res ? false : true;
+                        });
+                        valueOfProperty = res;
+                    }
+                    return true;
+                }
+
+                valueOfProperty = valueOfProperty[this];
+
+            });
+
+            res.push(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty);
+        });
+        
+
+        return res.length === 1 ? res[0] : res;
+
+    };
     this.self = '';
     this.target = '';
     this.event = '';
@@ -178,7 +247,7 @@ function ExecutableHelper() {
             return selector;
         }
         if (selector instanceof jQuery) {
-            return selector.length != 0 ? getValAction(selector) : '';
+            return selector.length != 0 ? getJquery(selector) : '';
         }
 
         var isPrimitiveType = (_.isNumber(selector) || _.isBoolean(selector) || _.isArray(selector) || _.isDate(selector) || _.isFunction(selector));
@@ -188,36 +257,35 @@ function ExecutableHelper() {
         }
 
         selector = selector.toString();
-        var isJqueryVariable = selector.startsWith("$(");
-        var isSelector = (selector.startsWith("||") && selector.endWith("||"));
-
-        if (!isJqueryVariable && !isSelector) {
+        
+        
+        if (!isJquerySelector(selector) && !isSelector(selector)) {
             return selector;
         }
 
-        if (isJqueryVariable) {
+        if (isJquerySelector(selector)) {
             return this.TryGetVal(eval(selector));
         }
 
         var res;
 
-        if (isSelector) {
+        if (isSelector(selector)) {
 
-            var valueSelector = selector.substring(2, selector.length - 2);
-            valueSelector = valueSelector.substring(selector.indexOf('*') - 1, selector.length);
+            var valueSelector = selector.substring(2, selector.length - 2)
+                .substring(selector.indexOf('*') - 1, selector.length);
 
-            var isTypeSelector = function(type) {
+            var isType = function(type) {
                 return selector.startsWith("||{0}*".f(type));
             };
 
-            if (isTypeSelector('ajax') || isTypeSelector('buildurl')) {
+            if (isType('ajax') || isType('buildurl')) {
                 var options = $.parseJSON(valueSelector);
                 if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
                     for (var i = 0; i < options.data.length; i++) {
                         options.data[i].selector = ExecutableHelper.Instance.TryGetVal(options.data[i].selector);
                     }
                 }
-                if (isTypeSelector('buildurl')) {
+                if (isType('buildurl')) {
                     var dataAsString = '';
                     if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
                         for (var i = 0; i < options.data.length; i++) {
@@ -238,20 +306,27 @@ function ExecutableHelper() {
                 }
 
             }
-            else if (isTypeSelector('cookie')) {
+            else if (isType('cookie')) {
                 res = $.cookie(valueSelector);
             }
-            else if (isTypeSelector('hashQueryString')) {
+            else if (isType('hashQueryString')) {
                 res = $.url(window.location.href).fparam(valueSelector.split(':')[0], valueSelector.split(':')[1]);
             }
-            else if (isTypeSelector('hashUrl')) {
+            else if (isType('hashUrl')) {
                 res = $.url(window.location.href).furl(valueSelector);
             }
-            else if (isTypeSelector('queryString')) {
+            else if (isType('queryString')) {
                 res = $.url(window.location.href).param(valueSelector);
             }
-            else if (isTypeSelector('javascript')) {
+            else if (isType('value')) {
+                res = valueSelector.replaceAll('1ADC3DB4-D196-4E59-9FC0-6FAD2633EF07', "|")
+                    .replaceAll("42CE7EF2-7812-4E6D-8071-676DA8CA7ED7", "*");
+            }
+            else if (isType('javascript')) {
                 res = eval(valueSelector);
+            }
+            else if (isType('result')) {
+                res = getResult(valueSelector, this.result);
             }
         }
 
@@ -261,12 +336,12 @@ function ExecutableHelper() {
 
     this.TrySetValue = function(element, val) {
 
-        if ($(element).is('[type=hidden]') && $.byName($(element).prop('name')).length == 2) {
-            return;
-        }
+        if ($(element).is('[type=hidden]') && $(element).is(':checkbox') && $(element).length == 2) {
+            element = $(element).filter(':checkbox');
+        } //fix CheckBoxFor
 
         if ($(element).is(':checkbox')) {
-            var onlyCheckBoxes = $(element).filter(':checkbox');
+            var onlyCheckBoxes = element;
             $(onlyCheckBoxes).prop('checked', false);
             if ($(onlyCheckBoxes).length == 1) {
                 if (ExecutableHelper.ToBool(val)) {
@@ -294,9 +369,11 @@ function ExecutableHelper() {
 
         if ($(element).is('select') && $(element).length > 1) {
             var arrayVal = _.isArray(val) ? val : val.split(',');
-            $(arrayVal).each(function () {
+            $(arrayVal).each(function() {
                 if (this.toString() != '') // fix to not update different selects if val is empty
-                    $('option[value="{0}"]'.f(this)).closest('select').val(this.toString()); //this.toString() fixed for ie < 9
+                {
+                    $('option[value="{0}"]'.f(this)).closest('select').val(this.toString());
+                } //this.toString() fixed for ie < 9
             });
             return;
         }
@@ -549,11 +626,13 @@ TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data
         compile = builder.compile(tmplContent);
         if (isLocalStore) {
             try {
+                if (localStorage.remainingSpace < 2000)
+                    localStorage.clear();
                 localStorage.setItem(selectorKey, compile);
             }
-            catch(e) {
-                if (e.name === 'QUOTA_EXCEEDED_ERR') {
-                    localStorage.clear();
+            catch (e) {
+                if (e.name.toUpperCase().indexOf('QUOTA') > -1) {
+                    //localStorage.clear();
                 }
             }
         }

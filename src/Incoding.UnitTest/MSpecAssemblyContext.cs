@@ -29,12 +29,8 @@ namespace Incoding.UnitTest
 
         #region Factory constructors
 
-        public static FluentConfiguration NhibernateFluent()
-        {
-            return NhibernateFluent<CallSessionContext>();
-        }
 
-        public static FluentConfiguration NhibernateFluent<TContext>() where TContext : ICurrentSessionContext
+        public static FluentConfiguration NhibernateFluent()
         {
             return Fluently
                     .Configure()
@@ -43,8 +39,7 @@ namespace Incoding.UnitTest
                                                 .ShowSql())
                     .Mappings(configuration => configuration.FluentMappings
                                                             .Add(typeof(DelayToScheduler.Map))
-                                                            .AddFromAssembly(typeof(DbEntity).Assembly))
-                    .CurrentSessionContext<TContext>();
+                                                            .AddFromAssembly(typeof(DbEntity).Assembly));
         }
 
         #endregion
@@ -56,7 +51,7 @@ namespace Incoding.UnitTest
             var currentUiCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = currentUiCulture;
             Thread.CurrentThread.CurrentCulture = currentUiCulture;
-            PleasureForData.StartNhibernate(NhibernateFluent<NhibernateSessionContext>());
+            PleasureForData.StartNhibernate(NhibernateFluent());
         }
 
         public void OnAssemblyComplete() { }

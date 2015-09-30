@@ -40,8 +40,7 @@
                                                                                                                  .Configure()
                                                                                                                  .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
                                                                                                                  .Mappings(configuration => configuration.FluentMappings.AddFromAssembly(typeof(Bootstrapper).Assembly))
-																												 .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
-                                                                                                                 .CurrentSessionContext<NhibernateSessionContext>();                                                                                                         
+																												 .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true));                                                                                                                 ;                                                                                                         
                                                                                                          registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
                                                                                                          registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();
                                                                                                          registry.For<IRepository>().Use<NhibernateRepository>();

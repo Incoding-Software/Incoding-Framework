@@ -12,6 +12,6 @@ namespace Incoding.CQRS
     {
         void Push(CommandComposite composite);
 
-        TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null) where TResult : class;
+        TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null);
     }
 }

@@ -89,6 +89,7 @@
             return this;
         }
 
+        [Obsolete("Use method Is with Selector.Result")]
         public IConditionalBinaryBuilder Data<TModel>(Expression<Func<TModel, bool>> expression)
         {
             Registry(new ConditionalData<TModel>(expression, this.and));

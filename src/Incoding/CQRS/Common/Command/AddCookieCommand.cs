@@ -37,7 +37,7 @@
 
         #endregion
 
-        public override void Execute()
+        protected override void Execute()
         {
             HttpContext.Current.Response.Cookies.Add(new HttpCookie(Key, Value)
                                                      {

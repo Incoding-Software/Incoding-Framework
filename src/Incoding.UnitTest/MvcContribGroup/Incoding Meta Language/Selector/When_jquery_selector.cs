@@ -157,8 +157,8 @@
                                                             .ShouldEqual("$('.\\.class')");
 
         It should_be_string_to_class = () => "class".ToClass()
-                                            .ToString()
-                                            .ShouldEqual("$('.class')");
+                                                    .ToString()
+                                                    .ShouldEqual("$('.class')");
 
         It should_be_to_self = () => Selector.Jquery
                                              .Self()
@@ -222,12 +222,12 @@
         It should_be_to_not_equals_attribute = () => Selector.Jquery
                                                              .NotEqualsAttribute(HtmlAttribute.Type, InputType.Text.ToString())
                                                              .ToString()
-                                                             .ShouldEqual("$('[type!=\"Text\"]')"); 
-        
+                                                             .ShouldEqual("$('[type!=\"Text\"]')");
+
         It should_be_to_not_equals_attribute_by_attribute = () => Selector.Jquery
-                                                             .NotEqualsAttribute(HtmlAttribute.Type)
-                                                             .ToString()
-                                                             .ShouldEqual("$('[type!=\"type\"]')");
+                                                                          .NotEqualsAttribute(HtmlAttribute.Type)
+                                                                          .ToString()
+                                                                          .ShouldEqual("$('[type!=\"type\"]')");
 
         It should_be_to_ends_with_attribute = () => Selector.Jquery
                                                             .EndsWithAttribute(HtmlAttribute.Type, InputType.Text.ToString())
@@ -259,6 +259,12 @@
                                                        .ToString()
                                                        .ShouldEqual("$('.class .class2')");
 
+        It should_be_classes_separate_by_space = () => Selector.Jquery
+                                                               .Class("class")
+                                                               .Class("class2")
+                                                               .ToString()
+                                                               .ShouldEqual("$('.class.class2')");
+
         It should_be_classes = () => Selector.Jquery
                                              .Class("class", "class2")
                                              .ToString()
@@ -268,6 +274,16 @@
                                                 .Class("  class   ")
                                                 .ToString()
                                                 .ShouldEqual("$('.class')");
+
+        It should_be_class_bootstrap = () => Selector.Jquery
+                                                     .Class(B.Active)
+                                                     .ToString()
+                                                     .ShouldEqual("$('.active')");
+
+        It should_be_class_bootstrap_also = () => Selector.Jquery
+                                                          .Class(B.Active | B.Container)
+                                                          .ToString()
+                                                          .ShouldEqual("$('.container.active')");
 
         It should_be_it = () => Selector.Jquery.All()
                                         .It(5).ToString()
@@ -288,11 +304,6 @@
                                          .ToString()
                                          .ShouldEqual("$('*:has(p)')");
 
-        It should_be_not = () => Selector.Jquery.All()
-                                         .Not(selector => selector.Tag(HtmlTag.P))
-                                         .ToString()
-                                         .ShouldEqual("$('*:not(p)')");
-
         It should_be_id_tag_gt = () => Selector.Jquery
                                                .Id("id")
                                                .Tag(HtmlTag.Div)
@@ -300,24 +311,31 @@
                                                .ToString()
                                                .ShouldEqual("$('#id div:gt(10)')");
 
-        It should_be_also = () => Selector.Jquery
-                                          .Id("id")
-                                          .Or(r => r.Id("nextId"))
-                                          .ToString()
-                                          .ShouldEqual("$('#id,#nextId')");
-
         It should_be_or = () => Selector.Jquery
-                                        .Class("first")
-                                        .Also(r => r.Class("next"))
+                                        .Id("id")
+                                        .Or(r => r.Id("nextId"))
                                         .ToString()
-                                        .ShouldEqual("$('.first.next')");
+                                        .ShouldEqual("$('#id,#nextId')");
+
+        It should_be_alt_or = () => Selector.Jquery.Class("1", "2")
+                                            .ToString()
+                                            .ShouldEqual("$('.1,.2')");
+
+        It should_be_also = () => Selector.Jquery
+                                          .Class("first")
+                                          .Also(r => r.Class("next"))
+                                          .ToString()
+                                          .ShouldEqual("$('.first.next')");
+
+        It should_be_alt_also = () => Selector.Jquery
+                                              .Class("first next")
+                                              .ToString()
+                                              .ShouldEqual("$('.first.next')");
 
         It should_be_complex = () => Selector.Jquery
                                              .Self()
                                              .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))
                                              .ToString()
                                              .ShouldEqual("$(this.self).find('input[type=\"text\"]')");
-
-
     }
 }

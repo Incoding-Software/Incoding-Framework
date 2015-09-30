@@ -23,7 +23,7 @@ namespace Incoding.UnitTest
 
         //public class FakeDelayCommand : CommandBase
         //{
-        //    public override void Execute()
+        //    protected override void Execute()
         //    {
         //        throw new NotImplementedException();
         //    }
@@ -56,9 +56,9 @@ namespace Incoding.UnitTest
 
         Because of = () => dispatcher.Push(composite);
 
-        It should_be_execute_command = () => command.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute_command = () => command.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
-        It should_be_execute_query = () => query.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute_query = () => query.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
         It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.AtLeast(1));
 

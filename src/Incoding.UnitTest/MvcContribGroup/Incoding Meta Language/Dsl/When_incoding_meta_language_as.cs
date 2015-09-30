@@ -12,9 +12,10 @@
     public class When_incoding_meta_language_as
     {
         It should_be_as_html_attribute_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                                    .Do().Direct()
+                                                                                    .Do()
+                                                                                    .Direct()
                                                                                     .OnComplete(r =>
-                                                                                                    {
+                                                                                                {                                                                                                        
                                                                                                         r.Self().Core().Form.Validation.Parse();
                                                                                                         r.WithId("Id").Core().Form.Validation.Parse();
                                                                                                         r.WithClass("Test").Core().Form.Validation.Parse();

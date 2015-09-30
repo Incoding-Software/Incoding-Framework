@@ -5,7 +5,12 @@ namespace Incoding.MvcContrib
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.UI;
+    using System.Web.WebPages;
     using Incoding.Extensions;
+    using Incoding.MvcContrib.MVD;
     using Incoding.Quality;
     using JetBrains.Annotations;
 
@@ -22,6 +27,8 @@ namespace Incoding.MvcContrib
         string insertTemplateSelector = string.Empty;
 
         bool prepare;
+
+        string content = Selector.Result;
 
         #endregion
 
@@ -76,20 +83,21 @@ namespace Incoding.MvcContrib
             throw new ArgumentException("Argument should be type of Selector", "selector");
         }
 
-        [Obsolete("Please use WithTemplateById or WithTemplateByUrl")]
+        [Obsolete("Please use WithTemplateByUrl")]
         public IncodingMetaCallbackInsertDsl WithTemplate(Selector selector)
         {
             this.insertTemplateSelector = selector;
             return this;
         }
 
-        [Obsolete("Please use WithTemplateById or WithTemplateByUrl")]
+        [Obsolete("Please use WithTemplateByUrl")]
         public IncodingMetaCallbackInsertDsl WithTemplate(JquerySelectorExtend selector)
         {
             this.insertTemplateSelector = selector;
             return this;
         }
 
+        [Obsolete("Suggest use ONLY WithTemplateByUrl")]
         public IncodingMetaCallbackInsertDsl WithTemplateById(string id)
         {
             return WithTemplate(id.ToId() as Selector);
@@ -100,15 +108,41 @@ namespace Incoding.MvcContrib
             return WithTemplate(url.ToAjaxGet());
         }
 
+        [ExcludeFromCodeCoverage]
+        public IncodingMetaCallbackInsertDsl WithTemplateByUrl(Func<UrlDispatcher,string> evaluated)
+        {
+            var dispatcher = new UrlDispatcher(new UrlHelper(HttpContext.Current.Request.RequestContext));           
+            return WithTemplateByUrl(evaluated(dispatcher));
+        }
+
+
+        [ExcludeFromCodeCoverage]
+        public IncodingMetaCallbackInsertDsl WithTemplateByView([PathReference]string view)
+        {
+            return WithTemplateByUrl(r => r.AsView(view));
+        }
+
         public IncodingMetaCallbackInsertDsl Prepare()
         {
             this.prepare = true;
             return this;
         }
 
+        [Obsolete("Please use On with Selector.Result.For<T>(r=>r.Prop)", false)]
         public IncodingMetaCallbackInsertDsl For<TModel>(Expression<Func<TModel, object>> property)
         {
             this.insertProperty = property.GetMemberName();
+            return this;
+        }
+
+        public IncodingMetaCallbackInsertDsl Use(Func<object, HelperResult> text)
+        {
+            this.content = new ValueSelector(Selector.FromHelperResult(text));
+            return this;
+        }
+        public IncodingMetaCallbackInsertDsl Use(Selector setContent)
+        {
+            this.content = setContent;
             return this;
         }
 
@@ -134,7 +168,7 @@ namespace Incoding.MvcContrib
 
         IExecutableSetting InternalInsert(string method)
         {
-            return this.plugIn.Registry(new ExecutableInsert(method, this.insertProperty, this.insertTemplateSelector, this.prepare));
+            return this.plugIn.Registry(new ExecutableInsert(method, this.insertProperty, this.insertTemplateSelector, this.prepare,this.content));
         }
     }
 }

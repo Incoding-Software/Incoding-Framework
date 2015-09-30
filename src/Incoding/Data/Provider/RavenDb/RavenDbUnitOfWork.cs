@@ -3,7 +3,6 @@
     #region << Using >>
 
     using System.Transactions;
-    using Incoding.Extensions;
     using Raven.Client;
     using IsolationLevel = System.Data.IsolationLevel;
 
@@ -26,23 +25,24 @@
 
         protected override void InternalFlush()
         {
-            this.session.Value.SaveChanges();
+            session.Value.SaveChanges();
         }
 
         protected override void InternalCommit()
         {
-            this.transaction.Complete();
-        }
-
-        protected override void InternalOpen()
-        {
-            this.transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
-            this.session.Initialize();
+            transaction.Complete();
         }
 
         protected override void InternalSubmit()
         {
-            this.transaction.Dispose();
+            transaction.Dispose();
+        }
+
+        public override IRepository GetRepository()
+        {
+            if (transaction == null)
+                transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
+            return new RavenDbRepository(session.Value);
         }
     }
 }

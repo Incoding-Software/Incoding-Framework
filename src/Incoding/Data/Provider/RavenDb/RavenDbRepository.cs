@@ -33,16 +33,18 @@
 
         #region Fields
 
-        Lazy<IDocumentSession> session;
-
+        readonly IDocumentSession session;
+        
         #endregion
 
         #region Constructors
 
-        public RavenDbRepository(/*IRavenDbSessionFactory sessionFactory*/)
+        public RavenDbRepository(IDocumentSession session)
         {
-            //this.session = new Lazy<IDocumentSession>(sessionFactory.GetCurrent);
+            this.session = session;
         }
+
+        public RavenDbRepository() { }
 
         #endregion
 
@@ -56,20 +58,15 @@
 
         public TProvider GetProvider<TProvider>() where TProvider : class
         {
-            return this.session.Value as TProvider;
-        }
-
-        public void SetProvider(object provider)
-        {
-            session = (Lazy<IDocumentSession>)provider;
+            return session as TProvider;
         }
 
         public void Save<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            if (this.session.Value.Advanced.HasChanged(entity))
+            if (session.Advanced.HasChanged(entity))
                 return;
 
-            this.session.Value.Store(entity);
+            session.Store(entity);
             foreach (var propertyInfo in cache.GetOrAdd(typeof(TEntity), type => type.GetProperties()
                                                                                      .Where(r => r.HasAttribute<JsonIgnoreAttribute>() &&
                                                                                                  r.CanRead && r.CanWrite)))
@@ -95,12 +92,12 @@
 
         public void Flush()
         {
-            this.session.Value.SaveChanges();
+            session.SaveChanges();
         }
 
         public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Value.Store(entity);
+            session.Store(entity);
         }
 
         public void Delete<TEntity>(object id) where TEntity : class, IEntity, new()
@@ -110,17 +107,17 @@
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
         {
-            this.session.Value.Delete(entity);
+            session.Delete(entity);
         }
 
         public void DeleteAll<TEntity>() where TEntity : class, IEntity, new()
         {
-            this.session.Value.Advanced.DocumentStore.DatabaseCommands.DeleteByIndex("Raven/DocumentsByEntityName",
-                                                                                     new IndexQuery
-                                                                                         {
-                                                                                                 Query = "Tag:" + this.session.Value.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(TEntity)),
-                                                                                         },
-                                                                                     allowStale: true);
+            session.Advanced.DocumentStore.DatabaseCommands.DeleteByIndex("Raven/DocumentsByEntityName", 
+                                                                          new IndexQuery
+                                                                          {
+                                                                                  Query = "Tag:" + session.Advanced.DocumentStore.Conventions.GetTypeTagName(typeof(TEntity)), 
+                                                                          }, 
+                                                                          allowStale: true);
         }
 
         public TEntity GetById<TEntity>(object id) where TEntity : class, IEntity, new()
@@ -129,8 +126,8 @@
                 return null;
 
             return id is string
-                           ? this.session.Value.Load<TEntity>(id.ToString())
-                           : this.session.Value.Load<TEntity>((ValueType)id);
+                           ? session.Load<TEntity>(id.ToString())
+                           : session.Load<TEntity>((ValueType)id);
         }
 
         public TEntity LoadById<TEntity>(object id) where TEntity : class, IEntity, new()
@@ -160,7 +157,7 @@
 
         IRavenQueryable<TEntity> GetRavenQueryable<TEntity>()
         {
-            var mapIndex = this.session.Value.Advanced.DocumentStore.DatabaseCommands.GetIndex("Map" + typeof(TEntity).Name);
+            var mapIndex = session.Advanced.DocumentStore.DatabaseCommands.GetIndex("Map" + typeof(TEntity).Name);
             bool hasMap = mapIndex != null;
             var genericTypes = hasMap ? new[] { typeof(TEntity), mapIndex.GetType() } : new[] { typeof(TEntity) };
 
@@ -170,7 +167,7 @@
                                                                   !r.GetParameters().Any())
                                                       .MakeGenericMethod(genericTypes);
 
-            return queryMethod.Invoke(this.session.Value, new object[] { }) as IRavenQueryable<TEntity>;
+            return queryMethod.Invoke(session, new object[] { }) as IRavenQueryable<TEntity>;
         }
     }
 }

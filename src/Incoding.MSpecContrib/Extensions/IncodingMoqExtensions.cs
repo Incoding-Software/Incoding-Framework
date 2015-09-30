@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Incoding.Block;
-
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
@@ -19,29 +16,11 @@ namespace Incoding.MSpecContrib
     {
         #region Dispatcher
 
+        #region Factory constructors
+
         public static void ShouldBePush<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
         {
             ShouldBePush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting())), callCount);
-        }
-
-        public static void StubPush<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
-        {
-            StubPush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting())), callCount);
-        }
-
-        public static void ShouldBeDelay<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageDelaySetting delaySetting = null, int callCount = 1) where TCommand : CommandBase
-        {
-            ShouldBePush<AddDelayToSchedulerCommand>(dispatcher, 
-                new AddDelayToSchedulerCommand
-            {
-                Commands = new List<IMessage<object>> {command},
-                UID = delaySetting.UID,
-                RecurrenceData = delaySetting.Reccurence,
-            }, new MessageExecuteSetting
-            {
-                Connection = delaySetting.Connection,
-                DataBaseInstance = delaySetting.DataBaseInstance
-            }, callCount);
         }
 
         public static void ShouldBePush<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount = 1) where TCommand : CommandBase
@@ -49,55 +28,41 @@ namespace Incoding.MSpecContrib
             dispatcher.Push(verifyCommand, callCount, false);
         }
 
-        static void Push<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount, bool asStub) where TCommand : CommandBase
+        public static void StubPush<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, MessageExecuteSetting executeSetting = null, int callCount = 1) where TCommand : CommandBase
         {
-            Func<IMessage<object>, bool> predicate = part =>
-                                                         {
-                                                             try
-                                                             {
-                                                                 verifyCommand((TCommand)part);
-
-                                                                 return true;
-                                                             }
-                                                             catch (Exception)
-                                                             {
-                                                                 return false;
-                                                             }
-                                                         };
-
-            if (asStub)
-            {
-                if (callCount == 0)
-                    dispatcher.Setup(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Any(predicate).ShouldBeTrue())));
-                else
-                    dispatcher.Setup(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Count(predicate).ShouldEqual(callCount))));
-            }
-            else
-            {
-                if (callCount == 0)
-                    dispatcher.Verify(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Any(predicate).ShouldBeTrue())), Times.Never());
-                else
-                    dispatcher.Verify(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Count(predicate).ShouldEqual(callCount))));
-            }
+            StubPush<TCommand>(dispatcher, arg => arg.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting())), callCount);
         }
 
         public static void StubPush<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount = 1) where TCommand : CommandBase
         {
+            Guard.IsConditional("callCount", callCount > 0, "Can't stub 0 push");
             dispatcher.Push(verifyCommand, callCount, true);
         }
 
         public static void StubPushAsThrow<TCommand>(this Mock<IDispatcher> dispatcher, TCommand command, Exception exception, MessageExecuteSetting executeSetting = null) where TCommand : CommandBase
         {
             Action<CommandComposite> verify = commandComposite =>
-                                                  {
-                                                      commandComposite.Parts.ShouldNotBeEmpty();
-                                                      var part = commandComposite.Parts[0];
-                                                      part.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting()));
-                                                  };
+                                              {
+                                                  commandComposite.Parts.ShouldNotBeEmpty();
+                                                  bool isAnySatisfied = commandComposite.Parts.Any(message =>
+                                                                                                   {
+                                                                                                       try
+                                                                                                       {
+                                                                                                           message.ShouldEqualWeak(command, dsl => dsl.ForwardToValue(r => r.Setting, executeSetting ?? new MessageExecuteSetting()));
+                                                                                                           return true;
+                                                                                                       }
+                                                                                                       catch (SpecificationException)
+                                                                                                       {
+                                                                                                           return false;
+                                                                                                       }
+                                                                                                   });
+                                                  if (!isAnySatisfied)
+                                                      throw new SpecificationException();
+                                              };
             dispatcher.Setup(r => r.Push(Pleasure.MockIt.Is(verify))).Throws(exception);
         }
 
-        public static void StubQuery<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, TResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
+        public static void StubQuery<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, TResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult>
         {
             dispatcher
                     .Setup(r => r.Query(Pleasure.MockIt.IsStrong(query), Pleasure.MockIt.IsStrong(executeSetting)))
@@ -112,12 +77,40 @@ namespace Incoding.MSpecContrib
                       .Returns(result);
         }
 
-
         public static void StubQueryAsThrow<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Exception exception, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
         {
             dispatcher
                     .Setup(r => r.Query(Pleasure.MockIt.IsStrong(query), Pleasure.MockIt.IsStrong(executeSetting)))
                     .Throws(exception);
+        }
+
+        #endregion
+
+        static void Push<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount, bool asStub) where TCommand : CommandBase
+        {
+            Func<IMessage<object>, bool> predicate = part =>
+                                                     {
+                                                         try
+                                                         {
+                                                             verifyCommand((TCommand)part);
+
+                                                             return true;
+                                                         }
+                                                         catch (Exception)
+                                                         {
+                                                             return false;
+                                                         }
+                                                     };
+
+            if (asStub)
+                dispatcher.Setup(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Count(predicate).ShouldEqual(callCount))));
+            else
+            {
+                if (callCount == 0)
+                    dispatcher.Verify(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Any(predicate).ShouldBeTrue())), Times.Never());
+                else
+                    dispatcher.Verify(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Count(predicate).ShouldEqual(callCount))));
+            }
         }
 
         #endregion

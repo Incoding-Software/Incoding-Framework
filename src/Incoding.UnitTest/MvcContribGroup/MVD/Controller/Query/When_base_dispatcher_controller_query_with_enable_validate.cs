@@ -43,7 +43,7 @@
                                       controller.ModelState.AddModelError("Fake", "Error");
                                   };
 
-        Because of = () => { result = controller.Query(HttpUtility.UrlEncode(typeof(FakeEnableValidateQuery).FullName), string.Empty, true); };
+        Because of = () => { result = controller.Query(HttpUtility.UrlEncode(typeof(FakeEnableValidateQuery).FullName), true); };
 
         It should_be_result = () => result.ShouldBeIncodingFail<IEnumerable<IncodingResult.JsonModelStateData>>(state => state.ShouldNotBeEmpty());
     }

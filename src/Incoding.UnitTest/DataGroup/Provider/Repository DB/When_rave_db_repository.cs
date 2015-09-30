@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace Incoding.UnitTest
+﻿namespace Incoding.UnitTest
 {
     #region << Using >>
 
+    using System.Configuration;
     using System.Linq;
     using Incoding.Data;
     using Incoding.MSpecContrib;
@@ -39,41 +38,34 @@ namespace Incoding.UnitTest
         protected static IRepository GetRepository()
         {
             var docSession = new DocumentStore
-            {
-                Url = "http://localhost:8080/",
-                DefaultDatabase = "IncTest",
-            };
+                             {
+                                     Url = ConfigurationManager.ConnectionStrings["IncRealRavenDb"].ConnectionString, 
+                                     DefaultDatabase = "IncTest", 
+                             };
             docSession.Conventions.AllowQueriesOnId = true;
             docSession.Conventions.MaxNumberOfRequestsPerSession = 1000;
             docSession.Initialize();
             docSession.RegisterListener(new NoStaleQueriesListener());
 
             var session = docSession.OpenSession();
-
-            var ravenDbRepository = new RavenDbRepository(/*Pleasure.MockAsObject<IRavenDbSessionFactory>(mock =>
-                                                                                           {
-                                                                                               
-                                                                                               //mock.Setup(r => r.GetCurrent()).Returns(session);
-                                                                                           })*/);
-            ravenDbRepository.SetProvider(new Lazy<IDocumentSession>(() => session));
-            return ravenDbRepository;
+            return new RavenDbRepository(session);
         }
 
         #endregion
 
         Because of = () =>
-                         {
-                             repository = GetRepository();
-                             repository.Init();
-                         };
+                     {
+                         repository = GetRepository();
+                         repository.Init();
+                     };
 
         Behaves_like<Behavior_repository> should_be_behavior;
 
         It should_be_performance_get_by_id = () =>
-                                                 {
-                                                     var id = repository.Query<DbEntityQuery>().First().Id;
-                                                     Pleasure.Do(i => repository.GetById<DbEntityQuery>(id), 1000)
-                                                             .ShouldBeLessThan(10);
-                                                 };
+                                             {
+                                                 var id = repository.Query<DbEntityQuery>().First().Id;
+                                                 Pleasure.Do(i => repository.GetById<DbEntityQuery>(id), 1000)
+                                                         .ShouldBeLessThan(10);
+                                             };
     }
 }

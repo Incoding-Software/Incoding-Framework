@@ -24,6 +24,7 @@ namespace Incoding.MvcContrib
 
         RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null);
 
+        [Obsolete("Please use using(ToBeginTag) instead of string", false)]
         string AsStringAttributes(object htmlAttributes = null);
 
         IIncodingMetaLanguageBindingDsl When(JqueryBind nextBind);

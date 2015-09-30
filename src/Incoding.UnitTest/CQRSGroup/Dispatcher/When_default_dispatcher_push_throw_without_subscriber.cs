@@ -24,7 +24,7 @@ namespace Incoding.UnitTest
 
         Establish establish = () =>
                                   {
-                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<ArgumentException>());
+                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(dispatcher, unitOfWork.Object)).Throws<ArgumentException>());
                                       eventBroker.Setup(r => r.HasSubscriber(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>())).Returns(false);
                                   };
 
@@ -32,7 +32,7 @@ namespace Incoding.UnitTest
 
         It should_be_exception = () => exception.ShouldBeOfType<ArgumentException>();
 
-        It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute = () => message.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
         It should_be_not_publish_after_fail = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()), Times.Never());
     }

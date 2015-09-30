@@ -27,7 +27,7 @@
                                   {
                                       composite = new CommandComposite();
                                       composite.Quote(Pleasure.MockAsObject<CommandBase>());
-                                      composite.Quote(Pleasure.MockAsObject<CommandBase>(mock => mock.Setup(r => r.Execute()).Throws<SpecificationException>()));
+                                      composite.Quote(Pleasure.MockAsObject<CommandBase>(mock => mock.Setup(r => r.OnExecute(dispatcher, unitOfWork.Object)).Throws<SpecificationException>()));
                                   };
 
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(composite)); };

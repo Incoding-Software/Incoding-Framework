@@ -23,7 +23,7 @@
         Because of = () =>
                          {
                              Establish(types: new[] { typeof(FakeRenderModelByFullName) });
-                             result = controller.Render("View", typeof(FakeRenderModelByFullName).FullName, string.Empty,true);
+                             result = controller.Render("View", typeof(FakeRenderModelByFullName).FullName, true);
                          };
 
         It should_be_clear_model_state = () => controller.ModelState.ShouldBeEmpty();

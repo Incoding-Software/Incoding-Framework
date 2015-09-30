@@ -18,14 +18,11 @@
         #endregion
 
         Because of = () =>
-                         {
-                             result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .File(boxControl =>
-                                               {
-                                                   boxControl.Value = Pleasure.Generator.TheSameString();
-                                               })
-                                     .ToHtmlString();
-                         };
+                     {
+                         result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
+                                 .File(boxControl => { boxControl.Value = Pleasure.Generator.TheSameString(); })
+                                 .ToHtmlString();
+                     };
 
         It should_be_render = () => result.ShouldEqual("<input id=\"Prop\" name=\"Prop\" type=\"file\" value=\"TheSameString\" />");
     }

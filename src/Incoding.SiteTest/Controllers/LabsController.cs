@@ -19,10 +19,10 @@
         public ActionResult FetchCountry()
         {
             return IncJson(new OptGroupVm(new List<KeyValueVm>
-                                              {
-                                                      new KeyValueVm("Russian"), 
-                                                      new KeyValueVm("USA")
-                                              }));
+                                          {
+                                                  new KeyValueVm("Russian"), 
+                                                  new KeyValueVm("USA")
+                                          }));
         }
 
         [HttpGet]
@@ -65,7 +65,7 @@
 
     public class TestCommand : CommandBase
     {
-        public override void Execute()
+        protected override void Execute()
         {
             throw new NotImplementedException();
         }

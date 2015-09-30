@@ -2,7 +2,6 @@
 {
     #region << Using >>
 
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Incoding.Extensions;
@@ -26,60 +25,17 @@
 
         #region ISettingCommandComposite Members
 
-        public ISettingCommandComposite WithConnectionString(string connectionString)
+        public ISettingCommandComposite Quote<TResult>(IMessage<TResult> message, MessageExecuteSetting executeSetting = null)
         {
-            this.parts[this.parts.Count - 1].Setting.Connection = connectionString;
-            return this;
-        }
-
-        public ISettingCommandComposite WithDateBaseString(string dbInstance)
-        {
-            this.parts[this.parts.Count - 1].Setting.DataBaseInstance = dbInstance;
-            return this;
-        }
-
-        public ISettingCommandComposite Mute(MuteEvent mute)
-        {
-            this.parts[this.parts.Count - 1].Setting.Mute = mute;
-            return this;
-        }
-
-        public ISettingCommandComposite OnBefore(Action<IMessage<object>> action)
-        {
-            this.parts[this.parts.Count - 1].Setting.OnBefore = action;
-            return this;
-        }
-
-        public ISettingCommandComposite OnAfter(Action<IMessage<object>> action)
-        {
-            this.parts[this.parts.Count - 1].Setting.OnAfter = action;
-            return this;
-        }
-
-        public ISettingCommandComposite OnError(Action<IMessage<object>, Exception> action)
-        {
-            this.parts[this.parts.Count - 1].Setting.OnError = action;
-            return this;
-        }
-
-        public ISettingCommandComposite OnComplete(Action<IMessage<object>> action)
-        {
-            this.parts[this.parts.Count - 1].Setting.OnComplete = action;
-            return this;
-        }
-
-        public ISettingCommandComposite Quote(IMessage<object> message, MessageExecuteSetting executeSetting = null)
-        {
-            if (executeSetting != null)
-                message.Setting = new MessageExecuteSetting(executeSetting);
-            else
+            if (message.Setting == null)
             {
-                message.Setting = message.GetType().FirstOrDefaultAttribute<MessageExecuteSettingAttribute>()
-                                         .With(r => new MessageExecuteSetting(r))
-                                         .Recovery(new MessageExecuteSetting());
+                message.Setting = executeSetting != null
+                                          ? new MessageExecuteSetting(executeSetting)
+                                          : message.GetType().FirstOrDefaultAttribute<MessageExecuteSettingAttribute>()
+                                                   .With(r => new MessageExecuteSetting(r))
+                                                   .Recovery(new MessageExecuteSetting());
             }
-
-            this.parts.Add(message);
+            this.parts.Add((IMessage<object>)message);
             return this;
         }
 

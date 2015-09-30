@@ -49,7 +49,7 @@ namespace Incoding.MSpecContrib
         public PersistenceSpecification()
                 : this(SpecWithRepository.Repository) { }
 
-        public IRepository Repository { get { return repository; } }
+        public IRepository Repository { get { return this.repository; } }
 
         #endregion
 
@@ -131,10 +131,8 @@ namespace Incoding.MSpecContrib
             this.Repository.Save(this.original);
             this.Repository.Flush();
 
-            var propertyId = this.original.GetType().GetProperties().First(r => r.Name.EqualsWithInvariant("Id"));
-            var id = propertyId.GetValue(this.original, new object[] { });
-            var cleanRepository = PleasureForData.BuildNhibernateRepository();
-            var entityFromDb = cleanRepository.GetById<TEntity>(id);
+            object id = this.original.TryGetValue("Id");
+            var entityFromDb = this.Repository.GetById<TEntity>(id);
             if (entityFromDb == null)
                 throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 

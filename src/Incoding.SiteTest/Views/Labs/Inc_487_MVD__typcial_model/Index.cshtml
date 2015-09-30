@@ -1,0 +1,19 @@
+﻿@using System
+
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxGet(Url.Dispatcher().Model("test").AsView("~/Views/Labs/Inc_487_MVD__typcial_model/tmpl_string.cshtml"))
+      .OnSuccess(dsl => dsl.Self().Insert.Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxGet(Url.Dispatcher().Model(DateTime.Now).AsView("~/Views/Labs/Inc_487_MVD__typcial_model/tmpl_date_time.cshtml"))
+      .OnSuccess(dsl => dsl.Self().Insert.Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxGet(Url.Dispatcher().Model(true).AsView("~/Views/Labs/Inc_487_MVD__typcial_model/tmpl_bool.cshtml"))
+      .OnSuccess(dsl => dsl.Self().Insert.Html())
+      .AsHtmlAttributes()
+      .ToDiv())

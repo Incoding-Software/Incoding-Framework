@@ -15,13 +15,13 @@
         public static Selector ToAjax(this string url, Action<JqueryAjaxOptions> configuration)
         {
             return Selector.Incoding.Ajax(options =>
-                                              {
-                                                  options.Url = url;
-                                                  configuration(options);
-                                              });
+                                          {
+                                              options.Url = url;
+                                              configuration(options);
+                                          });
         }
 
-        public static Selector ToAjax(this UrlDispatcher.UrlPushDispatcher url, Action<JqueryAjaxOptions> configuration)
+        public static Selector ToAjax(this UrlDispatcher.UrlPush url, Action<JqueryAjaxOptions> configuration)
         {
             return url.ToString().ToAjax(configuration);
         }
@@ -31,12 +31,12 @@
             return Selector.Incoding.AjaxGet(url);
         }
 
-        public static Selector ToAjaxGet(this UrlDispatcher.UrlPushDispatcher url)
+        public static Selector ToAjaxGet(this UrlDispatcher.UrlPush url)
         {
             return url.ToString().ToAjaxGet();
         }
 
-        public static Selector ToAjaxPost(this UrlDispatcher.UrlPushDispatcher url)
+        public static Selector ToAjaxPost(this UrlDispatcher.UrlPush url)
         {
             return url.ToString().ToAjaxPost();
         }
@@ -54,6 +54,11 @@
         public static JquerySelectorExtend ToClass(this string @class)
         {
             return Selector.Jquery.Class(@class);
+        }
+
+        public static Selector ToConfirm(this string message)
+        {
+            return Selector.JS.Confirm(message);
         }
 
         public static JquerySelectorExtend ToId(this string id)

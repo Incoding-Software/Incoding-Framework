@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using Incoding.Data;
     using Newtonsoft.Json;
 
     #endregion
@@ -12,6 +13,6 @@
         
         MessageExecuteSetting Setting { get; set; }
 
-        void Execute();
+        void OnExecute(IDispatcher current, IUnitOfWork unitOfWork);
     }
 }

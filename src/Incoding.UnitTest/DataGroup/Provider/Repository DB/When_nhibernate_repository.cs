@@ -1,16 +1,10 @@
-﻿using System;
-
-namespace Incoding.UnitTest
+﻿namespace Incoding.UnitTest
 {
     #region << Using >>
 
-    using FluentNHibernate;
     using Incoding.Data;
-    using Incoding.MSpecContrib;
     using Machine.Specifications;
     using NCrunch.Framework;
-    using NHibernate;
-    using NHibernate.Context;
 
     #endregion
 
@@ -21,20 +15,18 @@ namespace Incoding.UnitTest
 
         protected static IRepository GetRepository()
         {
-            var openSession = MSpecAssemblyContext.NhibernateFluent<CallSessionContext>().BuildSessionFactory().OpenSession();
-            var nhibernateRepository = new NhibernateRepository(/*Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(openSession))*/);
-            nhibernateRepository.SetProvider(new Lazy<ISession>(() => openSession));
-            return nhibernateRepository;
+            var openSession = MSpecAssemblyContext.NhibernateFluent().BuildSessionFactory().OpenSession();
+            return new NhibernateRepository(openSession);
         }
 
         #endregion
 
-        Behaves_like<Behavior_repository> should_be_behavior;
-
         Because of = () =>
-                         {
-                             repository = GetRepository();
-                             repository.Init();
-                         };
+                     {
+                         repository = GetRepository();
+                         repository.Init();
+                     };
+
+        Behaves_like<Behavior_repository> should_be_behavior;
     }
 }

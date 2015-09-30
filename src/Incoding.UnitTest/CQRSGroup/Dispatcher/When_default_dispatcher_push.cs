@@ -24,7 +24,7 @@
 
         Because of = () => dispatcher.Push(message.Object);
 
-        It should_be_execute = () => message.Verify(r => r.Execute(), Times.Once());
+        It should_be_execute = () => message.Verify(r => r.OnExecute(dispatcher, unitOfWork.Object), Times.Once());
 
         It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Once());
 

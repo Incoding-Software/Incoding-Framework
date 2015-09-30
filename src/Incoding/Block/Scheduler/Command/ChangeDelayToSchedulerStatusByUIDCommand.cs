@@ -17,7 +17,7 @@
 
         #endregion
 
-        public override void Execute()
+        protected override void Execute()
         {
             Dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
                                 {

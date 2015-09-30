@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Incoding.UnitTest
+﻿namespace Incoding.UnitTest
 {
     #region << Using >>
 
@@ -81,16 +79,13 @@ namespace Incoding.UnitTest
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      var mockAsObject = Pleasure.MockAsObject<IDocumentSession>(mock => mock.Setup(r => r.Advanced.HasChanged(Pleasure.MockIt.IsAny<FakeEntity>())).Returns(false));
+                              {
+                                  var mockAsObject = Pleasure.MockAsObject<IDocumentSession>(mock => mock.Setup(r => r.Advanced.HasChanged(Pleasure.MockIt.IsAny<FakeEntity>())).Returns(false));
+                                  repository = new RavenDbRepository(mockAsObject);
 
-                                      //var sessionFactory = Pleasure.MockAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.GetCurrent()).Returns(mockAsObject));
-                                      repository = new RavenDbRepository(/*sessionFactory*/);
-                                      repository.SetProvider(new Lazy<IDocumentSession>(() => mockAsObject));
-
-                                      fakeEntity = Pleasure.Generator.Invent<FakeEntity>(dsl => dsl.GenerateTo(r => r.Reference)
-                                                                                                   .GenerateTo(r => r.Items));
-                                  };
+                                  fakeEntity = Pleasure.Generator.Invent<FakeEntity>(dsl => dsl.GenerateTo(r => r.Reference)
+                                                                                               .GenerateTo(r => r.Items));
+                              };
 
         It should_be_performance = () => Pleasure.Do(i => repository.Save(fakeEntity), 1000).ShouldBeLessThan(600);
     }

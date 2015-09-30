@@ -1,0 +1,82 @@
+﻿@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new List<KeyValueVm>()
+              {
+                      new KeyValueVm("1"),
+                      new KeyValueVm("2")
+              })
+      .OnSuccess(dsl => { dsl.Self().JQuery.Dom.Use(Selector.Result).WithTemplateByView("~/Views/Labs/Tmpl/KeyValueVm.cshtml").Html(); })
+      .AsHtmlAttributes()
+      .ToDiv())
+
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new List<KeyValueVm>()
+              {
+                      new KeyValueVm("1"),
+                      new KeyValueVm("2")
+              })
+      .OnSuccess(dsl => { dsl.Self().JQuery.Dom.Use(Selector.Result.For<KeyValueVm[]>(vms => vms[1].Value)).Html(); })
+      .AsHtmlAttributes()
+      .ToDiv())
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new List<KeyValueVm>()
+              {
+                      new KeyValueVm("1"),
+                      new KeyValueVm("2")
+              })
+      .OnSuccess(dsl => { dsl.Self().JQuery.Dom.Use(Selector.Result.For<KeyValueVm[]>(vms => vms[1].Value)).Html(); })
+      .AsHtmlAttributes()
+      .ToDiv())
+
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new FakeModel()
+              {
+                      Inners = new List<FakeModel>()
+                               {
+                                       new FakeModel() { Vm = new KeyValueVm("3") },
+                                       new FakeModel() { Vm = new KeyValueVm("4") }
+                               }
+              })
+      .OnSuccess(dsl =>
+                 {
+                     dsl.Self().JQuery.Dom.Use(Selector.Result.For<FakeModel>(vms => vms.Inners.Select(r => r.Vm)))
+                        .WithTemplateByUrl(dispatcher => dispatcher.AsView("~/Views/Labs/Tmpl/KeyValueVm.cshtml"))
+                        .Html();
+                 })
+      .AsHtmlAttributes()
+      .ToDiv())
+
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new FakeModel()
+              {
+                      Inners = new List<FakeModel>()
+                               {
+                                       new FakeModel() { Vm = new KeyValueVm("3") },
+                                       new FakeModel() { Vm = new KeyValueVm("4") { Selected = true } }
+                               }
+              })
+      .OnSuccess(dsl => { dsl.Self().JQuery.Attr.Val(Selector.Result.For<FakeModel>(vms => vms.Inners.Any(r => r.Vm.Selected == true))); })
+      .AsHtmlAttributes()
+      .ToTextBox())
+
+@(Html.When(JqueryBind.InitIncoding)
+      .Direct(new FakeModel()
+              {
+                      Inners = new List<FakeModel>()
+                               {
+                                       new FakeModel() { Vm = new KeyValueVm("3") },
+                                       new FakeModel() { Vm = new KeyValueVm("4") { Selected = true } }
+                               }
+              })
+      .OnSuccess(dsl =>
+                 {
+                     dsl.Self().JQuery.Dom.Use(@<text>
+                                                   <div>Test</div>
+                                                </text>)
+                        .Html();
+                 })
+      .AsHtmlAttributes()
+      .ToDiv())    

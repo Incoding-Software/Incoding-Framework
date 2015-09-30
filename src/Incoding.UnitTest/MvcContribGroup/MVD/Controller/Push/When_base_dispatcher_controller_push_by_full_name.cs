@@ -28,7 +28,7 @@
             #endregion
 
             ////ncrunch: no coverage start
-            public override void Execute()
+            protected override void Execute()
             {
                 throw new NotImplementedException();
             }
@@ -40,7 +40,7 @@
 
         Establish establish = () => Establish(types: new[] { typeof(FakeByFullNameCommand) });
 
-        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeByFullNameCommand).FullName), string.Empty); };
+        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeByFullNameCommand).FullName)); };
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeByFullNameCommand());
 

@@ -105,5 +105,11 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
+
+        public virtual Dictionary<string, string> GetErrors()
+        {
+            return new Dictionary<string, string>();
+        }
+
     }
 }

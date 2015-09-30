@@ -39,6 +39,14 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_with_prevent_default_and_stop_propagation = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                                .DoWithPreventDefaultAndStopPropagation().Direct()
                                                                                .GetExecutable<ExecutableDirectAction>()
+                                                                               ["onEventStatus"].ShouldEqual(4);   
+        
+        
+        It should_be_with_prevent_default_and_stop_propagation_new = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                               .PreventDefault()
+                                                                               .StopPropagation()
+                                                                               .Direct()
+                                                                               .GetExecutable<ExecutableDirectAction>()
                                                                                ["onEventStatus"].ShouldEqual(4);
 
         It should_be_prevent_default_and_stop_propagation = () => new IncodingMetaLanguageDsl(JqueryBind.Click)

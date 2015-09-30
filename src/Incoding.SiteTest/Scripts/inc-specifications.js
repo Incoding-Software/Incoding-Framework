@@ -1169,6 +1169,7 @@ describe('Incoding', function() {
                     it('Should be DoIt filter by event type', function() {
 
                         var noClickAction = createCallback('noclick');
+                        runner.actions.push(noClickAction);
                         runner.before.push(noClickAction);
                         runner.breakes.push(noClickAction);
                         runner.success.push(noClickAction);
@@ -1188,6 +1189,135 @@ describe('Incoding', function() {
                         });
                     });
 
+                    it('Should be DoIt filter contains event type', function () {
+                        var multipleAction = createCallback('click otherevent');
+                        var otherEvent = $.Event('otherevent');
+
+                        runner.actions.push(multipleAction);
+                        runner.success.push(multipleAction);
+                        runner.error.push(multipleAction);
+                        runner.breakes.push(multipleAction);
+                        runner.complete.push(multipleAction);
+                        
+
+                        runner.DoIt(otherEvent, IncodingResult.Empty);
+                        
+                        expect(multipleAction.execute).toHaveBeenCalledWith({
+                            success: [multipleAction],
+                            error: [multipleAction],
+                            complete: [multipleAction],
+                            breakes: [multipleAction],
+                            eventResult : IncodingResult.Empty,
+                            event: otherEvent
+                        });
+                    });
+
+                    it('Should be DoIt filter by action', function() {
+                        var mutlipleAction = createCallback('click changes');
+                        runner.actions.push(mutlipleAction);
+                        var singleExeuctable = createCallback('click');
+                        var multipleExeuctable = createCallback('click changes');
+
+                        runner.success.push(singleExeuctable);
+                        runner.success.push(multipleExeuctable);
+
+                        runner.DoIt(event, IncodingResult.Empty);
+
+                        expect(action.execute).toHaveBeenCalledWith({
+                            success : [singleExeuctable],
+                            error : [],
+                            complete : [],
+                            breakes : [],
+                            eventResult : IncodingResult.Empty,
+                            event : event
+                        });
+                        expect(mutlipleAction.execute).toHaveBeenCalledWith({
+                            success : [multipleExeuctable],
+                            error : [],
+                            complete : [],
+                            breakes : [],
+                            eventResult : IncodingResult.Empty,
+                            event : event
+                        });
+
+                    });
+
+                });
+
+            });
+
+            describe('When Value', function() {
+                
+                it('Should be string', function() {
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Value_String').val());
+                    expect(res).toEqual('aws');
+                });
+
+            });
+
+            describe('When Result', function() {
+
+                it('Should be for', function() {
+                    ExecutableHelper.Instance.result = 'message';
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result').val());
+                    expect(res).toEqual(ExecutableHelper.Instance.result.Text);
+                });
+
+                it('Should be for property', function() {
+                    ExecutableHelper.Instance.result = { Text : 'message' };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Property').val());
+                    expect(res).toEqual(ExecutableHelper.Instance.result.Text);
+                });
+
+                it('Should be for complexity', function() {
+                    var value = 'value';
+                    ExecutableHelper.Instance.result = { Inner : { Value : value } };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Complexity').val());
+                    expect(res).toEqual(value);
+                });
+
+                it('Should be for array string', function() {
+                    ExecutableHelper.Instance.result = { Strings : ['message', 'message2'] };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_String').val());
+                    expect(res).toEqual(['message', 'message2']);
+                });
+
+                it('Should be for array by index', function() {
+                    ExecutableHelper.Instance.result = { Inners : [{ Value : 1 }, { Value : 2 }] };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_By_Index').val());
+                    expect(res).toEqual(2);
+                });
+
+                it('Should be for array select', function() {
+                    ExecutableHelper.Instance.result = { Inners : [{ Value : 1 }, { Value : 2 }] };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_Select').val());
+                    expect(res).toEqual([1, 2]);
+                });
+
+                it('Should be for array by index as self', function() {
+                    ExecutableHelper.Instance.result = [{ Value : 1 }, { Value : 2 }];
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_By_Index_As_Self').val());
+                    expect(res).toEqual(1);
+                });
+
+                it('Should be for array by index as self string', function() {
+                    ExecutableHelper.Instance.result = ['1', '2'];
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_By_Index_As_Self_String').val());
+                    expect(res).toEqual('1');
+                });
+
+                it('Should be for array any true', function() {
+                    TestHelper.Instance.SandboxTextBox({ value : 3 });
+                    ExecutableHelper.Instance.result = { Inners : [{ Value : 1 }, { Value : 3 }] };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_Any').val());
+                    expect(res).toEqual(true);
+                });
+
+                it('Should be for array any false', function() {
+                    TestHelper.Instance.SandboxTextBox({ value : 5 });
+                    ExecutableHelper.Instance.result = { Inners : [{ Value : 1 }, { Value : 3 }] };
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Result_For_Array_Any').val());
+                    expect(res).toEqual(false);
                 });
 
             });
@@ -1750,7 +1880,7 @@ describe('Incoding', function() {
 
                         ExecutableHelper.Instance.TrySetValue(element, data);
 
-                        expect($(element).val()).toEqual('');
+                        expect($(element).val()).toEqual(data);
                     });
 
                     it('Should be set radio', function() {
@@ -2072,14 +2202,8 @@ describe('Incoding', function() {
                             expect(val).toEqual('1');
                         });
 
-                        it('Should be select without selected', function () {
-                            var val = ExecutableHelper.Instance.TryGetVal($(TestHelper.Instance.SandboxSelect())
-                                .append(TestHelper.Instance.CreateOption(1, false), TestHelper.Instance.CreateOption(2, false)));
-
-                            expect(val).toEqual('');
-                        });
-
-                        it('Should be selects', function() {
+          
+                        it('Should be more select', function() {
                             TestHelper.Instance.SandboxSelect([{ value : 'value', selected : true }, { value : 'value', selected : false }]);
                             TestHelper.Instance.SandboxSelect([{ value : 'value2', selected : false }, { value : 'value3', selected : true }]);
 
@@ -2854,14 +2978,14 @@ describe('Incoding', function() {
 
             describe('Execute', function() {
 
-                var executable, expectedData;
+                var executable, expectedState;
 
                 beforeEach(function() {
-                    expectedData = 'aws';
+                    expectedState = 'aws';
                     executable = new ExecutableBase();
                     executable.timeOut = 0;
-                    executable.isValid = function(data) {
-                        return data == expectedData;
+                    executable.isValid = function() {
+                        return true;
                     };
                     executable.getTarget = function() {
                         return 5;
@@ -2870,11 +2994,11 @@ describe('Incoding', function() {
 
                 it('Should be execute', function() {
                     var callExecute = false;
-                    executable.internalExecute = function(data) {
-                        callExecute = data == expectedData;
+                    executable.internalExecute = function(state) {
+                        callExecute = state == expectedState;
                     };
 
-                    executable.execute(expectedData);
+                    executable.execute(expectedState);
 
                     expect(callExecute).toBeTruthy();
                     expect(executable.target).toEqual(5);
@@ -2889,7 +3013,7 @@ describe('Incoding', function() {
                         callExecute = true;
                     };
 
-                    executable.execute(expectedData);
+                    executable.execute(expectedState);
 
                     expect(callExecute).toBeFalsy();
                     expect(executable.target).toEqual(5);
@@ -2899,14 +3023,14 @@ describe('Incoding', function() {
                     ExecutableHelper.Compare;
                     var callCount = 0;
                     executable.internalExecute = function(data) {
-                        if (data == expectedData) {
+                        if (data == expectedState) {
                             callCount++;
                         }
                     };
                     executable.timeOut = 500;
 
                     runs(function() {
-                        executable.execute(expectedData);
+                        executable.execute(expectedState);
                         expect(callCount).toEqual(0);
                     });
 
@@ -2928,7 +3052,7 @@ describe('Incoding', function() {
                     ExecutableHelper.Compare;
                     var callCount = 0;
                     executable.internalExecute = function(data) {
-                        if (data == expectedData) {
+                        if (data == expectedState) {
                             callCount++;
                         }
                     };
@@ -2936,7 +3060,7 @@ describe('Incoding', function() {
                     executable.intervalId = '156EE3CE_9799_4BCB_9EE7_7FA61FC277B8';
 
                     runs(function() {
-                        executable.execute(expectedData);
+                        executable.execute(expectedState);
                         expect(callCount).toEqual(0);
                         expect(ExecutableBase.IntervalIds[executable.intervalId]).toBeGreaterThan(1);
                     });
@@ -2997,7 +3121,7 @@ describe('Incoding', function() {
                 var executable;
 
                 beforeEach(function() {
-                    executable = new ExecutableBase();
+                    executable = new ExecutableBase();                    
                 });
 
                 it('Should be null ands', function() {
@@ -3009,7 +3133,7 @@ describe('Incoding', function() {
 
                     beforeEach(function() {
                         expectedData = 'aws';
-
+                        executable.result = expectedData;
                         trueConditional = {
                             isSatisfied : function(data) {
                             }
@@ -3030,7 +3154,7 @@ describe('Incoding', function() {
                     it('Should be first group all true', function() {
                         executable.ands = [[{ type : true }, { type : true }], [{ type : false }]];
 
-                        expect(executable.isValid(expectedData)).toBeTruthy();
+                        expect(executable.isValid()).toBeTruthy();
 
                         expect(trueConditional.isSatisfied.callCount).toEqual(2);
                         expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
@@ -3041,7 +3165,7 @@ describe('Incoding', function() {
                     it('Should be last group all true', function() {
                         executable.ands = [[{ type : false }], [{ type : true }, { type : true }]];
 
-                        expect(executable.isValid(expectedData)).toBeTruthy();
+                        expect(executable.isValid()).toBeTruthy();
                         expect(trueConditional.isSatisfied.callCount).toEqual(2);
                         expect(falseConditional.isSatisfied.callCount).toEqual(1);
                         expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
@@ -3050,7 +3174,7 @@ describe('Incoding', function() {
                     it('Should be group has false', function() {
                         executable.ands = [[{ type : true }, { type : false }]];
 
-                        expect(executable.isValid(expectedData)).toBeFalsy();
+                        expect(executable.isValid()).toBeFalsy();
                         expect(trueConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
                         expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
 
@@ -3059,7 +3183,7 @@ describe('Incoding', function() {
                     it('Should be group false', function() {
                         executable.ands = [[{ type : false }, { type : false }]];
 
-                        expect(executable.isValid(expectedData)).toBeFalsy();
+                        expect(executable.isValid()).toBeFalsy();
                         expect(falseConditional.isSatisfied.callCount).toEqual(1);
                         expect(falseConditional.isSatisfied).toHaveBeenCalledWith(expectedData);
                     });
@@ -3146,8 +3270,8 @@ describe('Incoding', function() {
                 action.complete(result, state);
 
                 expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.success[0].execute).toHaveBeenCalled();
+                expect(state.complete[0].execute).toHaveBeenCalled();
                 expect(state.error[0].execute).not.toHaveBeenCalled();
                 expect(state.breakes[0].execute).not.toHaveBeenCalled();
             });
@@ -3163,9 +3287,9 @@ describe('Incoding', function() {
 
                 expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
 
-                expect(state.success[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.success[0].execute).toHaveBeenCalled();
+                expect(state.complete[0].execute).toHaveBeenCalled();
+                expect(state.breakes[0].execute).toHaveBeenCalled();
                 expect(state.error[0].execute).not.toHaveBeenCalled();
             });
 
@@ -3175,8 +3299,8 @@ describe('Incoding', function() {
                 action.complete(result, state);
 
                 expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.error[0].execute).toHaveBeenCalled();
+                expect(state.complete[0].execute).toHaveBeenCalled();
                 expect(state.success[0].execute).not.toHaveBeenCalled();
                 expect(state.breakes[0].execute).not.toHaveBeenCalled();
             });
@@ -3192,9 +3316,9 @@ describe('Incoding', function() {
                 action.complete(result, state);
 
                 expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                expect(state.error[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.error[0].execute).toHaveBeenCalled();
+                expect(state.complete[0].execute).toHaveBeenCalled();
+                expect(state.breakes[0].execute).toHaveBeenCalled();
                 expect(state.success[0].execute).not.toHaveBeenCalled();
             });
 
@@ -3208,8 +3332,8 @@ describe('Incoding', function() {
                 action.complete(result, state);
 
                 expect(ExecutableHelper.RedirectTo).not.toHaveBeenCalled();
-                expect(state.complete[0].execute).toHaveBeenCalledWith(result.data);
-                expect(state.breakes[0].execute).toHaveBeenCalledWith(result.data);
+                expect(state.complete[0].execute).toHaveBeenCalled();
+                expect(state.breakes[0].execute).toHaveBeenCalled();
             });
 
         });
@@ -3241,12 +3365,14 @@ describe('Incoding', function() {
                     action.target = instanceSandBox;
                 });
 
+
                 it('Should be execute result empty', function() {
                     action.jsonData = $.parseJSON($('#ExecutableDirectAction').val());
 
                     action.internalExecute(state);
 
-                    expect(fakeComplete.execute).toHaveBeenCalledWith(IncodingResult.Empty.data);
+                    expect(fakeComplete.result).toEqual(IncodingResult.Empty.data);
+                    expect(fakeComplete.execute).toHaveBeenCalled();
                     expect(fakeError.execute).not.toHaveBeenCalled();
                 });
 
@@ -3256,8 +3382,9 @@ describe('Incoding', function() {
 
                     action.internalExecute(state);
 
-                    expect(fakeSuccess.execute).toHaveBeenCalledWith('data');
-                    expect(fakeComplete.execute).toHaveBeenCalledWith('data');
+                    expect(fakeSuccess.result).toEqual($.parseJSON(action.jsonData.result).data);
+                    expect(fakeSuccess.execute).toHaveBeenCalled();
+                    expect(fakeComplete.execute).toHaveBeenCalled();
                     expect(fakeError.execute).not.toHaveBeenCalled();
                 });
 
@@ -3267,7 +3394,8 @@ describe('Incoding', function() {
 
                     action.internalExecute(state);
 
-                    expect(fakeError.execute).toHaveBeenCalledWith('data');
+                    expect(fakeError.result).toEqual($.parseJSON(action.jsonData.result).data);
+                    expect(fakeError.execute).toHaveBeenCalled();
                     expect(fakeSuccess.execute).not.toHaveBeenCalled();
                     expect(fakeComplete.execute).toHaveBeenCalled();
                 });
@@ -3305,8 +3433,9 @@ describe('Incoding', function() {
 
                     eventAction.internalExecute(eventState);
 
-                    expect(fakeSuccess.execute).toHaveBeenCalledWith(jsonData.data);
-                    expect(fakeComplete.execute).toHaveBeenCalledWith(jsonData.data);
+                    expect(fakeSuccess.result).toEqual(jsonData.data);
+                    expect(fakeSuccess.execute).toHaveBeenCalled();
+                    expect(fakeComplete.execute).toHaveBeenCalled();
                     expect(fakeError.execute).not.toHaveBeenCalled();
                 });
 
@@ -3345,7 +3474,8 @@ describe('Incoding', function() {
                     waits(500);
 
                     runs(function() {
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
+                        expect(fakeSuccess.result).toEqual('Success');
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
                     });
                 });
 
@@ -3371,8 +3501,9 @@ describe('Incoding', function() {
                     waits(500);
 
                     runs(function() {
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith('Success');
-                        expect(fakeComplete.execute).toHaveBeenCalledWith('Success');
+                        expect(fakeSuccess.result).toEqual('Success');
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
+                        expect(fakeComplete.execute).toHaveBeenCalled();
                         expect(fakeError.execute).not.toHaveBeenCalled();
                         expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
                     });
@@ -3405,8 +3536,9 @@ describe('Incoding', function() {
                     waits(500);
 
                     runs(function() {
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith('WithUrlFromHash');
-                        expect(fakeComplete.execute).toHaveBeenCalledWith('WithUrlFromHash');
+                        expect(fakeSuccess.result).toEqual('WithUrlFromHash');
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
+                        expect(fakeComplete.execute).toHaveBeenCalled();
                         expect(fakeError.execute).not.toHaveBeenCalled();
                         expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith(valBy);
                     });
@@ -3434,8 +3566,9 @@ describe('Incoding', function() {
                     waits(500);
 
                     runs(function() {
-                        expect(fakeSuccess.execute).toHaveBeenCalledWith('WithQueryStringHash');
-                        expect(fakeComplete.execute).toHaveBeenCalledWith('WithQueryStringHash');
+                        expect(fakeSuccess.result).toEqual('WithQueryStringHash');
+                        expect(fakeSuccess.execute).toHaveBeenCalled();
+                        expect(fakeComplete.execute).toHaveBeenCalled();
                         expect(fakeError.execute).not.toHaveBeenCalled();
                     });
 
@@ -3476,10 +3609,10 @@ describe('Incoding', function() {
                     spyOnEvent(document, IncSpecialBinds.IncAjaxBefore);
                     spyOnEvent(document, IncSpecialBinds.IncAjaxError);
                     action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
-
-                    var data = { data : 'Message', success : true, redirectTo : '' };
-                    runs(function() {
-                        setAjaxMock(data);
+                    
+                    var response = { data: 'Message', success: true, redirectTo: '' };
+                    runs(function() {                        
+                        setAjaxMock(response);
                         action.internalExecute(state);
                     });
 
@@ -3490,7 +3623,7 @@ describe('Incoding', function() {
                         expect(fakeComplete.execute).toHaveBeenCalled();
                         expect(fakeError.execute).not.toHaveBeenCalled();
 
-                        var xhr = new IncodingResult({ success : true, data : { ResponseText : data, StatusCode : 200, StatusText : 'OK' }, redirectTo : '' });
+                        var xhr = IncodingResult.Success(IncAjaxEvent.Create({ success: true, data: 'Message', redirectTo: '' }));
                         expect(IncSpecialBinds.IncAjaxSuccess).toHaveBeenTriggeredOn(document, xhr);
                         expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document, xhr);
                         expect(IncSpecialBinds.IncAjaxBefore).toHaveBeenTriggeredOn(document);
@@ -3518,8 +3651,7 @@ describe('Incoding', function() {
 
                 it('Should be success with url', function() {
                     action.jsonData = $.parseJSON($('#ExecutableSubmitActionWithUrl').val());
-                    $('<form>').removeAttr('action');
-
+                    
                     runs(function() {
                         $.mockjax({
                             url : 'http://localhost:64225/Submit/Get?name=value&CustomParam=123',
@@ -3533,6 +3665,7 @@ describe('Incoding', function() {
                     waits(500);
 
                     runs(function() {
+                        expect(fakeSuccess.result).toEqual('Message');
                         expect(fakeSuccess.execute).toHaveBeenCalled();
                     });
 
@@ -3599,73 +3732,95 @@ describe('Incoding', function() {
                     insert.target = instanceSandBox;
                 });
 
-                describe('When with data', function() {
+                describe('When result', function() {
 
                     beforeEach(function() {
                         insert.jsonData = $.parseJSON($('#ExecutableInsert').val());
                     });
 
                     it('Should be insert undifiend', function() {
-                        insert.internalExecute(undefined);
+                        insert.result = undefined;
+                        insert.internalExecute();
                         expect(instanceSandBox).toHaveHtml('');
                     });
 
-                    it('Should be insert html', function() {
-                        insert.internalExecute('Content');
+                    it('Should be insert html', function () {
+                        insert.result = 'Content';
+                        insert.internalExecute();
                         expect(instanceSandBox).toHaveHtml('Content');
                     });
 
-                    it('Should be insert string object', function() {
-                        insert.internalExecute(new String('Content'));
+                    it('Should be insert string object', function () {
+                        insert.result = new String('Content');
+                        insert.internalExecute();
                         expect(instanceSandBox).toHaveHtml('Content');
                     });
 
-                    it('Should be insert object', function() {
-                        insert.internalExecute(1);
+                    it('Should be insert object', function () {
+                        insert.result = 1;
+                        insert.internalExecute();
                         expect(instanceSandBox).toHaveHtml('1');
                     });
 
                 });
 
-                describe('When with property', function() {
+                describe('When result from attribute', function() {
+
+                    beforeEach(function() {
+                        insert.jsonData = $.parseJSON($('#ExecutableInsertWithResult').val());
+                    });
+
+                    it('Should be insert string', function () {
+                        insert.internalExecute();
+                        expect(instanceSandBox).toHaveHtml('Content');
+                    });
+
+                });
+
+                describe('When result with property', function() {
 
                     beforeEach(function() {
                         insert.jsonData = $.parseJSON($('#ExecutableInsertWithProperty').val());
                     });
 
-                    it('Should be insert object', function() {
-                        insert.internalExecute({ prop1 : 1, Prop2 : 2 });
+                    it('Should be insert object', function () {
+                        insert.result = { prop1 : 1, Prop2 : 2 };
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml('2');
                     });
 
-                    it('Should be insert array', function() {
-                        insert.internalExecute([{ prop1 : 1, Prop2 : 2 }]);
+                    it('Should be insert array', function () {
+                        insert.result = [{ prop1: 1, Prop2: 2 }];
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml('2');
                     });
 
-                    it('Should be insert big array', function() {
-                        insert.internalExecute([{ Prop2 : 1 }, { Prop2 : 2 }, { Prop2 : 3 }]);
+                    it('Should be insert big array', function () {
+                        insert.result = [{ Prop2 : 1 }, { Prop2 : 2 }, { Prop2 : 3 }];
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml('1');
                     });
 
-                    it('Should be insert empty object', function() {
-                        insert.internalExecute({});
+                    it('Should be insert empty object', function () {
+                        insert.result = {};
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml({});
                     });
 
-                    it('Should be insert empty array', function() {
-                        insert.internalExecute([]);
+                    it('Should be insert empty array', function () {
+                        insert.result = [];
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml({});
                     });
 
                 });
 
-                describe('When with prepare', function() {
+                describe('When result with prepare', function() {
 
                     var isValue1, isValue2;
 
@@ -3684,15 +3839,17 @@ describe('Incoding', function() {
                         insert.jsonData = $.parseJSON($('#ExecutableInsertWithPrepare').val());
                     });
 
-                    it('Should be insert array', function() {
-                        insert.internalExecute([{ prop1 : 1 }, { prop1 : 2 }]);
+                    it('Should be insert array', function () {
+                        insert.result = [{ prop1 : 1 }, { prop1 : 2 }];
+                        insert.internalExecute();
 
                         expect(isValue1).toBeTruthy();
                         expect(isValue2).toBeTruthy();
                     });
 
-                    it('Should be insert object', function() {
-                        insert.internalExecute({ prop1 : 1, prop2 : 2 });
+                    it('Should be insert object', function () {
+                        insert.result = { prop1 : 1, prop2 : 2 };
+                        insert.internalExecute();
 
                         expect(isValue1).toBeTruthy();
                         expect(isValue2).toBeTruthy();
@@ -3700,12 +3857,13 @@ describe('Incoding', function() {
 
                 });
 
-                describe('When insert with template', function() {
+                describe('When insert result with template', function() {
 
                     var incTemplate;
 
                     beforeEach(function() {
                         incTemplate = 'renderContent';
+                        insert.result = { item: 1 };
                         spyOn(TemplateFactory, 'ToHtml').andReturn(incTemplate);
                     });
 
@@ -3714,7 +3872,8 @@ describe('Incoding', function() {
                             return value;
                         };
                         insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateSelector').val());
-                        insert.internalExecute({ item : 1 });
+                        
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml(incTemplate);
                         expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
@@ -3733,7 +3892,7 @@ describe('Incoding', function() {
                             }
                         };
                         insert.jsonData = $.parseJSON($('#ExecutableInsertWithTemplateAjax').val());
-                        insert.internalExecute({ item : 1 });
+                        insert.internalExecute();
 
                         expect(instanceSandBox).toHaveHtml(incTemplate);
                         expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
@@ -3766,61 +3925,72 @@ describe('Incoding', function() {
                 });
 
                 it('Should be trigger with data as undefined', function() {
-                    trigger.internalExecute(undefined);
+                    trigger.result = undefined;
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : undefined, redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as object', function() {
-                    trigger.internalExecute({ is : true });
+                it('Should be trigger with data as object', function () {
+                    trigger.result = { is : true };
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : { is : true }, redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as string', function() {
-                    trigger.internalExecute('content');
+                it('Should be trigger with data as string', function () {
+                    trigger.result = 'content';
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 'content', redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as int', function() {
-                    trigger.internalExecute(5);
+                it('Should be trigger with data as int', function () {
+                    trigger.result = 5;
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as int object', function() {
-                    trigger.internalExecute(Number(5));
+                it('Should be trigger with data as int object', function () {
+                    trigger.result = Number(5);
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as bool', function() {
-                    trigger.internalExecute(true);
+                it('Should be trigger with data as bool', function () {
+                    trigger.result = true;
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
                 });
 
-                it('Should be trigger with data as bool object', function() {
-                    trigger.internalExecute(Boolean(true));
+                it('Should be trigger with data as bool object', function () {
+                    trigger.result = Boolean(true);
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
                 });
 
-                it('Should be trigger data as  array', function() {
-                    trigger.internalExecute([5, 6]);
+                it('Should be trigger data as  array', function () {
+                    trigger.result = [5, 6];
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : [5, 6], redirectTo : '' }));
                 });
 
                 it('Should be trigger data as  date time', function() {
                     var currentTime = new Date().now;
-                    trigger.internalExecute(currentTime);
+                    trigger.result = currentTime;
+                    trigger.internalExecute();
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : currentTime, redirectTo : '' }));
                 });
 
                 it('Should be trigger with property data', function() {
-                    trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());;
-                    trigger.internalExecute({ is : true });
+                    trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());
+                    trigger.result = { is: true };
+                    trigger.internalExecute();
 
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
                 });
 
                 it('Should be trigger with property empty data', function() {
                     trigger.jsonData = $.parseJSON($('#ExecutableTriggerWithProperty').val());;
-                    trigger.internalExecute({});
+                    trigger.result = {};
+                    trigger.internalExecute();
 
                     expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : '', redirectTo : '' }));
                 });
@@ -3904,7 +4074,8 @@ describe('Incoding', function() {
                     spyOn($.fn, 'validate').andReturn(validate);
                     $(span).addClass(messageValidClass);
 
-                    validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : '<b>errroMessage</b>', isValid : false }]);
+                    validationRefresh.result = [{ name : 'input.Email', errorMessage : '<b>errroMessage</b>', isValid : false }];
+                    validationRefresh.internalExecute();
 
                     expect(input).toHaveClass(inputErrorClass);
 
@@ -3919,7 +4090,8 @@ describe('Incoding', function() {
                     $(span).addClass(messageErrorClass);
                     $(input).addClass(inputErrorClass);
 
-                    validationRefresh.internalExecute([{ name : 'input.Email', errorMessage : 'errroMessage', isValid : true }]);
+                    validationRefresh.result = [{ name: 'input.Email', errorMessage: 'errroMessage', isValid: true }];
+                    validationRefresh.internalExecute();
 
                     expect(input).not.toHaveClass(inputErrorClass);
                     expect(span).not.toHaveClass(messageErrorClass);
@@ -3941,8 +4113,9 @@ describe('Incoding', function() {
                     evalEx.target = instanceSandBox;
                 });
 
-                it('Should be eval', function() {
-                    evalEx.internalExecute('data');
+                it('Should be eval', function () {
+                    evalEx.result = 'data';
+                    evalEx.internalExecute();
                     expect(newFakeEvalVariable).toEqual('data');
                 });
             });
@@ -4527,7 +4700,7 @@ describe('Incoding', function() {
                     var isSatisfied = evalConditional.isInternalSatisfied();
 
                     expect(isSatisfied).toBeTruthy();
-                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith("$('#id')", "5", 'equal');
+                    expect(ExecutableHelper.Compare).toHaveBeenCalledWith("$('#id')", '||value*5||', 'equal');
                 });
 
             });

@@ -23,7 +23,7 @@
         Because of = () =>
                          {
                              Establish(types: new[] { typeof(FakeRenderModelWithoutAjax) }, isAjax: false);
-                             result = controller.Render("View", typeof(FakeRenderModelWithoutAjax).Name, string.Empty,null);
+                             result = controller.Render("View", typeof(FakeRenderModelWithoutAjax).Name, null);
                          };
 
         It should_be_render = () =>
