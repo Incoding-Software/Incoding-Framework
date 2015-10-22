@@ -11,6 +11,7 @@
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.MSpecContrib;
+    using Incoding.MvcContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
     using Moq;
@@ -190,6 +191,20 @@
                                              .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                             };
 
+        It should_be_push_only_validate = () =>
+                                          {
+                                              const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand&incOnlyValidate=True";
+                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
+                                              urlDispatcher.Push(new FakeCommand
+                                                                 {
+                                                                         DecodeValue = "{{1}}", 
+                                                                         EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
+                                                                 })
+                                                           .OnlyValidate()
+                                                           .ToString()
+                                                           .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&incOnlyValidate=True&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                          };
+
         It should_be_push_as_string = () =>
                                       {
                                           const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand";
@@ -244,6 +259,18 @@
                                               urlDispatcher.Model<FakeModel>()
                                                            .AsView("~/FakeSerializeObject.cs")
                                                            .ShouldEqual(actionUrl);
+                                          };   
+        
+        It should_be_model_with_selector_to_view = () =>
+                                          {
+                                              const string actionUrl = "/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
+                                              httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
+                                              string asView = urlDispatcher.Model<FakeModel>(new
+                                                                                             {
+                                                                                                     GapId = Selector.Incoding.AjaxPost("url?test=value1&test2=value2")
+                                                                                             })
+                                                                           .AsView("~/FakeSerializeObject.cs");
+                                              asView.ShouldEqual("/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&GapId=||ajax*{\"url\"%3A\"url%3Ftest%3Dvalue1%26test2%3Dvalue2\",\"type\"%3A\"POST\",\"async\"%3Afalse}||");
                                           };
 
         It should_be_model_generic_to_view = () =>
@@ -308,7 +335,7 @@
                                            query.ToString().ShouldEqual(query.AsJson());
                                        };
 
-        It should_be_query_enable_validate_to_json = () =>
+        It should_be_query_enable_validate_as_json = () =>
                                                      {
                                                          const string actionUrl = "/Dispatcher/Query?incType=FakeQuery&incValidate=True";
                                                          httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
@@ -317,6 +344,16 @@
                                                                       .AsJson()
                                                                       .ShouldEqual(actionUrl);
                                                      };
+
+        It should_be_query_validate_only_as_json = () =>
+                                                   {
+                                                       const string actionUrl = "/Dispatcher/Query?incType=FakeQuery&incOnlyValidate=True";
+                                                       httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
+                                                       urlDispatcher.Query(new FakeQuery())
+                                                                    .ValidateOnly()
+                                                                    .AsJson()
+                                                                    .ShouldEqual(actionUrl);
+                                                   };
 
         It should_be_query_single_generic = () =>
                                             {

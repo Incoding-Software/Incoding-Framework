@@ -15,14 +15,6 @@ namespace Incoding.MvcContrib
     [Obsolete("Please migrate to handlebars or another template engine", false)]
     public class TemplateMustacheSyntax<TModel> : ITemplateSyntax<TModel>
     {
-        #region Fields
-
-        readonly HtmlHelper htmlHelper;
-
-        readonly string property;
-
-        #endregion
-
         #region Constructors
 
         public TemplateMustacheSyntax(HtmlHelper htmlHelper, string property, bool positiveConditional)
@@ -32,6 +24,23 @@ namespace Incoding.MvcContrib
             string typeConditional = positiveConditional ? "#" : "^";
             htmlHelper.ViewContext.Writer.Write("{{" + typeConditional + property + "}}");
         }
+
+        #endregion
+
+        #region Disposable
+
+        public void Dispose()
+        {
+            this.htmlHelper.ViewContext.Writer.Write("{{/" + this.property + "}}");
+        }
+
+        #endregion
+
+        #region Fields
+
+        readonly HtmlHelper htmlHelper;
+
+        readonly string property;
 
         #endregion
 
@@ -85,17 +94,17 @@ namespace Incoding.MvcContrib
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, MvcHtmlString isFalse)
         {
-            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.ToHtmlString());            
+            return Inline(field, isTrue.Invoke(null).ToHtmlString(), isFalse.ToHtmlString());
         }
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, Func<object, HelperResult> isFalse)
         {
-            return Inline(field, isTrue.ToHtmlString(), isFalse.Invoke(null).ToHtmlString());  
+            return Inline(field, isTrue.ToHtmlString(), isFalse.Invoke(null).ToHtmlString());
         }
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, Func<object, HelperResult> isFalse)
         {
-            return Inline(field, isTrue, isFalse.Invoke(null).ToHtmlString());  
+            return Inline(field, isTrue, isFalse.Invoke(null).ToHtmlString());
         }
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, Func<object, HelperResult> isTrue, string isFalse)
@@ -140,12 +149,12 @@ namespace Incoding.MvcContrib
             return new TemplateMustacheSyntax<TNewModel>(this.htmlHelper, field.GetMemberName(), true);
         }
 
-        public ITemplateSyntax<TModel> Is(Expression<Func<TModel, object>> field)
+        public IDisposable Is(Expression<Func<TModel, object>> field)
         {
             return new TemplateMustacheSyntax<TModel>(this.htmlHelper, field.GetMemberName(), true);
         }
 
-        public ITemplateSyntax<TModel> Not(Expression<Func<TModel, object>> field)
+        public IDisposable Not(Expression<Func<TModel, object>> field)
         {
             return new TemplateMustacheSyntax<TModel>(this.htmlHelper, field.GetMemberName(), false);
         }
@@ -158,15 +167,6 @@ namespace Incoding.MvcContrib
         public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, string content)
         {
             return NotInline(field, MvcHtmlString.Create(content));
-        }
-
-        #endregion
-
-        #region Disposable
-
-        public void Dispose()
-        {
-            this.htmlHelper.ViewContext.Writer.Write("{{/" + this.property + "}}");
         }
 
         #endregion

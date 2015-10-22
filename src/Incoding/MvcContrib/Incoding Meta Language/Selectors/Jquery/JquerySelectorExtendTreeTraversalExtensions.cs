@@ -121,7 +121,7 @@
         /// </summary>
         /// <param name="original">
         /// </param>
-        /// <param name="tag">
+        /// <param name="selector">
         ///     Selector
         /// </param>
         public static JquerySelectorExtend Closest(this JquerySelectorExtend original, JquerySelector selector)

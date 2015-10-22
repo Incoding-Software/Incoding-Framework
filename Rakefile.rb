@@ -60,6 +60,9 @@ task :estblish do
   DeleteDirIfExists(Folder[:deploy])
   CreateDirIfNotExists(Folder[:deploy])
   CreateDirIfNotExists(Folder[:live]) 
+  FileUtils.cp_r(File.expand_path(Files[:dbConfig]),Folder[:src] + '/Incoding.UnitTest',:verbose => true)  
+  FileUtils.cp_r(File.expand_path(Files[:dbConfig]),Folder[:src] + '/Incoding.SiteTest',:verbose => true)  
+
 end
 
 assemblyinfo :assemblyinfo do |asm|
@@ -68,8 +71,14 @@ assemblyinfo :assemblyinfo do |asm|
   asm.output_file = "src/Incoding/properties/AssemblyInfo.cs"
 end
 
+assemblyinfo :assemblyinfoToMspec do |asm|
+  asm.version = ENV['build_number']
+  asm.file_version = ENV['build_number']
+  asm.output_file = "src/Incoding.MSpecContrib/properties/AssemblyInfo.cs"
+end
+
 desc    'Clean and Build solution'
-msbuild :build =>[:assemblyinfo] do |msb|
+msbuild :build =>[:assemblyinfo,:assemblyinfoToMspec] do |msb|
   msb.properties :configuration => :Release, :OutputPath => :"../../#{Folder[:dev]}"
   msb.targets :Clean,:Build
   msb.solution = File.join(Folder[:src],Files[:sln])
@@ -78,7 +87,6 @@ end
 desc 'Execute integrated test'
 mspec do |mspec|
   CreateDirIfNotExists(Folder[:mspecResult])
-  FileUtils.cp_r(File.expand_path(Files[:dbConfig]),Folder[:dev],:verbose => true)
   mspec.command = Files[:mspecRunner]
   mspec.assemblies Files[:integratedTestDll]
   mspec.html_output = Folder[:mspecResult]
@@ -103,13 +111,13 @@ end
   end
 
 
-task :publish =>[:build,:minify]  do    
+task :publish =>[:build,:combine] do    
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.dll'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/incoding.pdb'),Folder[:live],:verbose => true)
   FileUtils.cp_r(File.expand_path(Folder[:clientFramework] + '/incoding.meta.trace.js'),Folder[:live],:verbose => true)  
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.dll'),Folder[:live],:verbose => true)
   FileUtils.cp_r(File.expand_path(Folder[:dev] + '/Incoding.MSpecContrib.pdb'),Folder[:live],:verbose => true)  
-  
+
 end
 
 

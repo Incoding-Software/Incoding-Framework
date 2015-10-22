@@ -3,7 +3,9 @@ namespace Incoding.UnitTest.MSpecGroup
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.MSpecContrib;

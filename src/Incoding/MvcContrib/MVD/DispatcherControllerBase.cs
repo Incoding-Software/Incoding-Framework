@@ -33,16 +33,14 @@
                 string str = Request.Params["incValue"];
                 if (instanceType == typeof(string))
                     return str;
-                else if (instanceType == typeof(bool))
+                if (instanceType == typeof(bool))
                     return bool.Parse(str);
-                else if (instanceType == typeof(DateTime))
+                if (instanceType == typeof(DateTime))
                     return DateTime.Parse(str);
-                else if (instanceType == typeof(int))
+                if (instanceType == typeof(int))
                     return int.Parse(str);
-                else if (instanceType.IsEnum)
+                if (instanceType.IsEnum)
                     return Enum.Parse(instanceType, str);
-
-                return null;
             }
 
             if (!string.IsNullOrWhiteSpace(genericType))
@@ -108,13 +106,17 @@
 
         public DispatcherControllerBase(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
         {
+            ////ncrunch: no coverage start
             if (types.Any())
                 return;
+            ////ncrunch: no coverage end
 
             lock (lockObject)
             {
+                ////ncrunch: no coverage start
                 if (types.Any())
                     return;
+                ////ncrunch: no coverage end
 
                 var temp = assemblies
                         .Select(s => s.GetLoadableTypes())
@@ -134,7 +136,7 @@
                                            typeof(DateTime), typeof(TimeSpan), typeof(DeleteEntityByIdCommand), typeof(DeleteEntityByIdCommand<>),
                                            typeof(GetEntitiesQuery<>), typeof(GetEntityByIdQuery<>), typeof(HasEntitiesQuery<>), typeof(KeyValueVm),
                                            typeof(IncEntityBase), typeof(IncStructureResponse<>), typeof(OptGroupVm),
-                                           typeof(IncBoolResponse), typeof(IncDateTimeResponse), typeof(IncIntResponse)
+                                           typeof(IncBoolResponse)
                                    };
                 types.AddRange(defaultTypes.Where(r => !types.Contains(r)));
                 duplicates.AddRange(types.Where(r => types.Count(s => s.Name == r.Name) > 1));
@@ -145,10 +147,13 @@
 
         #region Api Methods
 
-        public virtual ActionResult Query(string incType, bool? incValidate)
+        public virtual ActionResult Query(string incType, bool? incValidate, bool? incOnlyValidate = false)
         {
             var query = Create(incType);
-            if (incValidate.GetValueOrDefault(false) && !ModelState.IsValid)
+            if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
+                return IncodingResult.Success();
+
+            if ((incValidate.GetValueOrDefault() || incOnlyValidate.GetValueOrDefault()) && !ModelState.IsValid)
                 return IncodingResult.Error(ModelState);
 
             var result = dispatcher.GetType()
@@ -184,32 +189,41 @@
                            : Content(RenderToString(incView, model));
         }
 
-        public virtual ActionResult Push(string incTypes, bool incIsCompositeAsArray = false)
+        public virtual ActionResult Push(string incTypes, bool? incIsCompositeAsArray = false, bool? incOnlyValidate = false)
         {
             Guard.NotNullOrWhiteSpace("incTypes", incTypes);
 
             var splitByType = incTypes.Split(UrlDispatcher.separatorByType.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            bool isCompositeAsArray = splitByType.Count() == 1 && incIsCompositeAsArray;
+            bool isCompositeAsArray = splitByType.Count() == 1 && incIsCompositeAsArray.GetValueOrDefault();
             var commands = isCompositeAsArray
                                    ? ((IEnumerable<CommandBase>)Create(splitByType[0], true)).ToList()
                                    : splitByType.Select(r => (CommandBase)Create(r)).ToList();
+
+            if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
+                return IncodingResult.Success();
 
             return TryPush(composite =>
                            {
                                foreach (var commandBase in commands)
                                    composite.Quote(commandBase);
-                           }, setting => setting.SuccessResult = () => IncodingResult.Success(commands.Count == 1 ? commands[0].Result : commands.Select(r => r.Result)));
+                           }, setting => setting.SuccessResult = () =>
+                                                                 {
+                                                                     var data = commands.Count == 1 ? commands[0].Result : commands.Select(r => r.Result);
+                                                                     return IncodingResult.Success(data);
+                                                                 });
         }
 
         public virtual ActionResult QueryToFile(string incType, string incContentType, string incFileDownloadName)
         {
+            Response.AddHeader("X-Download-Options", "Open");
             var query = Create(incType, false);
             var result = dispatcher.GetType()
                                    .GetMethod("Query")
                                    .MakeGenericMethod(query.GetType().BaseType.With(r => r.GetGenericArguments()[0]))
                                    .Invoke(dispatcher, new[] { query, null });
-            return File((byte[])result, incContentType.Recovery("img"), incFileDownloadName.Recovery(string.Empty));
+            return File((byte[])result, string.IsNullOrWhiteSpace(incContentType) ? "img" : incContentType, incFileDownloadName.Recovery(string.Empty));
         }
+
 
         #endregion
     }

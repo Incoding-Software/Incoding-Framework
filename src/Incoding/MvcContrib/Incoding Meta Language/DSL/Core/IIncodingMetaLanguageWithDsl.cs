@@ -23,6 +23,8 @@ namespace Incoding.MvcContrib
 
         IIncodingMetaLanguageCallbackInstancesDsl WithClass(string @class);
 
+        IIncodingMetaLanguageCallbackInstancesDsl WithClass(B @class);
+
         IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Func<JquerySelectorExtend, JquerySelectorExtend> self);
 
         IIncodingMetaLanguageCallbackInstancesDsl Self();

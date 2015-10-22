@@ -6,6 +6,7 @@ namespace Incoding.Extensions
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Web.Mvc;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -19,7 +20,7 @@ namespace Incoding.Extensions
             return left.Equals(right, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        [DebuggerStepThrough]
+        [DebuggerStepThrough, StringFormatMethod("format")]
         public static string F(this string format, params object[] param)
         {
             return string.Format(format, param);

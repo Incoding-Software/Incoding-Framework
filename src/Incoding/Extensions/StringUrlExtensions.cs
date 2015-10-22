@@ -7,6 +7,7 @@ namespace Incoding.Extensions
     using System.Linq;
     using System.Web;
     using Incoding.Maybe;
+    using Incoding.MvcContrib;
 
     #endregion
 
@@ -14,17 +15,9 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
-        public static Dictionary<string, object> SelectQueryString(this string url)
+        public static string AppendOnlyToQueryString(this string value, object routes)
         {
-            if (!url.Contains("?"))
-                return new Dictionary<string, object>();
-
-            string query = url.Split("?".ToCharArray())[1] ?? string.Empty;
-            var queryString = HttpUtility.ParseQueryString(query);
-            return queryString.AllKeys
-                              .Select(r => new KeyValuePair<string, object>(r, queryString[r].ToString()))
-                              .ToDictionary(pair => pair.Key, pair => pair.Value);
-
+            return AppendTo(value, "&", routes);
         }
 
         public static string AppendSegment(this string root, string segment)
@@ -38,30 +31,35 @@ namespace Incoding.Extensions
             return "{0}{1}".F(root, segment);
         }
 
-        public static string AppendToHashQueryString(this string value, object routes)
+        public static string AppendToHashQueryString(this string value, object routes, bool isHash = false)
         {
-            if (!value.Contains("#!"))
+            const string hashSeparated = "#";
+            bool hasHash = value.Contains(hashSeparated);
+            if (!hasHash && isHash)
                 return AppendTo(value, "/", routes);
 
             var splitUrl = value
-                    .Split("#!".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    .Split(new[] { hashSeparated }, StringSplitOptions.RemoveEmptyEntries);
 
             string baseUrl = splitUrl.ElementAtOrDefault(0);
             string hashUrl = splitUrl.ElementAtOrDefault(1);
+            if (!hasHash)
+                hashUrl = "!" + hashUrl;
 
-            return baseUrl + "#!" + AppendTo(hashUrl, "/", routes);
+            return baseUrl + hashSeparated + AppendTo(hashUrl, "/", routes);
         }
 
         public static string AppendToQueryString(this string value, object routes)
         {
-            if (!value.Contains("#!"))
+            if (!value.Contains("#"))
                 return AppendTo(value, "&", routes);
 
-            var splitUrl = value.Split("#!".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var splitUrl = value.Split("#".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             string baseUrl = splitUrl[0];
             string hashUrl = splitUrl[1];
 
-            return AppendTo(baseUrl, "&", routes) + "#!" + hashUrl;
+            string specialChar = hashUrl.With(r => r.StartsWith("!")) ? string.Empty : "!";
+            return AppendTo(baseUrl, "&", routes) + "#" + specialChar + hashUrl;
         }
 
         public static string SetHash(this string value, string hash)
@@ -86,7 +84,20 @@ namespace Incoding.Extensions
             var dictionary = AnonymousHelper
                     .ToDictionary(routes)
                     .Where(r => r.Value != null)
-                    .ToDictionary(r => r.Key, r => r.Value.ToString());
+                    .Select(r =>
+                            {
+                                string switcherValue = r.Value is Selector ?
+                                                               r.Value.ToString().Replace("&", "%26")
+                                                                .Replace("?", "%3F")
+                                                                .Replace("/", "%2F")
+                                                                .Replace("=", "%3D")
+                                                                .Replace(":", "%3A")
+                                                                .Replace("@", "%40")
+                                                                .Replace("#", "%23")
+                                                               : r.Value.ToString();
+                                return new KeyValuePair<string, string>(r.Key, switcherValue);
+                            })
+                    .ToDictionary(r => r.Key, r => r.Value);
 
             if (dictionary.Count == 0)
                 return value;
@@ -94,13 +105,13 @@ namespace Incoding.Extensions
             bool hasExistsQueryString = (value ?? string.Empty).Contains("?");
             if (hasExistsQueryString)
             {
-                var originalQuery = value.Split("?".ToCharArray(),2)[1]
+                var originalQuery = value.Split("?".ToCharArray(), 2)[1]
                         .Split(separateChar.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
                         .Select(r =>
-                                    {
-                                        var pair = r.Split("=".ToCharArray(),2);
-                                        return new KeyValuePair<string, string>(pair.ElementAtOrDefault(0), pair.ElementAtOrDefault(1));
-                                    })
+                                {
+                                    var pair = r.Split("=".ToCharArray(), 2);
+                                    return new KeyValuePair<string, string>(pair.ElementAtOrDefault(0), pair.ElementAtOrDefault(1));
+                                })
                         .ToDictionary(r => r.Key, r => r.Value);
 
                 foreach (var newParam in dictionary)

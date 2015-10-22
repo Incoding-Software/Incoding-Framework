@@ -8,7 +8,7 @@ function IncAjaxEvent() {
     this.StatusText = '';
 }
 
-IncAjaxEvent.Create = function(response) {
+IncAjaxEvent.Create = function (response) {
     var res = new IncAjaxEvent();
     res.ResponseText = response.responseText;
     res.StatusCode = response.status;
@@ -54,53 +54,54 @@ IncSpecialBinds.DocumentBinds = [
 
 function AjaxAdapter() {
 
-    this.params = function(data) {
+    this.params = function (data) {
         var res = [];
-        $(data).each(function() {
+        $(data).each(function () {
             var name = this.name;
             var value = this.selector;
 
             if (ExecutableHelper.IsNullOrEmpty(value)) {
-                res.push({ name : name, value : value });
+                res.push({ name: name, value: value });
                 return;
             }
-            
-            var isElementCanArray = $.byName(name.replaceAll("[", "\\[").replaceAll("]", "\\]")).is('[type=checkbox],select,[type=radio]');
+
+            var isElementCanArray = $(name.toSelectorAsName()).is('[type=checkbox],select,[type=radio]');
             var isValueCanArray = _.isArray(value) || value.toString().contains(',');
 
             if (_.isArray(value) || (isValueCanArray && isElementCanArray)) {
-                $(value.toString().split(',')).each(function() {
-                    res.push({ name : name, value : this });
+                $(value.toString().split(',')).each(function () {
+                    res.push({ name: name, value: this });
                 });
             }
             else {
-                res.push({ name : name, value : value });
+                res.push({ name: name, value: value });
             }
 
         });
         return res;
     };
 
-    this.request = function(options, callback) {
+    this.request = function (options, callback) {
 
         $.extend(options, {
-            headers : { "X-Requested-With" : "XMLHttpRequest" },
-            dataType : 'JSON',
-            success : function(data, textStatus, jqXHR) {
+            url: options.url.split("?")[0],
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
                 var parseResult = new IncodingResult(data);
                 callback(parseResult);
             },
-            beforeSend : function(jqXHR, settings) {
+            beforeSend: function (jqXHR, settings) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            complete : function(jqXHR, textStatus) {
+            complete: function (jqXHR, textStatus) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            error : function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            data : this.params(options.data)
+            data: this.params(options.data)
         });
 
         return $.ajax(options);
@@ -113,8 +114,13 @@ AjaxAdapter.Instance = new AjaxAdapter();
 //#region class ExecutableHelper
 
 function ExecutableHelper() {
-
-    var getValAction = function(selector) {
+    var isSelector = function (selector) {
+        return selector.startsWith("||") && selector.endWith("||");
+    };
+    var isJquerySelector = function (selector) {
+        return selector.startsWith("$(");
+    };
+    var getJquery = function (selector) {
 
         if ($(selector).is(':checkbox')) {
             var onlyCheckbox = $(selector).filter(':checkbox');
@@ -124,7 +130,7 @@ function ExecutableHelper() {
             if (onlyCheckbox.length > 1) {
 
                 var res = [];
-                $(onlyCheckbox).each(function() {
+                $(onlyCheckbox).each(function () {
                     if (!$(this).is(':checked')) {
                         return true;
                     }
@@ -135,9 +141,9 @@ function ExecutableHelper() {
                 return res;
             }
         }
-        else if (($(selector).is('select') && $(selector).length > 1)) {
+        else if (($(selector).is("select") && $(selector).length > 1)) {
             var res = [];
-            $(selector).each(function() {
+            $(selector).each(function () {
                 var val = $(this).val();
                 if (!ExecutableHelper.IsNullOrEmpty(val)) {
                     res.push(val);
@@ -145,19 +151,19 @@ function ExecutableHelper() {
             });
             return res;
         }
-        else if ($(selector).is('select[multiple]')) {
+        else if ($(selector).is("select[multiple]")) {
             var res = [];
-            $($(selector).val()).each(function() {
+            $($(selector).val()).each(function () {
                 if (!ExecutableHelper.IsNullOrEmpty(this)) {
                     res.push(this);
                 }
             });
             return res;
         }
-        else if ($(selector).is(':radio')) {
-            return $.byName($(selector).prop('name'), ':checked').val();
+        else if ($(selector).is(":radio")) {
+            return $($(selector).prop("name").toSelectorAsName() + ":checked").val();
         }
-        else if ($(selector).is('select,textarea,input')) {
+        else if ($(selector).isFormElement()) {
             return $(selector).val();
         }
 
@@ -166,19 +172,83 @@ function ExecutableHelper() {
             ? $.trim($(selector).html())
             : something;
     };
+    var getResult = function (selector, currentResult) {
+        if (ExecutableHelper.IsNullOrEmpty(selector)) {
+            return currentResult;
+        }
+        var res = [];
+        if (selector.startsWith("[")) {
+            var index = selector.substring(selector.indexOf('[') + 1, selector.indexOf(']'));
+            currentResult = currentResult[index];
+            selector = selector.substring(selector.indexOf(']') + 1, selector.length);
+        }
 
+        $(!_.isArray(currentResult) ? [currentResult] : currentResult).each(function () {
+
+            var valueOfProperty = this;
+            $(selector.split('.')).each(function () {
+                if (ExecutableHelper.IsNullOrEmpty(this)) {
+                    return true;
+                }
+
+                var index = this.substring(this.indexOf('[') + 1, this.indexOf(']'));
+                if (!ExecutableHelper.IsNullOrEmpty(index)) {
+                    var array = valueOfProperty[this.substring(0, this.indexOf('['))];
+                    valueOfProperty = array[index];
+                    return true;
+                }
+
+                var valueOfMethod = this.substring(this.indexOf('(') + 1, this.lastIndexOf(')'));
+                if (!ExecutableHelper.IsNullOrEmpty(valueOfMethod)) {
+                    var nameOfMethod = this.substring(0, this.indexOf('('));
+                    if (nameOfMethod === 'Select') {
+                        var tmpValueOfProperty = [];
+
+                        $(valueOfProperty).each(function () {
+                            tmpValueOfProperty.push(getResult(valueOfMethod, this));
+                        });
+                        valueOfProperty = tmpValueOfProperty;
+
+                    }
+                    if (nameOfMethod === 'Any') {
+                        var res = false;
+                        var splitValue = valueOfMethod.split(' ');
+                        $(valueOfProperty).each(function () {
+                            var helper = $.extend({}, ExecutableHelper.Instance, { result: this });
+                            var actual = helper.TryGetVal(splitValue[0]);
+                            var expected = helper.TryGetVal(splitValue[2]);
+                            var method = splitValue[1];
+                            res = ExecutableHelper.Compare(actual, expected, method);
+                            return res ? false : true;
+                        });
+                        valueOfProperty = res;
+                    }
+                    return true;
+                }
+
+                valueOfProperty = valueOfProperty[this];
+
+            });
+
+            res.push(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty);
+        });
+
+
+        return res.length === 1 ? res[0] : res;
+
+    };
     this.self = '';
     this.target = '';
     this.event = '';
     this.result = '';
 
-    this.TryGetVal = function(selector) {
+    this.TryGetVal = function (selector) {
 
         if (ExecutableHelper.IsNullOrEmpty(selector)) {
             return selector;
         }
         if (selector instanceof jQuery) {
-            return selector.length != 0 ? getValAction(selector) : '';
+            return selector.length != 0 ? getJquery(selector) : '';
         }
 
         var isPrimitiveType = (_.isNumber(selector) || _.isBoolean(selector) || _.isArray(selector) || _.isDate(selector) || _.isFunction(selector));
@@ -188,70 +258,70 @@ function ExecutableHelper() {
         }
 
         selector = selector.toString();
-        var isJqueryVariable = selector.startsWith("$(");
-        var isSelector = (selector.startsWith("||") && selector.endWith("||"));
 
-        if (!isJqueryVariable && !isSelector) {
+
+        if (!isJquerySelector(selector) && !isSelector(selector)) {
             return selector;
         }
 
-        if (isJqueryVariable) {
+        if (isJquerySelector(selector)) {
             return this.TryGetVal(eval(selector));
         }
 
         var res;
 
-        if (isSelector) {
+        if (isSelector(selector)) {
 
-            var valueSelector = selector.substring(2, selector.length - 2);
-            valueSelector = valueSelector.substring(selector.indexOf('*') - 1, selector.length);
+            var valueSelector = selector.substring(2, selector.length - 2)
+                .substring(selector.indexOf('*') - 1, selector.length);
 
-            var isTypeSelector = function(type) {
+            var isType = function (type) {
                 return selector.startsWith("||{0}*".f(type));
             };
 
-            if (isTypeSelector('ajax') || isTypeSelector('buildurl')) {
-                var options = $.parseJSON(valueSelector);
-                if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
-                    for (var i = 0; i < options.data.length; i++) {
-                        options.data[i].selector = ExecutableHelper.Instance.TryGetVal(options.data[i].selector);
-                    }
-                }
-                if (isTypeSelector('buildurl')) {
-                    var dataAsString = '';
-                    if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
-                        for (var i = 0; i < options.data.length; i++) {
-                            options.data[i].selector = this.TryGetVal(options.data[i].selector);
-                        }
-                        dataAsString = options.data.select(function(item) {
-                            return '{0}={1}'.f(item.name, item.selector);
-                        }).join('&');
-                    }
-                    res = '{0}?{1}'.f(options.url, dataAsString);
-                }
-                else {
-                    var ajaxData;
-                    AjaxAdapter.Instance.request(options, function(result) {
-                        ajaxData = result.data;
-                    });
-                    res = ajaxData;
-                }
+            if (isType('buildurl')) {
+                var toBuildUrl = $.url(valueSelector);
+                $.eachProperties(toBuildUrl.param(), function () {
+                    toBuildUrl.setParam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.param()[this]));
+                });
 
+                $.eachProperties(toBuildUrl.fparam(), function () {
+                    toBuildUrl.setFparam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.fparam()[this]));
+                }); return toBuildUrl.toHref();
             }
-            else if (isTypeSelector('cookie')) {
+            if (isType('ajax')) {
+                var options = $.extend(true, { data: [] }, $.parseJSON(valueSelector));
+                var ajaxUrl = $.url(options.url);
+                $.eachProperties(ajaxUrl.param(), function () {
+                    options.data.push({ name: this, selector: ExecutableHelper.Instance.TryGetVal(ajaxUrl.param()[this]) });
+                });
+                var ajaxData;
+                AjaxAdapter.Instance.request(options, function (result) {
+                    ajaxData = result.data;
+                });
+                res = ajaxData;
+            }
+            else if (isType('cookie')) {
                 res = $.cookie(valueSelector);
             }
-            else if (isTypeSelector('hashQueryString')) {
+            else if (isType('hashQueryString')) {
                 res = $.url(window.location.href).fparam(valueSelector.split(':')[0], valueSelector.split(':')[1]);
             }
-            else if (isTypeSelector('hashUrl')) {
+            else if (isType('hashUrl')) {
                 res = $.url(window.location.href).furl(valueSelector);
             }
-            else if (isTypeSelector('queryString')) {
+            else if (isType('queryString')) {
                 res = $.url(window.location.href).param(valueSelector);
             }
-            else if (isTypeSelector('javascript')) {
+            else if (isType('value')) {
+                res = valueSelector.replaceAll('1ADC3DB4-D196-4E59-9FC0-6FAD2633EF07', "|")
+                    .replaceAll("42CE7EF2-7812-4E6D-8071-676DA8CA7ED7", "*");
+            }
+            else if (isType('javascript')) {
                 res = eval(valueSelector);
+            }
+            else if (isType('result')) {
+                res = getResult(valueSelector, this.result);
             }
         }
 
@@ -261,12 +331,12 @@ function ExecutableHelper() {
 
     this.TrySetValue = function(element, val) {
 
-        if ($(element).is('[type=hidden]') && $.byName($(element).prop('name')).length == 2) {
-            return;
-        }
+        if ($(element).is('[type=hidden]') && $(element).is(':checkbox') && $(element).length == 2) {
+            element = $(element).filter(':checkbox');
+        } //fix CheckBoxFor
 
         if ($(element).is(':checkbox')) {
-            var onlyCheckBoxes = $(element).filter(':checkbox');
+            var onlyCheckBoxes = element;
             $(onlyCheckBoxes).prop('checked', false);
             if ($(onlyCheckBoxes).length == 1) {
                 if (ExecutableHelper.ToBool(val)) {
@@ -292,26 +362,26 @@ function ExecutableHelper() {
             return;
         }
 
-        if ($(element).is('select') && $(element).length > 1) {
-            var arrayVal = _.isArray(val) ? val : val.split(',');
-            $(arrayVal).each(function () {
+        if ($(element).is('select') && $(element).length > 1) {            
+            $(_.isArray(val) ? val : val.split(',')).each(function() {
                 if (this.toString() != '') // fix to not update different selects if val is empty
-                    $('option[value="{0}"]'.f(this)).closest('select').val(this.toString()); //this.toString() fixed for ie < 9
+                {
+                    $('option[value="{0}"]'.f(this)).closest('select').val(this.toString());
+                } //this.toString() fixed for ie < 9
             });
             return;
         }
 
         if ($(element).is(':radio')) {
-            $.byName($(element).prop('name'), '[value="{0}"]'.f(val))
-                .prop('checked', true);
+            $($(element).prop("name").toSelectorAsName() + "[value=\"{0}\"]".f(val)).prop('checked', true);
             return;
         }
 
-        if ($(element).is('script,label,div,span,p')) {
-            $(element).html(val);
+        if ($(element).isFormElement()) {
+            $(element).val(val);
         }
         else {
-            $(element).val(val);
+            $(element).html(val);
         }
 
     };
@@ -320,14 +390,14 @@ function ExecutableHelper() {
 
 ExecutableHelper.Instance = new ExecutableHelper();
 
-ExecutableHelper.IsData = function(data, property, evaluated) {
+ExecutableHelper.IsData = function (data, property, evaluated) {
 
     if (ExecutableHelper.IsNullOrEmpty(property)) {
         return evaluated.call(data);
     }
 
     var res = false;
-    $(!_.isArray(data) ? [data] : data).each(function() {
+    $(!_.isArray(data) ? [data] : data).each(function () {
         var valueOfProperty = this[property];
         if (evaluated.call(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty)) {
             res = true;
@@ -338,11 +408,19 @@ ExecutableHelper.IsData = function(data, property, evaluated) {
     return res;
 };
 
-ExecutableHelper.Filter = function(data, filter) {
+ExecutableHelper.ParaseQueryString = function (url) {
+
+    if (ExecutableHelper.IsNullOrEmpty(url) && (!url.contains('?') || !url.contains('#'))) {
+        return [];
+    }
+
+};
+
+ExecutableHelper.Filter = function (data, filter) {
     var res;
     if (_.isArray(data)) {
         res = [];
-        $(data).each(function() {
+        $(data).each(function () {
             if (filter.isSatisfied(this)) {
                 res.push(this);
             }
@@ -354,7 +432,7 @@ ExecutableHelper.Filter = function(data, filter) {
     return res;
 };
 
-ExecutableHelper.Compare = function(actual, expected, method) {
+ExecutableHelper.Compare = function (actual, expected, method) {
 
     method = method.toString().toLowerCase();
 
@@ -392,10 +470,10 @@ ExecutableHelper.Compare = function(actual, expected, method) {
         return parseFloat(actual) >= parseFloat(expected);
     }
 
-    throw new IncClientException({ message : "Can't compare by method {0}".f(method) }, {});
+    throw new IncClientException({ message: "Can't compare by method {0}".f(method) }, {});
 };
 
-ExecutableHelper.IsNullOrEmpty = function(value) {
+ExecutableHelper.IsNullOrEmpty = function (value) {
     var isNothing = _.isUndefined(value) || _.isNull(value) || _.isNaN(value) || value == "undefined";
     if (isNothing) {
         return true;
@@ -414,7 +492,7 @@ ExecutableHelper.IsNullOrEmpty = function(value) {
     }
 
     var hasOwnProperty = false;
-    $.eachProperties(value, function() {
+    $.eachProperties(value, function () {
         hasOwnProperty = true;
     });
 
@@ -434,16 +512,16 @@ ExecutableHelper.RedirectTo = function (destentationUrl) {
     window.location = destentationUrl;
 };
 
-ExecutableHelper.UrlDecode = function(value) {
+ExecutableHelper.UrlDecode = function (value) {
     return decodeURIComponent(value);
 };
 
-ExecutableHelper.UrlEncode = function(value) {
+ExecutableHelper.UrlEncode = function (value) {
     if (ExecutableHelper.IsNullOrEmpty(value)) {
         return value;
     }
 
-    var encode = function() {
+    var encode = function () {
         return this
             .replaceAll('&', '%26')
             .replaceAll('?', '%3F')
@@ -465,7 +543,7 @@ ExecutableHelper.UrlEncode = function(value) {
     }
 };
 
-ExecutableHelper.ToBool = function(value) {
+ExecutableHelper.ToBool = function (value) {
 
     if (ExecutableHelper.IsNullOrEmpty(value)) {
         return false;
@@ -485,11 +563,11 @@ ExecutableHelper.ToBool = function(value) {
 
 function IncMustacheTemplate() {
 
-    this.compile = function(tmpl) {
+    this.compile = function (tmpl) {
         return tmpl;
     };
 
-    this.render = function(tmpl, data) {
+    this.render = function (tmpl, data) {
         var compile = Mustache.compile(tmpl);
         return compile(data);
     };
@@ -498,12 +576,12 @@ function IncMustacheTemplate() {
 
 function IncHandlerbarsTemplate() {
 
-    this.compile = function(tmpl) {
+    this.compile = function (tmpl) {
         return navigator.Ie8 ? tmpl
             : Handlebars.precompile(tmpl);
     };
 
-    this.render = function(tmpl, data) {
+    this.render = function (tmpl, data) {
 
         if (navigator.Ie8) {
             return Handlebars.compile(tmpl)(data);
@@ -516,6 +594,20 @@ function IncHandlerbarsTemplate() {
     };
 
 }
+
+function IncDoTTemplate() {
+
+    this.compile = function(tmpl) {
+        return navigator.Ie8 ? tmpl
+            : doT.compile(tmpl);
+    };
+
+    this.render = function(tmpl, data) {
+        return doT.template(tmpl)(data);
+    };
+
+}
+
 
 function TemplateFactory() {
 }
@@ -549,16 +641,19 @@ TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data
         compile = builder.compile(tmplContent);
         if (isLocalStore) {
             try {
+                if (localStorage.remainingSpace < 2000) {
+                    localStorage.clear();
+                }
                 localStorage.setItem(selectorKey, compile);
             }
-            catch(e) {
-                if (e.name === 'QUOTA_EXCEEDED_ERR') {
+            catch (e) {
+                if (!ExecutableHelper.IsNullOrEmpty(e.name) && e.name.toUpperCase().indexOf('QUOTA') > -1) {
                     try {
                         localStorage.clear();
                     }
                     catch (e) {
-                        //TODO still searching solution
-                    } 
+
+                    }
                 }
             }
         }
@@ -580,9 +675,9 @@ function purl(existsUrl) {
         this.parseUri = function(url) {
 
             var uri = { attr : {}, param : {} };
-
-            if (url.contains('#')) {
-                uri.attr['fragment'] = url.split('#')[1].replace("!", "");
+            var hashSeparated = '#';           
+            if (url.contains(hashSeparated)) {
+                uri.attr['fragment'] = url.split(hashSeparated)[1].replace("!", "");
 
                 var current = this;
                 var fparams = {};
@@ -606,15 +701,16 @@ function purl(existsUrl) {
                 uri.param['fragment'] = {};
             }
 
-            if (url.split('#')[0].contains('?')) {
-                uri.param['query'] = this.parseString(url.split('#')[0].split('?')[1], '&');
+            if (url.split(hashSeparated)[0].contains('?')) {
+                uri.param['query'] = this.parseString(url.split(hashSeparated)[0].split('?')[1], '&');
             }
             else {
                 uri.param['query'] = {};
             }
 
-            // compile a 'base' domain attribute
-            uri.attr['base'] = url.split("#")[0].contains("?") ? url.split("?")[0] : url;
+            // compile a 'base' domain attribute            
+            uri.attr['base'] = url.split("#")[0].split('?')[0];
+            uri.attr['isWasHash'] = url.contains("#");
             uri.attr['fullBase'] = url.contains("#") ? url.split("#")[0] : url;
 
             return uri;
@@ -688,7 +784,7 @@ function purl(existsUrl) {
     }
 
     return {
-        data : new urlParser().parseUri(existsUrl || window.location.toString()),
+        data : new urlParser().parseUri(existsUrl),
 
         // get various attributes from the URI
         attr : function(attr) {
@@ -698,7 +794,7 @@ function purl(existsUrl) {
 
         // return query string parameters
         param : function(param) {
-            return typeof param !== 'undefined' ? this.data.param.query[param] : this.data.param.query;
+            return arguments.length != 0 ? ExecutableHelper.UrlDecode(this.data.param.query[param]) : this.data.param.query;
         },
         // return fragment parameters
         fparam : function(param, prefix) {
@@ -709,11 +805,11 @@ function purl(existsUrl) {
             var key = "{0}__{1}".f(prefix, param);
             return this.data.param.fragment.hasOwnProperty(key) ? ExecutableHelper.UrlDecode(this.data.param.fragment[key]) : '';
         },
-        
-        encodeAllParams: function () {
+
+        encodeAllParams : function() {
             var self = this;
             var params = self.fparam();
-            $.eachProperties(params, function () {
+            $.eachProperties(params, function() {
                 var key = this.split('__')[1];
                 var prefix = this.split('__')[0];
                 var value = params[this.toString()];
@@ -723,10 +819,15 @@ function purl(existsUrl) {
 
         // set fragment parameters
         setFparam : function(param, value, prefix) {
-            var fullParam = "{0}__{1}".f(prefix, param);
+            var fullParam = ExecutableHelper.IsNullOrEmpty(prefix) ? param : "{0}__{1}".f(prefix, param);
             return this.data.param.fragment[fullParam] = ExecutableHelper.UrlEncode(value);
-        }, 
-        
+        },
+
+        // set fragment parameters
+        setParam : function(param, value) {
+            return this.data.param.query[param] = ExecutableHelper.UrlEncode(value);
+        },
+
         // set fragment parameters
         removeFparam : function(param, prefix) {
             var fullParam = "{0}__{1}".f(prefix, param);
@@ -742,7 +843,7 @@ function purl(existsUrl) {
 
         fprefixes : function() {
             var uniquePrefixes = ['root'];
-            $.eachProperties(this.fparam(), function() {                
+            $.eachProperties(this.fparam(), function() {
                 var prefixKey = this.split('__')[0];
                 if (uniquePrefixes.contains(prefixKey)) {
                     return true;
@@ -779,48 +880,46 @@ function purl(existsUrl) {
             this.data.attr['fragment'] = clearValue;
         },
 
-        url : function() {
-            return this.data.attr['fullBase'];
-        },
-
         toHref : function() {
 
             var current = this;
 
+            var queryString = "?";
+            $.eachProperties(current.param(), function(i) {
+                queryString += "{0}{1}={2}".f(i === 0 ? '' : '&', this, ExecutableHelper.UrlEncode(current.param()[this]));
+            });
+
             var hash = '#!';
-
-            $.each(current.fprefixes(), function() {
-
+            $.each(current.fprefixes(), function(indexPrefix) {
+                hash += indexPrefix == 0 ? "" : "&";
                 var currentPrefix = this;
                 if (currentPrefix != 'root') {
                     hash += "{0}:".f(currentPrefix);
                 }
-                if (!_.isEmpty(current.furl(currentPrefix))) {
+                if (!ExecutableHelper.IsNullOrEmpty(current.furl(currentPrefix))) {
                     hash += current.furl(currentPrefix) + '?';
                 }
-
-                var queryParams = current.fparam();
-                $.eachProperties(queryParams, function() {
+                $.eachProperties(current.fparam(), function(i) {
                     var prefixKey = currentPrefix + "__";
                     if (!this.contains(prefixKey)) {
                         return true;
                     }
 
                     var clearKey = this.replace(prefixKey, '');
-                    if (_.isEmpty(clearKey)) {
+                    if (ExecutableHelper.IsNullOrEmpty(clearKey)) {
                         return true;
                     }
+                    var isFirstParameter = ['?', '!', ':'].contains(hash.charAt(hash.length - 1));
+                    hash += "{0}{1}={2}".f(isFirstParameter ? '' : "/", clearKey, ExecutableHelper.UrlEncode(current.fparam()[this]));
 
-                    hash += "{0}={1}/".f(clearKey, ExecutableHelper.UrlEncode(queryParams[this]));
                 });
 
-                if (hash.charAt(hash.length - 1) == '/') {
-                    hash = hash.cutLastChar(); //cut redundant '/'/
-                }
-                hash += "&";
             });
-            
-            return current.url() + hash.trim().cutLastChar();
+
+            queryString = queryString === '?' ? '' : queryString.trim();
+            hash = hash === '#!' && current.data.attr["isWasHash"] ? '' : hash.trim();
+            return current.data.attr['base'] + queryString + hash;
+
         }
     };
 
@@ -838,53 +937,61 @@ function purl(existsUrl) {
 
 if (!window.console) {
     window.console = {
-        log : function() {
+        log: function () {
         },
-        error : function() {
+        error: function () {
 
         },
-        dir : function() {
+        dir: function () {
         }
     };
 }
 
 function InitGps() {
     if (navigator.geolocation && !navigator.geolocation.currentPosition) {
-        navigator.geolocation.currentPosition = { longitude : 0, latitude : 0 };
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.currentPosition = { longitude: 0, latitude: 0 };
+        navigator.geolocation.getCurrentPosition(function (position) {
             navigator.geolocation.currentPosition = position.coords;
-        }, function() {
+        }, function () {
         });
     }
 }
 
 $.extend(String.prototype, {
-    replaceAll : function(find, replace) {
+    replaceAll: function (find, replace) {
         return this.split(find).join(replace);
     },
-    endWith : function(suffix) {
+    endWith: function (suffix) {
         return (this.substr(this.length - suffix.length) === suffix);
     },
-    startsWith : function(prefix) {
+    toSelectorAsName: function () {
+        var name = this;
+        if (ExecutableHelper.IsNullOrEmpty(name)) {
+            name = '';
+        }
+       return  '[name="{0}"]'.f(name.toString()
+            .replaceAll("[", "\\[")
+            .replaceAll("]", "\\]"));        
+    },
+    startsWith: function (prefix) {
         return (this.substr(0, prefix.length) === prefix);
     },
-    trim : function() {
+    trim: function () {
         return this.replace(/^\s\s*|\s\s*$/g, '');
     },
-    ltrim : function() {
+    ltrim: function () {
         return this.replace(/^\s+/, "");
     },
-    rtrim : function() {
+    rtrim: function () {
         return this.replace(/\s+$/, "");
     },
-    cutLastChar : function() {
+    cutLastChar: function () {
         return this.substring(0, this.length - 1);
     },
-    contains : function(find) {
+    contains: function (find) {
         return this.indexOf(find) !== -1;
     },
-
-    f : function() {
+    f: function () {
         var s = this;
         var i = arguments.length;
 
@@ -897,42 +1004,42 @@ $.extend(String.prototype, {
 });
 
 $.extend(Array.prototype, {
-    contains : function(findValue) {
+    contains: function (findValue) {
         return $.inArray(findValue, this) != -1;
     },
-    remove : function(from, to) {
+    remove: function (from, to) {
         var rest = this.slice((to || from) + 1 || this.length);
         this.length = from < 0 ? this.length + from : from;
         return this.push.apply(this, rest);
     },
-    sum : function() {
+    sum: function () {
         var sum = 0;
-        $(this).each(function() {
+        $(this).each(function () {
             sum += parseFloat(this);
         });
         return sum;
     },
-    max : function() {
+    max: function () {
         return this.length > 0 ? Math.max.apply(Math, this) : 0;
     },
-    min : function() {
+    min: function () {
         return this.length > 0 ? Math.min.apply(Math, this) : 0;
     },
-    average : function() {
+    average: function () {
         return this.length > 0 ? this.sum() / this.length : 0;
     },
-    first : function() {
+    first: function () {
         return this.length > 0 ? this[0] : '';
     },
-    last : function() {
+    last: function () {
         return this.length > 0 ? this[this.length - 1] : '';
     },
-    count : function() {
+    count: function () {
         return this.length;
     },
-    select : function(convert) {
+    select: function (convert) {
         var res = [];
-        $(this).each(function() {
+        $(this).each(function () {
             res.push(convert(this));
         });
         return res;
@@ -940,7 +1047,7 @@ $.extend(Array.prototype, {
 });
 
 function incodingExtend(child, parent) {
-    var f = function() {
+    var f = function () {
     };
     f.prototype = parent.prototype;
     child.prototype = new f();
@@ -949,22 +1056,22 @@ function incodingExtend(child, parent) {
 }
 
 $.fn.extend({
-    maxZIndex : function(opt) {
-        var def = { inc : 10, group : "*" };
+    maxZIndex: function (opt) {
+        var def = { inc: 10, group: "*" };
         $.extend(def, opt);
         var zMax = 0;
-        $(def.group).each(function() {
+        $(def.group).each(function () {
             var cur = parseInt($(this).css('z-index'));
             zMax = cur > zMax ? cur : zMax;
         });
 
-        return this.each(function() {
+        return this.each(function () {
             zMax += def.inc;
-            $(this).css({ "z-index" : zMax });
+            $(this).css({ "z-index": zMax });
         });
     },
 
-    toggleProp : function(key) {
+    toggleProp: function (key) {
         if (this.prop(key)) {
             $(this).prop(key, false);
         }
@@ -973,7 +1080,7 @@ $.fn.extend({
         }
         return this;
     },
-    toggleAttr : function(key) {
+    toggleAttr: function (key) {
         if (this.attr(key)) {
             $(this).removeAttr(key);
         }
@@ -982,38 +1089,29 @@ $.fn.extend({
         }
         return this;
     },
-    increment : function(step) {
-        return $(this).each(function() {
+    increment: function (step) {
+        return $(this).each(function () {
             var val = parseInt($(this).val());
             $(this).val((_.isNaN(val) ? 0 : val) + parseInt(step));
         });
-    }
+    },
+    isFormElement: function () {
+        return $(this).is('select,textarea,input');
+    },
 });
 
 $.extend({
-    eachProperties : function(ob, evaluated) {
+    eachProperties: function (ob, evaluated) {
+        var i = 0;
         for (var property in ob) {
             var isValid = !_.isUndefined(property) || !_.isEmpty(property);
             if (isValid && ob.hasOwnProperty(property)) {
-                evaluated.call(property);
+                evaluated.call(property, i);
             }
+            i++;
         }
-    },
-    byName : function(name, nextSelector) {
-        if (ExecutableHelper.IsNullOrEmpty(name)) {
-            name = '';
-        }
-        var selectorByName = '[name="{0}"]'.f(name.toString()
-            .replaceAll("[", "\\[")
-            .replaceAll("]", "\\]"));
-        if (ExecutableHelper.IsNullOrEmpty(nextSelector)) {
-            return $(selectorByName);
-        }
-        else {
-            return $(selectorByName + nextSelector);
-        }
-    },
-    eachFormElements : function(ob, evaluated) {
+    },    
+    eachFormElements: function (ob, evaluated) {
         var inputTag = 'input,select,textarea';
         var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
         var targets;
@@ -1025,16 +1123,32 @@ $.extend({
             targets = allInput.length > 1 ? allInput : [allInput];
         }
 
-        $(targets).each(evaluated);
+        $(targets).each(function() {
+            var name = $(this).prop('name');
+
+            if (ExecutableHelper.IsNullOrEmpty(name)) {
+                return;
+            }
+
+            var isElement = ob.length === 1 && ob.isFormElement();
+            if (isElement) {
+                evaluated.call(ob);
+            }
+            else {
+                var byFind = ob.find(name.toSelectorAsName());
+                evaluated.call(byFind.length !== 0 ? byFind : ob.filter(name.toSelectorAsName()));
+            }
+        });
+        
     },
-    url : function(url) {
+    url: function (url) {
         return purl(url);
     }
 });
 
 //#region  Jquery cookies
 
-(function($, document) {
+(function ($, document) {
 
     var pluses = /\+/g;
 
@@ -1042,7 +1156,7 @@ $.extend({
         return decodeURIComponent(s.replace(pluses, ' '));
     }
 
-    var config = $.cookie = function(key, value, options) {
+    var config = $.cookie = function (key, value, options) {
 
         // write
         if (value !== undefined) {
@@ -1084,7 +1198,7 @@ $.extend({
 
     config.defaults = {};
 
-    $.removeCookie = function(key, options) {
+    $.removeCookie = function (key, options) {
         if ($.cookie(key) !== null) {
             $.cookie(key, null, options);
             return true;
@@ -1094,7 +1208,7 @@ $.extend({
 
 })(jQuery, document);
 
-navigator.Ie8 = (function() {
+navigator.Ie8 = (function () {
     var N = navigator.appName, ua = navigator.userAgent, tem;
     var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
     if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {
@@ -1210,7 +1324,7 @@ IncodingRunner.prototype = {
 
         var current = this;
 
-        var filterFunc = function (executable) {            
+        var filterExecutableByEvent = function (executable) {            
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
                 executable.event = event;
@@ -1219,13 +1333,13 @@ IncodingRunner.prototype = {
         };
 
         try {
-            $($.grep(this.before, filterFunc)).each(function() {
+            $($.grep(this.before, filterExecutableByEvent)).each(function() {
                 this.execute();
             });
         }
         catch(ex) {
             if (ex instanceof IncClientException) {
-                $($.grep(this.breakes, filterFunc)).each(function() {
+                $($.grep(this.breakes, filterExecutableByEvent)).each(function() {
                     this.execute(ex);
                 });
                 return;
@@ -1233,12 +1347,20 @@ IncodingRunner.prototype = {
             throw ex;
         }
 
-        $($.grep(this.actions, filterFunc)).each(function() {
-            this.execute({
-                success : $.grep(current.success, filterFunc),
-                error : $.grep(current.error, filterFunc),
-                complete : $.grep(current.complete, filterFunc),
-                breakes : $.grep(current.breakes, filterFunc),
+        $($.grep(this.actions, filterExecutableByEvent)).each(function() {
+            var currentAction = this;
+            var filterExecutableByAction = function(executable) {
+                if (executable.onBind !== currentAction.onBind) {
+                    return false;
+                }
+                return filterExecutableByEvent(executable);
+            };
+
+            currentAction.execute({
+                success : $.grep(current.success, filterExecutableByAction),
+                error : $.grep(current.error, filterExecutableByAction),
+                complete : $.grep(current.complete, filterExecutableByAction),
+                breakes : $.grep(current.breakes, filterExecutableByAction),
                 eventResult : result,
                 event : event
             });
@@ -1433,6 +1555,7 @@ ExecutableFactory.Create = function(type, data, self) {
 
     return executable;
 };
+
 // ReSharper restore UnusedParameter
 
 //#endregion
@@ -1448,7 +1571,8 @@ function ExecutableBase() {
     this.interval = 0;
     this.intervalId = '';
     this.target = '';
-    this.ands = null;    
+    this.ands = null;
+    this.result = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -1457,19 +1581,19 @@ function ExecutableBase() {
 
 ExecutableBase.prototype = {
     // ReSharper disable UnusedParameter
-    execute : function(data) {
+    execute : function(state) {
 
         var current = this;
         current.target = current.getTarget();
-        
-        if (!current.isValid(data)) {
+
+        if (!current.isValid()) {
             return;
         }
 
         if (current.timeOut > 0) {
             window.setTimeout(function() {
                 current.target = current.getTarget();
-                current.internalExecute(data);
+                current.internalExecute(state);
             }, current.timeOut);
             return;
         }
@@ -1477,17 +1601,17 @@ ExecutableBase.prototype = {
         if (current.interval > 0) {
             ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function() {
                 current.target = current.getTarget();
-                current.internalExecute(data);
+                current.internalExecute(state);
             }, current.interval);
             return;
         }
-        
-        current.internalExecute(data);        
-    },    
-    internalExecute : function(data) {        
+
+        current.internalExecute(state);
     },
-    
-    isValid : function(data) {
+    internalExecute : function(state) {
+    },
+
+    isValid : function() {
 
         var current = this;
 
@@ -1500,10 +1624,10 @@ ExecutableBase.prototype = {
         $(current.ands).each(function() {
 
             var hasAny = false;
-            
+
             $(this).each(function() {
 
-                hasAny = ConditionalFactory.Create(this, current).isSatisfied(data);
+                hasAny = ConditionalFactory.Create(this, current).isSatisfied(current.result);
                 if (!hasAny) {
                     return false;
                 }
@@ -1522,6 +1646,7 @@ ExecutableBase.prototype = {
         ExecutableHelper.Instance.self = this.self;
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
+        ExecutableHelper.Instance.result = this.result;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -1540,8 +1665,8 @@ function ExecutableActionBase() {
 }
 
 $.extend(ExecutableActionBase.prototype, {
-    complete: function (result, state) {
-        
+    complete : function(result, state) {
+
         if (!ExecutableHelper.IsNullOrEmpty(result.redirectTo)) {
             ExecutableHelper.RedirectTo(result.redirectTo);
             return;
@@ -1556,19 +1681,20 @@ $.extend(ExecutableActionBase.prototype, {
         }
 
         var hasBreak = false;
-        var executeState = function () {
-            try {                
-                this.execute(resultData);
+        var executeState = function() {
+            try {
+                this.result = resultData;
+                this.execute();
             }
             catch (e) {
                 if (e instanceof IncClientException) {
                     hasBreak = true;
-                    return false;//stop execute
+                    return false; //stop execute
                 }
 
-                console.log('Incoding exception: {0}'.f(e.message ? e.messsage : e));
+                console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
                 if (navigator.Ie8) {
-                    return false;//stop execute
+                    return false; //stop execute
                 }
                 throw e;
             }
@@ -1591,9 +1717,9 @@ incodingExtend(ExecutableDirectAction, ExecutableActionBase);
 function ExecutableDirectAction() {
 }
 
-ExecutableDirectAction.prototype.internalExecute = function(data) {
+ExecutableDirectAction.prototype.internalExecute = function(state) {
     var result = ExecutableHelper.IsNullOrEmpty(this.jsonData.result) ? IncodingResult.Empty : new IncodingResult(this.jsonData.result);
-    this.complete(result, data);
+    this.complete(result, state);
 };
 
 //#endregion
@@ -1605,8 +1731,8 @@ incodingExtend(ExecutableEventAction, ExecutableActionBase);
 function ExecutableEventAction() {
 }
 
-ExecutableEventAction.prototype.internalExecute = function(data) {
-    this.complete(data.eventResult, data);
+ExecutableEventAction.prototype.internalExecute = function(state) {
+    this.complete(state.eventResult, state);
 };
 
 //#endregion
@@ -1618,20 +1744,23 @@ incodingExtend(ExecutableAjaxAction, ExecutableActionBase);
 function ExecutableAjaxAction() {
 }
 
-ExecutableAjaxAction.prototype.internalExecute = function(data) {
+ExecutableAjaxAction.prototype.internalExecute = function(state) {
 
     var current = this;
 
-    var ajaxOptions = $.extend(true, { data : [] }, this.jsonData.ajax);
-
-    for (var i = 0; i < ajaxOptions.data.length; i++) {
-        ajaxOptions.data[i].selector = this.tryGetVal(ajaxOptions.data[i].selector);
+    var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
+    var url = ajaxOptions.url;
+    if (!ExecutableHelper.IsNullOrEmpty(url)) {
+        var queryFromString = $.url(url).param();
+        $.eachProperties(queryFromString, function() {
+            ajaxOptions.data.push({ name : this, selector : current.tryGetVal(queryFromString[this]) });
+        });
+        ajaxOptions.url = url.split('?')[0];
     }
-
-    if (this.jsonData.hash) {
+    if (current.jsonData.hash) {
         var href = $.url(document.location.href);
-        if (ExecutableHelper.IsNullOrEmpty(ajaxOptions.url)) {
-            ajaxOptions.url = href.furl(this.jsonData.prefix);
+        if (ExecutableHelper.IsNullOrEmpty(url.split('?')[0])) {
+            ajaxOptions.url = href.furl(current.jsonData.prefix);
         }
 
         var fragmentParams = href.fparam();
@@ -1639,10 +1768,11 @@ ExecutableAjaxAction.prototype.internalExecute = function(data) {
             var name = this.replace(current.jsonData.prefix + '__', '');
             ajaxOptions.data.push({ name : name, selector : fragmentParams[this] });
         });
+
     }
 
     AjaxAdapter.Instance.request(ajaxOptions, function(result) {
-        current.complete(result, data);
+        current.complete(result, state);
     });
 
 };
@@ -1656,21 +1786,22 @@ incodingExtend(ExecutableSubmitAction, ExecutableActionBase);
 function ExecutableSubmitAction() {
 }
 
-ExecutableSubmitAction.prototype.internalExecute = function(data) {
+ExecutableSubmitAction.prototype.internalExecute = function(state) {
 
     var current = this;
     var formSelector = eval(this.jsonData.formSelector);
     var form = $(formSelector).is('form') ? formSelector : $(formSelector).closest('form').first();
 
     var ajaxOptions = $.extend(true, {
+        data : [],
         error : function(error) {
             $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(error)));
             $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(error)));
         },
         success : function(responseText, statusText, xhr, $form) {
-            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(xhr)));                        
+            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
             $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
-            current.complete(new IncodingResult(responseText), data);
+            current.complete(new IncodingResult(responseText), state);
         },
         beforeSubmit : function(formData, jqForm, options) {
             var isValid = $(form).valid();
@@ -1684,16 +1815,20 @@ ExecutableSubmitAction.prototype.internalExecute = function(data) {
         }
     }, this.jsonData.options);
 
-    if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.options.data)) {
-        for (var i = 0; i < this.jsonData.options.data.length; i++) {
-            ajaxOptions.data[i].value = this.tryGetVal(this.jsonData.options.data[i].value);
+    var url = this.jsonData.options.url;
+    if (!ExecutableHelper.IsNullOrEmpty(url)) {
+        var queryFromString = $.url(url).param();
+        $.eachProperties(queryFromString, function() {
+            ajaxOptions.data.push({ name : this, value : current.tryGetVal(queryFromString[this]) });
+        });
+        ajaxOptions.url = url.split('?')[0];
+        if (ExecutableHelper.IsNullOrEmpty(ajaxOptions.url)) {
+            delete ajaxOptions.url;
         }
     }
 
     $(form).ajaxSubmit(ajaxOptions);
 };
-
-//#endregion
 
 //#endregion
 
@@ -1708,16 +1843,18 @@ function ExecutableInsert() {
 
 // ReSharper disable UnusedLocals
 // ReSharper disable AssignedValueIsNeverUsed
-ExecutableInsert.prototype.internalExecute = function(data) {
+ExecutableInsert.prototype.internalExecute = function() {
 
     var current = this;
 
-    var insertContent = ExecutableHelper.IsNullOrEmpty(data) ? '' : data;
+    var insertContent = ExecutableHelper.IsNullOrEmpty(current.jsonData.result)
+        ? ExecutableHelper.IsNullOrEmpty(this.result) ? '' : this.result
+        : this.tryGetVal(current.jsonData.result);
 
     if (!ExecutableHelper.IsNullOrEmpty(current.jsonData.property)) {
-        var insertObject = data;
-        if (_.isArray(data)) {
-            insertObject = data.length > 0 ? data[0] : {};
+        var insertObject = this.result;
+        if (_.isArray(this.result)) {
+            insertObject = this.result.length > 0 ? this.result[0] : {};
         }
         insertContent = insertObject.hasOwnProperty(current.jsonData.property) ? insertObject[current.jsonData.property] : '';
     }
@@ -1734,8 +1871,10 @@ ExecutableInsert.prototype.internalExecute = function(data) {
     if (!ExecutableHelper.IsNullOrEmpty(current.jsonData.template)) {
         var templateId = current.jsonData.template;
         if (templateId.startsWith("||ajax*")) {
-            var buildUrlKey = '||buildurl*' + templateId.substring(7, templateId.length);
-            templateId = current.tryGetVal(buildUrlKey);
+
+            var json = templateId.substring(2, templateId.length - 2)
+                .substring(templateId.indexOf('*') - 1, templateId.length);
+            templateId = current.tryGetVal('||buildurl*{0}||'.f($.parseJSON(json).url));
         }
         insertContent = TemplateFactory.ToHtml(ExecutableInsert.Template, templateId, function() {
             return current.tryGetVal(current.jsonData.template);
@@ -1746,9 +1885,23 @@ ExecutableInsert.prototype.internalExecute = function(data) {
         insertContent = '';
     }
 
+    // temporary fix for IE9 (random rows in table having td offset)
+    // https://issues.jboss.org/browse/JBPM-4396
+    if (jQuery.browser.msie && jQuery.browser.version === '9.0') {
+        if (typeof insertContent === 'string' || insertContent instanceof String) {
+            insertContent = insertContent.replace(/>\s+(?=<\/?(t|c)[hardfob])/gm, '>');
+        }
+    }
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
 
-    IncodingEngine.Current.parse(current.target);
+    var target = current.target;
+    if (current.jsonData.insertType.toLowerCase() === 'after') {
+        target = $(current.target).next();
+    }
+    if (current.jsonData.insertType.toLowerCase() === 'before') {
+        target = $(current.target).prev();
+    }
+    IncodingEngine.Current.parse(target);
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
 };
 
@@ -1765,11 +1918,11 @@ incodingExtend(ExecutableTrigger, ExecutableBase);
 function ExecutableTrigger() {
 }
 
-ExecutableTrigger.prototype.internalExecute = function(data) {
+ExecutableTrigger.prototype.internalExecute = function() {
 
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
-        ? data
-        : data.hasOwnProperty(this.jsonData.property) ? data[this.jsonData.property] : '';
+        ? this.result
+        : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
     $(this.target).trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
 
 };
@@ -1790,10 +1943,10 @@ ExecutableValidationParse.prototype.internalExecute = function() {
     $.validator.unobtrusive.parse(form);
 
     //bug in fluent validation. fixed for input
-    $('[data-val-equalto-other]', form).each(function () {
+    $('[data-val-equalto-other]', form).each(function() {
         var equalTo = '#' + $(this).data('val-equalto-other').replaceAll('*.', 'Input_');
         if ($(equalTo).length > 0) {
-            $(this).rules("add", { required: true, equalTo: equalTo });
+            $(this).rules("add", { required : true, equalTo : equalTo });
         }
     });
 };
@@ -1807,10 +1960,14 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
-ExecutableValidationRefresh.prototype.internalExecute = function(data) {
+ExecutableValidationRefresh.prototype.internalExecute = function() {
 
     var current = this;
-    $(data).each(function() {
+    var inputErrorClass = 'input-validation-error';
+    var messageErrorClass = 'field-validation-error';
+    var messageValidClass = 'field-validation-valid';
+    var result = ExecutableHelper.IsNullOrEmpty(current.result) ? [] : current.result;
+    $(result).each(function() {
 
         var name = this.name.toString();
         var input = $('[name]', current.target).filter(function() {
@@ -1820,25 +1977,28 @@ ExecutableValidationRefresh.prototype.internalExecute = function(data) {
             return $(this).attr('data-valmsg-for').toLowerCase() == name.toLowerCase();
         });
 
-        var inputErrorClass = 'input-validation-error';
-        var messageErrorClass = 'field-validation-error';
-        var messageValidClass = 'field-validation-valid';
-
         if (ExecutableHelper.ToBool(this.isValid)) {
             $(input).removeClass(inputErrorClass);
-            $(span)
-                .removeClass(messageErrorClass)
-                .addClass(messageValidClass);
+            $(span).removeClass(messageErrorClass)
+                .addClass(messageValidClass)
+                .empty();
         }
         else {
             $(input).addClass(inputErrorClass);
             $(span)
                 .removeClass(messageValidClass)
                 .addClass(messageErrorClass)
-                .html(this.errorMessage);
+                .html($('<span/>')
+                    .attr({ for : name, generated : true })
+                    .html(this.errorMessage));
         }
 
     });
+
+    if ($(result).length === 0) {
+        $(current.target).find('.input-validation-error').removeClass(inputErrorClass);
+        $(current.target).find('.field-validation-error').addClass(messageValidClass).removeClass(messageErrorClass).empty();
+    }
 
     $($(current.target).is('form') ? current.target : $('form', this.target))
         .validate()
@@ -1854,7 +2014,7 @@ incodingExtend(ExecutableEval, ExecutableBase);
 function ExecutableEval() {
 }
 
-ExecutableEval.prototype.internalExecute = function(data) {
+ExecutableEval.prototype.internalExecute = function() {
     eval(this.jsonData.code);
 };
 
@@ -1867,7 +2027,7 @@ incodingExtend(ExecutableEvalMethod, ExecutableBase);
 function ExecutableEvalMethod() {
 }
 
-ExecutableEvalMethod.prototype.internalExecute = function(data) {
+ExecutableEvalMethod.prototype.internalExecute = function() {
 
     var length = this.jsonData.args.length;
 
@@ -1892,7 +2052,7 @@ incodingExtend(ExecutableBreak, ExecutableBase);
 function ExecutableBreak() {
 }
 
-ExecutableBreak.prototype.internalExecute = function(result) {
+ExecutableBreak.prototype.internalExecute = function() {
     throw new IncClientException();
 };
 
@@ -1914,14 +2074,11 @@ ExecutableStoreInsert.prototype.internalExecute = function() {
         url.clearFparam();
     }
 
-    $.eachFormElements(this.target, function() {
+    var target = this.target;
+    $.eachFormElements(target, function() {
         var name = $(this).prop('name');
+        var value = ExecutableHelper.Instance.TryGetVal(this);
 
-        if (ExecutableHelper.IsNullOrEmpty(name)) {
-            return;
-        }
-
-        var value = ExecutableHelper.Instance.TryGetVal($.byName(name));
         if (ExecutableHelper.IsNullOrEmpty(value)) {
             url.removeFparam(name, prefix);
         }
@@ -1954,7 +2111,7 @@ ExecutableStoreFetch.prototype.internalExecute = function() {
         if (fparam.hasOwnProperty(key)) {
             value = fparam[key];
         }
-        ExecutableHelper.Instance.TrySetValue($.byName(name), value);
+        ExecutableHelper.Instance.TrySetValue(this, value);
     });
 
 };
@@ -1968,13 +2125,13 @@ incodingExtend(ExecutableStoreManipulate, ExecutableBase);
 function ExecutableStoreManipulate() {
 }
 
-ExecutableStoreManipulate.prototype.internalExecute = function(data) {
+ExecutableStoreManipulate.prototype.internalExecute = function() {
     var current = this;
     switch (current.jsonData.type) {
         case 'hash':
             var url = $.url(document.location.href);
             url.encodeAllParams();
-            
+
             var methods = $.parseJSON(current.jsonData.methods);
             $(methods).each(function() {
                 switch (this.verb) {
@@ -2043,9 +2200,8 @@ ExecutableBind.prototype.internalExecute = function() {
             break;
     }
 };
-    
 
- //#endregion
+//#endregion
 
 //#endregion﻿"use strict";
 

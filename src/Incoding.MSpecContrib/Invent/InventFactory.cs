@@ -114,8 +114,9 @@ namespace Incoding.MSpecContrib
             var dictionary = new Dictionary<string, Type>();
             for (int i = 0; i < members.Count; i++)
             {
-                string memberName = members[i].Name;
-                var declaringType = members[i].DeclaringType;
+                var memberInfo = members[i];
+                string memberName = memberInfo.Name;
+                var declaringType = memberInfo is PropertyInfo ? ((PropertyInfo)memberInfo).PropertyType : ((FieldInfo)memberInfo).FieldType;
 
                 if (dictionary.ContainsKey(memberName))
                 {

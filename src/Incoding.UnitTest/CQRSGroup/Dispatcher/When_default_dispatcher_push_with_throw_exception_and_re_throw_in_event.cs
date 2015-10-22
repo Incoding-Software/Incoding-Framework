@@ -58,21 +58,13 @@ namespace Incoding.UnitTest
                                   {
                                       IoCFactory.Instance.Initialize(init => init.WithProvider(Pleasure.MockAsObject<IIoCProvider>(mock =>
                                                                                                                                        {
-                                                                                                                                           var unitOfWorkFactory = Pleasure.Mock<IUnitOfWorkFactory>(unitOfWorkFactoryMock =>
-                                                                                                                                                                                                         {
-                                                                                                                                                                                                             var unitOfWork = new Mock<IUnitOfWork>();
-                                                                                                                                                                                                             unitOfWorkFactoryMock
-                                                                                                                                                                                                                     .Setup(r => r.Create(Pleasure.MockIt.IsAny<IsolationLevel>(), Pleasure.MockIt.IsNull<string>()))
-                                                                                                                                                                                                                     .Returns(unitOfWork.Object);
-                                                                                                                                                                                                         });
-
-                                                                                                                                           mock.Setup(r => r.TryGet<IUnitOfWorkFactory>()).Returns(unitOfWorkFactory.Object);
+                                                                                                                                           
                                                                                                                                            mock.Setup(r => r.Get<object>(typeof(DispatcherSubscriber))).Returns(new DispatcherSubscriber());
                                                                                                                                            mock.Setup(r => r.TryGet<IEventBroker>()).Returns(new DefaultEventBroker());
                                                                                                                                            mock.Setup(r => r.GetAll<object>(typeof(IEventSubscriber<>).MakeGenericType(new[] { typeof(OnAfterErrorExecuteEvent) }))).Returns(new List<object> { new DispatcherSubscriber() });
                                                                                                                                        })));
 
-                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(Pleasure.MockIt.IsAny<IDispatcher>(), Pleasure.MockIt.IsAny<IUnitOfWork>())).Throws<MyException>());
+                                      message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(Pleasure.MockIt.IsAny<IDispatcher>(), Pleasure.MockIt.IsAny<Lazy<IUnitOfWork>>())).Throws<MyException>());
 
                                       dispatcher = new DefaultDispatcher();
                                   };
@@ -80,5 +72,7 @@ namespace Incoding.UnitTest
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
 
         It should_be_re_throw = () => exception.ShouldBeOfType<MyException>();
+
+
     }
 }

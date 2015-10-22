@@ -3,7 +3,9 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System.IO;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Moq;
 
     #endregion
@@ -18,23 +20,25 @@ namespace Incoding.MSpecContrib
 
         readonly Mock<IViewDataContainer> viewDataContainer;
 
+        Mock<HttpContextBase> httpContext;
+
         #endregion
 
         #region Constructors
 
         MockHtmlHelper()
         {
-            this.textWriter = Pleasure.Mock<TextWriter>();
+            textWriter = Pleasure.Mock<TextWriter>();
 
             var viewDataDictionary = new ViewDataDictionary<TModel>();
 
-            this.viewContext = Pleasure.Mock<ViewContext>(mock =>
-                                                              {
-                                                                  mock.Setup(r => r.ClientValidationEnabled).Returns(true);
-                                                                  mock.SetupGet(r => r.Writer).Returns(this.textWriter.Object);
-                                                                  mock.SetupGet(r => r.ViewData).Returns(viewDataDictionary);
-                                                              });
-            this.viewDataContainer = Pleasure.Mock<IViewDataContainer>(mock => mock.SetupGet(r => r.ViewData).Returns(viewDataDictionary));
+            viewContext = Pleasure.Mock<ViewContext>(mock =>
+                                                     {
+                                                         mock.Setup(r => r.ClientValidationEnabled).Returns(true);                                                         
+                                                         mock.SetupGet(r => r.Writer).Returns(textWriter.Object);
+                                                         mock.SetupGet(r => r.ViewData).Returns(viewDataDictionary);
+                                                     });
+            viewDataContainer = Pleasure.Mock<IViewDataContainer>(mock => mock.SetupGet(r => r.ViewData).Returns(viewDataDictionary));
         }
 
         #endregion
@@ -55,6 +59,11 @@ namespace Incoding.MSpecContrib
             get { return new HtmlHelper<TModel>(this.viewContext.Object, this.viewDataContainer.Object); }
         }
 
+        public HtmlHelper OriginalNoGeneric
+        {
+            get { return new HtmlHelper(this.viewContext.Object, this.viewDataContainer.Object); }
+        }
+
         #endregion
 
         #region Api Methods
@@ -66,6 +75,7 @@ namespace Incoding.MSpecContrib
             this.viewContext.SetupGet(r => r.ViewData).Returns(viewDataDictionary);
             return this;
         }
+
 
         public void ShouldBeWriter(string items)
         {

@@ -1,51 +1,61 @@
-﻿using Incoding.Maybe;
-
-namespace Incoding.Block
+﻿namespace Incoding.Block
 {
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Diagnostics.CodeAnalysis;
     using Incoding.CQRS;
     using Incoding.Extensions;
+    using Incoding.Quality;
+    using JetBrains.Annotations;
 
     #endregion
 
     public class AddDelayToSchedulerCommand : CommandBase
     {
+        #region Constructors
+
+        public AddDelayToSchedulerCommand(DelayToScheduler delay)
+        {
+            Command = delay.Instance;
+            Priority = delay.Priority;
+            UID = delay.UID;
+            Setting = delay.Instance.Setting;
+        }
+
+        [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor, false), ExcludeFromCodeCoverage]
+        public AddDelayToSchedulerCommand() { }
+
+        #endregion
+
         #region Properties
 
-        public List<IMessage<object>> Commands { get; set; }
+        public CommandBase Command { get; set; }
 
         public string UID { get; set; }
 
         public GetRecurrencyDateQuery Recurrency { get; set; }
 
-        #endregion
-
-        #region Nested classes
+        public int Priority { get; set; }
 
         #endregion
 
         protected override void Execute()
         {
-            string groupKey = Guid.NewGuid().ToString();
             Recurrency = Recurrency ?? new GetRecurrencyDateQuery
                                        {
-                                           Type = GetRecurrencyDateQuery.RepeatType.Once
+                                               Type = GetRecurrencyDateQuery.RepeatType.Once
                                        };
-            Repository.Saves(Commands.Select((message, i) => new DelayToScheduler
-                                                             {
-                                                                     Command = message.ToJsonString(),
-                                                                     Type = message.GetType().AssemblyQualifiedName,
-                                                                     GroupKey = groupKey,
-                                                                     Priority = i,
-                                                                     UID = UID,
-                                                                     Status = DelayOfStatus.New,
-                                                                     Recurrence = Recurrency,
-                                                                     StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow))
-                                                             }));
+            Repository.Save(new DelayToScheduler
+                            {
+                                    Command = Command.ToJsonString(), 
+                                    Type = Command.GetType().AssemblyQualifiedName, 
+                                    UID = UID, 
+                                    Priority = Priority, 
+                                    Status = DelayOfStatus.New, 
+                                    Recurrence = Recurrency, 
+                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow))
+                            });
         }
     }
 }

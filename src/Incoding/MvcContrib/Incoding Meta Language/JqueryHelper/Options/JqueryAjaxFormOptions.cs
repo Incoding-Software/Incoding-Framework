@@ -2,10 +2,10 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Incoding.Extensions;
+    using Incoding.Maybe;
     using JetBrains.Annotations;
 
     #endregion
@@ -16,19 +16,26 @@ namespace Incoding.MvcContrib
     public class JqueryAjaxFormOptions : MetaTypicalOptions
     {
         ////ncrunch: no coverage start
-
         #region Static Fields
 
         public static readonly JqueryAjaxFormOptions Default = new JqueryAjaxFormOptions();
 
         #endregion
 
-        ////ncrunch: no coverage end
+        #region Fields
 
+        RouteValueDictionary data = new RouteValueDictionary();
+
+        #endregion
+
+        ////ncrunch: no coverage end
         #region Constructors
 
-        public JqueryAjaxFormOptions(MetaTypicalOptions @default)
-                : base(@default) { }
+        public JqueryAjaxFormOptions(JqueryAjaxFormOptions @default)
+                : base(@default)
+        {
+            Data = @default.Data;
+        }
 
         public JqueryAjaxFormOptions() { }
 
@@ -37,9 +44,11 @@ namespace Incoding.MvcContrib
         #region Properties
 
         /// <summary>
-        ///     Boolean value. Set to <c>true</c> to remove short delay before posting form when uploading files (or using the iframe option).
+        ///     Boolean value. Set to <c>true</c> to remove short delay before posting form when uploading files (or using the
+        ///     iframe option).
         ///     <remarks>
-        ///         The delay is used to allow the browser to render DOM updates prior to performing a native form submit. This improves usability when displaying notifications to the user, such as "Please Wait..."
+        ///         The delay is used to allow the browser to render DOM updates prior to performing a native form submit. This
+        ///         improves usability when displaying notifications to the user, such as "Please Wait..."
         ///     </remarks>
         ///     Default value: <c>false</c>.
         /// </summary>
@@ -49,7 +58,9 @@ namespace Incoding.MvcContrib
         /// <summary>
         ///     Boolean flag indicating whether data must be submitted in strict semantic order (slower).
         ///     <remarks>
-        ///         Note that the normal form serialization is done in semantic order with the exception of input elements of type="image". You should only set the semantic option to true if your server has strict semantic requirements and your form contains an input element of type="image".
+        ///         Note that the normal form serialization is done in semantic order with the exception of input elements of
+        ///         type="image". You should only set the semantic option to true if your server has strict semantic requirements
+        ///         and your form contains an input element of type="image".
         ///     </remarks>
         ///     Default value: <see langword="false" />
         /// </summary>
@@ -67,30 +78,15 @@ namespace Incoding.MvcContrib
         ///     URL to which the form data will be submitted.
         ///     Default value: value of form's action attribute
         /// </summary>
-        [UsedImplicitly]
-        public string Url
-        {
-            set
-            {
-                var routes = value.SelectQueryString();
-                if (routes.Any())
-                {
-                    this.Set("url", value.Split('?')[0]);
-                    Data = routes.Select(r => new JqueryAjaxRoute { name = r.Key, value = r.Value.ToString() })
-                                 .ToList();
-                }
-                else
-                    this.Set("url", value);
-            }
-        }
+        public string Url { get { return this.GetOrDefault("url").Recovery(string.Empty).With(r => r.ToString()); } set { this.Set("url", value.AppendOnlyToQueryString(data)); } }
 
-        [UsedImplicitly]
-        public IEnumerable<JqueryAjaxRoute> Data
+        public RouteValueDictionary Data
         {
+            get { return data; }
             set
             {
-                var currentData = (this.GetOrDefault("data") as List<JqueryAjaxRoute>) ?? new List<JqueryAjaxRoute>();
-                this.Set("data", currentData.Merger(value));
+                data = value;
+                this.Set("url", Url.AppendOnlyToQueryString(data));
             }
         }
 

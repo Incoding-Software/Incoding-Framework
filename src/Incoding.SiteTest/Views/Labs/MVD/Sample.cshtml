@@ -1,0 +1,42 @@
+﻿@using Incoding.SiteTest
+<h3>Push</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new SampleOfCQRS.Command() { Value = "Value" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite as array</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 1" })
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 2" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value" })
+                   .Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push composite mix</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher()
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 1" })
+                   .Push(new SampleOfCQRS.Command() { Value = "Value 2" })
+                   .Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Push multiple generic</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new SampleOfCQRS.MultipleGenericCommand<string, int, DateTime>()))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())

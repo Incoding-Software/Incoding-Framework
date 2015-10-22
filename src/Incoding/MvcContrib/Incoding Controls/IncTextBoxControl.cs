@@ -44,9 +44,9 @@ namespace Incoding.MvcContrib
             set
             {
                 if (value)
-                    this.attributes.Set(HtmlAttribute.AutoComplete.ToStringLower(), HtmlAttribute.AutoComplete.ToString());
+                    SetAttr(HtmlAttribute.AutoComplete);
                 else
-                    this.attributes.Remove(HtmlAttribute.AutoComplete.ToStringLower());
+                    RemoveAttr(HtmlAttribute.AutoComplete.ToStringLower());
             }
         }
 

@@ -3,6 +3,8 @@ namespace Incoding.UnitTest.MvcContribGroup
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
+    using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.Extensions;

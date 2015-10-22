@@ -6,6 +6,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Management.Instrumentation;
+    using Incoding.Block;
     using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Extensions;

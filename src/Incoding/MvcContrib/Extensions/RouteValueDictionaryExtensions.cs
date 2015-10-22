@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using System.Web.WebPages;
@@ -13,22 +14,36 @@
 
     public static class RouteValueDictionaryExtensions
     {
-        
-        
-        ////ncrunch: no coverage start
-        public static BeginTag ToBeginForm(this RouteValueDictionary htmlAttributes, HtmlHelper htmlHelper, string url)
+        [Obsolete("Use ToBeginTag wihtout HtmlHelper")]
+        public static BeginTag ToBeginForm(this RouteValueDictionary htmlAttributes, HtmlHelper htmlHelper, string url,
+                                           HttpVerbs method = HttpVerbs.Post,
+                                           Enctype enctype = Enctype.ApplicationXWWWFormUrlEncoded
+                )
         {
-            htmlAttributes.Set("method", HttpVerbs.Post.ToStringLower());
+            htmlAttributes.Set("method", method.ToStringLower());
+            htmlAttributes.Set("enctype", enctype.ToLocalization());
             htmlAttributes.Set("action", url);
-            return new BeginTag(htmlHelper, HtmlTag.Form, htmlAttributes);
+            return htmlAttributes.ToBeginTag(HtmlTag.Form);
         }
 
+        public static BeginTag ToBeginForm(this RouteValueDictionary htmlAttributes, string url)
+        {
+            return htmlAttributes.ToBeginForm(HtmlExtensions.HtmlHelper, url);
+        }
+
+        [Obsolete("Use ToBeginTag wihtout HtmlHelper")]
         public static BeginTag ToBeginTag(this RouteValueDictionary htmlAttributes, HtmlHelper htmlHelper, HtmlTag tag)
         {
             return new BeginTag(htmlHelper, tag, htmlAttributes);
         }
+
+        public static BeginTag ToBeginTag(this RouteValueDictionary htmlAttributes, HtmlTag tag)
+        {
+            return htmlAttributes.ToBeginTag(HtmlExtensions.HtmlHelper, tag);
+        }
+
         ////ncrunch: no coverage end
-        
+
         public static MvcHtmlString ToButton(this RouteValueDictionary htmlAttributes)
         {
             return htmlAttributes.ToButton(string.Empty);
@@ -60,9 +75,33 @@
             return htmlAttributes.ToInput(HtmlInputType.CheckBox, string.Empty);
         }
 
+        public static MvcHtmlString ToRadioButton(this RouteValueDictionary htmlAttributes, string value, bool isChecked)
+        {
+            htmlAttributes.Set(HtmlAttribute.Value.ToStringLower(), value);
+            if (isChecked)
+                htmlAttributes.Set(HtmlAttribute.Checked.ToStringLower(), "checked");
+
+            return htmlAttributes.ToInput(HtmlInputType.Radio, string.Empty);
+        }
+
         public static MvcHtmlString ToDiv(this RouteValueDictionary htmlAttributes)
         {
             return htmlAttributes.ToTag(HtmlTag.Div);
+        }
+
+        public static MvcHtmlString ToDiv(this RouteValueDictionary htmlAttributes, string content)
+        {
+            return htmlAttributes.ToTag(HtmlTag.Div, content);
+        }
+
+        public static MvcHtmlString ToDiv(this RouteValueDictionary htmlAttributes, MvcHtmlString content)
+        {
+            return htmlAttributes.ToTag(HtmlTag.Div, content);
+        }
+
+        public static MvcHtmlString ToDiv(this RouteValueDictionary htmlAttributes, Func<object, HelperResult> content)
+        {
+            return htmlAttributes.ToTag(HtmlTag.Div, content);
         }
 
         public static MvcHtmlString ToI(this RouteValueDictionary htmlAttributes)
@@ -182,9 +221,9 @@
             return htmlAttributes.ToTag(tag, new MvcHtmlString(content));
         }
 
-        public static MvcHtmlString ToTag(this RouteValueDictionary htmlAttributes, HtmlTag tag, Func<object, HelperResult> text)
+        public static MvcHtmlString ToTag(this RouteValueDictionary htmlAttributes, HtmlTag tag, Func<object, HelperResult> content)
         {
-            return htmlAttributes.ToTag(tag, Selector.FromHelperResult(text).ToString());
+            return htmlAttributes.ToTag(tag, Selector.FromHelperResult(content).ToString());
         }
 
         public static MvcHtmlString ToTag(this RouteValueDictionary htmlAttributes, HtmlTag tag, MvcHtmlString content)
@@ -207,7 +246,5 @@
         {
             return htmlAttributes.ToInput(HtmlInputType.Text, value);
         }
-        
-   
     }
 }

@@ -8,7 +8,7 @@ function IncAjaxEvent() {
     this.StatusText = '';
 }
 
-IncAjaxEvent.Create = function(response) {
+IncAjaxEvent.Create = function (response) {
     var res = new IncAjaxEvent();
     res.ResponseText = response.responseText;
     res.StatusCode = response.status;
@@ -54,53 +54,54 @@ IncSpecialBinds.DocumentBinds = [
 
 function AjaxAdapter() {
 
-    this.params = function(data) {
+    this.params = function (data) {
         var res = [];
-        $(data).each(function() {
+        $(data).each(function () {
             var name = this.name;
             var value = this.selector;
 
             if (ExecutableHelper.IsNullOrEmpty(value)) {
-                res.push({ name : name, value : value });
+                res.push({ name: name, value: value });
                 return;
             }
-            
-            var isElementCanArray = $.byName(name.replaceAll("[", "\\[").replaceAll("]", "\\]")).is('[type=checkbox],select,[type=radio]');
+
+            var isElementCanArray = $(name.toSelectorAsName()).is('[type=checkbox],select,[type=radio]');
             var isValueCanArray = _.isArray(value) || value.toString().contains(',');
 
             if (_.isArray(value) || (isValueCanArray && isElementCanArray)) {
-                $(value.toString().split(',')).each(function() {
-                    res.push({ name : name, value : this });
+                $(value.toString().split(',')).each(function () {
+                    res.push({ name: name, value: this });
                 });
             }
             else {
-                res.push({ name : name, value : value });
+                res.push({ name: name, value: value });
             }
 
         });
         return res;
     };
 
-    this.request = function(options, callback) {
+    this.request = function (options, callback) {
 
         $.extend(options, {
-            headers : { "X-Requested-With" : "XMLHttpRequest" },
-            dataType : 'JSON',
-            success : function(data, textStatus, jqXHR) {
+            url: options.url.split("?")[0],
+            headers: { "X-Requested-With": "XMLHttpRequest" },
+            dataType: 'JSON',
+            success: function (data, textStatus, jqXHR) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
                 var parseResult = new IncodingResult(data);
                 callback(parseResult);
             },
-            beforeSend : function(jqXHR, settings) {
+            beforeSend: function (jqXHR, settings) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            complete : function(jqXHR, textStatus) {
+            complete: function (jqXHR, textStatus) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            error : function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
             },
-            data : this.params(options.data)
+            data: this.params(options.data)
         });
 
         return $.ajax(options);
@@ -113,13 +114,13 @@ AjaxAdapter.Instance = new AjaxAdapter();
 //#region class ExecutableHelper
 
 function ExecutableHelper() {
-    var isSelector = function(selector) {
+    var isSelector = function (selector) {
         return selector.startsWith("||") && selector.endWith("||");
     };
     var isJquerySelector = function (selector) {
         return selector.startsWith("$(");
     };
-    var getJquery = function(selector) {
+    var getJquery = function (selector) {
 
         if ($(selector).is(':checkbox')) {
             var onlyCheckbox = $(selector).filter(':checkbox');
@@ -129,7 +130,7 @@ function ExecutableHelper() {
             if (onlyCheckbox.length > 1) {
 
                 var res = [];
-                $(onlyCheckbox).each(function() {
+                $(onlyCheckbox).each(function () {
                     if (!$(this).is(':checked')) {
                         return true;
                     }
@@ -140,9 +141,9 @@ function ExecutableHelper() {
                 return res;
             }
         }
-        else if (($(selector).is('select') && $(selector).length > 1)) {
+        else if (($(selector).is("select") && $(selector).length > 1)) {
             var res = [];
-            $(selector).each(function() {
+            $(selector).each(function () {
                 var val = $(this).val();
                 if (!ExecutableHelper.IsNullOrEmpty(val)) {
                     res.push(val);
@@ -150,19 +151,19 @@ function ExecutableHelper() {
             });
             return res;
         }
-        else if ($(selector).is('select[multiple]')) {
+        else if ($(selector).is("select[multiple]")) {
             var res = [];
-            $($(selector).val()).each(function() {
+            $($(selector).val()).each(function () {
                 if (!ExecutableHelper.IsNullOrEmpty(this)) {
                     res.push(this);
                 }
             });
             return res;
         }
-        else if ($(selector).is(':radio')) {
-            return $.byName($(selector).prop('name'), ':checked').val();
+        else if ($(selector).is(":radio")) {
+            return $($(selector).prop("name").toSelectorAsName() + ":checked").val();
         }
-        else if ($(selector).is('select,textarea,input')) {
+        else if ($(selector).isFormElement()) {
             return $(selector).val();
         }
 
@@ -174,7 +175,7 @@ function ExecutableHelper() {
     var getResult = function (selector, currentResult) {
         if (ExecutableHelper.IsNullOrEmpty(selector)) {
             return currentResult;
-        }        
+        }
         var res = [];
         if (selector.startsWith("[")) {
             var index = selector.substring(selector.indexOf('[') + 1, selector.indexOf(']'));
@@ -182,10 +183,10 @@ function ExecutableHelper() {
             selector = selector.substring(selector.indexOf(']') + 1, selector.length);
         }
 
-        $(!_.isArray(currentResult) ? [currentResult] : currentResult).each(function() {
+        $(!_.isArray(currentResult) ? [currentResult] : currentResult).each(function () {
 
             var valueOfProperty = this;
-            $(selector.split('.')).each(function() {
+            $(selector.split('.')).each(function () {
                 if (ExecutableHelper.IsNullOrEmpty(this)) {
                     return true;
                 }
@@ -203,7 +204,7 @@ function ExecutableHelper() {
                     if (nameOfMethod === 'Select') {
                         var tmpValueOfProperty = [];
 
-                        $(valueOfProperty).each(function() {
+                        $(valueOfProperty).each(function () {
                             tmpValueOfProperty.push(getResult(valueOfMethod, this));
                         });
                         valueOfProperty = tmpValueOfProperty;
@@ -213,7 +214,7 @@ function ExecutableHelper() {
                         var res = false;
                         var splitValue = valueOfMethod.split(' ');
                         $(valueOfProperty).each(function () {
-                            var helper = $.extend({}, ExecutableHelper.Instance,{result:this});                            
+                            var helper = $.extend({}, ExecutableHelper.Instance, { result: this });
                             var actual = helper.TryGetVal(splitValue[0]);
                             var expected = helper.TryGetVal(splitValue[2]);
                             var method = splitValue[1];
@@ -231,7 +232,7 @@ function ExecutableHelper() {
 
             res.push(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty);
         });
-        
+
 
         return res.length === 1 ? res[0] : res;
 
@@ -241,7 +242,7 @@ function ExecutableHelper() {
     this.event = '';
     this.result = '';
 
-    this.TryGetVal = function(selector) {
+    this.TryGetVal = function (selector) {
 
         if (ExecutableHelper.IsNullOrEmpty(selector)) {
             return selector;
@@ -257,8 +258,8 @@ function ExecutableHelper() {
         }
 
         selector = selector.toString();
-        
-        
+
+
         if (!isJquerySelector(selector) && !isSelector(selector)) {
             return selector;
         }
@@ -274,37 +275,31 @@ function ExecutableHelper() {
             var valueSelector = selector.substring(2, selector.length - 2)
                 .substring(selector.indexOf('*') - 1, selector.length);
 
-            var isType = function(type) {
+            var isType = function (type) {
                 return selector.startsWith("||{0}*".f(type));
             };
 
-            if (isType('ajax') || isType('buildurl')) {
-                var options = $.parseJSON(valueSelector);
-                if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
-                    for (var i = 0; i < options.data.length; i++) {
-                        options.data[i].selector = ExecutableHelper.Instance.TryGetVal(options.data[i].selector);
-                    }
-                }
-                if (isType('buildurl')) {
-                    var dataAsString = '';
-                    if (!ExecutableHelper.IsNullOrEmpty(options.data)) {
-                        for (var i = 0; i < options.data.length; i++) {
-                            options.data[i].selector = this.TryGetVal(options.data[i].selector);
-                        }
-                        dataAsString = options.data.select(function(item) {
-                            return '{0}={1}'.f(item.name, item.selector);
-                        }).join('&');
-                    }
-                    res = '{0}?{1}'.f(options.url, dataAsString);
-                }
-                else {
-                    var ajaxData;
-                    AjaxAdapter.Instance.request(options, function(result) {
-                        ajaxData = result.data;
-                    });
-                    res = ajaxData;
-                }
+            if (isType('buildurl')) {
+                var toBuildUrl = $.url(valueSelector);
+                $.eachProperties(toBuildUrl.param(), function () {
+                    toBuildUrl.setParam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.param()[this]));
+                });
 
+                $.eachProperties(toBuildUrl.fparam(), function () {
+                    toBuildUrl.setFparam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.fparam()[this]));
+                }); return toBuildUrl.toHref();
+            }
+            if (isType('ajax')) {
+                var options = $.extend(true, { data: [] }, $.parseJSON(valueSelector));
+                var ajaxUrl = $.url(options.url);
+                $.eachProperties(ajaxUrl.param(), function () {
+                    options.data.push({ name: this, selector: ExecutableHelper.Instance.TryGetVal(ajaxUrl.param()[this]) });
+                });
+                var ajaxData;
+                AjaxAdapter.Instance.request(options, function (result) {
+                    ajaxData = result.data;
+                });
+                res = ajaxData;
             }
             else if (isType('cookie')) {
                 res = $.cookie(valueSelector);
@@ -367,9 +362,8 @@ function ExecutableHelper() {
             return;
         }
 
-        if ($(element).is('select') && $(element).length > 1) {
-            var arrayVal = _.isArray(val) ? val : val.split(',');
-            $(arrayVal).each(function() {
+        if ($(element).is('select') && $(element).length > 1) {            
+            $(_.isArray(val) ? val : val.split(',')).each(function() {
                 if (this.toString() != '') // fix to not update different selects if val is empty
                 {
                     $('option[value="{0}"]'.f(this)).closest('select').val(this.toString());
@@ -379,16 +373,15 @@ function ExecutableHelper() {
         }
 
         if ($(element).is(':radio')) {
-            $.byName($(element).prop('name'), '[value="{0}"]'.f(val))
-                .prop('checked', true);
+            $($(element).prop("name").toSelectorAsName() + "[value=\"{0}\"]".f(val)).prop('checked', true);
             return;
         }
 
-        if ($(element).is('script,label,div,span,p')) {
-            $(element).html(val);
+        if ($(element).isFormElement()) {
+            $(element).val(val);
         }
         else {
-            $(element).val(val);
+            $(element).html(val);
         }
 
     };
@@ -397,14 +390,14 @@ function ExecutableHelper() {
 
 ExecutableHelper.Instance = new ExecutableHelper();
 
-ExecutableHelper.IsData = function(data, property, evaluated) {
+ExecutableHelper.IsData = function (data, property, evaluated) {
 
     if (ExecutableHelper.IsNullOrEmpty(property)) {
         return evaluated.call(data);
     }
 
     var res = false;
-    $(!_.isArray(data) ? [data] : data).each(function() {
+    $(!_.isArray(data) ? [data] : data).each(function () {
         var valueOfProperty = this[property];
         if (evaluated.call(ExecutableHelper.IsNullOrEmpty(valueOfProperty) ? '' : valueOfProperty)) {
             res = true;
@@ -415,11 +408,19 @@ ExecutableHelper.IsData = function(data, property, evaluated) {
     return res;
 };
 
-ExecutableHelper.Filter = function(data, filter) {
+ExecutableHelper.ParaseQueryString = function (url) {
+
+    if (ExecutableHelper.IsNullOrEmpty(url) && (!url.contains('?') || !url.contains('#'))) {
+        return [];
+    }
+
+};
+
+ExecutableHelper.Filter = function (data, filter) {
     var res;
     if (_.isArray(data)) {
         res = [];
-        $(data).each(function() {
+        $(data).each(function () {
             if (filter.isSatisfied(this)) {
                 res.push(this);
             }
@@ -431,7 +432,7 @@ ExecutableHelper.Filter = function(data, filter) {
     return res;
 };
 
-ExecutableHelper.Compare = function(actual, expected, method) {
+ExecutableHelper.Compare = function (actual, expected, method) {
 
     method = method.toString().toLowerCase();
 
@@ -469,10 +470,10 @@ ExecutableHelper.Compare = function(actual, expected, method) {
         return parseFloat(actual) >= parseFloat(expected);
     }
 
-    throw new IncClientException({ message : "Can't compare by method {0}".f(method) }, {});
+    throw new IncClientException({ message: "Can't compare by method {0}".f(method) }, {});
 };
 
-ExecutableHelper.IsNullOrEmpty = function(value) {
+ExecutableHelper.IsNullOrEmpty = function (value) {
     var isNothing = _.isUndefined(value) || _.isNull(value) || _.isNaN(value) || value == "undefined";
     if (isNothing) {
         return true;
@@ -491,7 +492,7 @@ ExecutableHelper.IsNullOrEmpty = function(value) {
     }
 
     var hasOwnProperty = false;
-    $.eachProperties(value, function() {
+    $.eachProperties(value, function () {
         hasOwnProperty = true;
     });
 
@@ -511,16 +512,16 @@ ExecutableHelper.RedirectTo = function (destentationUrl) {
     window.location = destentationUrl;
 };
 
-ExecutableHelper.UrlDecode = function(value) {
+ExecutableHelper.UrlDecode = function (value) {
     return decodeURIComponent(value);
 };
 
-ExecutableHelper.UrlEncode = function(value) {
+ExecutableHelper.UrlEncode = function (value) {
     if (ExecutableHelper.IsNullOrEmpty(value)) {
         return value;
     }
 
-    var encode = function() {
+    var encode = function () {
         return this
             .replaceAll('&', '%26')
             .replaceAll('?', '%3F')
@@ -542,7 +543,7 @@ ExecutableHelper.UrlEncode = function(value) {
     }
 };
 
-ExecutableHelper.ToBool = function(value) {
+ExecutableHelper.ToBool = function (value) {
 
     if (ExecutableHelper.IsNullOrEmpty(value)) {
         return false;
@@ -562,11 +563,11 @@ ExecutableHelper.ToBool = function(value) {
 
 function IncMustacheTemplate() {
 
-    this.compile = function(tmpl) {
+    this.compile = function (tmpl) {
         return tmpl;
     };
 
-    this.render = function(tmpl, data) {
+    this.render = function (tmpl, data) {
         var compile = Mustache.compile(tmpl);
         return compile(data);
     };
@@ -575,12 +576,12 @@ function IncMustacheTemplate() {
 
 function IncHandlerbarsTemplate() {
 
-    this.compile = function(tmpl) {
+    this.compile = function (tmpl) {
         return navigator.Ie8 ? tmpl
             : Handlebars.precompile(tmpl);
     };
 
-    this.render = function(tmpl, data) {
+    this.render = function (tmpl, data) {
 
         if (navigator.Ie8) {
             return Handlebars.compile(tmpl)(data);
@@ -593,6 +594,20 @@ function IncHandlerbarsTemplate() {
     };
 
 }
+
+function IncDoTTemplate() {
+
+    this.compile = function(tmpl) {
+        return navigator.Ie8 ? tmpl
+            : doT.compile(tmpl);
+    };
+
+    this.render = function(tmpl, data) {
+        return doT.template(tmpl)(data);
+    };
+
+}
+
 
 function TemplateFactory() {
 }
@@ -626,13 +641,19 @@ TemplateFactory.ToHtml = function (builder, selectorKey, evaluatedSelector, data
         compile = builder.compile(tmplContent);
         if (isLocalStore) {
             try {
-                if (localStorage.remainingSpace < 2000)
+                if (localStorage.remainingSpace < 2000) {
                     localStorage.clear();
+                }
                 localStorage.setItem(selectorKey, compile);
             }
             catch (e) {
-                if (e.name.toUpperCase().indexOf('QUOTA') > -1) {
-                    //localStorage.clear();
+                if (!ExecutableHelper.IsNullOrEmpty(e.name) && e.name.toUpperCase().indexOf('QUOTA') > -1) {
+                    try {
+                        localStorage.clear();
+                    }
+                    catch (e) {
+
+                    }
                 }
             }
         }

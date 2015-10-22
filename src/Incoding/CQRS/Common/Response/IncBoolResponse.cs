@@ -10,6 +10,7 @@
 
     #endregion
 
+    [Obsolete("Please use Bool or Bool?")]
     public class IncBoolResponse : IncStructureResponse<bool>
     {
         #region Constructors

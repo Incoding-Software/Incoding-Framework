@@ -4,6 +4,8 @@ namespace Incoding.UnitTest.MSpecGroup
 {
     #region << Using >>
 
+    using System.Collections.Generic;
+    using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;

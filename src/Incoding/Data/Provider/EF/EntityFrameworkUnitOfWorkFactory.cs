@@ -28,9 +28,9 @@
 
         #region IUnitOfWorkFactory Members
 
-        public IUnitOfWork Create(IsolationLevel level, string connection = null)
+        public IUnitOfWork Create(IsolationLevel level, bool isFlush, string connection = null)
         {
-            return new EntityFrameworkUnitOfWork(this.sessionFactory, level, connection);
+            return new EntityFrameworkUnitOfWork(sessionFactory.Open(connection), level, isFlush);
         }
 
         #endregion

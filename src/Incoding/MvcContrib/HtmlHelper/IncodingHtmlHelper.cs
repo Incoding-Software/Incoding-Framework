@@ -2,6 +2,7 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    using System;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Block.IoC;
@@ -13,10 +14,57 @@ namespace Incoding.MvcContrib
 
     public class IncodingHtmlHelper
     {
+        #region Fields
+
+        readonly HtmlHelper htmlHelper;
+
+        #endregion
+
+        ////ncrunch: no coverage start
+
+        #region Constructors
+
+        public IncodingHtmlHelper(HtmlHelper htmlHelper)
+        {
+            this.htmlHelper = htmlHelper;
+        }
+
+        #endregion
+
+        static TagBuilder CreateScript(string id, HtmlType type, string src, MvcHtmlString content)
+        {
+            var routeValueDictionary = new RouteValueDictionary(new { type = type.ToLocalization() });
+            if (!string.IsNullOrWhiteSpace(src))
+                routeValueDictionary.Merge(new { src });
+            if (!string.IsNullOrWhiteSpace(id))
+                routeValueDictionary.Merge(new { id });
+
+            return CreateTag(HtmlTag.Script, content, routeValueDictionary);
+        }
+
+        static TagBuilder CreateInput(string value, string type, object attributes)
+        {
+            var routeValueDictionary = AnonymousHelper.ToDictionary(attributes);
+            routeValueDictionary.Merge(new { value, type });
+            var input = CreateTag(HtmlTag.Input, MvcHtmlString.Empty, routeValueDictionary);
+
+            return input;
+        }
+
+        internal static TagBuilder CreateTag(HtmlTag tag, MvcHtmlString content, RouteValueDictionary attributes)
+        {
+            var tagBuilder = new TagBuilder(tag.ToStringLower());
+            tagBuilder.InnerHtml = content.ReturnOrDefault(r => r.ToHtmlString(), string.Empty);
+            tagBuilder.MergeAttributes(attributes, true);
+
+            return tagBuilder;
+        }
+
         // ReSharper disable ConvertToConstant.Global
         // ReSharper disable FieldCanBeMadeReadOnly.Global
 
         ////ncrunch: no coverage start
+
         #region Static Fields
 
         public static string DropDownTemplateId = "incodingDropDownTemplate";
@@ -29,23 +77,9 @@ namespace Incoding.MvcContrib
 
         // ReSharper restore FieldCanBeMadeReadOnly.Global
         // ReSharper restore ConvertToConstant.Global
-        #region Fields
-
-        readonly HtmlHelper htmlHelper;
-
-        #endregion
-
-        ////ncrunch: no coverage start
-        #region Constructors
-
-        public IncodingHtmlHelper(HtmlHelper htmlHelper)
-        {
-            this.htmlHelper = htmlHelper;
-        }
-
-        #endregion
 
         ////ncrunch: no coverage end
+
         #region Api Methods
 
         public MvcHtmlString Script([PathReference] string src)
@@ -54,14 +88,15 @@ namespace Incoding.MvcContrib
             return new MvcHtmlString(script.ToString());
         }
 
+        [Obsolete("Please use Template")]
         public MvcScriptTemplate<TModel> ScriptTemplate<TModel>(string id)
         {
-            return new MvcScriptTemplate<TModel>(htmlHelper, id);
+            return new MvcScriptTemplate<TModel>(this.htmlHelper, id);
         }
 
         public MvcTemplate<TModel> Template<TModel>()
         {
-            return new MvcTemplate<TModel>(htmlHelper);
+            return new MvcTemplate<TModel>(this.htmlHelper);
         }
 
         public MvcHtmlString Link([PathReference] string href)
@@ -203,34 +238,5 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
-        static TagBuilder CreateScript(string id, HtmlType type, string src, MvcHtmlString content)
-        {
-            var routeValueDictionary = new RouteValueDictionary(new { type = type.ToLocalization() });
-            if (!string.IsNullOrWhiteSpace(src))
-                routeValueDictionary.Merge(new { src });
-            if (!string.IsNullOrWhiteSpace(id))
-                routeValueDictionary.Merge(new { id });
-
-            return CreateTag(HtmlTag.Script, content, routeValueDictionary);
-        }
-
-        static TagBuilder CreateInput(string value, string type, object attributes)
-        {
-            var routeValueDictionary = AnonymousHelper.ToDictionary(attributes);
-            routeValueDictionary.Merge(new { value, type });
-            var input = CreateTag(HtmlTag.Input, MvcHtmlString.Empty, routeValueDictionary);
-
-            return input;
-        }
-
-        internal static TagBuilder CreateTag(HtmlTag tag, MvcHtmlString content, RouteValueDictionary attributes)
-        {
-            var tagBuilder = new TagBuilder(tag.ToStringLower());
-            tagBuilder.InnerHtml = content.ReturnOrDefault(r => r.ToHtmlString(), string.Empty);
-            tagBuilder.MergeAttributes(attributes, true);
-
-            return tagBuilder;
-        }
     }
 }

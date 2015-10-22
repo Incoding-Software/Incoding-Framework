@@ -2,8 +2,8 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
-    using System.Collections.Generic;
-    using Incoding.MSpecContrib;
+    using System.Linq;
+    using System.Web.Routing;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -16,27 +16,59 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         static JqueryAjaxFormOptions options;
 
-        #endregion
-
-        #region Establish value
-
-        static IEnumerable<JqueryAjaxRoute> data;
+        static RouteValueDictionary data = new RouteValueDictionary(new { value1 = 1, value2 = 2 });
 
         #endregion
 
-        Establish establish = () =>
-                                  {
-                                      options = new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default);
-                                      data = Pleasure.ToList(new JqueryAjaxRoute { name = "param1", value = "#id1" },
-                                                             new JqueryAjaxRoute { name = "param2", value = "#id2" });
-                                  };
+        It should_be_get = () =>
+                           {
+                               options = new JqueryAjaxFormOptions(new JqueryAjaxFormOptions());
+                               options.Data = data;
+                               options.Data.ShouldEqual(data);
+                           };
 
-        Because of = () => options.Data = data;
+        It should_be_set_data_and_then_url = () =>
+                                             {
+                                                 options = new JqueryAjaxFormOptions(new JqueryAjaxFormOptions());
+                                                 options.Data = data;
+                                                 options.Url = "/Test/Home";
 
-        It should_be_data = () =>
-                                {
-                                    var dataAsCollection = options["data"] as IEnumerable<JqueryAjaxRoute>;
-                                    dataAsCollection.ShouldEqualWeakEach(data);
-                                };
+                                                 new[] { options["url"], options.Url }.All(o => o.ToString() == "/Test/Home?value1=1&value2=2").ShouldBeTrue();
+                                             };
+
+        It should_be_ctor = () =>
+                            {
+                                var def = new JqueryAjaxFormOptions();
+                                def.Data = data;
+                                options = new JqueryAjaxFormOptions(def);
+
+                                new[] { options["url"], options.Url }.All(o => o.ToString() == "?value1=1&value2=2").ShouldBeTrue();
+                            };
+
+        It should_be_set_data_with_empty_url = () =>
+                                               {
+                                                   options = new JqueryAjaxFormOptions(new JqueryAjaxFormOptions());
+                                                   options.Url = string.Empty;
+                                                   options.Data = data;
+
+                                                   new[] { options["url"], options.Url }.All(o => o.ToString() == "?value1=1&value2=2").ShouldBeTrue();
+                                               };
+
+        It should_be_set_data_with_null_url = () =>
+                                              {
+                                                  options = new JqueryAjaxFormOptions(new JqueryAjaxFormOptions());
+                                                  options.Data = data;
+
+                                                  new[] { options["url"], options.Url }.All(o => o.ToString() == "?value1=1&value2=2").ShouldBeTrue();
+                                              };
+
+        It should_be_set_url_and_then_data = () =>
+                                             {
+                                                 options = new JqueryAjaxFormOptions(new JqueryAjaxFormOptions());
+                                                 options.Url = "/Test/Home";
+                                                 options.Data = data;
+
+                                                 new[] { options["url"], options.Url }.All(o => o.ToString() == "/Test/Home?value1=1&value2=2").ShouldBeTrue();
+                                             };
     }
 }

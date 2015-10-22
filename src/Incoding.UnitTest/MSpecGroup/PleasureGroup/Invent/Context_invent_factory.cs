@@ -15,6 +15,11 @@ namespace Incoding.UnitTest.MSpecGroup
     {
         #region Fake classes
 
+        protected class FakeGenerateGeneric<T>
+        {
+           public T Result { get; set; }
+        }
+
         protected class FakeGenerateObject
         {
             string privateValue;
@@ -75,6 +80,8 @@ namespace Incoding.UnitTest.MSpecGroup
             public TimeSpan TimeSpanValue { get; set; }
 
             public FakeGenerateObject Fake { get; set; }
+
+            public List<FakeGenerateObject> Fakes { get; set; }
 
             public byte[] ByteArray { get; set; }
 

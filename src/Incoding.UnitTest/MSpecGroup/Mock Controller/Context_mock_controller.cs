@@ -3,6 +3,8 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
+    using Incoding.Block;
     using Incoding.CQRS;
 
     #endregion

@@ -59,7 +59,7 @@ namespace Incoding.MvcContrib
                 this.onEventStatus = isAll ? IncodingEventCanceled.All : value;
             }
         }
-
+        
         public JquerySelectorExtend Target
         {
             get { return this.target; }
@@ -109,6 +109,8 @@ namespace Incoding.MvcContrib
                 .OfType<ExecutableActionBase>()
                 .DoEach(@base => @base.SetFilter(filter));
         }
+
+        public bool IsLastAction { get { return merges.LastOrDefault() is ExecutableActionBase; } }
 
         #endregion
     }

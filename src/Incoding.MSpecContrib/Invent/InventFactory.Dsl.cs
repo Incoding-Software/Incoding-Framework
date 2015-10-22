@@ -3,6 +3,7 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using Incoding.Extensions;
@@ -22,6 +23,14 @@ namespace Incoding.MSpecContrib
         public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new()
         {
             return Tuning(property, Pleasure.Generator.Invent(innerDsl));
+        }
+
+        public IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, IEnumerable<TGenerate>>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new()
+        {
+            var invent = Pleasure.Generator.Invent<List<TGenerate>>();
+            for (int i = 0; i < invent.Count; i++)
+                invent[i] = Pleasure.Generator.Invent(innerDsl);
+            return Tuning(property, invent);
         }
 
         public IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, TGenerate>> property)
@@ -45,7 +54,7 @@ namespace Incoding.MSpecContrib
             var memberName = property.GetMemberName();
             Guard.IsConditional("property",typeof(T).GetProperties(bindingFlags)
                 .Where(r=>r.CanWrite)
-                .Select(r=>r.Name).Contains(memberName),"Tuning can be use for CanWrite property/field");            
+                .Select(r => r.Name).Contains(memberName), "Tuning can be use for CanWrite property/field: " + memberName);            
             return Tuning(memberName, value);
         }
 

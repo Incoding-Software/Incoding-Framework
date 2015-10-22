@@ -1,0 +1,17 @@
+﻿@using Incoding.SiteTest
+  @{
+      using (var template = Html.Incoding().Template<KeyValueVm>())
+      {
+          using (var each = template.ForEach())
+          {
+              <p>
+                  @(Html.When(JqueryBind.Click)
+                        .Ajax(each.Inline(r => r.Selected,
+                                          isTrue: Url.Dispatcher().Push(new SampleOfCQRS.Command { Value = true.ToString() }),
+                                          isFalse: Url.Dispatcher().Push(new SampleOfCQRS.Command { Value = false.ToString() })))
+                        .AsHtmlAttributes()
+                        .ToButton("Test"))
+              </p>
+          }
+      }
+  }

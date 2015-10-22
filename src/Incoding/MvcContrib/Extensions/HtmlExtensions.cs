@@ -5,11 +5,21 @@ namespace Incoding.MvcContrib
     using System;
     using System.Linq.Expressions;
     using System.Web.Mvc;
+    using Incoding.Extensions;
+    using Incoding.MvcContrib.MVD;
 
     #endregion
 
     public static class HtmlExtensions
     {
+        [ThreadStatic]
+        internal static HtmlHelper HtmlHelper;
+        
+        [ThreadStatic]
+        internal static IUrlDispatcher UrlDispatcher;
+
+
+
         #region Factory constructors
 
         public static IncodingHtmlHelperFor<TModel, TProperty> For<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
@@ -34,11 +44,13 @@ namespace Incoding.MvcContrib
 
         public static IIncodingMetaLanguageBindingDsl When(this HtmlHelper htmlHelper, JqueryBind bind)
         {
-            return new IncodingMetaLanguageDsl(bind);
+            return htmlHelper.When(bind.ToJqueryString());
         }
 
         public static IIncodingMetaLanguageBindingDsl When(this HtmlHelper htmlHelper, string bind)
         {
+            HtmlHelper = htmlHelper;
+            UrlDispatcher = new UrlDispatcher(new UrlHelper(htmlHelper.ViewContext.RequestContext));
             return new IncodingMetaLanguageDsl(bind);
         }
 

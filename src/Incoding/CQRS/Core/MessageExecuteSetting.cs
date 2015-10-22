@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using System.Data;
     using Incoding.Extensions;
 
@@ -30,9 +31,9 @@
         #endregion
 
         #region Properties
-
+        
         public string DataBaseInstance { get; set; }
-
+        
         public string Connection { get; set; }
 
         public IsolationLevel? IsolationLevel { get; set; }
@@ -58,9 +59,6 @@
 
         protected bool Equals(MessageExecuteSetting other)
         {
-            if (other == null)
-                return false;
-
             return string.Equals(DataBaseInstance, other.DataBaseInstance) &&
                    string.Equals(Connection, other.Connection) &&
                    IsolationLevel.Equals(other.IsolationLevel);

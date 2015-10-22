@@ -27,7 +27,7 @@
                                                                                                      {
                                                                                                          registry.For<IDispatcher>().Singleton().Use<DefaultDispatcher>();
                                                                                                          registry.For<IEventBroker>().Singleton().Use<DefaultEventBroker>();
-                                                                                                         registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
+                                                                                                         registry.For<ITemplateFactory>().Singleton().Use<TemplateDoTFactory>();
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()

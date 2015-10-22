@@ -1,7 +1,6 @@
 namespace Incoding.CQRS
 {
-    public abstract class CommandBase : MessageBase<object>
+    public abstract class CommandBase : MessageBase
     {
-                
     }
 }

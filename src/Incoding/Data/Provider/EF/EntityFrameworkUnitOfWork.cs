@@ -9,11 +9,11 @@
     #endregion
 
     [ExcludeFromCodeCoverage]
-    public class EntityFrameworkUnitOfWork : UnitOfWorkBase<DbContext, IEntityFrameworkSessionFactory>
+    public class EntityFrameworkUnitOfWork : UnitOfWorkBase<DbContext>
     {
         #region Fields
 
-        DbContextTransaction transaction;
+        readonly DbContextTransaction transaction;
 
         bool isWasCommit;
 
@@ -21,14 +21,20 @@
 
         #region Constructors
 
-        public EntityFrameworkUnitOfWork(IEntityFrameworkSessionFactory sessionFactory, IsolationLevel level, string connection)
-                : base(sessionFactory, level, connection) { }
+        public EntityFrameworkUnitOfWork(DbContext session, IsolationLevel level, bool isFlush)
+                : base(session, level, isFlush)
+        {
+            transaction = session.Database.BeginTransaction(level);
+            if (!isFlush)
+                session.Configuration.AutoDetectChangesEnabled = false;
+            repository = new EntityFrameworkRepository(session);
+        }
 
         #endregion
 
         protected override void InternalFlush()
         {
-            session.Value.SaveChanges();
+            session.SaveChanges();
         }
 
         protected override void InternalCommit()
@@ -43,14 +49,6 @@
                 transaction.Rollback();
 
             transaction.Dispose();
-        }
-
-        public override IRepository GetRepository()
-        {
-            if (transaction == null)
-                transaction = session.Value.Database.BeginTransaction(isolationLevel);
-
-            return new EntityFrameworkRepository(session.Value);
         }
     }
 }

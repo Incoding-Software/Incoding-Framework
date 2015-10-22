@@ -9,12 +9,15 @@
     #endregion
 
     [UsedImplicitly, ExcludeFromCodeCoverage]
-    public class MongoDbUnitOfWork : UnitOfWorkBase<MongoDatabaseDisposable, IMongoDbSessionFactory>
+    public class MongoDbUnitOfWork : UnitOfWorkBase<MongoDatabaseDisposable>
     {
         #region Constructors
 
-        public MongoDbUnitOfWork(IMongoDbSessionFactory sessionFactory, IsolationLevel level, string connection)
-                : base(sessionFactory, level, connection) { }
+        public MongoDbUnitOfWork(MongoDatabaseDisposable session, IsolationLevel level, bool isFlush)
+                : base(session, level, isFlush)
+        {
+            repository = new MongoDbRepository(session);
+        }
 
         #endregion
 
@@ -23,10 +26,5 @@
         protected override void InternalFlush() { }
 
         protected override void InternalCommit() { }
-
-        public override IRepository GetRepository()
-        {
-            return new MongoDbRepository(session.Value);
-        }
     }
 }

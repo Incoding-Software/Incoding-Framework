@@ -155,18 +155,21 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Enyim.Caching, Version=2.12.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+    <Reference Include="Enyim.Caching">
+      <HintPath>..\packages\EnyimMemcached.2.13\lib\net35\Enyim.Caching.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EnyimMemcached.2.12\lib\net35\Enyim.Caching.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentNHibernate">
-      <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+      <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=5.0.0.1, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -176,12 +179,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentValidation.MVC3-Signed.5.0.0.3\lib\Net40\FluentValidation.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections">
-      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=9.1.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JetBrains.Annotations.9.1.1\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="MongoDB.Bson">
@@ -190,16 +194,17 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
-      <HintPath>..\packages\NHibernate.4.0.0.4000\lib\net40\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Abstractions.dll</HintPath>
@@ -207,12 +212,13 @@
     <Reference Include="Raven.Client.Lightweight">
       <HintPath>..\packages\RavenDB.Client.2.5.2851\lib\net40\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap, Version=3.1.4.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="StructureMap, Version=3.1.6.186, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\structuremap.3.1.4.143\lib\net40\StructureMap.dll</HintPath>
+      <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap.Net4">
-      <HintPath>..\packages\structuremap.3.1.4.143\lib\net40\StructureMap.Net4.dll</HintPath>
+      <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -282,6 +288,7 @@
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByUIDWhereSpec.cs" />
     <Compile Include="Block\Scheduler\InitScheduler.cs" />
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerLessStartsOnWhereSpec.cs" />
+    <Compile Include="Block\Scheduler\StartSchedulerCommand.cs" />
     <Compile Include="ContractAbbreviateAttribute.cs" />
     <Compile Include="ContractArgumentValidatorAttribute.cs" />
     <Compile Include="ContractOptionAttribute.cs" />
@@ -290,10 +297,7 @@
     <Compile Include="CQRS\Common\Query\GetCookiesAsStringQuery.cs" />
     <Compile Include="CQRS\Common\Query\HasEntitiesQuery.cs" />
     <Compile Include="CQRS\Common\Response\IncBoolResponse.cs" />
-    <Compile Include="CQRS\Common\Response\IncDateTimeResponse.cs" />
-    <Compile Include="CQRS\Common\Response\IncIntResponse.cs" />
     <Compile Include="CQRS\Common\Response\IncStructureResponse.cs" />
-    <Compile Include="CQRS\Common\Response\IncStructureResponseExtensions.cs" />
     <Compile Include="CQRS\Common\Specifications\EntityByRandomOrderSpec.cs" />
     <Compile Include="CQRS\Core\CommandBase.cs" />
     <Compile Include="CQRS\Common\Command\DeleteEntityByIdCommand.cs" />
@@ -302,7 +306,6 @@
     <Compile Include="CQRS\Core\CommandComposite.cs" />
     <Compile Include="CQRS\Core\IMessage.cs" />
     <Compile Include="Block\Scheduler\Command\AddDelayToSchedulerCommand.cs" />
-    <Compile Include="Block\Scheduler\SchedulerFactory.cs" />
     <Compile Include="Block\Scheduler\Persistence\DelayOfStatus.cs" />
     <Compile Include="Block\Scheduler\Persistence\DelayToScheduler.cs" />
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByStatusWhere.cs" />
@@ -314,7 +317,6 @@
     <Compile Include="CQRS\DefaultDispatcher.cs" />
     <Compile Include="CQRS\Core\QueryBase.cs" />
     <Compile Include="CQRS\DispatcherExtensions.cs" />
-    <Compile Include="CQRS\Events\OnBeforeDeleteEntityEvent.cs" />
     <Compile Include="CQRS\Events\OnAfterExecuteEvent.cs" />
     <Compile Include="CQRS\Events\OnAfterErrorExecuteEvent.cs" />
     <Compile Include="CQRS\Events\OnBeforeExecuteEvent.cs" />
@@ -324,6 +326,7 @@
     <Compile Include="CQRS\Common\Specifications\EntityByIdSpec.cs" />
     <Compile Include="CQRS\ISetUp.cs" />
     <Compile Include="Block\Scheduler\Query\GetExpectedDelayToSchedulerQuery.cs" />
+    <Compile Include="Data\Core\IUnitOfWorkFactory.cs" />
     <Compile Include="Data\Core\QueryableExtensions.cs" />
     <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchEFSpecification.cs" />
     <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchNhibernateSpecification.cs" />
@@ -337,7 +340,6 @@
     <Compile Include="Data\Core\Specifications\PaginatedSpecification.cs" />
     <Compile Include="Data\IncPaginatedResult.cs" />
     <Compile Include="Data\IncEntityBase.cs" />
-    <Compile Include="Data\Core\IUnitOfWorkFactory.cs" />
     <Compile Include="Data\Core\IUnitOfWork.cs" />
     <Compile Include="Data\Core\IManagerDataBase.cs" />
     <Compile Include="Data\Core\IRepository.cs" />
@@ -360,7 +362,6 @@
     <Compile Include="Data\Provider\MongoDb\MongoDbRepository.cs" />
     <Compile Include="Data\Provider\MongoDb\MongoDbSessionFactory.cs" />
     <Compile Include="Data\Provider\MongoDb\MongoDbUnitOfWork.cs" />
-    <Compile Include="Data\Provider\NHibernate\NhibernateSessionContext.cs" />
     <Compile Include="Data\Provider\NHibernate\HqGenerator\GuidStringGenerator.cs" />
     <Compile Include="Data\Provider\NHibernate\INhibernateSessionFactory.cs" />
     <Compile Include="Data\Provider\NHibernate\NhibernateManagerDataBase.cs" />
@@ -416,6 +417,8 @@
     <Compile Include="MvcContrib\Core\IncControllerBase.cs" />
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
     <Compile Include="MvcContrib\Extensions\BeginTag.cs" />
+    <Compile Include="MvcContrib\MVD\IUrlDispatcher.cs" />
+    <Compile Include="MvcContrib\Primitive\Enctype.cs" />
     <Compile Include="MvcContrib\HtmlHelper\B.cs" />
     <Compile Include="MvcContrib\HtmlHelper\BootstrapOfVersion.cs" />
     <Compile Include="MvcContrib\Incoding Controls\IncHelpBlockControl.cs" />
@@ -450,7 +453,6 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableStoreManipulate.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\Display.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\IncAjaxEvent.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryAjaxRoute.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JqueryEasing.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Options\JqueryShowOptions.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\JqueryHelper\Primitive\JuqeryEffect.cs" />
@@ -476,8 +478,11 @@
     <Compile Include="MvcContrib\Primitive\HtmlInputType.cs" />
     <Compile Include="MvcContrib\Primitive\KeyCode.cs" />
     <Compile Include="MvcContrib\Template\Factory\ITemplateFactory.cs" />
+    <Compile Include="MvcContrib\Template\Factory\TemplateDoTFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateHandlebarsFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateMustacheFactory.cs" />
+    <Compile Include="MvcContrib\Template\Syntax\HandlebarsType.cs" />
+    <Compile Include="MvcContrib\Template\Syntax\TemplateDoTSyntax.cs" />
     <Compile Include="MvcContrib\Template\Syntax\TemplateHandlebarsSyntax.cs" />
     <Compile Include="MvcContrib\Template\Syntax\ITemplateSyntax.cs" />
     <Compile Include="MvcContrib\Template\MvcTemplate.cs" />
@@ -575,10 +580,10 @@
     <Compile Include="Quality\IgnoreCompareAttribute.cs" />
     <Compile Include="Quality\IgnoreInventAttribute.cs" />
     <Compile Include="Quality\ObsoleteMessage.cs" />
-    <Compile Include="SpecificationMessageRes.Designer.cs">
+    <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SpecificationMessageRes.resx</DependentUpon>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Utilities\EmailSenders\FakeEmailSender.cs" />
     <Compile Include="Utilities\EmailSenders\IEmailSender.cs" />
@@ -625,9 +630,9 @@
     <None Include="ResharperMemberLayout.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SpecificationMessageRes.resx">
+    <EmbeddedResource Include="Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SpecificationMessageRes.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

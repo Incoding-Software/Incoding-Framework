@@ -1,0 +1,8 @@
+﻿@using Incoding.CQRS
+@using Incoding.SiteTest
+<h3>Delete entity by generic common command</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new DeleteEntityByIdCommand<Product>("232")))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use("Done").Html())
+      .AsHtmlAttributes()
+      .ToDiv())

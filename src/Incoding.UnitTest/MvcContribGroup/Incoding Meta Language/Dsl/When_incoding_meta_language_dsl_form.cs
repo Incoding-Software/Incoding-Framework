@@ -25,7 +25,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_reset = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                            .Do().Direct()
-                                           .OnSuccess(r => r.With(selector => selector.Id("id")).Core().Form.Reset())
+                                           .OnSuccess(r => r.With(selector => selector.Id("id")).Form.Reset())
                                            .GetExecutable<ExecutableForm>()
                                            .ShouldEqualData(new Dictionary<string, object> { { "method", "reset" } });
 

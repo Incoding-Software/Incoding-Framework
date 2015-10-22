@@ -267,6 +267,7 @@
             return new JquerySelectorExtend(selector);
         }
 
+        [Obsolete("Will be remove on next version")]
         public JquerySelectorExtend Target()
         {
             AndSelector("this.target");

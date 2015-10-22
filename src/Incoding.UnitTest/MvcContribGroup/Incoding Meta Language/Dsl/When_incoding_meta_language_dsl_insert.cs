@@ -4,6 +4,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
     using System;
     using System.Collections.Generic;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
@@ -13,6 +14,19 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingMetaCallbackInsertDsl))]
     public class When_incoding_meta_language_dsl_insert
     {
+        #region Fake classes
+
+        class FakeInsertModel
+        {
+            #region Properties
+
+            public decimal Prop1 { get; set; }
+
+            #endregion
+        }
+
+        #endregion
+
         #region Establish value
 
         static readonly Func<JquerySelector, JquerySelectorExtend> targetSelector = selector => selector.Id("Selector");
@@ -21,7 +35,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_exception_if_insert_not_finished_yet = () =>
                                                             {
-                                                                new ExecutableInsert("", "", "", false, "")
+                                                                new ExecutableInsert(string.Empty, string.Empty, string.Empty, false, string.Empty)
                                                                         .GetErrors()
                                                                         .ShouldBeKeyValue("insertType", "Insert can be empty. Please choose Html/Text/Append or any type");
                                                             };
@@ -90,6 +104,16 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                           { "result", Selector.Result.ToString() },
                                                                                           { "template", "||ajax*{\"url\":\"TheSameString\",\"type\":\"GET\",\"async\":false}||" }
                                                                                   });
+
+        It should_be_insert_with_template_by_selector_ajax = () => Catch.Exception(() => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                                                 .Do().Direct()
+                                                                                                 .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateByUrl(Pleasure.Generator.TheSameString().ToAjaxGet()).Text()))
+                                                                        .ShouldBeOfType<ArgumentException>();
+
+        It should_be_insert_with_template_by_view_path = () => Catch.Exception(() => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                                             .Do().Direct()
+                                                                                             .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateByUrl("~/View").Text()))
+                                                                    .ShouldBeOfType<ArgumentException>();
 
         It should_be_with_after = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()
@@ -160,18 +184,5 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                        { "insertType", "val" },
                                                                        { "result", Selector.Result.ToString() },
                                                                });
-
-        #region Fake classes
-
-        class FakeInsertModel
-        {
-            #region Properties
-
-            public decimal Prop1 { get; set; }
-
-            #endregion
-        }
-
-        #endregion
     }
 }

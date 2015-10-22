@@ -57,7 +57,7 @@
         {
             if (this.expressions.Count != other.expressions.Count)
             {
-                Console.WriteLine(SpecificationMessageRes.AdHocFetchSpecification_Equal_diffrent_count_expressions.F(this.expressions.Count, other.expressions.Count));
+                Console.WriteLine(Resources.AdHocFetchSpecification_Equal_diffrent_count_expressions.F(this.expressions.Count, other.expressions.Count));
                 return false;
             }
 
@@ -65,7 +65,7 @@
             {
                 if (!this.expressions[i].IsExpressionEqual(other.expressions[i]))
                 {
-                    Console.WriteLine(SpecificationMessageRes.AdHocFetchSpecification_Equal_diffrent_expressions.F(this.expressions[i], other.expressions[i]));
+                    Console.WriteLine(Resources.AdHocFetchSpecification_Equal_diffrent_expressions.F(this.expressions[i], other.expressions[i]));
                     return false;
                 }
             }

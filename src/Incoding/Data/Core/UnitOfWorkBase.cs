@@ -7,15 +7,16 @@
 
     #endregion
 
-    public abstract class UnitOfWorkBase<TSession, TSessionFactory> : IUnitOfWork
-            where TSessionFactory : ISessionFactory<TSession>
-            where TSession : IDisposable
+    public abstract class UnitOfWorkBase<TSession> : IUnitOfWork
+            where TSession : class, IDisposable
     {
         #region Fields
 
-        protected readonly Lazy<TSession> session;
+        protected readonly TSession session;
+        
+        protected readonly bool isFlush;
 
-        protected readonly IsolationLevel isolationLevel;
+        protected IRepository repository;
 
         bool disposed;
 
@@ -25,31 +26,28 @@
 
         #region Constructors
 
-        protected UnitOfWorkBase(TSessionFactory sessionFactory, IsolationLevel isolationLevel, string connectionString)
-        {
-            this.isolationLevel = isolationLevel;
-            session = new Lazy<TSession>(() => sessionFactory.Open(connectionString));
+        protected UnitOfWorkBase(TSession session, IsolationLevel isolationLevel, bool isFlush)
+        {            
+            this.isFlush = isFlush;
+            this.session = session;
         }
 
         #endregion
 
         #region IUnitOfWork Members
 
-        public abstract IRepository GetRepository();
+        public IRepository GetRepository()
+        {
+            return repository;
+        }
 
         public void Flush()
         {
-            if (IsOpen())
+            if (!disposed && isFlush)
             {
                 InternalFlush();
                 isWasFlush = true;
             }
-        }
-
-        public void Commit()
-        {
-            if (IsOpen() && isWasFlush)
-                InternalCommit();
         }
 
         #endregion
@@ -58,10 +56,13 @@
 
         public void Dispose()
         {
-            if (IsOpen())
+            if (!disposed)
             {
+                if (isWasFlush)
+                    InternalCommit();
+
                 InternalSubmit();
-                session.Value.Dispose();
+                session.Dispose();
             }
 
             disposed = true;
@@ -74,10 +75,5 @@
         protected abstract void InternalFlush();
 
         protected abstract void InternalCommit();
-
-        bool IsOpen()
-        {
-            return !disposed && session.IsValueCreated;
-        }
     }
 }

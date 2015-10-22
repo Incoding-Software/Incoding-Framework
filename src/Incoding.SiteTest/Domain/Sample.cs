@@ -19,6 +19,16 @@
                 Result = Value;
             }
         }
+        public class CommandWithAction:CommandBase
+        {
+            public string Action { get; set; }
+            public string Controller { get; set; }
+
+            protected override void Execute()
+            {
+                Result = Action + Controller;
+            }
+        }
 
         public class MultipleGenericCommand<T, T2, T3> : CommandBase
         {

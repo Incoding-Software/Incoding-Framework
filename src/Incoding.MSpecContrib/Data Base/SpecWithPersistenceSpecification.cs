@@ -28,7 +28,7 @@ namespace Incoding.MSpecContrib
         [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true)]
         Establish establish = () =>
         {
-            persistenceSpecification = new PersistenceSpecification<TEntity>(SpecWithRepository.Repository);
+            persistenceSpecification = new PersistenceSpecification<TEntity>();
         };
 
         #endregion

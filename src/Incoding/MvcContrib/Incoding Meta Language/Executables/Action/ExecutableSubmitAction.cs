@@ -5,9 +5,9 @@ namespace Incoding.MvcContrib
         #region Constructors
 
         public ExecutableSubmitAction(string formSelector, JqueryAjaxFormOptions ajaxForm)
-        {
-            this.Add("options", ajaxForm);
+        {            
             this.Add("formSelector", formSelector);
+            this.Add("options", ajaxForm);
         }
 
         #endregion

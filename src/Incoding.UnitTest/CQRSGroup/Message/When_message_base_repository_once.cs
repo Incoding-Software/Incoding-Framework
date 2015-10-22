@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.MSpecContrib;
@@ -11,12 +12,12 @@
 
     #endregion
 
-    [Subject(typeof(MessageBase<>))]
+    [Subject(typeof(MessageBase))]
     public class When_message_base_repository_once
     {
         #region Fake classes
 
-        public class FakeCommand : MessageBase<object>
+        public class FakeCommand : MessageBase
         {
             protected override void Execute()
             {
@@ -43,7 +44,7 @@
                                   unitOfWork = Pleasure.MockStrict<IUnitOfWork>(mock => mock.Setup(r => r.GetRepository()).Returns(repository.Object));
                               };
 
-        Because of = () => message.OnExecute(Pleasure.MockStrictAsObject<IDispatcher>(), unitOfWork.Object);
+        Because of = () => message.OnExecute(Pleasure.MockStrictAsObject<IDispatcher>(), new Lazy<IUnitOfWork>(() => unitOfWork.Object));
 
         It should_be_delete = () => repository.Verify(r => r.Delete<FakeEntityForNew>(Pleasure.MockIt.IsAny<int>()), Times.Exactly(10));
 

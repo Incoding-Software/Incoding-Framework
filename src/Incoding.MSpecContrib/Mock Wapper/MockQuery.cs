@@ -6,7 +6,7 @@ namespace Incoding.MSpecContrib
 
     #endregion
 
-    public class MockQuery<TMessage, TResult> : MockMessage<TMessage, TResult> where TMessage : MessageBase<TResult>
+    public class MockQuery<TMessage, TResult> : MockMessage<TMessage, TResult> where TMessage : MessageBase
     {
         #region Constructors
 

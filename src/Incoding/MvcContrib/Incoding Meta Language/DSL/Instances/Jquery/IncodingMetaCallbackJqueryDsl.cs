@@ -28,7 +28,7 @@ namespace Incoding.MvcContrib
         #region Properties
 
         [Obsolete("Please use Attr")]
-        public IncodingMetaCallbackJqueryAttributesDsl Attributes { get { return new IncodingMetaCallbackJqueryAttributesDsl(this.plugInDsl); } }
+        public IncodingMetaCallbackJqueryAttributesDsl Attributes { get { return Attr; } }
         
         public IncodingMetaCallbackJqueryAttributesDsl Attr { get { return new IncodingMetaCallbackJqueryAttributesDsl(this.plugInDsl); } }
 

@@ -1,0 +1,10 @@
+﻿
+@(Html.When(JqueryBind.InitIncoding)
+              .Direct(new[]
+                      {
+                              new KeyValueVm() { Selected = true, Value = "IsTrue" },
+                              new KeyValueVm() { Selected = false, Value = "IsFalse" }
+                      })
+              .OnSuccess(dsl => dsl.Self().JQuery.Dom.WithTemplateByView("~/Views/Labs/Inc-429_isinline_url_in_template/Tmpl.cshtml").Html())
+              .AsHtmlAttributes()
+              .ToDiv())

@@ -180,6 +180,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\dot.js" />
     <Content Include="Scripts\dust-full-0.3.0.js" />
     <Compile Include="VM\JasmineIndexContainer.cs" />
     <Compile Include="VM\LabsIndexContainer.cs" />
@@ -229,6 +230,10 @@
     <Content Include="Scripts\jasmine-jquery.js" />
     <Content Include="Scripts\jasmine.js" />
     <Content Include="Scripts\jquery.mockjax.js" />
+    <Content Include="db.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.0.js" />
     <Content Include="Scripts\jquery-2.0.0.min.js" />
@@ -277,6 +282,17 @@
     <Content Include="Views\Labs\Inc_487_MVD__typcial_model\tmpl_date_time.cshtml" />
     <Content Include="Views\Labs\Inc_487_MVD__typcial_model\tmpl_bool.cshtml" />
     <Content Include="Views\Labs\Inc_487_MVD__typcial_model\Index.cshtml" />
+    <Content Include="Views\Labs\MVD\Sample.cshtml" />
+    <Content Include="Views\Labs\Inc-417_MVD_action_model\Tmpl.cshtml" />
+    <Content Include="Views\Labs\Inc-417_MVD_action_model\Sample.cshtml" />
+    <Content Include="Views\Labs\Inc-363_Delete_Entity_By_Generic_Common_Command\Sample.cshtml" />
+    <Content Include="Views\Labs\Inc_427_Parse_after_insert\Sample.cshtml" />
+    <Content Include="Views\Labs\Inc-429_isinline_url_in_template\Tmpl.cshtml" />
+    <Content Include="Views\Labs\Inc-429_isinline_url_in_template\Sample.cshtml" />
+    <Content Include="Views\Labs\Inc-275_to_begin_tag_without_html_helper\Sample.cshtml" />
+    <Content Include="Views\Labs\Ajax And Form Data\Default.cshtml" />
+    <Content Include="Views\Labs\Issue\inc_496.cshtml" />
+    <Content Include="Views\Labs\DoT\DropDown.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

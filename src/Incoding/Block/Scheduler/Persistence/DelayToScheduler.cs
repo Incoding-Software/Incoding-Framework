@@ -37,9 +37,7 @@
         public virtual CommandBase Instance { get { return Command.DeserializeFromJson(System.Type.GetType(Type)) as CommandBase; } }
 
         public virtual string Type { get; set; }
-
-        public virtual string GroupKey { get; set; }
-
+        
         public virtual int Priority { get; set; }
 
         public virtual DelayOfStatus Status { get; set; }
@@ -65,8 +63,7 @@
             {
                 Id(r => r.Id).GeneratedBy.Assigned();
                 MapEscaping(r => r.Command).CustomType("StringClob").CustomSqlType("nvarchar(max)");
-                MapEscaping(r => r.Type).CustomType("StringClob").CustomSqlType("nvarchar(max)");
-                MapEscaping(r => r.GroupKey);
+                MapEscaping(r => r.Type).CustomType("StringClob").CustomSqlType("nvarchar(max)");                
                 MapEscaping(r => r.Priority);
                 MapEscaping(r => r.UID);
                 MapEscaping(r => r.Description).CustomType("StringClob").CustomSqlType("nvarchar(max)");

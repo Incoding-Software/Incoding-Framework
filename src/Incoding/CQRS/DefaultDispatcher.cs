@@ -6,6 +6,7 @@ namespace Incoding.CQRS
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using System.Threading;
     using Incoding.Block.IoC;
     using Incoding.Data;
     using Incoding.EventBroker;
@@ -17,7 +18,7 @@ namespace Incoding.CQRS
     {
         #region Fields
 
-        readonly Dictionary<MessageExecuteSetting, IUnitOfWork> unitOfWorkCollection = new Dictionary<MessageExecuteSetting, IUnitOfWork>();
+        readonly UnitOfWorkCollection unitOfWorkCollection = new UnitOfWorkCollection();
 
         #endregion
 
@@ -25,70 +26,41 @@ namespace Incoding.CQRS
 
         public void Push(CommandComposite composite)
         {
-            bool isOuterCycle = !this.unitOfWorkCollection.Any();
+            bool isOuterCycle = !unitOfWorkCollection.Any();
             var eventBroker = IoCFactory.Instance.TryResolve<IEventBroker>() ?? new DefaultEventBroker();
 
             foreach (var groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
             {
-                var messages = groupMessage.ToList();
-                bool isFlush = messages.Any(r => r is CommandBase);
-                var sessing = groupMessage.Key;
-
-                if (!this.unitOfWorkCollection.ContainsKey(sessing))
-                {
-                    var unitOfWorkFactory = string.IsNullOrWhiteSpace(sessing.DataBaseInstance)
-                                                    ? IoCFactory.Instance.TryResolve<IUnitOfWorkFactory>()
-                                                    : IoCFactory.Instance.TryResolveByNamed<IUnitOfWorkFactory>(sessing.DataBaseInstance);
-                    var isoLevel = sessing.IsolationLevel.GetValueOrDefault(isFlush ? IsolationLevel.ReadCommitted : IsolationLevel.ReadUncommitted);
-                    this.unitOfWorkCollection.Add(sessing, unitOfWorkFactory.Create(isoLevel, sessing.Connection));
-                }
-                IUnitOfWork unitOfWork = this.unitOfWorkCollection[sessing];
-
-                foreach (var part in messages)
+                bool isFlush = groupMessage.Any(r => r is CommandBase);
+                foreach (var part in groupMessage)
                 {
                     bool isThrow = false;
                     try
                     {
                         eventBroker.Publish(new OnBeforeExecuteEvent(part));
+                        var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         part.OnExecute(this, unitOfWork);
+                        if (unitOfWork.IsValueCreated)
+                            unitOfWork.Value.Flush();
                         eventBroker.Publish(new OnAfterExecuteEvent(part));
-
-                        if (isFlush)
-                            unitOfWork.Flush();
                     }
                     catch (Exception exception)
                     {
                         isThrow = true;
-
-                        var onAfterErrorExecuteEvent = new OnAfterErrorExecuteEvent(part, exception);
-                        if (eventBroker.HasSubscriber(onAfterErrorExecuteEvent))
-                            eventBroker.Publish(onAfterErrorExecuteEvent);
-
+                        eventBroker.Publish(new OnAfterErrorExecuteEvent(part, exception));
                         throw;
                     }
                     finally
                     {
                         eventBroker.Publish(new OnCompleteExecuteEvent(part));
                         if (isThrow && isOuterCycle)
-                        {
-                            this.unitOfWorkCollection.Select(r => r.Value)
-                                .DoEach(r => r.Dispose());
-                            this.unitOfWorkCollection.Clear();
-                        }
+                            unitOfWorkCollection.Dispose();
                     }
                 }
             }
 
             if (isOuterCycle)
-            {
-                this.unitOfWorkCollection.Select(r => r.Value)
-                    .DoEach(r =>
-                            {
-                                r.Commit();
-                                r.Dispose();
-                            });
-                this.unitOfWorkCollection.Clear();
-            }
+                unitOfWorkCollection.Dispose();
         }
 
         public TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null)
@@ -96,7 +68,51 @@ namespace Incoding.CQRS
             var commandComposite = new CommandComposite();
             commandComposite.Quote(message, executeSetting);
             Push(commandComposite);
-            return message.Result;
+            return (TResult)message.Result;
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        public class UnitOfWorkCollection : Dictionary<MessageExecuteSetting, Lazy<IUnitOfWork>>, IDisposable
+        {
+            #region Api Methods
+
+            public Lazy<IUnitOfWork> AddOrGet(MessageExecuteSetting setting, bool isFlush)
+            {
+                if (!ContainsKey(setting))
+                {
+                    Add(setting, new Lazy<IUnitOfWork>(() =>
+                                                       {
+                                                           var unitOfWorkFactory = string.IsNullOrWhiteSpace(setting.DataBaseInstance)
+                                                                                           ? IoCFactory.Instance.TryResolve<IUnitOfWorkFactory>()
+                                                                                           : IoCFactory.Instance.TryResolveByNamed<IUnitOfWorkFactory>(setting.DataBaseInstance);
+
+                                                           var isoLevel = setting.IsolationLevel.GetValueOrDefault(isFlush ? IsolationLevel.ReadCommitted : IsolationLevel.ReadUncommitted);
+                                                           return unitOfWorkFactory.Create(isoLevel, isFlush, setting.Connection);
+                                                       }, LazyThreadSafetyMode.None));
+                }
+
+                return this[setting];
+            }
+
+            #endregion
+
+            #region Disposable
+
+            public void Dispose()
+            {
+                this.Select(r => r.Value)
+                    .DoEach(r =>
+                            {
+                                if (r.IsValueCreated)
+                                    r.Value.Dispose();
+                            });
+                Clear();
+            }
+
+            #endregion
         }
 
         #endregion

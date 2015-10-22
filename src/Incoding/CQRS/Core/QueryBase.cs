@@ -1,6 +1,9 @@
 namespace Incoding.CQRS
 {
-    public abstract class QueryBase<TResult> : MessageBase<TResult>
+    using System.Collections.Generic;
+    using Incoding.Block;
+
+    public abstract class QueryBase<TResult> : MessageBase
     {
         #region Override
 
@@ -12,5 +15,6 @@ namespace Incoding.CQRS
         #endregion
 
         protected abstract TResult ExecuteResult();
+
     }
 }

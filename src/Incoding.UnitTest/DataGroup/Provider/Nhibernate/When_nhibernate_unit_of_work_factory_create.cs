@@ -2,8 +2,6 @@
 {
     #region << Using >>
 
-    using System.Data;
-    using System.Data.SqlClient;
     using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
@@ -12,20 +10,15 @@
     #endregion
 
     [Subject(typeof(NhibernateUnitOfWorkFactory))]
-    public class When_nhibernate_unit_of_work_factory_create
+    public class When_nhibernate_unit_of_work_factory_create : Behavior_unit_of_work_factory
     {
-        #region Establish value
+        Establish establish = () =>
+                              {
+                                  var session = Pleasure.MockAsObject<ISession>();
+                                  var sessionFactory = Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(session));
+                                  unitOfWork = new NhibernateUnitOfWorkFactory(sessionFactory).Create(isolated, isFlush, connectionString);
+                              };
 
-        static NhibernateUnitOfWorkFactory unitOfWorkFactory;
-
-        static IUnitOfWork unitOfWork;
-
-        #endregion
-
-        Establish establish = () => { unitOfWorkFactory = new NhibernateUnitOfWorkFactory(Pleasure.MockStrictAsObject<INhibernateSessionFactory>()); };
-
-        Because of = () => { unitOfWork = unitOfWorkFactory.Create(IsolationLevel.ReadCommitted, @"Data Source=Work\SQLEXPRESS;Database=IncRealDb;Integrated Security=true;"); };
-
-        It should_be_transaction_active = () => unitOfWork.ShouldNotBeNull();
+        Behaves_like<Behavior_unit_of_work_factory> verify;
     }
 }

@@ -57,6 +57,8 @@
 
         It should_be_inverse_bool = () => true.Inverse().ShouldBeFalse();
 
+        It should_be_inverse_bool_always_inverse = () => Pleasure.Do10(i => true.Inverse().ShouldBeFalse());
+
         It should_be_inverse_int = () => 5.Inverse().ShouldNotEqual(5);
 
         It should_be_inverse_enum = () => Pleasure.Do((i) => FakeEnum.Email

@@ -1,24 +1,24 @@
 ﻿namespace Incoding.UnitTest
 {
-    using System.Diagnostics;
+    #region << Using >>
+
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
-    using Moq;
-    using It = Machine.Specifications.It;
+
+    #endregion
 
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push_performance : Context_default_dispatcher
     {
         #region Establish value
 
-        static Mock<CommandBase> message;
+        static CommandWithRepository message;
 
         #endregion
 
-        Establish establish = () => { message = Pleasure.Mock<CommandBase>(); };
+        Establish establish = () => { message = Pleasure.Generator.Invent<CommandWithRepository>(); };
 
-        It should_be_performance = () => Pleasure.Do(i => dispatcher.Push(message.Object), 1000)
-                                                 .ShouldBeLessThan(700);
+        It should_be_performance = () => Pleasure.Do(i => dispatcher.Push(message), 1000).ShouldBeLessThan(700);
     }
 }

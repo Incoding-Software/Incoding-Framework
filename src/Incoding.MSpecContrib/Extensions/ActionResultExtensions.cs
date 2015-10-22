@@ -43,13 +43,13 @@ namespace Incoding.MSpecContrib
             ShouldBeIncoding(actionResult, data => data.data.ShouldBeNull());
         }
 
-        public static void ShouldBeIncodingFail<TData>(this ActionResult actionResult, Action<TData> verify)
+        public static void ShouldBeIncodingError<TData>(this ActionResult actionResult, Action<TData> verify)
         {
             ShouldBeIncoding(actionResult, data => data.success.ShouldBeFalse());
             ShouldBeIncodingData(actionResult, verify);
         }
 
-        public static void ShouldBeIncodingFail(this ActionResult actionResult)
+        public static void ShouldBeIncodingError(this ActionResult actionResult)
         {
             ShouldBeIncoding(actionResult, data => data.success.ShouldBeFalse());
         }

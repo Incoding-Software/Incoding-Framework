@@ -7,11 +7,9 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.UI;
     using System.Web.WebPages;
     using Incoding.Extensions;
     using Incoding.MvcContrib.MVD;
-    using Incoding.Quality;
     using JetBrains.Annotations;
 
     #endregion
@@ -41,9 +39,106 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        #region Api Methods
+
+
+#if DEBUG
+        [Obsolete("Please use selector as argument", false), ExcludeFromCodeCoverage]
+#endif
+#if !DEBUG
+        [Obsolete("Please use selector as argument", true), UsedImplicitly, ExcludeFromCodeCoverage]
+#endif
+        public IncodingMetaCallbackInsertDsl WithTemplate(string selector)
+        {
+            throw new ArgumentException("Argument should be type of Selector", "selector");
+        }
+
+        [Obsolete("Please use WithTemplateByUrl/WithTemplateByView")]
+        public IncodingMetaCallbackInsertDsl WithTemplate([NotNull] Selector selector)
+        {
+            insertTemplateSelector = selector;
+            return this;
+        }
+
+        [Obsolete("Please use WithTemplateByUrl/WithTemplateByView")]
+        public IncodingMetaCallbackInsertDsl WithTemplate(JquerySelectorExtend selector)
+        {
+            return WithTemplate(selector as Selector);
+        }
+
+        [Obsolete("Suggest use ONLY WithTemplateByUrl")]
+        public IncodingMetaCallbackInsertDsl WithTemplateById([NotNull, HtmlAttributeValue("id")] string id)
+        {
+            return WithTemplate(id.ToId() as Selector);
+        }
+
+        public IncodingMetaCallbackInsertDsl WithTemplateByUrl([NotNull] string url)
+        {
+            if (url.StartsWith("||"))
+                throw new ArgumentException("Please use Url instead of Selector", "url");
+
+            if (url.StartsWith("~"))
+                throw new ArgumentException("Please use Url instead of path to View", "url");
+
+            return WithTemplate(url.ToAjaxGet());
+        }
+
+        [ExcludeFromCodeCoverage]
+        public IncodingMetaCallbackInsertDsl WithTemplateByUrl(Func<UrlDispatcher, string> evaluated)
+        {
+            var dispatcher = new UrlDispatcher(new UrlHelper(HttpContext.Current.Request.RequestContext));
+            return WithTemplateByUrl(evaluated(dispatcher));
+        }
+
+        [ExcludeFromCodeCoverage]
+        public IncodingMetaCallbackInsertDsl WithTemplateByView([PathReference, NotNull] string view)
+        {
+            return WithTemplateByUrl(r => r.AsView(view));
+        }
+
+        public IncodingMetaCallbackInsertDsl Prepare()
+        {
+            prepare = true;
+            return this;
+        }
+
+        [Obsolete("Please use On with Selector.Result.For<T>(r=>r.Prop)", false)]
+        public IncodingMetaCallbackInsertDsl For<TModel>(Expression<Func<TModel, object>> property)
+        {
+            insertProperty = property.GetMemberName();
+            return this;
+        }
+
+        public IncodingMetaCallbackInsertDsl Use(Func<object, HelperResult> text)
+        {
+            return Use(new ValueSelector(Selector.FromHelperResult(text)));
+        }
+
+        public IncodingMetaCallbackInsertDsl Use(Selector setContent)
+        {
+            content = setContent;
+            return this;
+        }
 
         /// <summary>
+        ///     Set the data of every matched element through After.
+        /// </summary>
+        public IExecutableSetting After()
+        {
+            return InternalInsert("after");
+        }
+
+        public IExecutableSetting Val()
+        {
+            return InternalInsert("val");
+        }
+
+        public IExecutableSetting Before()
+        {
+            return InternalInsert("before");
+        }
+
+        /// <summary>
+        /// Insert content, specified by the parameter, to the end of each element in the set of matched elements.
         /// </summary>
         public IExecutableSetting Append()
         {
@@ -71,104 +166,9 @@ namespace Incoding.MvcContrib
             return InternalInsert("text");
         }
 
-#if DEBUG
-        [Obsolete("Please use selector as argument", false)]
-#endif
-#if !DEBUG
-        [Obsolete("Please use selector as argument", true)]
-#endif
-        [UsedImplicitly, ExcludeFromCodeCoverage]
-        public IncodingMetaCallbackInsertDsl WithTemplate(string selector)
-        {
-            throw new ArgumentException("Argument should be type of Selector", "selector");
-        }
-
-        [Obsolete("Please use WithTemplateByUrl")]
-        public IncodingMetaCallbackInsertDsl WithTemplate(Selector selector)
-        {
-            this.insertTemplateSelector = selector;
-            return this;
-        }
-
-        [Obsolete("Please use WithTemplateByUrl")]
-        public IncodingMetaCallbackInsertDsl WithTemplate(JquerySelectorExtend selector)
-        {
-            this.insertTemplateSelector = selector;
-            return this;
-        }
-
-        [Obsolete("Suggest use ONLY WithTemplateByUrl")]
-        public IncodingMetaCallbackInsertDsl WithTemplateById(string id)
-        {
-            return WithTemplate(id.ToId() as Selector);
-        }
-
-        public IncodingMetaCallbackInsertDsl WithTemplateByUrl(string url)
-        {
-            return WithTemplate(url.ToAjaxGet());
-        }
-
-        [ExcludeFromCodeCoverage]
-        public IncodingMetaCallbackInsertDsl WithTemplateByUrl(Func<UrlDispatcher,string> evaluated)
-        {
-            var dispatcher = new UrlDispatcher(new UrlHelper(HttpContext.Current.Request.RequestContext));           
-            return WithTemplateByUrl(evaluated(dispatcher));
-        }
-
-
-        [ExcludeFromCodeCoverage]
-        public IncodingMetaCallbackInsertDsl WithTemplateByView([PathReference]string view)
-        {
-            return WithTemplateByUrl(r => r.AsView(view));
-        }
-
-        public IncodingMetaCallbackInsertDsl Prepare()
-        {
-            this.prepare = true;
-            return this;
-        }
-
-        [Obsolete("Please use On with Selector.Result.For<T>(r=>r.Prop)", false)]
-        public IncodingMetaCallbackInsertDsl For<TModel>(Expression<Func<TModel, object>> property)
-        {
-            this.insertProperty = property.GetMemberName();
-            return this;
-        }
-
-        public IncodingMetaCallbackInsertDsl Use(Func<object, HelperResult> text)
-        {
-            this.content = new ValueSelector(Selector.FromHelperResult(text));
-            return this;
-        }
-        public IncodingMetaCallbackInsertDsl Use(Selector setContent)
-        {
-            this.content = setContent;
-            return this;
-        }
-
-        /// <summary>
-        ///     Set the data of every matched element through After.
-        /// </summary>
-        public IExecutableSetting After()
-        {
-            return InternalInsert("after");
-        }
-
-        public IExecutableSetting Val()
-        {
-            return InternalInsert("val");
-        }
-
-        public IExecutableSetting Before()
-        {
-            return InternalInsert("before");
-        }
-
-        #endregion
-
         IExecutableSetting InternalInsert(string method)
         {
-            return this.plugIn.Registry(new ExecutableInsert(method, this.insertProperty, this.insertTemplateSelector, this.prepare,this.content));
+            return plugIn.Registry(new ExecutableInsert(method, insertProperty, insertTemplateSelector, prepare, content));
         }
     }
 }

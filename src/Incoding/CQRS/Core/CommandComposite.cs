@@ -13,29 +13,30 @@
     {
         #region Fields
 
-        readonly List<IMessage<object>> parts = new List<IMessage<object>>();
+        readonly List<IMessage> parts = new List<IMessage>();
 
         #endregion
 
         #region Properties
 
-        public ReadOnlyCollection<IMessage<object>> Parts { get { return this.parts.AsReadOnly(); } }
+        public ReadOnlyCollection<IMessage> Parts { get { return parts.AsReadOnly(); } }
 
         #endregion
 
         #region ISettingCommandComposite Members
 
-        public ISettingCommandComposite Quote<TResult>(IMessage<TResult> message, MessageExecuteSetting executeSetting = null)
+        public ISettingCommandComposite Quote(IMessage message, MessageExecuteSetting executeSetting = null)
         {
-            if (message.Setting == null)
+            if (executeSetting != null)
+                message.Setting = new MessageExecuteSetting(executeSetting);
+            else if (message.Setting == null)
             {
-                message.Setting = executeSetting != null
-                                          ? new MessageExecuteSetting(executeSetting)
-                                          : message.GetType().FirstOrDefaultAttribute<MessageExecuteSettingAttribute>()
-                                                   .With(r => new MessageExecuteSetting(r))
-                                                   .Recovery(new MessageExecuteSetting());
+                message.Setting = message.GetType().FirstOrDefaultAttribute<MessageExecuteSettingAttribute>()
+                                         .With(r => new MessageExecuteSetting(r))
+                                         .Recovery(new MessageExecuteSetting());
             }
-            this.parts.Add((IMessage<object>)message);
+
+            parts.Add(message);
             return this;
         }
 

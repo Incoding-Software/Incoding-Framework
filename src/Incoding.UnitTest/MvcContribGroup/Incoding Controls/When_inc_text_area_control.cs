@@ -24,6 +24,7 @@
                                                        boxControl.Cols = 10;
                                                        boxControl.Rows = 30;
                                                        boxControl.MaxLenght = 15;
+                                                       boxControl.ReadOnly = false;
                                                    })
                                      .ToHtmlString();
                          };

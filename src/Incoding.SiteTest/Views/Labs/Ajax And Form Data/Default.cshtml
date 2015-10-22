@@ -1,0 +1,20 @@
+﻿@{
+    JqueryAjaxOptions.Default.Data = new RouteValueDictionary(new { test = "value" });
+}
+@(Html.When(JqueryBind.Click)
+      .Do()
+      .Ajax(Url.Action("FetchCountry", "Labs"))
+      .OnSuccess(dsl => dsl.Window.Alert("test"))
+      .AsHtmlAttributes()
+      .ToButton("Save"))
+
+@{JqueryAjaxFormOptions.Default.Data = new RouteValueDictionary(new { test = "value" });}
+@using (Html.When(JqueryBind.Submit)
+                  .PreventDefault()
+                  .Submit()
+                  .OnSuccess(dsl => dsl.Window.Alert("test"))
+                  .AsHtmlAttributes()
+                  .ToBeginForm(Url.Action("FetchCountry", "Labs")))
+{
+    <input type="submit" value="Save" />
+}

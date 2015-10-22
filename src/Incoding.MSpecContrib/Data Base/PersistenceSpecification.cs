@@ -6,6 +6,7 @@ namespace Incoding.MSpecContrib
 
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -35,19 +36,24 @@ namespace Incoding.MSpecContrib
 
         TEntity original;
 
+        IUnitOfWork unitOfWork;
+
         #endregion
 
         #region Constructors
 
-        public PersistenceSpecification(IRepository repository)
+        public PersistenceSpecification(IRepository repository = null)
         {
-            this.repository = repository;
+            if (repository != null)
+                this.repository = repository;
+            else
+            {
+                this.unitOfWork = PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
+                this.repository = this.unitOfWork.GetRepository();
+            }
             this.original = new TEntity();
             this.properties = new List<string>();
         }
-
-        public PersistenceSpecification()
-                : this(SpecWithRepository.Repository) { }
 
         public IRepository Repository { get { return this.repository; } }
 
@@ -113,10 +119,8 @@ namespace Incoding.MSpecContrib
                     object invent;
                     if (missing.PropertyType.IsImplement<IEntity>())
                     {
-                        invent = ((IQueryable)this.Repository.GetType().GetMethod("Query").MakeGenericMethod(missing.PropertyType).Invoke(this.Repository, new object[] { null, null, null, null }))
-                        //.Cast<object>()
-                        .FirstOrNull();
-                        if(invent == null)
+                        invent = ((IQueryable)Repository.GetType().GetMethod("Query").MakeGenericMethod(missing.PropertyType).Invoke(Repository, new object[] { null, null, null, null })).FirstOrNull();
+                        if (invent == null)
                             throw new SpecificationException("No elements at database for type '{0}'".F(missing.PropertyType.Name));
                     }
                     else
@@ -143,6 +147,8 @@ namespace Incoding.MSpecContrib
                                                             dsl.IgnoreRecursionError();
                                                             dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
                                                         });
+
+            this.unitOfWork.Dispose();
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()

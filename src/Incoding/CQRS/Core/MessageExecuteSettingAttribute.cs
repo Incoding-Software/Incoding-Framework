@@ -24,7 +24,7 @@
 
         public string Connection { get; set; }
 
-        public IsolationLevel? IsolationLevel { get; set; }
+        public IsolationLevel IsolationLevel { get; set; }
 
         #endregion
     }

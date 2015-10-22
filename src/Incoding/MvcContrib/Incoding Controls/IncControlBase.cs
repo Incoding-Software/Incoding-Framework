@@ -21,6 +21,36 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        protected RouteValueDictionary GetAttributes()
+        {
+            bool isIml = OnInit != null ||
+                         OnChange != null ||
+                         OnEvent != null;
+
+            if (isIml)
+            {
+                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
+                                              .Do()
+                                              .Direct()
+                                              .OnSuccess(dsl =>
+                                                         {
+                                                             OnInit.Do(action => action(dsl));
+                                                             OnEvent.Do(action => action(dsl));
+                                                         })
+                                              .When(JqueryBind.Change)
+                                              .Do()
+                                              .Direct()
+                                              .OnSuccess(dsl =>
+                                                         {
+                                                             OnChange.Do(action => action(dsl));
+                                                             OnEvent.Do(action => action(dsl));
+                                                         })
+                                              .AsHtmlAttributes());
+            }
+
+            return this.attributes;
+        }
+
         #region Properties
 
         /// <summary>
@@ -58,6 +88,31 @@ namespace Incoding.MvcContrib
         public void SetAttr(HtmlAttribute attr, object value)
         {
             SetAttr(attr.ToStringLower(), value.With(r => r.ToString()));
+        }
+
+        /// <summary>
+        ///     <see cref="HtmlAttribute" />
+        /// </summary>
+        public void SetAttr(HtmlAttribute attr)
+        {
+            SetAttr(attr.ToStringLower(), attr.ToJqueryString());
+        }
+
+        /// <summary>
+        ///     <see cref="HtmlAttribute.AutoComplete" />
+        /// </summary>
+        public void RemoveAttr(HtmlAttribute attr)
+        {
+            RemoveAttr(attr);
+        }
+
+        /// <summary>
+        ///     <see cref="HtmlAttribute.AutoComplete" />
+        /// </summary>
+        public void RemoveAttr(string attr)
+        {
+            if (this.attributes.ContainsKey(attr))
+                this.attributes.Remove(attr);
         }
 
         /// <summary>
@@ -106,35 +161,5 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
-        protected RouteValueDictionary GetAttributes()
-        {
-            bool isIml = OnInit != null ||
-                         OnChange != null ||
-                         OnEvent != null;
-
-            if (isIml)
-            {
-                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
-                                              .Do()
-                                              .Direct()
-                                              .OnSuccess(dsl =>
-                                                             {
-                                                                 OnInit.Do(action => action(dsl));
-                                                                 OnEvent.Do(action => action(dsl));
-                                                             })
-                                              .When(JqueryBind.Change)
-                                              .Do()
-                                              .Direct()
-                                              .OnSuccess(dsl =>
-                                                             {
-                                                                 OnChange.Do(action => action(dsl));
-                                                                 OnEvent.Do(action => action(dsl));
-                                                             })
-                                              .AsHtmlAttributes());
-            }
-
-            return this.attributes;
-        }
     }
 }

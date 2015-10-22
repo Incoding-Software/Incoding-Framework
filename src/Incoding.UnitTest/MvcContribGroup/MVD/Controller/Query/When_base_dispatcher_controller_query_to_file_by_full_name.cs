@@ -47,6 +47,7 @@
                                   fileName = Pleasure.Generator.String();
 
                                   dispatcher.StubQuery(new FakeFileByFullNameQuery<string>(), content);
+                                  responseBase.Setup(r => r.AddHeader("X-Download-Options", "Open"));
                               };
 
         Because of = () =>
@@ -58,8 +59,8 @@
                          ;
                      };
 
-        It should_be_result = () => result.ShouldBeFileContent(content,
-                                                               contentType: contentType,
+        It should_be_result = () => result.ShouldBeFileContent(content, 
+                                                               contentType: contentType, 
                                                                fileDownloadName: fileName);
     }
 }

@@ -15,7 +15,7 @@
     {
         #region Http action
 
-        [HttpGet]
+        
         public ActionResult FetchCountry()
         {
             return IncJson(new OptGroupVm(new List<KeyValueVm>
@@ -38,9 +38,9 @@
         }
 
         [HttpPost]
-        public ActionResult Submit(string value, string optional)
+        public ActionResult Submit(string value, string text)
         {
-            return IncJson(new KeyValueVm());
+            return IncJson(new KeyValueVm(value,text));
         }
 
         #endregion

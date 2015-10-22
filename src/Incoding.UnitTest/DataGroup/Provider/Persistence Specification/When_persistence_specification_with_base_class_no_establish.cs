@@ -15,7 +15,7 @@ namespace Incoding.UnitTest.MSpecGroup
         Establish establish = () =>
                               {
                                   dbEntityReference = new DbEntityReference();
-                                  SpecWithRepository.Repository.Save(dbEntityReference);
+                                  persistenceSpecification.Repository.Save(dbEntityReference);
                               };
 
         It should_be_by_verify = () => persistenceSpecification

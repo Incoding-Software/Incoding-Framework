@@ -22,6 +22,8 @@
 
             public string Reference { get; set; }
 
+            public bool Is { get; set; }
+
             public List<string> Strings { get; set; }
 
             public List<KeyValueVm> Many { get; set; }
@@ -38,6 +40,10 @@
         It should_be_data_for = () => Selector.Result.For<FakeModel>(r => r.Reference)
                                               .ToString()
                                               .ShouldEqual("||result*Reference||");
+
+        It should_be_data_for_bool = () => Selector.Result.For<FakeModel>(r => r.Is)
+                                                   .ToString()
+                                                   .ShouldEqual("||result*Is||");
 
         It should_be_data_for_array_as_self = () => Selector.Result.For<FakeModel[]>(r => r[0])
                                                             .ToString()

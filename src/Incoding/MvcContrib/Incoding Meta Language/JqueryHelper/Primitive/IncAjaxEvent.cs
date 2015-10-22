@@ -1,5 +1,7 @@
 ﻿namespace Incoding.MvcContrib
 {
+    using System.Web.Mvc;
+
     public class IncAjaxEvent
     {
         #region Properties
@@ -10,6 +12,7 @@
 
         public string StatusText { get; set; }
 
+        
         #endregion
     }
 }

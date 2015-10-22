@@ -1,0 +1,13 @@
+﻿@{
+    using (var template = Html.Incoding().Template<KeyValueVm>())
+    {
+        <select>
+            @using (var each = template.ForEach())
+            {
+                <option>
+                    @each.For(r => r.Value)
+                </option>
+            }
+        </select>
+    }
+}

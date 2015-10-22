@@ -27,7 +27,7 @@
         {
             this.htmlHelper = htmlHelper;
             this.tag = tag.ToStringLower();
-
+            
             var startTag = new StringBuilder();
             startTag.Append("<{0} ".F(this.tag));
             foreach (var attr in attributes)

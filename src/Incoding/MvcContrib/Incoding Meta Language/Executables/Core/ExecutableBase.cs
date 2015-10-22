@@ -21,6 +21,7 @@ namespace Incoding.MvcContrib
 
         #region IExecutableSetting Members
 
+        [Obsolete("Please use If(() => expression) instead of this method")]
         public IExecutableSetting If(Action<IConditionalBuilder> configuration)
         {
             var builder = new ConditionalBuilder();
@@ -34,26 +35,28 @@ namespace Incoding.MvcContrib
             return If(builder => builder.Is(expression));
         }
 
-        public void TimeOut(double millisecond)
+        public IExecutableSetting TimeOut(double millisecond)
         {
             this.Set("timeOut", millisecond);
+            return this;
         }
 
-        public void TimeOut(TimeSpan millisecond)
+        public IExecutableSetting TimeOut(TimeSpan millisecond)
         {
-            TimeOut(millisecond.TotalMilliseconds);
+           return TimeOut(millisecond.TotalMilliseconds);
         }
 
-        public void Interval(double millisecond, out string intervalId)
+        public IExecutableSetting Interval(double millisecond, out string intervalId)
         {
             intervalId = Guid.NewGuid().ToString().Replace("-", "_");
             this.Set("interval", millisecond);
             this.Set("intervalId", intervalId);
+            return this;
         }
 
-        public void Interval(TimeSpan millisecond, out string intervalId)
+        public IExecutableSetting Interval(TimeSpan millisecond, out string intervalId)
         {
-            Interval(millisecond.TotalMilliseconds, out intervalId);
+           return Interval(millisecond.TotalMilliseconds, out intervalId);
         }
 
         #endregion

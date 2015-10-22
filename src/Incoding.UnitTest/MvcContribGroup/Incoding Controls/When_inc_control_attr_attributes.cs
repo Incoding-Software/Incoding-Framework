@@ -1,11 +1,15 @@
 ﻿namespace Incoding.UnitTest.MvcContribGroup
 {
+    #region << Using >>
+
     using System.Collections.Generic;
     using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(IncControlBase))]
     public class When_inc_control_attr_attributes : Context_inc_control
@@ -19,10 +23,10 @@
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      control = new IncTextBoxControl<FakeModel, string>(mockHtmlHelper.Original, r => r.Prop);
-                                      control.Attr(new { @class = "test", @checked = true });
-                                  };
+                              {
+                                  control = new IncTextBoxControl<FakeModel, string>(mockHtmlHelper.Original, r => r.Prop);
+                                  control.Attr(new { @class = "test", @checked = true });
+                              };
 
         Because of = () => { attr = control.TryGetValue("attributes") as RouteValueDictionary; };
 

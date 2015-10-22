@@ -1,0 +1,14 @@
+﻿@using Incoding.SiteTest
+<h3>Push command with Action and Controller as Property</h3>
+@(Html.When(JqueryBind.InitIncoding)
+      .AjaxPost(Url.Dispatcher().Push(new SampleOfCQRS.CommandWithAction() { Action = "SomeAction", Controller = "SomeController" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+      .AsHtmlAttributes()
+      .ToDiv())
+
+<h3>Model Action and Controller as Property</h3>
+@(Html.When(JqueryBind.InitIncoding)
+              .AjaxPost(Url.Dispatcher().Model(new SampleOfCQRS.CommandWithAction() { Action = "SomeAction", Controller = "SomeController" }).AsView("~/Views/Labs/Inc-417_MVD_action_model/Tmpl.cshtml"))
+              .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Result).Html())
+              .AsHtmlAttributes()
+              .ToDiv())
