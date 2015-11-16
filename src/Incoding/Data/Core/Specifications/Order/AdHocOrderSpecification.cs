@@ -72,7 +72,7 @@
 
             if (this.expressions.Count != other.expressions.Count)
             {
-                Console.WriteLine(SpecificationMessageRes.AdHocOrderSpecification_Equal_diffrent_count_expressions.F(this.expressions.Count, other.expressions.Count));
+                Console.WriteLine(Resources.AdHocOrderSpecification_Equal_diffrent_count_expressions.F(this.expressions.Count, other.expressions.Count));
                 return false;
             }
 
@@ -80,13 +80,13 @@
             {
                 if (!this.expressions[i].Item1.IsExpressionEqual(other.expressions[i].Item1))
                 {
-                    Console.WriteLine(SpecificationMessageRes.AdHocOrderSpecification_Equal_diffrent_expressions.F(this.expressions[i].Item1, other.expressions[i].Item1));
+                    Console.WriteLine(Resources.AdHocOrderSpecification_Equal_diffrent_expressions.F(this.expressions[i].Item1, other.expressions[i].Item1));
                     return false;
                 }
 
                 if (this.expressions[i].Item2 != other.expressions[i].Item2)
                 {
-                    Console.WriteLine(SpecificationMessageRes.AdHocOrderSpecification_Equal_diffrent_type.F(this.expressions[i].Item2, other.expressions[i].Item2));
+                    Console.WriteLine(Resources.AdHocOrderSpecification_Equal_diffrent_type.F(this.expressions[i].Item2, other.expressions[i].Item2));
                     return false;
                 }
             }

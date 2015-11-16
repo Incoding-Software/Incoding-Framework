@@ -13,6 +13,13 @@ namespace Incoding.MvcContrib
 
     public abstract class ExecutableBase : Dictionary<string, object>, IExecutableSetting
     {
+        public class Json
+        {
+            public string type { get; set; }
+
+            public object data { get; set; }            
+        }
+
         #region Fields
 
         readonly List<ConditionalBase> conditionals = new List<ConditionalBase>();
@@ -21,11 +28,12 @@ namespace Incoding.MvcContrib
 
         #region IExecutableSetting Members
 
+        [Obsolete("Please use If(() => expression) instead of this method")]
         public IExecutableSetting If(Action<IConditionalBuilder> configuration)
         {
             var builder = new ConditionalBuilder();
             configuration(builder);
-            this.conditionals.AddRange(builder.conditionals);
+            conditionals.AddRange(builder.conditionals);
             return this;
         }
 
@@ -34,43 +42,41 @@ namespace Incoding.MvcContrib
             return If(builder => builder.Is(expression));
         }
 
-        public void TimeOut(double millisecond)
+        public IExecutableSetting TimeOut(double millisecond)
         {
             this.Set("timeOut", millisecond);
+            return this;
         }
 
-        public void TimeOut(TimeSpan millisecond)
+        public IExecutableSetting TimeOut(TimeSpan millisecond)
         {
-            TimeOut(millisecond.TotalMilliseconds);
+            return TimeOut(millisecond.TotalMilliseconds);
         }
 
-        public void Interval(double millisecond, out string intervalId)
+        public IExecutableSetting Interval(double millisecond, out string intervalId)
         {
             intervalId = Guid.NewGuid().ToString().Replace("-", "_");
             this.Set("interval", millisecond);
             this.Set("intervalId", intervalId);
+            return this;
         }
 
-        public void Interval(TimeSpan millisecond, out string intervalId)
+        public IExecutableSetting Interval(TimeSpan millisecond, out string intervalId)
         {
-            Interval(millisecond.TotalMilliseconds, out intervalId);
+            return Interval(millisecond.TotalMilliseconds, out intervalId);
         }
 
         #endregion
 
         #region Api Methods
 
-        public virtual RouteValueDictionary Merge(RouteValueDictionary dest)
+        public Json AsObject()
         {
-            const string dataIncodingKey = "incoding";
-
-            var res = new RouteValueDictionary(dest);
-
-            if (this.conditionals.Any())
+            if (conditionals.Any())
             {
                 var ands = new Dictionary<string, List<object>>();
                 string key = Guid.NewGuid().ToString();
-                foreach (var conditional in this.conditionals)
+                foreach (var conditional in conditionals)
                 {
                     if (conditional.IsOr())
                         key = Guid.NewGuid().ToString();
@@ -86,22 +92,11 @@ namespace Incoding.MvcContrib
                         .ToList();
             }
 
-            var newCallback = new
-                                  {
-                                          type = GetType().Name,
-                                          data = this
-                                  };
-
-            if (!dest.ContainsKey(dataIncodingKey))
-                res.Add(dataIncodingKey, new[] { newCallback }.ToJsonString());
-            else
-            {
-                var newArray = res[dataIncodingKey].ToString().DeserializeFromJson<object[]>().ToList();
-                newArray.Add(newCallback);
-                res[dataIncodingKey] = newArray.ToJsonString();
-            }
-
-            return res;
+            return new Json
+                   {
+                           type = GetType().Name,
+                           data = this
+                   };
         }
 
         #endregion
@@ -110,6 +105,5 @@ namespace Incoding.MvcContrib
         {
             return new Dictionary<string, string>();
         }
-
     }
 }

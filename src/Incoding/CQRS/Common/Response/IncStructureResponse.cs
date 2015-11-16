@@ -9,6 +9,7 @@
 
     #endregion
 
+    [Obsolete("Please use structure type (int,datetime)")]
     public class IncStructureResponse<T>
     {
         #region Constructors

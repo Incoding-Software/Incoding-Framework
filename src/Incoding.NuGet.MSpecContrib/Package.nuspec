@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MSpecContrib</id>
-    <version>1.3.0.845</version>
+    <version>1.4.0.40-beta</version>
     <title>Incoding tests helpers</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -22,12 +22,14 @@
     <copyright>Copyright  2013 - 2015</copyright>
     <dependencies>
         <group targetFramework="net40">                    
-          <dependency id="Machine.Specifications" version="0.5.8.0" />
-          <dependency id="Moq" version="4.0.10827.0" />          
-          <dependency id="FluentNHibernate" version="2.0.1.0" />
-          <dependency id="structuremap" version="3.1.4.0" />
-          <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
-          <dependency id="Newtonsoft.Json" version="6.0.0.0" />
+          <dependency id="Machine.Specifications" />
+          <dependency id="Machine.Specifications.Should" />
+          <dependency id="Machine.Specifications.Runner.Console" />
+          <dependency id="Moq" />          
+          <dependency id="FluentNHibernate" />
+          <dependency id="structuremap" />
+          <dependency id="FluentValidation.MVC3-signed" />
+          <dependency id="Newtonsoft.Json" />
         </group>
     </dependencies>
     <references></references>

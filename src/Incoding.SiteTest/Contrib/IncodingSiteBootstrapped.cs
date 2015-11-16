@@ -14,6 +14,7 @@
     using Incoding.Extensions;
     using Incoding.MvcContrib;
     using NHibernate.Context;
+    using NHibernate.Tool.hbm2ddl;
 
     #endregion
 
@@ -27,15 +28,16 @@
                                                                                                      {
                                                                                                          registry.For<IDispatcher>().Singleton().Use<DefaultDispatcher>();
                                                                                                          registry.For<IEventBroker>().Singleton().Use<DefaultEventBroker>();
-                                                                                                         registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
+                                                                                                         registry.For<ITemplateFactory>().Singleton().Use<TemplateDoTFactory>();
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()
+                                                                                                                 .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
                                                                                                                  .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
                                                                                                                  .Mappings(configuration => configuration.FluentMappings
                                                                                                                                                          .Add<DelayToScheduler.Map>()
-                                                                                                                                                         .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly))
-                                                                                                                 .CurrentSessionContext<ThreadStaticSessionContext>();
+                                                                                                                                                         .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly));
+                                                                                                                 
                                                                                                          registry.For<IManagerDataBase>().Singleton().Use(() => new NhibernateManagerDataBase(configure));
                                                                                                          registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
                                                                                                          registry.For<IUnitOfWorkFactory>().Singleton().Use<NhibernateUnitOfWorkFactory>();

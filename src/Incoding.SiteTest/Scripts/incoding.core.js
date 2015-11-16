@@ -12,53 +12,61 @@
 
 if (!window.console) {
     window.console = {
-        log : function() {
+        log: function () {
         },
-        error : function() {
+        error: function () {
 
         },
-        dir : function() {
+        dir: function () {
         }
     };
 }
 
 function InitGps() {
     if (navigator.geolocation && !navigator.geolocation.currentPosition) {
-        navigator.geolocation.currentPosition = { longitude : 0, latitude : 0 };
-        navigator.geolocation.getCurrentPosition(function(position) {
+        navigator.geolocation.currentPosition = { longitude: 0, latitude: 0 };
+        navigator.geolocation.getCurrentPosition(function (position) {
             navigator.geolocation.currentPosition = position.coords;
-        }, function() {
+        }, function () {
         });
     }
 }
 
 $.extend(String.prototype, {
-    replaceAll : function(find, replace) {
+    replaceAll: function (find, replace) {
         return this.split(find).join(replace);
     },
-    endWith : function(suffix) {
+    endWith: function (suffix) {
         return (this.substr(this.length - suffix.length) === suffix);
     },
-    startsWith : function(prefix) {
+    toSelectorAsName: function () {
+        var name = this;
+        if (ExecutableHelper.IsNullOrEmpty(name)) {
+            name = '';
+        }
+       return  '[name="{0}"]'.f(name.toString()
+            .replaceAll("[", "\\[")
+            .replaceAll("]", "\\]"));        
+    },
+    startsWith: function (prefix) {
         return (this.substr(0, prefix.length) === prefix);
     },
-    trim : function() {
+    trim: function () {
         return this.replace(/^\s\s*|\s\s*$/g, '');
     },
-    ltrim : function() {
+    ltrim: function () {
         return this.replace(/^\s+/, "");
     },
-    rtrim : function() {
+    rtrim: function () {
         return this.replace(/\s+$/, "");
     },
-    cutLastChar : function() {
+    cutLastChar: function () {
         return this.substring(0, this.length - 1);
     },
-    contains : function(find) {
+    contains: function (find) {
         return this.indexOf(find) !== -1;
     },
-
-    f : function() {
+    f: function () {
         var s = this;
         var i = arguments.length;
 
@@ -71,42 +79,42 @@ $.extend(String.prototype, {
 });
 
 $.extend(Array.prototype, {
-    contains : function(findValue) {
+    contains: function (findValue) {
         return $.inArray(findValue, this) != -1;
     },
-    remove : function(from, to) {
+    remove: function (from, to) {
         var rest = this.slice((to || from) + 1 || this.length);
         this.length = from < 0 ? this.length + from : from;
         return this.push.apply(this, rest);
     },
-    sum : function() {
+    sum: function () {
         var sum = 0;
-        $(this).each(function() {
+        $(this).each(function () {
             sum += parseFloat(this);
         });
         return sum;
     },
-    max : function() {
+    max: function () {
         return this.length > 0 ? Math.max.apply(Math, this) : 0;
     },
-    min : function() {
+    min: function () {
         return this.length > 0 ? Math.min.apply(Math, this) : 0;
     },
-    average : function() {
+    average: function () {
         return this.length > 0 ? this.sum() / this.length : 0;
     },
-    first : function() {
+    first: function () {
         return this.length > 0 ? this[0] : '';
     },
-    last : function() {
+    last: function () {
         return this.length > 0 ? this[this.length - 1] : '';
     },
-    count : function() {
+    count: function () {
         return this.length;
     },
-    select : function(convert) {
+    select: function (convert) {
         var res = [];
-        $(this).each(function() {
+        $(this).each(function () {
             res.push(convert(this));
         });
         return res;
@@ -114,7 +122,7 @@ $.extend(Array.prototype, {
 });
 
 function incodingExtend(child, parent) {
-    var f = function() {
+    var f = function () {
     };
     f.prototype = parent.prototype;
     child.prototype = new f();
@@ -123,22 +131,22 @@ function incodingExtend(child, parent) {
 }
 
 $.fn.extend({
-    maxZIndex : function(opt) {
-        var def = { inc : 10, group : "*" };
+    maxZIndex: function (opt) {
+        var def = { inc: 10, group: "*" };
         $.extend(def, opt);
         var zMax = 0;
-        $(def.group).each(function() {
+        $(def.group).each(function () {
             var cur = parseInt($(this).css('z-index'));
             zMax = cur > zMax ? cur : zMax;
         });
 
-        return this.each(function() {
+        return this.each(function () {
             zMax += def.inc;
-            $(this).css({ "z-index" : zMax });
+            $(this).css({ "z-index": zMax });
         });
     },
 
-    toggleProp : function(key) {
+    toggleProp: function (key) {
         if (this.prop(key)) {
             $(this).prop(key, false);
         }
@@ -147,7 +155,7 @@ $.fn.extend({
         }
         return this;
     },
-    toggleAttr : function(key) {
+    toggleAttr: function (key) {
         if (this.attr(key)) {
             $(this).removeAttr(key);
         }
@@ -156,38 +164,29 @@ $.fn.extend({
         }
         return this;
     },
-    increment : function(step) {
-        return $(this).each(function() {
+    increment: function (step) {
+        return $(this).each(function () {
             var val = parseInt($(this).val());
             $(this).val((_.isNaN(val) ? 0 : val) + parseInt(step));
         });
-    }
+    },
+    isFormElement: function () {
+        return $(this).is('select,textarea,input');
+    },
 });
 
 $.extend({
-    eachProperties : function(ob, evaluated) {
+    eachProperties: function (ob, evaluated) {
+        var i = 0;
         for (var property in ob) {
             var isValid = !_.isUndefined(property) || !_.isEmpty(property);
             if (isValid && ob.hasOwnProperty(property)) {
-                evaluated.call(property);
+                evaluated.call(property, i);
             }
+            i++;
         }
-    },
-    byName : function(name, nextSelector) {
-        if (ExecutableHelper.IsNullOrEmpty(name)) {
-            name = '';
-        }
-        var selectorByName = '[name="{0}"]'.f(name.toString()
-            .replaceAll("[", "\\[")
-            .replaceAll("]", "\\]"));
-        if (ExecutableHelper.IsNullOrEmpty(nextSelector)) {
-            return $(selectorByName);
-        }
-        else {
-            return $(selectorByName + nextSelector);
-        }
-    },
-    eachFormElements : function(ob, evaluated) {
+    },    
+    eachFormElements: function (ob, evaluated) {
         var inputTag = 'input,select,textarea';
         var ignoreInputType = '[type="submit"],[type="reset"],[type="button"]';
         var targets;
@@ -199,16 +198,32 @@ $.extend({
             targets = allInput.length > 1 ? allInput : [allInput];
         }
 
-        $(targets).each(evaluated);
+        $(targets).each(function() {
+            var name = $(this).prop('name');
+
+            if (ExecutableHelper.IsNullOrEmpty(name)) {
+                return;
+            }
+
+            var isElement = ob.length === 1 && ob.isFormElement();
+            if (isElement) {
+                evaluated.call(ob);
+            }
+            else {
+                var byFind = ob.find(name.toSelectorAsName());
+                evaluated.call(byFind.length !== 0 ? byFind : ob.filter(name.toSelectorAsName()));
+            }
+        });
+        
     },
-    url : function(url) {
+    url: function (url) {
         return purl(url);
     }
 });
 
 //#region  Jquery cookies
 
-(function($, document) {
+(function ($, document) {
 
     var pluses = /\+/g;
 
@@ -216,7 +231,7 @@ $.extend({
         return decodeURIComponent(s.replace(pluses, ' '));
     }
 
-    var config = $.cookie = function(key, value, options) {
+    var config = $.cookie = function (key, value, options) {
 
         // write
         if (value !== undefined) {
@@ -258,7 +273,7 @@ $.extend({
 
     config.defaults = {};
 
-    $.removeCookie = function(key, options) {
+    $.removeCookie = function (key, options) {
         if ($.cookie(key) !== null) {
             $.cookie(key, null, options);
             return true;
@@ -268,7 +283,7 @@ $.extend({
 
 })(jQuery, document);
 
-navigator.Ie8 = (function() {
+navigator.Ie8 = (function () {
     var N = navigator.appName, ua = navigator.userAgent, tem;
     var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
     if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) {

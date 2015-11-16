@@ -7,9 +7,9 @@ function purl(existsUrl) {
         this.parseUri = function(url) {
 
             var uri = { attr : {}, param : {} };
-
-            if (url.contains('#')) {
-                uri.attr['fragment'] = url.split('#')[1].replace("!", "");
+            var hashSeparated = '#';           
+            if (url.contains(hashSeparated)) {
+                uri.attr['fragment'] = url.split(hashSeparated)[1].replace("!", "");
 
                 var current = this;
                 var fparams = {};
@@ -33,15 +33,16 @@ function purl(existsUrl) {
                 uri.param['fragment'] = {};
             }
 
-            if (url.split('#')[0].contains('?')) {
-                uri.param['query'] = this.parseString(url.split('#')[0].split('?')[1], '&');
+            if (url.split(hashSeparated)[0].contains('?')) {
+                uri.param['query'] = this.parseString(url.split(hashSeparated)[0].split('?')[1], '&');
             }
             else {
                 uri.param['query'] = {};
             }
 
-            // compile a 'base' domain attribute
-            uri.attr['base'] = url.split("#")[0].contains("?") ? url.split("?")[0] : url;
+            // compile a 'base' domain attribute            
+            uri.attr['base'] = url.split("#")[0].split('?')[0];
+            uri.attr['isWasHash'] = url.contains("#");
             uri.attr['fullBase'] = url.contains("#") ? url.split("#")[0] : url;
 
             return uri;
@@ -115,7 +116,7 @@ function purl(existsUrl) {
     }
 
     return {
-        data : new urlParser().parseUri(existsUrl || window.location.toString()),
+        data : new urlParser().parseUri(existsUrl),
 
         // get various attributes from the URI
         attr : function(attr) {
@@ -125,7 +126,7 @@ function purl(existsUrl) {
 
         // return query string parameters
         param : function(param) {
-            return typeof param !== 'undefined' ? this.data.param.query[param] : this.data.param.query;
+            return arguments.length != 0 ? ExecutableHelper.UrlDecode(this.data.param.query[param]) : this.data.param.query;
         },
         // return fragment parameters
         fparam : function(param, prefix) {
@@ -136,11 +137,11 @@ function purl(existsUrl) {
             var key = "{0}__{1}".f(prefix, param);
             return this.data.param.fragment.hasOwnProperty(key) ? ExecutableHelper.UrlDecode(this.data.param.fragment[key]) : '';
         },
-        
-        encodeAllParams: function () {
+
+        encodeAllParams : function() {
             var self = this;
             var params = self.fparam();
-            $.eachProperties(params, function () {
+            $.eachProperties(params, function() {
                 var key = this.split('__')[1];
                 var prefix = this.split('__')[0];
                 var value = params[this.toString()];
@@ -150,10 +151,15 @@ function purl(existsUrl) {
 
         // set fragment parameters
         setFparam : function(param, value, prefix) {
-            var fullParam = "{0}__{1}".f(prefix, param);
+            var fullParam = ExecutableHelper.IsNullOrEmpty(prefix) ? param : "{0}__{1}".f(prefix, param);
             return this.data.param.fragment[fullParam] = ExecutableHelper.UrlEncode(value);
-        }, 
-        
+        },
+
+        // set fragment parameters
+        setParam : function(param, value) {
+            return this.data.param.query[param] = ExecutableHelper.UrlEncode(value);
+        },
+
         // set fragment parameters
         removeFparam : function(param, prefix) {
             var fullParam = "{0}__{1}".f(prefix, param);
@@ -169,7 +175,7 @@ function purl(existsUrl) {
 
         fprefixes : function() {
             var uniquePrefixes = ['root'];
-            $.eachProperties(this.fparam(), function() {                
+            $.eachProperties(this.fparam(), function() {
                 var prefixKey = this.split('__')[0];
                 if (uniquePrefixes.contains(prefixKey)) {
                     return true;
@@ -206,48 +212,46 @@ function purl(existsUrl) {
             this.data.attr['fragment'] = clearValue;
         },
 
-        url : function() {
-            return this.data.attr['fullBase'];
-        },
-
         toHref : function() {
 
             var current = this;
 
+            var queryString = "?";
+            $.eachProperties(current.param(), function(i) {
+                queryString += "{0}{1}={2}".f(i === 0 ? '' : '&', this, ExecutableHelper.UrlEncode(current.param()[this]));
+            });
+
             var hash = '#!';
-
-            $.each(current.fprefixes(), function() {
-
+            $.each(current.fprefixes(), function(indexPrefix) {
+                hash += indexPrefix == 0 ? "" : "&";
                 var currentPrefix = this;
                 if (currentPrefix != 'root') {
                     hash += "{0}:".f(currentPrefix);
                 }
-                if (!_.isEmpty(current.furl(currentPrefix))) {
+                if (!ExecutableHelper.IsNullOrEmpty(current.furl(currentPrefix))) {
                     hash += current.furl(currentPrefix) + '?';
                 }
-
-                var queryParams = current.fparam();
-                $.eachProperties(queryParams, function() {
+                $.eachProperties(current.fparam(), function(i) {
                     var prefixKey = currentPrefix + "__";
                     if (!this.contains(prefixKey)) {
                         return true;
                     }
 
                     var clearKey = this.replace(prefixKey, '');
-                    if (_.isEmpty(clearKey)) {
+                    if (ExecutableHelper.IsNullOrEmpty(clearKey)) {
                         return true;
                     }
+                    var isFirstParameter = ['?', '!', ':'].contains(hash.charAt(hash.length - 1));
+                    hash += "{0}{1}={2}".f(isFirstParameter ? '' : "/", clearKey, ExecutableHelper.UrlEncode(current.fparam()[this]));
 
-                    hash += "{0}={1}/".f(clearKey, ExecutableHelper.UrlEncode(queryParams[this]));
                 });
 
-                if (hash.charAt(hash.length - 1) == '/') {
-                    hash = hash.cutLastChar(); //cut redundant '/'/
-                }
-                hash += "&";
             });
-            
-            return current.url() + hash.trim().cutLastChar();
+
+            queryString = queryString === '?' ? '' : queryString.trim();
+            hash = hash === '#!' && current.data.attr["isWasHash"] ? '' : hash.trim();
+            return current.data.attr['base'] + queryString + hash;
+
         }
     };
 

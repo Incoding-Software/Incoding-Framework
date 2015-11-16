@@ -70,14 +70,13 @@ namespace Incoding.MSpecContrib
         }
 
         public static void StubQuery<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TResult result, MessageExecuteSetting executeSetting = null)
-                where TQuery : QueryBase<TResult>
-                where TResult : class
+                where TQuery : QueryBase<TResult>                
         {
             dispatcher.Setup(r => r.Query(Pleasure.MockIt.IsStrong(query, dsl), Pleasure.MockIt.IsStrong(executeSetting)))
                       .Returns(result);
         }
 
-        public static void StubQueryAsThrow<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Exception exception, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult> where TResult : class
+        public static void StubQueryAsThrow<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Exception exception, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult>
         {
             dispatcher
                     .Setup(r => r.Query(Pleasure.MockIt.IsStrong(query), Pleasure.MockIt.IsStrong(executeSetting)))
@@ -88,7 +87,7 @@ namespace Incoding.MSpecContrib
 
         static void Push<TCommand>(this Mock<IDispatcher> dispatcher, Action<TCommand> verifyCommand, int callCount, bool asStub) where TCommand : CommandBase
         {
-            Func<IMessage<object>, bool> predicate = part =>
+            Func<IMessage, bool> predicate = part =>
                                                      {
                                                          try
                                                          {

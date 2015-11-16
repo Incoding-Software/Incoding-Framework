@@ -56,8 +56,8 @@ namespace Incoding.MvcContrib
 
         ITemplateSyntax<TNewModel> ForEach<TNewModel>(Expression<Func<TModel, IEnumerable<TNewModel>>> field);
 
-        ITemplateSyntax<TModel> Is(Expression<Func<TModel, object>> field);
+        IDisposable Is(Expression<Func<TModel, object>> field);
 
-        ITemplateSyntax<TModel> Not(Expression<Func<TModel, object>> field);
+        IDisposable Not(Expression<Func<TModel, object>> field);
     }
 }

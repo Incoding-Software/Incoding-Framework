@@ -19,13 +19,14 @@
 
         protected override void Execute()
         {
-            Dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
+            foreach (var delay in Repository.Query(whereSpecification: new DelayToSchedulerByUIDWhereSpec(UID)))
+            {
+                Dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
                                 {
-                                        Ids = Repository.Query(whereSpecification: new DelayToSchedulerByUIDWhereSpec(UID))
-                                                        .Select(r => r.Id)
-                                                        .ToArray(), 
+                                        Id = delay.Id,
                                         Status = Status
                                 });
+            }
         }
     }
 }

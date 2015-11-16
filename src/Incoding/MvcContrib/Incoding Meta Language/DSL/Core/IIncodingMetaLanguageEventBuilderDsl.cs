@@ -5,30 +5,31 @@ namespace Incoding.MvcContrib
     using System;
     using System.Linq.Expressions;
     using System.Web.Routing;
+    using JetBrains.Annotations;
 
     #endregion
 
     public interface IIncodingMetaLanguageEventBuilderDsl
     {
-        IIncodingMetaLanguageEventBuilderDsl Where<TModel>(Expression<Func<TModel, bool>> expression);
+        IIncodingMetaLanguageEventBuilderDsl Where<TModel>([NotNull] Expression<Func<TModel, bool>> expression);
 
-        IIncodingMetaLanguageEventBuilderDsl OnSuccess(Action<IIncodingMetaLanguageCallbackBodyDsl> action);
+        IIncodingMetaLanguageEventBuilderDsl OnSuccess([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        IIncodingMetaLanguageEventBuilderDsl OnError(Action<IIncodingMetaLanguageCallbackBodyDsl> action);
+        IIncodingMetaLanguageEventBuilderDsl OnError([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        IIncodingMetaLanguageEventBuilderDsl OnComplete(Action<IIncodingMetaLanguageCallbackBodyDsl> action);
+        IIncodingMetaLanguageEventBuilderDsl OnComplete([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        IIncodingMetaLanguageEventBuilderDsl OnBegin(Action<IIncodingMetaLanguageCallbackBodyDsl> action);
+        IIncodingMetaLanguageEventBuilderDsl OnBegin([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        IIncodingMetaLanguageEventBuilderDsl OnBreak(Action<IIncodingMetaLanguageCallbackBodyDsl> action);
+        IIncodingMetaLanguageEventBuilderDsl OnBreak([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null);
+        RouteValueDictionary AsHtmlAttributes([CanBeNull] object htmlAttributes = null);
 
         [Obsolete("Please use using(ToBeginTag) instead of string", false)]
         string AsStringAttributes(object htmlAttributes = null);
 
-        IIncodingMetaLanguageBindingDsl When(JqueryBind nextBind);
+        IIncodingMetaLanguageBindingDsl When([NotNull] JqueryBind nextBind);
 
-        IIncodingMetaLanguageBindingDsl When(string nextBind);
+        IIncodingMetaLanguageBindingDsl When([NotNull] string nextBind);
     }
 }

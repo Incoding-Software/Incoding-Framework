@@ -2,6 +2,6 @@
 {
     public interface ISettingCommandComposite
     {        
-        ISettingCommandComposite Quote<TResult>(IMessage<TResult> message, MessageExecuteSetting executeSetting = null);
+        ISettingCommandComposite Quote(IMessage message, MessageExecuteSetting executeSetting = null);
     }
 }

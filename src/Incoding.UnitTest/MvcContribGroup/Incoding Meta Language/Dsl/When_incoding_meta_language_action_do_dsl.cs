@@ -21,10 +21,20 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                             .GetExecutable<ExecutableDirectAction>()
                                                             ["onEventStatus"].ShouldEqual(1);
 
-        It should_be_revent_default = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                    .PreventDefault().Direct()
-                                                    .GetExecutable<ExecutableDirectAction>()
-                                                    ["onEventStatus"].ShouldEqual(2);
+        It should_be_prevent_default = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                     .PreventDefault()
+                                                     .Direct()
+                                                     .GetExecutable<ExecutableDirectAction>()
+                                                     ["onEventStatus"].ShouldEqual(2);
+
+        It should_be_prevent_default_without_direct = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                    .PreventDefault()
+                                                                    .ShouldNotBeNull();
+        
+        It should_be_stop_propagation_without_direct = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                    .StopPropagation()
+                                                                    .ShouldNotBeNull();
+                                                     
 
         It should_be_with_stop_propagation = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                            .DoWithStopPropagation().Direct()
@@ -37,17 +47,17 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                       ["onEventStatus"].ShouldEqual(3);
 
         It should_be_with_prevent_default_and_stop_propagation = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                               .DoWithPreventDefaultAndStopPropagation().Direct()
-                                                                               .GetExecutable<ExecutableDirectAction>()
-                                                                               ["onEventStatus"].ShouldEqual(4);   
-        
-        
-        It should_be_with_prevent_default_and_stop_propagation_new = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                               .PreventDefault()
-                                                                               .StopPropagation()
+                                                                               .DoWithPreventDefaultAndStopPropagation()
                                                                                .Direct()
                                                                                .GetExecutable<ExecutableDirectAction>()
                                                                                ["onEventStatus"].ShouldEqual(4);
+
+        It should_be_with_prevent_default_and_stop_propagation_new = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                                   .PreventDefault()
+                                                                                   .StopPropagation()
+                                                                                   .Direct()
+                                                                                   .GetExecutable<ExecutableDirectAction>()
+                                                                                   ["onEventStatus"].ShouldEqual(4);
 
         It should_be_prevent_default_and_stop_propagation = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                           .PreventDefault()
@@ -55,5 +65,31 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                           .Direct()
                                                                           .GetExecutable<ExecutableDirectAction>()
                                                                           ["onEventStatus"].ShouldEqual(4);
+
+        It should_be_multiple_prevent_default_then_none = () =>
+                                                          {
+                                                              var meta = new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                      .PreventDefault()
+                                                                      .Direct()
+                                                                      .OnSuccess(dsl => { })
+                                                                      .When(JqueryBind.Change)
+                                                                      .Submit();
+
+                                                              meta.GetExecutable<ExecutableDirectAction>()["onEventStatus"].ShouldEqual(2);
+                                                              meta.GetExecutable<ExecutableSubmitAction>()["onEventStatus"].ShouldEqual(1);
+                                                          };
+
+        It should_be_multiple_none_then_prevent_default = () =>
+                                                          {
+                                                              var meta = new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                      .Direct()
+                                                                      .OnSuccess(dsl => { })
+                                                                      .When(JqueryBind.Change)
+                                                                      .PreventDefault()
+                                                                      .Submit();
+
+                                                              meta.GetExecutable<ExecutableDirectAction>()["onEventStatus"].ShouldEqual(1);
+                                                              meta.GetExecutable<ExecutableSubmitAction>()["onEventStatus"].ShouldEqual(2);
+                                                          };
     }
 }

@@ -1,0 +1,15 @@
+﻿<h3>Insert After with parse IML</h3>
+@(Html.When(JqueryBind.InitIncoding)
+              .Direct()
+              .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(@<text>
+                @(Html.When(JqueryBind.Click)
+                                                                     .Direct()
+                                                                     .OnSuccess(bodyDsl => bodyDsl.Utilities.Window.Alert("Test"))
+                                                                     .AsHtmlAttributes()
+                                                                     .ToButton("Test"))
+            </text>).After())
+                              .AsHtmlAttributes()
+                              .ToDiv())
+<div></div>
+<div></div>
+<div></div>

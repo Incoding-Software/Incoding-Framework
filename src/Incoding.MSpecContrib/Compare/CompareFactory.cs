@@ -194,7 +194,7 @@ namespace Incoding.MSpecContrib
 
             if (actual == null || expected == null)
             {
-                FixedDifferent(SpecificationMessageRes.CompareFactory_Actual_Null_Or_Expected_Null.F(actual == null ? "is" : "not", expected == null ? "is" : "not"));
+                FixedDifferent(Resources.CompareFactory_Actual_Null_Or_Expected_Null.F(actual == null ? "is" : "not", expected == null ? "is" : "not"));
                 return;
             }
 
@@ -263,7 +263,7 @@ namespace Incoding.MSpecContrib
                 var expectedMember = expected.GetType().GetMember(expectedPropName, bindingFlags).LastOrDefault();
                 if (expectedMember == null)
                 {
-                    FixedDifferent(SpecificationMessageRes.CompareFactory_Not_Found_Property.F(actualMemberName, expected.GetType().Name));
+                    FixedDifferent(Resources.CompareFactory_Not_Found_Property.F(actualMemberName, expected.GetType().Name));
                     continue;
                 }
 
@@ -282,7 +282,7 @@ namespace Incoding.MSpecContrib
 
         void VerifyUniqueProperty(string property)
         {
-            Action throwException = () => { throw new SpecificationException(SpecificationMessageRes.CompareFactory_Has_Many_Configuration.F(property)); };
+            Action throwException = () => { throw new SpecificationException(Resources.CompareFactory_Has_Many_Configuration.F(property)); };
 
             if (this.forwards.ContainsKey(property))
                 throwException();

@@ -136,19 +136,19 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                            .ShouldEqual("||cookie*Prop||");
 
         It should_be_ajax_get = () => Selector.Incoding
-                                              .AjaxGet(Pleasure.Generator.Url())
+                                              .AjaxGet(Pleasure.Generator.Url().AppendToQueryString(new { id = "9847E8A2-6D73-450F-9BF6-075CB060E774".ToId() }))
                                               .ToString()
                                               .ShouldEqual("||ajax*{\"url\":\"http://sample.com\",\"type\":\"GET\",\"async\":false}||");
 
         It should_be_build_url = () => Selector.Incoding
                                                .BuildUrl("/Dispatcher/Query?type=IsQuery&id=123")
                                                .ToString()
-                                               .ShouldEqual("||buildurl*{\"data\":[{\"name\":\"type\",\"selector\":\"IsQuery\"},{\"name\":\"id\",\"selector\":\"123\"}],\"url\":\"/Dispatcher/Query\"}||");
+                                               .ShouldEqual("||buildurl*/Dispatcher/Query?type=IsQuery&id=123||");
 
         It should_be_to_build_url = () => "/Dispatcher/Query?type=IsQuery&id=123"
                                                   .ToBuildUrl()
                                                   .ToString()
-                                                  .ShouldEqual("||buildurl*{\"data\":[{\"name\":\"type\",\"selector\":\"IsQuery\"},{\"name\":\"id\",\"selector\":\"123\"}],\"url\":\"/Dispatcher/Query\"}||");
+                                                  .ShouldEqual("||buildurl*/Dispatcher/Query?type=IsQuery&id=123||");
 
         It should_be_string_to_ajax_get = () => Pleasure.Generator.Url()
                                                         .ToAjaxGet()
@@ -180,11 +180,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                            .ToString()
                                                            .ShouldEqual("||ajax*{\"url\":\"TheSameString\",\"type\":\"POST\",\"async\":false}||");
 
-        It should_be_ajax_get_with_data = () => Selector.Incoding
-                                                        .AjaxGet("/Dispatcher/Query?type=IsQuery&id=123")
-                                                        .ToString()
-                                                        .ShouldEqual("||ajax*{\"data\":[{\"name\":\"type\",\"selector\":\"IsQuery\"},{\"name\":\"id\",\"selector\":\"123\"}],\"url\":\"/Dispatcher/Query\",\"type\":\"GET\",\"async\":false}||");
-
+        
         It should_be_ajax_post = () => Selector.Incoding
                                                .AjaxPost(Pleasure.Generator.Url())
                                                .ToString()

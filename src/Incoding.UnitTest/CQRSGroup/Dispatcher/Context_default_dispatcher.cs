@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using System.Data;
     using Incoding.Block.IoC;
     using Incoding.CQRS;
@@ -14,6 +15,76 @@
 
     public class Context_default_dispatcher
     {
+        #region Fake classes
+
+        protected class FakeEntity : IncEntityBase { }
+
+        protected class CommandWithRepository : CommandBase
+        {
+            protected override void Execute()
+            {
+                Repository.Delete(new FakeEntity());
+            }
+        }
+
+        protected class QueryWithRepository : QueryBase<string>
+        {
+            protected override string ExecuteResult()
+            {
+                Repository.Delete(new FakeEntity());
+                return Pleasure.Generator.TheSameString();
+            }
+        }
+
+        protected class QueryWithThrowAndRepository : QueryBase<string>
+        {
+            protected override string ExecuteResult()
+            {
+                Repository.Delete(new FakeEntity());
+                throw new Exception();
+            }
+        }
+
+        protected class QueryWithoutRepository : QueryBase<string>
+        {
+            protected override string ExecuteResult()
+            {
+                return Pleasure.Generator.TheSameString();
+            }
+        }
+
+        protected class QueryWithThrowAndWithoutRepository : QueryBase<string>
+        {
+            protected override string ExecuteResult()
+            {
+                throw new Exception();
+            }
+        }
+
+        protected class CommandWithoutRepository : CommandBase
+        {
+            protected override void Execute() { }
+        }
+
+        protected class CommandWithThrowAndRepository : CommandBase
+        {
+            protected override void Execute()
+            {
+                Repository.Delete(new FakeEntity());
+                throw new Exception();
+            }
+        }
+
+        protected class CommandWithThrow : CommandBase
+        {
+            protected override void Execute()
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        #endregion
+
         #region Static Fields
 
         protected static Mock<IUnitOfWork> unitOfWork;
@@ -31,11 +102,11 @@
         protected Context_default_dispatcher()
         {
             unitOfWorkFactory = Pleasure.MockStrict<IUnitOfWorkFactory>(unitOfWorkFactoryMock =>
-                                                                            {
-                                                                                unitOfWork = new Mock<IUnitOfWork>();
-                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadCommitted, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
-                                                                                unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadUncommitted, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
-                                                                            });
+                                                                        {
+                                                                            unitOfWork = Pleasure.Mock<IUnitOfWork>(mock => mock.Setup(r => r.GetRepository()).Returns(Pleasure.MockAsObject<IRepository>()));
+                                                                            unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadCommitted, true, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
+                                                                            unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadUncommitted, false, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
+                                                                        });
             IoCFactory.Instance.StubTryResolve(unitOfWorkFactory.Object);
 
             eventBroker = Pleasure.Mock<IEventBroker>();

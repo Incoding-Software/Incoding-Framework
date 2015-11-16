@@ -107,9 +107,9 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_incoding_fail_with_data = () => IncodingResult
                                                              .Error(Pleasure.Generator.TheSameString())
-                                                             .ShouldBeIncodingFail<string>(s => s.ShouldEqual(Pleasure.Generator.TheSameString()));
+                                                             .ShouldBeIncodingError<string>(s => s.ShouldEqual(Pleasure.Generator.TheSameString()));
 
-        It should_be_incoding_fail = () => IncodingResult.Error().ShouldBeIncodingFail();
+        It should_be_incoding_fail = () => IncodingResult.Error().ShouldBeIncodingError();
 
         It should_be_incoding_redirect_to = () => IncodingResult
                                                           .RedirectTo(Pleasure.Generator.TheSameString())

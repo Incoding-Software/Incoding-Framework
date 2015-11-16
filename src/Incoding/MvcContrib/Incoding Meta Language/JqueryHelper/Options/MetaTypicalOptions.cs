@@ -11,7 +11,7 @@ namespace Incoding.MvcContrib
         #region Constructors
 
         protected MetaTypicalOptions(MetaTypicalOptions @default)
-        {
+        {            
             foreach (var item in @default)
                 Add(item.Key, item.Value);
         }

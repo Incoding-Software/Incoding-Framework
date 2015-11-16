@@ -2,6 +2,7 @@ namespace Incoding.Utilities
 {
     #region << Using >>
 
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Net;
     using System.Net.Mail;
@@ -11,12 +12,32 @@ namespace Incoding.Utilities
     #endregion
 
     ////ncrunch: no coverage start
-    [UsedImplicitly, ExcludeFromCodeCoverage]
+    [UsedImplicitly, ExcludeFromCodeCoverage, Obsolete("Please use SendEmailCommand")]
     public class NetEmailSender : IEmailSender
     {
         #region Fields
 
         readonly SmtpClient smtpClient;
+
+        #endregion
+
+        #region IEmailSender Members
+
+        public void Send(MailMessage mailMessage)
+        {
+            Guard.NotNull("mailMessage", mailMessage);
+            this.smtpClient.Send(mailMessage);
+        }
+
+        #endregion
+
+        #region Disposable
+
+        public void Dispose()
+        {
+            this.smtpClient
+                .Do(r => r.Dispose());
+        }
 
         #endregion
 
@@ -38,26 +59,6 @@ namespace Incoding.Utilities
                 : this(host, port, enableSsl)
         {
             this.smtpClient.Credentials = credential;
-        }
-
-        #endregion
-
-        #region IEmailSender Members
-
-        public void Send(MailMessage mailMessage)
-        {
-            Guard.NotNull("mailMessage", mailMessage);
-            this.smtpClient.Send(mailMessage);
-        }
-
-        #endregion
-
-        #region Disposable
-
-        public void Dispose()
-        {
-            this.smtpClient
-                .Do(r => r.Dispose());
         }
 
         #endregion

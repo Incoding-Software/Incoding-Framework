@@ -7,47 +7,47 @@
 <head>
     @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
     @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
-    
+
 
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery-{0}.min.js".F(Model.JqueryVersion)))
     @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
-    
-    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))    
-    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))        
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))    
-    @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))    
-    @Html.Incoding().Script(Url.Content("~/Scripts/dust-full-0.3.0.js"))    
-    
+    @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/dust-full-0.3.0.js"))
 
-@*            <script src="@Url.Content("~/Scripts/incoding.url.js")" data-cover> </script>
+
+    @*            <script src="@Url.Content("~/Scripts/incoding.url.js")" data-cover> </script>
     <script src="@Url.Content("~/Scripts/incoding.core.js")" data-cover> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")" data-cover> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")" data-cover> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")" data-cover> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")" data-cover> </script>  *@
-    
-    <script src="@Url.Content("~/Scripts/incoding.url.js")" > </script>
-    <script src="@Url.Content("~/Scripts/incoding.core.js")" > </script>
+
+    <script src="@Url.Content("~/Scripts/incoding.url.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.core.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>
-    <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")" > </script>
-    <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")" > </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")"> </script>
-   
-  
-    @Html.Incoding().Script(Url.Content("~/Scripts/JSON2.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-jquery.js"))  
-    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-html.js"))      
-    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.mockjax.js"))  
-    
+
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/JSON2.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-jquery.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-html.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.mockjax.js"))
+
     <script src="@Url.Content("~/Scripts/blanket.min.js")" data-cover-adapter="@Url.Content("~/Scripts/blanket.jasmine.adapter.js")"> </script>
-         
-    @Html.Incoding().Script(Url.Content("~/Scripts/inc-specifications.js")) 
-    
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/inc-specifications.js"))
+
 
     <script type="text/javascript">
         (function() {
@@ -80,168 +80,173 @@
 </head>
 
 <body>
-    <div id="my-fixture">            
-    </div>    
-    @using (Html.Incoding().ScriptTemplate<string>("sandboxScript"))
+<div id="my-fixture">
+</div>
+@using (Html.Incoding().ScriptTemplate<string>("sandboxScript"))
+{
+    <div class="form-row">
+        <input type="hidden" name="Input.ValidationProperties[{{Index}}].Value" value="{{Value}}"/>
+        <label class="form-label">{{Value}}</label>
+        <input class="form-item input-elastic" type="text" name="Input.ValidationProperties[{{Index}}].Text" value="{{Text}}"/>
+        <span class="tickLabel">{{Title}}</span>
+    </div>
+}
+
+<div id="suportedExectuable">
+    @foreach (var item in Model.AllSupportedMeta)
     {
-        <div class="form-row">
-            <input type="hidden" name="Input.ValidationProperties[{{Index}}].Value" value="{{Value}}" />
-            <label class="form-label">{{Value}}</label>
-            <input class="form-item input-elastic"  type="text" name="Input.ValidationProperties[{{Index}}].Text" value="{{Text}}" />
-            <span class="tickLabel">{{Title}}</span>
-        </div>
+        @Html.Hidden("id", item)
     }
-        
-    <div id="suportedExectuable">
-        @foreach (var item in Model.AllSupportedMeta)
-        {
-            @Html.Hidden("id", item)
-        }
-    </div>
-    <div id="incSpecialBinds">
-        @foreach (var item in Model.IncSpecialBinds)
-        {
-            @Html.Hidden("id", item)
-        }
-    </div>
-    <div id="supportedConditional">
-        @foreach (var item in Model.AllSupportedConditional)
-        {
-            @Html.Hidden("id", item)
-        }
-    </div>
-        
-
-        
-    <input type="hidden" value="@(new ExecutableDirectAction(string.Empty).ToJsonString())" id="ExecutableDirectAction"/>
-    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Success("data").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithSucces"/>
-    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Error("data").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithError"/>
-    <input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.RedirectTo("redirectTo").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithRedirect"/>
-    
-    
-    <input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Self(), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)).ToJsonString())" id="ExecutableSubmitAction"/>
-    <input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Self(), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)
-                                                                                         {
-                                                                                                 Url = "http://localhost:64225/Submit/Get?CustomParam=123",
-                                                                                                 Type = HttpVerbs.Get
-                                                                                         }).ToJsonString())" id="ExecutableSubmitActionWithUrl"/>
-    <input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Id("formSubmit"), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)).ToJsonString())" id="ExecutableSubmitActionWithForm"/>
-    
-
-    <input type="hidden" value="@(new ExecutableAjaxAction(false, "", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test" }).ToJsonString())" id="ExecutableAjaxActionWithoutData"/>
-    <input type="hidden" value="@(new ExecutableAjaxAction(false, "", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test?Name=Value" }).ToJsonString())" id="ExecutableAjaxAction"/>
-    <input type="hidden" value="@(new ExecutableAjaxAction(true, "root", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "?Name=Value" }).ToJsonString())" id="ExecutableAjaxActionWithHash"/>
-    <input type="hidden" value="@(new ExecutableAjaxAction(true, "root", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test?Name=Value" }).ToJsonString())" id="ExecutableAjaxActionWithOnlyQueryStringHash"/>
-    
-
-    <input type="hidden" value="@(new ExecutableEval("newFakeEvalVariable = this.result;").ToJsonString())" id="ExecutableEval"/>
-    <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "arg1", "arg2", "arg3" }, string.Empty).ToJsonString())" id="ExecutableEvalMethod"/>
-    <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "new title", }, string.Empty).ToJsonString())" id="ExecutableEvalMethodWithContext"/>
-    
-    <input type="hidden" value="@(new ExecutableTrigger("invoke", string.Empty).ToJsonString())" id="ExecutableTrigger"/>
-    <input type="hidden" value="@(new ExecutableTrigger("invoke", "is").ToJsonString())" id="ExecutableTriggerWithProperty"/>
-
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false,string.Empty).ToJsonString())" id="ExecutableInsert"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false,"Content").ToJsonString())" id="ExecutableInsertWithResult"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false,string.Empty).ToJsonString())" id="ExecutableInsertWithProperty"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true,string.Empty).ToJsonString())" id="ExecutableInsertWithPrepare"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false,string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
-    <input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })), false,string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
+</div>
+<div id="incSpecialBinds">
+    @foreach (var item in Model.IncSpecialBinds)
+    {
+        @Html.Hidden("id", item)
+    }
+</div>
+<div id="supportedConditional">
+    @foreach (var item in Model.AllSupportedConditional)
+    {
+        @Html.Hidden("id", item)
+    }
+</div>
 
 
-    <input type="hidden" value="@(new ExecutableForm("clear").ToJsonString())" id="ExecutableFormClear"/>
-    <input type="hidden" value="@(new ExecutableForm("reset").ToJsonString())" id="ExecutableFormReset"/>
-    
-    <input type="hidden" value="@(new ExecutableBind("attach", "meta", string.Empty).ToJsonString())" id="ExecutableBindAttach"/>
-    <input type="hidden" value="@(new ExecutableBind("detach", string.Empty, "click").ToJsonString())" id="ExecutableBindDetach"/>
-    <input type="hidden" value="@(new ExecutableBind("detach", string.Empty, string.Empty).ToJsonString())" id="ExecutableBindDetachAll"/>
-
-    <input type="hidden" value="@(new ExecutableStoreFetch("hash", "root").ToJsonString())" id="ExecutableStoreFetch"/>
-    <input type="hidden" value="@(new ExecutableStoreFetch("hash", "search").ToJsonString())" id="ExecutableStoreFetchWithPrefix"/>
-
-    <input type="hidden" value="@(new ExecutableStoreInsert("hash", false, "root").ToJsonString())" id="ExecutableStoreInsert"/>
-    <input type="hidden" value="@(new ExecutableStoreInsert("hash", false, "search").ToJsonString())" id="ExecutableStoreInsertWithPrefix"/>
-    <input type="hidden" value="@(new ExecutableStoreInsert("hash", true, "root").ToJsonString())" id="ExecutableStoreInsertWithReplace"/>
-
-    <input type="hidden" value="@(new ConditionalEval("false", true).GetData().ToJsonString())" id="ConditionalEval"/>
-    <input type="hidden" value="@(new ConditionalEval("data", true).GetData().ToJsonString())" id="ConditionalEvalData"/>
-
-    <input type="hidden" value="@(new ConditionalIs(() => Selector.Jquery.Id("id") == 5, true).GetData().ToJsonString())" id="ConditionalIs"/>
-    <input type="hidden" value="@(new ConditionalData<KeyValueVm>(container => container.Text == "123", true).GetData().ToJsonString())" id="ConditionalData"/>    
-    <input type="hidden" value="@(new ConditionalData<string>(container => container == "123", true).GetData().ToJsonString())" id="ConditionalDataWihtoutProperty"/>
-          
-    <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateRemove"/>    
-    <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "search", } }).ToJsonString())" id="ExecutableStoreManipulateRemoveWithPrefix"/>        
-    <input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "set", key = "IncHash", value = Selector.Jquery.Id("incSelector").ToString(), prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateSet"/>    
-    
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(1)" id="Target_Increment"/>
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(-1)" id="Target_Decrement"/>             
-    <input type="hidden" value="@JavaScriptCodeTemplate.Target_Val" id="Target_Val"/>             
-    <input type="hidden" value="@JavaScriptCodeTemplate.Document_SetTitle" id="Document_SetTitle"/>        
-    <input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>       
-    
-    
-    <input type="hidden" value="@Selector.JS.DateTime.GetFullYear()" id="Selector_Js_DateTime_GetFullYear"/> 
-    <input type="hidden" value="@Selector.JS.DateTime.GetDay()" id="Selector_Js_DateTime_GetDay"/> 
-    <input type="hidden" value="@Selector.JS.DateTime.GetTimezoneOffset()" id="Selector_Js_DateTime_GetTimezoneOffset"/> 
-    <input type="hidden" value="@Selector.JS.DateTime.ToDateString()" id="Selector_Js_DateTime_ToDateString"/> 
-    <input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/>
+<input type="hidden" value="@(new ExecutableDirectAction(string.Empty).ToJsonString())" id="ExecutableDirectAction"/>
+<input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Success("data").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithSucces"/>
+<input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.Error("data").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithError"/>
+<input type="hidden" value="@(new ExecutableDirectAction(IncodingResult.RedirectTo("redirectTo").Data.ToJsonString()).ToJsonString())" id="ExecutableDirectActionWithRedirect"/>
 
 
-    <input type="hidden" value="@(new ValueSelector("aws"))" id="Selector_Value_String"/> 
+<input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Self(), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)).ToJsonString())" id="ExecutableSubmitAction"/>
+<input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Self(), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)
+                                                                                 {
+                                                                                         Url = "http://localhost:64225/Submit/Get?CustomParam=123",
+                                                                                         Type = HttpVerbs.Get
+                                                                                 }).ToJsonString())" id="ExecutableSubmitActionWithUrl"/>
+<input type="hidden" value="@(new ExecutableSubmitAction(Selector.Jquery.Id("formSubmit"), new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default)).ToJsonString())" id="ExecutableSubmitActionWithForm"/>
 
-<input type="hidden" value="@Selector.Event.ScreenX" id="Selector_Event_ScreenX"/> 
-    <input type="hidden" value="@Selector.Event.ScreenY" id="Selector_Event_ScreenY"/> 
-    <input type="hidden" value="@Selector.Event.Type" id="Selector_Event_Type"/> 
-    <input type="hidden" value="@Selector.Event.PageX" id="Selector_Event_PageX"/> 
-    <input type="hidden" value="@Selector.Event.PageY" id="Selector_Event_PageY"/> 
-    <input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/>
+
+<input type="hidden" value="@(new ExecutableAjaxAction(false, "", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test" }).ToJsonString())" id="ExecutableAjaxActionWithoutData"/>
+<input type="hidden" value="@(new ExecutableAjaxAction(false, "", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test?Name=Value" }).ToJsonString())" id="ExecutableAjaxAction"/>
+<input type="hidden" value="@(new ExecutableAjaxAction(false, "", new JqueryAjaxOptions(JqueryAjaxOptions.Default)
+                                                                  {
+                                                                          Data = new RouteValueDictionary(new { Value2 = "Value2" }),
+                                                                          Url = "Url/Test?Name=Value"
+                                                                  }).ToJsonString())" id="ExecutableAjaxActionWithData"/>
+<input type="hidden" value="@(new ExecutableAjaxAction(true, "root", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "?Name=Value" }).ToJsonString())" id="ExecutableAjaxActionWithHash"/>
+<input type="hidden" value="@(new ExecutableAjaxAction(true, "root", new JqueryAjaxOptions(JqueryAjaxOptions.Default) { Url = "Url/Test?Name=Value" }).ToJsonString())" id="ExecutableAjaxActionWithOnlyQueryStringHash"/>
+
+
+<input type="hidden" value="@(new ExecutableEval("newFakeEvalVariable = this.result;").ToJsonString())" id="ExecutableEval"/>
+<input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "arg1", "arg2", "arg3" }, string.Empty).ToJsonString())" id="ExecutableEvalMethod"/>
+<input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "new title", }, string.Empty).ToJsonString())" id="ExecutableEvalMethodWithContext"/>
+
+<input type="hidden" value="@(new ExecutableTrigger("invoke", string.Empty).ToJsonString())" id="ExecutableTrigger"/>
+<input type="hidden" value="@(new ExecutableTrigger("invoke", "is").ToJsonString())" id="ExecutableTriggerWithProperty"/>
+
+<input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsert"/>
+<input type="hidden" value="@(new ExecutableInsert("after", string.Empty, string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertAfter"/>
+<input type="hidden" value="@(new ExecutableInsert("before", string.Empty, string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertBefore"/>
+<input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, false, "Content").ToJsonString())" id="ExecutableInsertWithResult"/>
+<input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertWithProperty"/>
+<input type="hidden" value="@(new ExecutableInsert("html", string.Empty, string.Empty, true, string.Empty).ToJsonString())" id="ExecutableInsertWithPrepare"/>
+<input type="hidden" value="@(new ExecutableInsert("html", string.Empty, "selectorId", false, string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateSelector"/>
+<input type="hidden" value="@(new ExecutableInsert("html", string.Empty, Selector.Incoding.AjaxGet(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })), false, string.Empty).ToJsonString())" id="ExecutableInsertWithTemplateAjax"/>
+
+
+<input type="hidden" value="@(new ExecutableForm("clear").ToJsonString())" id="ExecutableFormClear"/>
+<input type="hidden" value="@(new ExecutableForm("reset").ToJsonString())" id="ExecutableFormReset"/>
+
+<input type="hidden" value="@(new ExecutableBind("attach", "meta", string.Empty).ToJsonString())" id="ExecutableBindAttach"/>
+<input type="hidden" value="@(new ExecutableBind("detach", string.Empty, "click").ToJsonString())" id="ExecutableBindDetach"/>
+<input type="hidden" value="@(new ExecutableBind("detach", string.Empty, string.Empty).ToJsonString())" id="ExecutableBindDetachAll"/>
+
+<input type="hidden" value="@(new ExecutableStoreFetch("hash", "root").ToJsonString())" id="ExecutableStoreFetch"/>
+<input type="hidden" value="@(new ExecutableStoreFetch("hash", "search").ToJsonString())" id="ExecutableStoreFetchWithPrefix"/>
+
+<input type="hidden" value="@(new ExecutableStoreInsert("hash", false, "root").ToJsonString())" id="ExecutableStoreInsert"/>
+<input type="hidden" value="@(new ExecutableStoreInsert("hash", false, "search").ToJsonString())" id="ExecutableStoreInsertWithPrefix"/>
+<input type="hidden" value="@(new ExecutableStoreInsert("hash", true, "root").ToJsonString())" id="ExecutableStoreInsertWithReplace"/>
+
+<input type="hidden" value="@(new ConditionalEval("false", true).GetData().ToJsonString())" id="ConditionalEval"/>
+<input type="hidden" value="@(new ConditionalEval("data", true).GetData().ToJsonString())" id="ConditionalEvalData"/>
+
+<input type="hidden" value="@(new ConditionalIs(() => Selector.Jquery.Id("id") == 5, true).GetData().ToJsonString())" id="ConditionalIs"/>
+<input type="hidden" value="@(new ConditionalData<KeyValueVm>(container => container.Text == "123", true).GetData().ToJsonString())" id="ConditionalData"/>
+<input type="hidden" value="@(new ConditionalData<string>(container => container == "123", true).GetData().ToJsonString())" id="ConditionalDataWihtoutProperty"/>
+
+<input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateRemove"/>
+<input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "remove", key = "IncHash", prefix = "search", } }).ToJsonString())" id="ExecutableStoreManipulateRemoveWithPrefix"/>
+<input type="hidden" value="@(new ExecutableStoreManipulate("hash", new List<object> { new { verb = "set", key = "IncHash", value = Selector.Jquery.Id("incSelector").ToString(), prefix = "root" } }).ToJsonString())" id="ExecutableStoreManipulateSet"/>
+
+<input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(1)" id="Target_Increment"/>
+<input type="hidden" value="@JavaScriptCodeTemplate.Target_Increment.F(-1)" id="Target_Decrement"/>
+<input type="hidden" value="@JavaScriptCodeTemplate.Target_Val" id="Target_Val"/>
+<input type="hidden" value="@JavaScriptCodeTemplate.Document_SetTitle" id="Document_SetTitle"/>
+<input type="hidden" value="@JavaScriptCodeTemplate.Window_Clear_Interval" id="Window_Clear_Interval"/>
+
+
+<input type="hidden" value="@Selector.JS.DateTime.GetFullYear()" id="Selector_Js_DateTime_GetFullYear"/>
+<input type="hidden" value="@Selector.JS.DateTime.GetDay()" id="Selector_Js_DateTime_GetDay"/>
+<input type="hidden" value="@Selector.JS.DateTime.GetTimezoneOffset()" id="Selector_Js_DateTime_GetTimezoneOffset"/>
+<input type="hidden" value="@Selector.JS.DateTime.ToDateString()" id="Selector_Js_DateTime_ToDateString"/>
+<input type="hidden" value="@Selector.JS.DateTime.ToTimeString()" id="Selector_Js_DateTime_ToTimeString"/>
+
+
+<input type="hidden" value="@(new ValueSelector("aws"))" id="Selector_Value_String"/>
+
+<input type="hidden" value="@Selector.Event.ScreenX" id="Selector_Event_ScreenX"/>
+<input type="hidden" value="@Selector.Event.ScreenY" id="Selector_Event_ScreenY"/>
+<input type="hidden" value="@Selector.Event.Type" id="Selector_Event_Type"/>
+<input type="hidden" value="@Selector.Event.PageX" id="Selector_Event_PageX"/>
+<input type="hidden" value="@Selector.Event.PageY" id="Selector_Event_PageY"/>
+<input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/>
 <input type="hidden" value="@Selector.Event.Which" id="Selector_Event_Which"/>
 
 
-<input type="hidden" value="@(Selector.Result)" id="Selector_Result_For"/> 
-<input type="hidden" value="@(Selector.Result.For<KeyValueVm>(r=>r.Text))" id="Selector_Result_For_Property"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inner.Value))" id="Selector_Result_For_Complexity"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel[]>(r=>r[0].Value))" id="Selector_Result_For_Array_By_Index_As_Self"/> 
-<input type="hidden" value="@(Selector.Result.For<string[]>(r=>r[0]))" id="Selector_Result_For_Array_By_Index_As_Self_String"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners[1].Value))" id="Selector_Result_For_Array_By_Index"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners.Select(s=>s.Value)))" id="Selector_Result_For_Array_Select"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Strings))" id="Selector_Result_For_Array_String"/> 
-<input type="hidden" value="@(Selector.Result.For<FakeModel>(r=>r.Inners.Any(model => model.Value == Selector.Jquery.Id("sandboxTextBox"))))" id="Selector_Result_For_Array_Any"/> 
+<input type="hidden" value="@(Selector.Result)" id="Selector_Result_For"/>
+<input type="hidden" value="@(Selector.Result.For<KeyValueVm>(r => r.Text))" id="Selector_Result_For_Property"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r => r.Inner.Value))" id="Selector_Result_For_Complexity"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel[]>(r => r[0].Value))" id="Selector_Result_For_Array_By_Index_As_Self"/>
+<input type="hidden" value="@(Selector.Result.For<string[]>(r => r[0]))" id="Selector_Result_For_Array_By_Index_As_Self_String"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r => r.Inners[1].Value))" id="Selector_Result_For_Array_By_Index"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r => r.Inners.Select(s => s.Value)))" id="Selector_Result_For_Array_Select"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r => r.Strings))" id="Selector_Result_For_Array_String"/>
+<input type="hidden" value="@(Selector.Result.For<FakeModel>(r => r.Inners.Any(model => model.Value == Selector.Jquery.Id("sandboxTextBox"))))" id="Selector_Result_For_Array_Any"/>
 
-    
 
-    
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Accuracy" id="Selector_Js_Navigator_Accuracy"/> 
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.AltitudeAccuracy" id="Selector_Js_Navigator_AltitudeAccuracy"/> 
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Heading" id="Selector_Js_Navigator_Heading"/> 
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Latitude" id="Selector_Js_Navigator_Latitude"/> 
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Longitude" id="Selector_Js_Navigator_Longitude"/> 
-    <input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Speed" id="Selector_Js_Navigator_Speed"/> 
-        
-    <input type="hidden" value="@Selector.JS.Location.Href" id="Selector_Js_Location_Href"/> 
-    <input type="hidden" value="@Selector.JS.Location.Host" id="Selector_Js_Location_Host"/> 
-    <input type="hidden" value="@Selector.JS.Location.HostName" id="Selector_Js_Location_HostName"/> 
-    <input type="hidden" value="@Selector.JS.Location.PathName" id="Selector_Js_Location_PathName"/> 
-    <input type="hidden" value="@Selector.JS.Location.Port" id="Selector_Js_Location_Port"/> 
-    <input type="hidden" value="@Selector.JS.Location.Protocol" id="Selector_Js_Location_Protocol"/> 
-    <input type="hidden" value="@Selector.JS.Location.Search" id="Selector_Js_Location_Search"/> 
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Accuracy" id="Selector_Js_Navigator_Accuracy"/>
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.AltitudeAccuracy" id="Selector_Js_Navigator_AltitudeAccuracy"/>
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Heading" id="Selector_Js_Navigator_Heading"/>
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Latitude" id="Selector_Js_Navigator_Latitude"/>
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Longitude" id="Selector_Js_Navigator_Longitude"/>
+<input type="hidden" value="@Selector.JS.Navigator.CurrentPosition.Speed" id="Selector_Js_Navigator_Speed"/>
 
-    <input type="hidden" value="@Selector.Incoding.Cookie("incodingParam")" id="Selector_Incoding_Cookie"/>     
-    <input type="hidden" value="@Selector.Incoding.HashUrl()" id="Selector_Incoding_Hash"/>        
-    <input type="hidden" value="@Selector.Incoding.QueryString("incodingParam")" id="Selector_Incoding_QueryString"/>     
-    <input type="hidden" value="@Selector.Incoding.QueryString("incodingParam2")" id="Selector_Incoding_QueryString_Undefined"/>         
-    <input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam")" id="Selector_Incoding_HashQueryString"/>     
-    <input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam2")" id="Selector_Incoding_HashQueryString_Undefined"/> 
-    
-    <input type="hidden" value="@(Selector.Incoding.Ajax(options =>
-                                                             {
-                                                                 options.Cache = false;
-                                                                 options.Url = Url.Action("GetValue", "Jasmine", new
-                                                                                                                     {
-                                                                                                                             Value = Selector.Jquery.Id("sandboxTextBox")
-                                                                                                                     });
-                                                             }))" id="Selector_Incoding_Ajax"/>            
-    <input type="hidden" value="@(Selector.Incoding.BuildUrl(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") })))" id="Selector_Incoding_Build_Url"/>    
-    
+<input type="hidden" value="@Selector.JS.Location.Href" id="Selector_Js_Location_Href"/>
+<input type="hidden" value="@Selector.JS.Location.Host" id="Selector_Js_Location_Host"/>
+<input type="hidden" value="@Selector.JS.Location.HostName" id="Selector_Js_Location_HostName"/>
+<input type="hidden" value="@Selector.JS.Location.PathName" id="Selector_Js_Location_PathName"/>
+<input type="hidden" value="@Selector.JS.Location.Port" id="Selector_Js_Location_Port"/>
+<input type="hidden" value="@Selector.JS.Location.Protocol" id="Selector_Js_Location_Protocol"/>
+<input type="hidden" value="@Selector.JS.Location.Search" id="Selector_Js_Location_Search"/>
+
+<input type="hidden" value="@Selector.Incoding.Cookie("incodingParam")" id="Selector_Incoding_Cookie"/>
+<input type="hidden" value="@Selector.Incoding.HashUrl()" id="Selector_Incoding_Hash"/>
+<input type="hidden" value="@Selector.Incoding.QueryString("incodingParam")" id="Selector_Incoding_QueryString"/>
+<input type="hidden" value="@Selector.Incoding.QueryString("incodingParam2")" id="Selector_Incoding_QueryString_Undefined"/>
+<input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam")" id="Selector_Incoding_HashQueryString"/>
+<input type="hidden" value="@Selector.Incoding.HashQueryString("incodingParam2")" id="Selector_Incoding_HashQueryString_Undefined"/>
+
+<input type="hidden" value="@(Selector.Incoding.Ajax(options =>
+                                                     {
+                                                         options.Cache = false;
+                                                         options.Url = Url.Action("GetValue", "Jasmine", new
+                                                                                                         {
+                                                                                                                 Value = Selector.Jquery.Id("sandboxTextBox")
+                                                                                                         });
+                                                     }))" id="Selector_Incoding_Ajax"/>
+
+<input type="hidden" value="@(Url.Action("GetValue", "Jasmine", new { Value = Selector.Jquery.Id("sandboxTextBox") }).AppendToHashQueryString(new { Hash = Selector.Jquery.Id("sandboxHidden") }).ToBuildUrl())" id="Selector_Incoding_Build_Url"/>
+
 </body>

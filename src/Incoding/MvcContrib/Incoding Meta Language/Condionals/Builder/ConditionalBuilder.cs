@@ -71,9 +71,10 @@
                 bool isAnd = nodeType.IsAnyEquals(ExpressionType.And, ExpressionType.AndAlso);
                 IsRegistry(binary.Left, isAnd);
                 IsRegistry(binary.Right, isAnd);
+                return;
             }
-            else
-                Registry(new ConditionalIs(expression, setAnd));
+
+            Registry(new ConditionalIs(expression, setAnd));
         }
 
         public IConditionalBinaryBuilder Is(Expression<Func<bool>> expression)

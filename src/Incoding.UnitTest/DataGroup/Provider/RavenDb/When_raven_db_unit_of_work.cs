@@ -5,6 +5,7 @@
     using System;
     using System.Data;
     using Incoding.Data;
+    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Moq;
@@ -20,9 +21,8 @@
 
         static void Run(Action<RavenDbUnitOfWork, Mock<IDocumentSession>> action)
         {
-            var session = Pleasure.MockStrict<IDocumentSession>();
-            var sessionFactory = Pleasure.MockStrictAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.Open(Pleasure.MockIt.IsNotNull<string>())).Returns(session.Object));
-            var work = new RavenDbUnitOfWork(sessionFactory, Pleasure.Generator.String(), IsolationLevel.ReadCommitted);
+            var session = Pleasure.Mock<IDocumentSession>();
+            var work = new RavenDbUnitOfWork(session.Object, IsolationLevel.ReadCommitted, true);
             action(work, session);
         }
 
@@ -38,8 +38,10 @@
 
         It should_be_dispose_without_open = () => Run((unitOfWork, session) =>
                                                       {
+                                                          unitOfWork.TryGetValue("disposed").ShouldEqual(false);
                                                           unitOfWork.Dispose();
-                                                          session.Verify(r => r.Dispose(), Times.Never());
+                                                          session.Verify(r => r.Dispose(), Times.Once());
+                                                          unitOfWork.TryGetValue("disposed").ShouldEqual(true);
                                                       });
 
         It should_be_flush = () => Run((unitOfWork, session) =>

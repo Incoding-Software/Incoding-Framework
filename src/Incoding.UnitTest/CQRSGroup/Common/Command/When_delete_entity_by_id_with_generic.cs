@@ -36,8 +36,7 @@
 
                                       mockCommand = MockCommand<DeleteEntityByIdCommand<FakeEntity>>
                                               .When(command)
-                                              .StubGetById(command.Id, fakeEntity)
-                                              .StubPublish<OnBeforeDeleteEntityEvent>(@event => @event.Entity.ShouldEqualWeak(fakeEntity));
+                                              .StubGetById(command.Id, fakeEntity);
                                   };
 
         Because of = () => mockCommand.Original.Execute();

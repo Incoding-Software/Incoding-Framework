@@ -32,11 +32,8 @@
                                           .When(command)
                                           .StubQuery(whereSpecification: new DelayToSchedulerByUIDWhereSpec(command.UID), 
                                                      entities: entities)
-                                          .StubPush(new ChangeDelayToSchedulerStatusCommand()
-                                                    {
-                                                            Ids = new[] { entities[0].Id, entities[1].Id }, 
-                                                            Status = command.Status
-                                                    });
+                                          .StubPush(new ChangeDelayToSchedulerStatusCommand() { Id = entities[0].Id, Status = command.Status })
+                                          .StubPush(new ChangeDelayToSchedulerStatusCommand() { Id = entities[1].Id, Status = command.Status });
                               };
 
         Because of = () => { exception = Catch.Exception(() => mockCommand.Original.Execute()); };

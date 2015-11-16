@@ -1,11 +1,10 @@
-using NHibernate.Util;
-
 namespace Incoding.MSpecContrib
 {
     #region << Using >>
 
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -13,6 +12,7 @@ namespace Incoding.MSpecContrib
     using Incoding.Extensions;
     using Incoding.Maybe;
     using Machine.Specifications;
+    using NHibernate.Util;
 
     #endregion
 
@@ -29,6 +29,8 @@ namespace Incoding.MSpecContrib
 
         readonly List<string> properties;
 
+        readonly IUnitOfWork unitOfWork;
+
         BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty;
 
         TEntity preEntity;
@@ -39,17 +41,25 @@ namespace Incoding.MSpecContrib
 
         #region Constructors
 
-        public PersistenceSpecification(IRepository repository)
+        public PersistenceSpecification(IRepository repository = null)
         {
-            this.repository = repository;
-            this.original = new TEntity();
-            this.properties = new List<string>();
+            if (repository != null)
+                this.repository = repository;
+            else
+            {
+                unitOfWork = PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
+                this.repository = unitOfWork.GetRepository();
+            }
+
+            original = new TEntity();
+            properties = new List<string>();
         }
 
-        public PersistenceSpecification()
-                : this(SpecWithRepository.Repository) { }
+        #endregion
 
-        public IRepository Repository { get { return this.repository; } }
+        #region Properties
+
+        public IRepository Repository { get { return repository; } }
 
         #endregion
 
@@ -57,16 +67,16 @@ namespace Incoding.MSpecContrib
 
         public PersistenceSpecification<TEntity> CheckProperty<TValue>(Expression<Func<TEntity, TValue>> prop, TValue value, Action<TEntity, TValue> configure)
         {
-            this.properties.Add(prop.GetMemberName());
-            configure(this.original, value);
+            properties.Add(prop.GetMemberName());
+            configure(original, value);
             return this;
         }
 
         public PersistenceSpecification<TEntity> CheckProperty<TValue>(Expression<Func<TEntity, IEnumerable<TValue>>> prop, IEnumerable<TValue> values, Action<TEntity, TValue> configure)
         {
-            this.properties.Add(prop.GetMemberName());
+            properties.Add(prop.GetMemberName());
             foreach (var item in values)
-                configure(this.original, item);
+                configure(original, item);
             return this;
         }
 
@@ -88,80 +98,81 @@ namespace Incoding.MSpecContrib
         {
             configure.Do(action => action(this));
 
-            if (this.preEntity == null)
+            if (preEntity == null)
             {
-                string allDuplicate = this.properties.Where(r => this.properties.Count(s => s == r) > 1)
-                        .Distinct()
-                        .AsString(",");
+                string allDuplicate = properties.Where(r => properties.Count(s => s == r) > 1)
+                                                .Distinct()
+                                                .AsString(",");
                 if (!string.IsNullOrWhiteSpace(allDuplicate))
                     throw new SpecificationException("Duplicate fields:{0}".F(allDuplicate));
 
-                string allCheckInIgnore = this.ignoreProperties.Where(r => this.properties.Contains(r))
-                        .Distinct()
-                        .AsString(",");
+                string allCheckInIgnore = ignoreProperties.Where(r => properties.Contains(r))
+                                                          .Distinct()
+                                                          .AsString(",");
                 if (!string.IsNullOrWhiteSpace(allCheckInIgnore))
                     throw new SpecificationException("Fields:{0} was ignore and can't check".F(allCheckInIgnore));
 
-                var allMissing = this.original.GetType()
-                        .GetProperties(this.bindingFlags)
-                        .Where(r => r.CanWrite)
-                        .Where(s => !this.properties.Contains(s.Name) && !this.ignoreProperties.Contains(s.Name))
-                        .Where(r => !r.Name.EqualsWithInvariant("Id"));
+                var allMissing = original.GetType()
+                                         .GetProperties(bindingFlags)
+                                         .Where(r => r.CanWrite)
+                                         .Where(s => !properties.Contains(s.Name) && !ignoreProperties.Contains(s.Name))
+                                         .Where(r => !r.Name.EqualsWithInvariant("Id"));
 
                 foreach (var missing in allMissing)
                 {
                     object invent;
                     if (missing.PropertyType.IsImplement<IEntity>())
                     {
-                        invent = ((IQueryable)this.Repository.GetType().GetMethod("Query").MakeGenericMethod(missing.PropertyType).Invoke(this.Repository, new object[] { null, null, null, null }))
-                        //.Cast<object>()
-                        .FirstOrNull();
-                        if(invent == null)
+                        invent = ((IQueryable)Repository.GetType().GetMethod("Query").MakeGenericMethod(missing.PropertyType).Invoke(Repository, new object[] { null, null, null, null })).FirstOrNull();
+                        if (invent == null)
                             throw new SpecificationException("No elements at database for type '{0}'".F(missing.PropertyType.Name));
                     }
                     else
                         invent = Pleasure.Generator.Invent(missing.PropertyType);
 
-                    missing.SetValue(this.original, invent, null);
+                    missing.SetValue(original, invent, null);
                 }
             }
             else
-                this.original = this.preEntity;
+                original = preEntity;
 
-            this.Repository.Save(this.original);
-            this.Repository.Flush();
+            Repository.Save(original);
+            Repository.Flush();
 
-            object id = this.original.TryGetValue("Id");
-            var entityFromDb = this.Repository.GetById<TEntity>(id);
+            var id = original.TryGetValue("Id");
+            var entityFromDb = Repository.GetById<TEntity>(id);
             if (entityFromDb == null)
                 throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 
-            entityFromDb.ShouldEqualWeak(this.original, dsl =>
-                                                        {
-                                                            foreach (var ignoreProperty in this.ignoreProperties)
-                                                                dsl.Ignore(ignoreProperty, "Fixed");
-                                                            dsl.IgnoreRecursionError();
-                                                            dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
-                                                        });
+            entityFromDb.ShouldEqualWeak(original, dsl =>
+                                                   {
+                                                       foreach (var ignoreProperty in ignoreProperties)
+                                                           dsl.Ignore(ignoreProperty, "Fixed");
+                                                       dsl.IgnoreRecursionError();
+                                                       dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
+                                                   });
+
+            if (unitOfWork != null)
+                unitOfWork.Dispose();
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()
         {
-            this.bindingFlags = this.bindingFlags | BindingFlags.DeclaredOnly;
+            bindingFlags = bindingFlags | BindingFlags.DeclaredOnly;
             return this;
         }
 
         public PersistenceSpecification<TEntity> WithEntity(TEntity entity)
         {
-            this.preEntity = entity;
+            preEntity = entity;
             return this;
         }
 
         public PersistenceSpecification<TEntity> IgnoreProperty(Expression<Func<TEntity, object>> ignoreProperty, string reason)
         {
             string memberName = ignoreProperty.GetMemberName();
-            if (!this.ignoreProperties.Contains(memberName))
-                this.ignoreProperties.Add(memberName);
+            if (!ignoreProperties.Contains(memberName))
+                ignoreProperties.Add(memberName);
             return this;
         }
 

@@ -4,8 +4,10 @@
 
     using System;
     using System.Collections;
+    using System.Linq;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -35,7 +37,6 @@
         {
             return Toggle(attribute.ToJqueryString());
         }
-
 
         /// <summary>
         ///     Add or remove attribute
@@ -125,7 +126,7 @@
         [Obsolete("Please use Remove")]
         public IExecutableSetting RemoveAttr(string key)
         {
-            return plugInDsl.Core().JQuery.Call("removeAttr", key.ToLower());
+            return Remove(key);
         }
 
         /// <summary>
@@ -140,20 +141,20 @@
         /// <summary>
         ///     Remove an attribute from each element in the set of matched elements.
         /// </summary>
-        /// <param name="key">Html attributes</param>
-        [Obsolete("Please use Remove")]
+        /// <param name="key">Html attributes</param>        
         public IExecutableSetting Remove(HtmlAttribute key)
         {
-            return RemoveAttr(key.ToJqueryString());
+            return Remove(key.ToJqueryString());
         }
 
         /// <summary>
         ///     Remove an attribute from each element in the set of matched elements.
         /// </summary>
         /// <param name="key">Html attributes</param>
+        [Obsolete("Please use Remove")]
         public IExecutableSetting RemoveAttr(HtmlAttribute key)
         {
-            return RemoveAttr(key.ToJqueryString());
+            return Remove(key);
         }
 
         /// <summary>
@@ -166,7 +167,7 @@
         [Obsolete("Please use Set")]
         public IExecutableSetting SetAttr(string key, Selector value = null)
         {
-            return plugInDsl.Core().JQuery.Call("attr", key, value ?? key);
+            return Set(key, value);
         }
 
         /// <summary>
@@ -191,7 +192,7 @@
         [Obsolete("Please use Set")]
         public IExecutableSetting SetAttr(HtmlAttribute key, Selector value = null)
         {
-            return Set(key.ToJqueryString(), value);
+            return Set(key, value);
         }
 
         /// <summary>
@@ -284,7 +285,8 @@
         /// <param name="class">
         ///     One or more <c>class</c> names to be added to the class attribute of each matched element.
         /// </param>
-        public IExecutableSetting AddClass(string @class)
+        [ContractAnnotation("class:null =>true")]
+        public IExecutableSetting AddClass([HtmlAttributeValue("class")] string @class)
         {
             return plugInDsl.Core().JQuery.Call("addClass", @class);
         }

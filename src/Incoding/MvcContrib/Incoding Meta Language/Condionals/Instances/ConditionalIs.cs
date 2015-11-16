@@ -32,8 +32,7 @@ namespace Incoding.MvcContrib
 
         void SetBoolean(Expression expression)
         {
-            var value = fakeMode
-                                ? Selector.Result.For(((MemberExpression)expression).Member.Name)
+            var value = fakeMode ? Selector.Result.For(((MemberExpression)expression).Member.Name)
                                 : Expression.Lambda(expression).Compile().DynamicInvoke();
             Set(true, value, ExpressionType.Equal.ToStringLower());
         }
@@ -152,7 +151,9 @@ namespace Incoding.MvcContrib
             else if (body.Type == typeof(Boolean))
                 SetBoolean(body);
             else
+            ////ncrunch: no coverage start
                 throw new ArgumentOutOfRangeException("expression", "Not found logic for {0}".F(body.GetType()));
+            ////ncrunch: no coverage end
         }
 
         public ConditionalIs(Expression<Func<bool>> expression, bool and)

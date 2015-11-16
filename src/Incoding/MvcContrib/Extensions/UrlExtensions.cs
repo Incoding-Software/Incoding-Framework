@@ -67,7 +67,7 @@
             string urlHash = area
                     .Not(string.IsNullOrWhiteSpace)
                     .ReturnOrDefault(r => urlHelper.ActionArea(action, controller, area), urlHelper.Action(action, controller))
-                    .AppendToHashQueryString(routes);
+                    .AppendToHashQueryString(routes,true);
 
             return HttpUtility.UrlDecode(baseUrl.SetHash(urlHash));
         }

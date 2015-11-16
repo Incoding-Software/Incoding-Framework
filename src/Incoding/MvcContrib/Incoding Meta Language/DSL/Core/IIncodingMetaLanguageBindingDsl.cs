@@ -8,7 +8,7 @@ namespace Incoding.MvcContrib
     #endregion
 
 
-    public interface IIncodingMetaLanguageBindingDsl : IIncodingMetaLanguageActionDsl
+    public interface IIncodingMetaLanguageBindingDsl : IIncodingMetaLanguageActionDsl, IIncodingMetaLanguageEventBuilderDsl
     {
         [Obsolete("Not use because is default")]
         IIncodingMetaLanguageActionDsl Do();

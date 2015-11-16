@@ -10,8 +10,6 @@
     {
         void Flush();
 
-        void Commit();
-
         IRepository GetRepository();
     }
 }

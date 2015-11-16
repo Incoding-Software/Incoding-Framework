@@ -87,26 +87,24 @@
         public Selector AjaxGet(string url)
         {
             return Ajax(options =>
-                            {
-                                options.Url = url;
-                                options.Type = HttpVerbs.Get;
-                            });
+                        {
+                            options.Url = url;
+                            options.Type = HttpVerbs.Get;
+                        });
         }
 
         public Selector AjaxPost(string url)
         {
             return Ajax(options =>
-                            {
-                                options.Url = url;
-                                options.Type = HttpVerbs.Post;
-                            });
+                        {
+                            options.Url = url;
+                            options.Type = HttpVerbs.Post;
+                        });
         }
 
         public Selector BuildUrl(string url)
         {
-            var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
-            options.Url = url;
-            AndSelector("||buildurl*{0}||".F(options.ToJsonString()));
+            AndSelector("||buildurl*{0}||".F(url));
             return this;
         }
 

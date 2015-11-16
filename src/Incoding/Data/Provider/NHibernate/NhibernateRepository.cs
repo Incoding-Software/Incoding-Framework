@@ -4,8 +4,10 @@ namespace Incoding.Data
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Incoding.Extensions;
+    using JetBrains.Annotations;
     using NHibernate;
     using NHibernate.Linq;
     using NHibernate.Persister.Entity;
@@ -27,7 +29,7 @@ namespace Incoding.Data
             this.session = session;
         }
 
-        [Obsolete("Not needed use Repository on IOC", true)]
+        [Obsolete("Not needed use Repository on IOC", true), ExcludeFromCodeCoverage, UsedImplicitly]
         public NhibernateRepository() { }
 
         #endregion

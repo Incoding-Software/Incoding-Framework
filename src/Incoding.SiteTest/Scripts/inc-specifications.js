@@ -65,8 +65,11 @@ function TestHelper() {
         return res;
     };
 
-    this.SandboxHidden = function() {
+    this.SandboxHidden = function(attr) {
         var res = $('<input>').attr({ id : 'sandboxHidden', type : 'hidden', name : 'sandboxHidden' });
+        if (attr) {
+            $(res).attr(attr);
+        }
         appendSetFixtures(res);
         return res;
     };
@@ -535,8 +538,7 @@ describe('Incoding', function() {
                             expect(url.param('param2')).toEqual('value2');
                             expect(url.attr('fragment')).toEqual(options.fragment);
                             expect(url.attr('base')).toEqual(options.base);
-                            expect(url.url()).toEqual(options.url);
-
+                            
                             if (!options.excludeHashQuery) {
                                 expect(url.fparam('param', 'root')).toEqual('fragmentValue');
                                 expect(url.fparam('param2', 'root')).toEqual('fragmentValue2');
@@ -558,8 +560,7 @@ describe('Incoding', function() {
                             var href = 'http://sample.com/Home/Index?param=value&param2=value2#!Manager/Office?param=fragmentValue/param2=fragmentValue2&SearchUrl:Search/Index?param=value/param2=value2';
                             var url = $.url(href);
                             verify(url, {
-                                base : 'http://sample.com/Home/Index',
-                                url : 'http://sample.com/Home/Index?param=value&param2=value2',
+                                base : 'http://sample.com/Home/Index',                                
                                 rootUrl : 'Manager/Office',
                                 searhUrl : 'Search/Index',
                                 fragment : 'Manager/Office?param=fragmentValue/param2=fragmentValue2&SearchUrl:Search/Index?param=value/param2=value2',
@@ -595,7 +596,7 @@ describe('Incoding', function() {
                             });
                         });
 
-                        it('Should be parse without hash url', function() {
+                        it('Should be parse with hash url', function() {
                             var href = 'Home/Index?param=value&param2=value2#!param=fragmentValue/param2=fragmentValue2&SearchUrl:param=value/param2=value2';
                             var url = $.url(href);
                             verify(url, {
@@ -608,7 +609,7 @@ describe('Incoding', function() {
                             });
                         });
 
-                        it('Should be parse without hash', function() {
+                        it('Should be parse with empty hash', function() {
                             var href = 'Home/Index?param=value&param2=value2#!';
                             var url = $.url(href);
                             verify(url, {
@@ -1560,7 +1561,7 @@ describe('Incoding', function() {
                             engine.parse(instanceSandBox);
 
                             runs(function() {
-                                document.location.hash = Date.now().toString();
+                                document.location.hash = '!'+Date.now().toString();
                             });
 
                             waits(500);
@@ -2127,7 +2128,7 @@ describe('Incoding', function() {
                         it('Should be script', function() {
                             var val = ExecutableHelper.Instance.TryGetVal($("#sandboxScript"));
 
-                            var length = 385;
+                            var length = 362;
                             if (jQuery.browser.msie) {
                                 if (jQuery.browser.version <= 8) {
                                     length = 390;
@@ -2308,7 +2309,7 @@ describe('Incoding', function() {
                         var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Hash').val());
                         expect(val).toEqual('Index/Home');
                     });
-
+               
                     it('Should be cookie', function() {
                         var cookiesVal = 'cookiesVal';
                         $.cookie('incodingParam', cookiesVal);
@@ -2327,10 +2328,12 @@ describe('Incoding', function() {
 
                     it('Should be build url', function() {
                         var actualvalue = 'actualValue';
+                        var hashValue = 'hashValue';
                         TestHelper.Instance.SandboxTextBox({ value : actualvalue });
+                        TestHelper.Instance.SandboxHidden({ value : hashValue });
 
                         var val = ExecutableHelper.Instance.TryGetVal($('#Selector_Incoding_Build_Url').val());
-                        expect(val).toEqual('/Jasmine/GetValue?Value=actualValue');
+                        expect(val).toEqual('/Jasmine/GetValue?Value=actualValue#!Hash=hashValue');
                     });
 
                 });
@@ -2573,7 +2576,7 @@ describe('Incoding', function() {
                 it('Should be redirect', function() {
 
                     runs(function() {
-                        document.location.hash = 'aws';
+                        document.location.hash = '!aws';
                         var anotherUrl = document.location.href.replace(document.location.hash, '#!' + Date.now().toString());
                         ExecutableHelper.RedirectTo(anotherUrl);
                     });
@@ -2599,8 +2602,8 @@ describe('Incoding', function() {
 
                 it('Should be redirect to self with encode', function() {
                     runs(function() {
-                        document.location.hash = '~/Areas/Admin/Views/Category/Index.cshtml'; //set encode value
-                        var selfEncode = '{0}!#{1}'.f(document.location.href.split("#")[0], '~%2FAreas%2FAdmin%2FViews%2FCategory%2FIndex.cshtml');
+                        document.location.hash = '!~/Areas/Admin/Views/Category/Index.cshtml'; //set encode value
+                        var selfEncode = '{0}#!{1}'.f(document.location.href.split("#")[0], '~%2FAreas%2FAdmin%2FViews%2FCategory%2FIndex.cshtml');
                         ExecutableHelper.RedirectTo(selfEncode);
                     });
 
@@ -3509,6 +3512,33 @@ describe('Incoding', function() {
                     });
                 });
 
+                //it('Should be execute with data', function() {
+
+                //    spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
+                //        return value;
+                //    });
+                //    action.jsonData = $.parseJSON($('#ExecutableAjaxActionWithData').val());
+                //    $.mockjax({
+                //        url : fakeUrl,
+                //        data : [{ Name : 'Value' }, { Name : 'Value2' }],
+                //        type : 'GET',
+                //        responseText : { data : 'Success', success : true, redirectTo : '' }
+                //    });
+
+                //    runs(function() {
+                //        action.internalExecute(state);
+                //    });
+
+                //    waits(500);
+
+                //    runs(function() {
+                //        expect(fakeSuccess.result).toEqual('Success');
+
+                //        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('Value');
+                //        expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('Value2');
+                //    });
+                //});
+
                 it('Should be execute with hash', function() {
                     var valBy = 'Value';
                     spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(value) {
@@ -3529,7 +3559,7 @@ describe('Incoding', function() {
                     });
 
                     runs(function() {
-                        window.location.hash = 'hash/fakeUrl?Name2=Value2/Name3=Value3';
+                        window.location.hash = '!hash/fakeUrl?Name2=Value2/Name3=Value3';
                         action.internalExecute(state);
                     });
 
@@ -3559,7 +3589,7 @@ describe('Incoding', function() {
                     });
                     runs(function() {
 
-                        window.location.hash = 'Name2=Value2/Name3=Value3';
+                        window.location.hash = '!Name2=Value2/Name3=Value3';
                         action.internalExecute(state);
                     });
 
@@ -3897,7 +3927,7 @@ describe('Incoding', function() {
                         expect(instanceSandBox).toHaveHtml(incTemplate);
                         expect(TemplateFactory.ToHtml.mostRecentCall.args[0]).toEqual(ExecutableInsert.Template);
                         expect(TemplateFactory.ToHtml.mostRecentCall.args[1]).toEqual('isKey');
-                        expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('||ajax*{"data":[{"name":"Value","selector":"$(\'#sandboxTextBox\')"}],"url":"/Jasmine/GetValue","type":"GET","async":false}||');
+                        expect(TemplateFactory.ToHtml.mostRecentCall.args[2]()).toEqual('||ajax*{"url":"/Jasmine/GetValue?Value=%24(\'%23sandboxTextBox\')","type":"GET","async":false}||');
                         expect(TemplateFactory.ToHtml.mostRecentCall.args[3]).toEqual({ item : 1 });
                     });
 
@@ -3906,6 +3936,32 @@ describe('Incoding', function() {
                 afterEach(function() {
                     expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(instanceSandBox);
                     expect(IncSpecialBinds.IncInsert).toHaveBeenTriggeredOn(document);
+                });
+
+            });
+
+            describe('When ExecutableInsert Before and After', function() {
+
+                var insert, div;
+                beforeEach(function() {
+                    spyOn(IncodingEngine.Current, 'parse');
+                    div = $('<div>');
+                    $('body').append(div);
+                    insert = new ExecutableInsert();                    
+                    insert.target = div;
+                    insert.result = '<p/>';
+                });
+
+                it('Should be insert after', function() {
+                    insert.jsonData = $.parseJSON($('#ExecutableInsertAfter').val());
+                    insert.internalExecute();
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.next());
+                });
+
+                it('Should be insert before', function() {
+                    insert.jsonData = $.parseJSON($('#ExecutableInsertBefore').val());
+                    insert.internalExecute();
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.prev());
                 });
 
             });
@@ -4080,14 +4136,14 @@ describe('Incoding', function() {
                     expect(input).toHaveClass(inputErrorClass);
 
                     expect(span).toHaveClass(messageErrorClass);
-                    expect(span).toHaveHtml('<b>errroMessage</b>');
+                    expect(span).toHaveHtml('<span for="input.Email" generated="true"><b>errroMessage</b></span>');
                     expect(span).not.toHaveClass(messageValidClass);
                     expect(validate.focusInvalid).toHaveBeenCalled();
                 });
 
                 it('Should be is valid', function() {
 
-                    $(span).addClass(messageErrorClass);
+                    $(span).addClass(messageErrorClass).html('message');
                     $(input).addClass(inputErrorClass);
 
                     validationRefresh.result = [{ name: 'input.Email', errorMessage: 'errroMessage', isValid: true }];
@@ -4096,7 +4152,37 @@ describe('Incoding', function() {
                     expect(input).not.toHaveClass(inputErrorClass);
                     expect(span).not.toHaveClass(messageErrorClass);
                     expect(span).toHaveClass(messageValidClass);
+                    expect(span).toHaveHtml('');
 
+                });
+
+                it('Should be is empty', function () {
+
+                    $(span).addClass(messageErrorClass).html('message');
+                    $(input).addClass(inputErrorClass);
+
+                    validationRefresh.result = [];
+                    validationRefresh.internalExecute();
+
+                    expect(input).not.toHaveClass(inputErrorClass);
+                    expect(span).not.toHaveClass(messageErrorClass);
+                    expect(span).toHaveClass(messageValidClass);
+                    expect(span).toHaveHtml("");
+
+                });
+
+                it('Should be is undefined', function () {
+
+                    $(span).addClass(messageErrorClass).html('message');
+                    $(input).addClass(inputErrorClass);
+
+                    validationRefresh.result = undefined;
+                    validationRefresh.internalExecute();
+
+                    expect(input).not.toHaveClass(inputErrorClass);
+                    expect(span).not.toHaveClass(messageErrorClass);
+                    expect(span).toHaveClass(messageValidClass);
+                    expect(span).toHaveHtml('');
                 });
 
                 afterEach(function() {
@@ -4178,28 +4264,18 @@ describe('Incoding', function() {
                             TestHelper.Instance.SandboxReset(),
                             TestHelper.Instance.SandboxInput());
 
-                        valueInput = '@@input';
-                        valueSelect = 'select';
-
-                        spyOn(ExecutableHelper, 'RedirectTo');
-                        spyOn(ExecutableHelper.Instance, 'TryGetVal').andCallFake(function(jObject) {
-                            if (jObject.selector === '[name="sandboxTextBox"]' ||
-                                jObject.selector === '[name="sandboxTextBox\\[1\\].Value"]' ||
-                                jObject.selector === '[name="sandboxTextBox\\[2\\].Value"]') {
-                                return valueInput;
-                            }
-                            if (jObject.selector === '[name="sandboxSelect"]') {
-                                return valueSelect;
-                            }
-
-                            return undefined;
+                        valueInput = "sandboxTextBox";
+                        valueSelect = 'sandboxSelect';
+                        spyOn(ExecutableHelper.Instance, "TryGetVal").andCallFake(function(jObject) {
+                            return jObject.attr("name");
                         });
+                        spyOn(ExecutableHelper, "RedirectTo");
 
-                        window.document.location.hash = 'aws=param';
+                        window.document.location.hash = "!aws=param";
                     });
 
-                    it('Should be insert', function() {
-                        hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
+                    it('Should be insert', function () {                   
+                        hashInsert.jsonData = $.parseJSON($("#ExecutableStoreInsert").val());
                         hashInsert.target = instanceSandBox;
 
                         hashInsert.internalExecute();
@@ -4222,11 +4298,12 @@ describe('Incoding', function() {
                         hashInsert.internalExecute();
 
                         var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
-                        expect(redirectUrl.fparam('sandboxTextBox[1].Value', 'root')).toEqual(valueInput);
-                        expect(redirectUrl.fparam('sandboxTextBox[2].Value', 'root')).toEqual(valueInput);
+                        expect(redirectUrl.fparam('sandboxTextBox[1].Value', 'root')).toEqual('sandboxTextBox[1].Value');
+                        expect(redirectUrl.fparam('sandboxTextBox[2].Value', 'root')).toEqual('sandboxTextBox[2].Value');
                     });
 
                     it('Should be insert with multiple', function() {
+                    
                         hashInsert.jsonData = $.parseJSON($('#ExecutableStoreInsert').val());
                         hashInsert.target = $('[name=sandboxTextBox], [name=sandboxSelect]');
 
@@ -4235,8 +4312,8 @@ describe('Incoding', function() {
                         var redirectUrl = $.url(ExecutableHelper.RedirectTo.mostRecentCall.args[0]);
                         expect(redirectUrl.fparam('aws', 'root')).toEqual('param');
                         expect(redirectUrl.fparam().hasOwnProperty('sandboxSubmit__root')).toBeFalsy();
-                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual(valueInput);
-                        expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual(valueSelect);
+                        expect(redirectUrl.fparam('sandboxTextBox', 'root')).toEqual("sandboxTextBox");
+                        expect(redirectUrl.fparam('sandboxSelect', 'root')).toEqual("sandboxSelect");
                     });
 
                     it('Should be insert by prefix', function() {
@@ -4331,26 +4408,13 @@ describe('Incoding', function() {
 
                 it('Should be fetch element', function() {
                     hashFetch.target = element;
-                    window.location.hash = "sandboxTextBox=@Test";
+                    window.location.hash = "!sandboxTextBox=@Test";
 
                     hashFetch.internalExecute();
 
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '@Test');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '@Test');
                 });
 
-                it('Should be fetch elements', function() {
-                    var textBox = TestHelper.Instance.SandboxTextBox().addClass('fetch');
-                    var select = TestHelper.Instance.SandboxSelect([{ value : 'selectValue', selected : true }]).addClass('fetch');
-                    $(instanceSandBox).append(textBox).append(select);
-
-                    hashFetch.target = $('.fetch');
-                    window.location.hash = "sandboxTextBox=TextBoxValue&sandboxSelect=SelectValue";
-
-                    hashFetch.internalExecute();
-
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(textBox.prop('name')), 'TextBoxValue');
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(select.prop('name')), 'SelectValue');
-                });
 
                 it('Should be fetch element without value', function() {
                     hashFetch.target = element;
@@ -4358,32 +4422,32 @@ describe('Incoding', function() {
 
                     hashFetch.internalExecute();
 
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '');
                 });
 
                 it('Should be fetch element with decode', function() {
                     hashFetch.target = element;
-                    window.location.hash = "sandboxTextBox=%26TestÐóññêèå Áóêâû";
+                    window.location.hash = "!sandboxTextBox=%26TestÐóññêèå Áóêâû";
 
                     hashFetch.internalExecute();
 
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), '&TestÐóññêèå Áóêâû');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, '&TestÐóññêèå Áóêâû');
                 });
 
                 it('Should be fetch element by prefix', function() {
-                    window.location.hash = "sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
+                    window.location.hash = "!sandboxTextBox=Test&search:sandboxTextBox=ValueFromPrefix";
                     hashFetch.jsonData = $.parseJSON($('#ExecutableStoreFetchWithPrefix').val());
                     hashFetch.target = element;
 
                     hashFetch.internalExecute();
 
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName(element.prop('name')), 'ValueFromPrefix');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(element, 'ValueFromPrefix');
                 });
 
                 it('Should be fetch container', function() {
                     $(instanceSandBox).append(element);
                     hashFetch.target = instanceSandBox;
-                    window.location.hash = "sandboxTextBox=Test";
+                    window.location.hash = "!sandboxTextBox=Test";
 
                     hashFetch.internalExecute();
 
@@ -4401,12 +4465,12 @@ describe('Incoding', function() {
                         .append(button)
                         .append(radioButton);
                     hashFetch.target = instanceSandBox;
-                    window.location.hash = "sandboxTextBox=Test&sandboxRadiobutton=value";
+                    window.location.hash = "!sandboxTextBox=Test&sandboxRadiobutton=value";
 
                     hashFetch.internalExecute();
 
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName($(textBox).prop('name')), 'Test');
-                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith($.byName($(radioButton).prop('name')), 'value');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(instanceSandBox.find(textBox.prop("name").toSelectorAsName()), 'Test');
+                    expect(ExecutableHelper.Instance.TrySetValue).toHaveBeenCalledWith(instanceSandBox.find(radioButton.prop("name").toSelectorAsName()), 'value');
                     expect(ExecutableHelper.Instance.TrySetValue.callCount).toEqual(2);
                 });
 
@@ -4422,7 +4486,7 @@ describe('Incoding', function() {
                 });
 
                 it('Should be remove', function() {
-                    window.location.hash = "IncHash=Test";
+                    window.location.hash = "!IncHash=Test";
                     executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemove').val());
 
                     executable.internalExecute();
@@ -4432,7 +4496,7 @@ describe('Incoding', function() {
                 });
 
                 it('Should be remove with prefix', function() {
-                    window.location.hash = "search:IncHash=ValueFromPrefix";
+                    window.location.hash = "!search:IncHash=ValueFromPrefix";
                     executable.jsonData = $.parseJSON($('#ExecutableStoreManipulateRemoveWithPrefix').val());
 
                     executable.internalExecute();

@@ -7,24 +7,32 @@ namespace Incoding.Data
 
     #endregion
 
-    public class NhibernateUnitOfWork : UnitOfWorkBase<ISession, INhibernateSessionFactory>
+    public class NhibernateUnitOfWork : UnitOfWorkBase<ISession>
     {
         #region Fields
 
-        ITransaction transaction;
+        readonly ITransaction transaction;
 
         #endregion
 
         #region Constructors
 
-        public NhibernateUnitOfWork(INhibernateSessionFactory sessionFactory, string connectionString, IsolationLevel isolationLevel)
-                : base(sessionFactory, isolationLevel, connectionString) { }
+        public NhibernateUnitOfWork(ISession session, IsolationLevel isolationLevel, bool isFlush)
+                : base(session, isolationLevel, isFlush)
+        {
+            transaction = session.BeginTransaction(isolationLevel);
+            bool isReadonly = !isFlush;
+            session.DefaultReadOnly = isReadonly;
+            if (isReadonly)
+                session.FlushMode = FlushMode.Never;
+            repository = new NhibernateRepository(session);
+        }
 
         #endregion
 
         protected override void InternalFlush()
         {
-            session.Value.Flush();
+            session.Flush();
         }
 
         protected override void InternalCommit()
@@ -35,13 +43,6 @@ namespace Incoding.Data
         protected override void InternalSubmit()
         {
             transaction.Dispose();
-        }
-
-        public override IRepository GetRepository()
-        {
-            if (transaction == null)
-                transaction = session.Value.BeginTransaction(isolationLevel);
-            return new NhibernateRepository(session.Value);
         }
     }
 }

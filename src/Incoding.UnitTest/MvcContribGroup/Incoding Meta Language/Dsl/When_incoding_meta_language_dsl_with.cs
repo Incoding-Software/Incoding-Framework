@@ -129,6 +129,14 @@
                                                 .First()["target"]
                                                 .ShouldEqual("$('.red')");
 
+        It should_be_with_class_b = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                  .Do()
+                                                  .Direct()
+                                                  .OnSuccess(dsl => dsl.WithClass(B.Active).Core().Form.Validation.Parse())
+                                                  .GetActions<ExecutableValidationParse>()
+                                                  .First()["target"]
+                                                  .ShouldEqual("$('.active')");
+
         It should_be_with_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do()
                                                .Direct()

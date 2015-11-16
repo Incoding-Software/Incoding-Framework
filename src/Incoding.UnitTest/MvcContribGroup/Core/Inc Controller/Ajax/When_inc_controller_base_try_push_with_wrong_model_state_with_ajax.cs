@@ -21,7 +21,7 @@
 
         Because of = () => { result = controller.Push(new FakeCommand()); };
 
-        It should_be_incoding_success = () => result.ShouldBeIncodingFail();
+        It should_be_incoding_success = () => result.ShouldBeIncodingError();
 
         It should_be_incoding_data = () => result.ShouldBeIncodingData<IEnumerable<object>>(o => o.ShouldEqualWeakEach(new[] { new { name = "key", isValid = false, errorMessage = "message" } }));
 

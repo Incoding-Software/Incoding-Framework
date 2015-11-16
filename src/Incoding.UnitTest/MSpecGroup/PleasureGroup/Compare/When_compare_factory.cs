@@ -719,6 +719,7 @@
                                                           spy.Verify(r => r.Is(Pleasure.MockIt.IsAny<FakeCompare>()));
                                                       };
 
+
         It should_be_compare_with_ignore = () =>
                                            {
                                                var compare = new CompareFactory<FakeCompare, FakeCompare2>();

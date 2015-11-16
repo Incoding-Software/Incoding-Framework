@@ -3,6 +3,7 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
+    using System.Data;
     using System.Data.Entity;
     using System.Reflection;
     using System.Windows.Forms;
@@ -19,9 +20,11 @@ namespace Incoding.MSpecContrib
 
     public static class PleasureForData
     {
+        public static Lazy<IUnitOfWorkFactory> Factory = null;
+
         #region Factory constructors
 
-        public static IRepository BuildEFRepository(IncDbContext dbContext, bool reloadDb = true)
+        public static IUnitOfWorkFactory BuildEFSessionFactory(IncDbContext dbContext, bool reloadDb = true)
         {
             try
             {
@@ -33,7 +36,7 @@ namespace Incoding.MSpecContrib
                 else
                     Database.SetInitializer(new NullDatabaseInitializer<IncDbContext>());
 
-                return new EntityFrameworkRepository(dbContext);
+                return new EntityFrameworkUnitOfWorkFactory(new EntityFrameworkSessionFactory(() => dbContext));
             }
                     
                     ////ncrunch: no coverage start
@@ -63,16 +66,26 @@ namespace Incoding.MSpecContrib
             return new MongoDbRepository(session);
         }
 
-        public static IRepository BuildNhibernateRepository()
+        public static IUnitOfWorkFactory BuildNhibernateUnitOfWorkFactory(Func<FluentConfiguration> instanceBuilderConfigurationAction, bool reloadDb)
         {
             try
             {
-                var session = SessionFactory.Open(null);
-                session.CacheMode = CacheMode.Ignore;
-                return new NhibernateRepository(session);
+                var builderConfiguration = instanceBuilderConfigurationAction();
+                if (reloadDb)
+                {
+                    IManagerDataBase managerDataBase = new NhibernateManagerDataBase(builderConfiguration);
+                    if (!managerDataBase.IsExist())
+                        managerDataBase.Create();
+
+                    managerDataBase.Update();
+                }
+
+
+                var unitOfWork = new NhibernateUnitOfWorkFactory(new NhibernateSessionFactory(builderConfiguration));
+                return unitOfWork;
             }
                     
-                    ////ncrunch: no coverage start
+            ////ncrunch: no coverage start
             catch (Exception e)
             {
                 Clipboard.SetText("Exception in  build configuration {0}".F(e));
@@ -94,30 +107,13 @@ namespace Incoding.MSpecContrib
 
         public static void StartEF(IncDbContext dbContext, bool reloadDb = true)
         {
-            SpecWithRepository.Repository = BuildEFRepository(dbContext, reloadDb);
+            Factory = new Lazy<IUnitOfWorkFactory>(() => BuildEFSessionFactory(dbContext, reloadDb));
         }
 
-        public static void StartNhibernate(FluentConfiguration instanceBuilderConfiguration, bool reloadDb = true)
+        public static void StartNhibernate(Func<FluentConfiguration> instanceBuilderConfigurationAction, bool reloadDb = true)
         {
-            if (reloadDb)
-            {
-                IManagerDataBase managerDataBase = new NhibernateManagerDataBase(instanceBuilderConfiguration);
-                if (!managerDataBase.IsExist())
-                    managerDataBase.Create();
-
-                managerDataBase.Update();
-            }
-
-            SessionFactory = new NhibernateSessionFactory(instanceBuilderConfiguration);
-
-            SpecWithRepository.Repository = BuildNhibernateRepository();
+            Factory = new Lazy<IUnitOfWorkFactory>(() => BuildNhibernateUnitOfWorkFactory(instanceBuilderConfigurationAction, reloadDb));
         }
-
-        #endregion
-
-        #region Properties
-
-        public static NhibernateSessionFactory SessionFactory { get; set; }
 
         #endregion
     }

@@ -18,25 +18,27 @@ namespace Incoding.MSpecContrib
     {
         #region Factory constructors
 
-        public static void Execute<TResult>(this IMessage<TResult> message)
+        public static void Execute(this IMessage message)
         {
-            message.OnExecute(IoCFactory.Instance.TryResolve<IDispatcher>(), IoCFactory.Instance.TryResolve<IUnitOfWork>());
+            message.OnExecute(IoCFactory.Instance.TryResolve<IDispatcher>(), new Lazy<IUnitOfWork>(() => IoCFactory.Instance.TryResolve<IUnitOfWork>()));
         }
 
         #endregion
     }
 
-    public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage<TResult>
+    public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage
     {
         #region Fields
 
         protected readonly Mock<IDispatcher> dispatcher;
 
+        readonly Dictionary<Type, List<CommandBase>> stubs = new Dictionary<Type, List<CommandBase>>();
+
+        readonly Dictionary<Type, int> stubsOfSuccess = new Dictionary<Type, int>();
+
         readonly Mock<IRepository> repository;
 
         readonly Mock<IEventBroker> eventBroker;
-
-        readonly List<Action<CommandBase>> actions = new List<Action<CommandBase>>();
 
         #endregion
 
@@ -54,24 +56,7 @@ namespace Incoding.MSpecContrib
             eventBroker = Pleasure.MockStrict<IEventBroker>();
             IoCFactory.Instance.StubTryResolve(eventBroker.Object);
 
-            dispatcher = Pleasure.MockStrict<IDispatcher>(mock =>
-                                                          {
-                                                              mock.StubPush<CommandBase>(@base =>
-                                                                                         {
-                                                                                             bool isAny = false;
-                                                                                             foreach (var action in actions)
-                                                                                             {
-                                                                                                 try
-                                                                                                 {
-                                                                                                     action(@base);
-                                                                                                     isAny = true;
-                                                                                                 }
-                                                                                                 catch (Exception) { }
-                                                                                             }
-
-                                                                                             isAny.ShouldBeTrue();
-                                                                                         });
-                                                          });
+            dispatcher = Pleasure.MockStrict<IDispatcher>();
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
         }
 
@@ -79,6 +64,7 @@ namespace Incoding.MSpecContrib
 
         #region Properties
 
+        [Obsolete("Use mock.Execute() instead of mock.Original.Execute()", false)]
         public TMessage Original { get; set; }
 
         #endregion
@@ -88,18 +74,57 @@ namespace Incoding.MSpecContrib
         public void Execute()
         {
             Original.Execute();
-            dispatcher.VerifyAll();
+            ShouldBePushed();
             eventBroker.VerifyAll();
             repository.VerifyAll();
         }
 
-        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null) where TCommand : CommandBase
+        public MockMessage<TMessage, TResult> StubPushAsThrow<TCommand>(TCommand command, Exception ex, MessageExecuteSetting setting = null) where TCommand : CommandBase
         {
-            actions.Add(@base =>
-                        {
-                            var impCommand = @base as TCommand;
-                            impCommand.ShouldEqualWeak(command, dsl);
-                        });
+            dispatcher.StubPushAsThrow(command, ex, setting);
+            return this;
+        }
+
+        public void ShouldBePushed()
+        {
+            foreach (var stub in stubs)
+            {
+                if (stubsOfSuccess.GetOrDefault(stub.Key) != stub.Value.Count)
+                    throw new SpecificationException("Not Stub for {0}".F(stub.Key.Name));
+            }
+        }
+
+        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null, MessageExecuteSetting setting = null) where TCommand : CommandBase
+        {
+            command.Setting = command.Setting ?? (setting ?? new MessageExecuteSetting());
+            var type = typeof(TCommand);
+            var value = stubs.GetOrDefault(type, new List<CommandBase>());
+            value.Add(command);
+            if (!stubs.ContainsKey(type))
+                stubs.Add(type, value);
+            dispatcher.StubPush<TCommand>(arg =>
+                                          {
+                                              bool isAny = false;
+                                              foreach (var pair in stubs[type])
+                                              {
+                                                  try
+                                                  {
+                                                      arg.ShouldEqualWeak(pair as TCommand, dsl);
+                                                      isAny = true;
+                                                      if (stubsOfSuccess.ContainsKey(type))
+                                                          stubsOfSuccess[type]++;
+                                                      else
+                                                          stubsOfSuccess.Add(type, 1);
+                                                      break;
+                                                  }
+                                                  catch (InternalSpecificationException ex)
+                                                  {
+                                                      Console.WriteLine(ex);
+                                                  }
+                                              }
+
+                                              isAny.ShouldBeTrue();
+                                          });
             return this;
         }
 
@@ -186,23 +211,29 @@ namespace Incoding.MSpecContrib
             ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldEqualWeak(entity), callCount);
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, TNextResult result) where TQuery : QueryBase<TNextResult> 
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, TNextResult result) where TQuery : QueryBase<TNextResult>
         {
             dispatcher.StubQuery(query, result, new MessageExecuteSetting());
             return this;
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TNextResult result) where TQuery : QueryBase<TNextResult> 
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TNextResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TNextResult>
+        {
+            dispatcher.StubQuery(query, dsl, result, executeSetting);
+            return this;
+        }
+
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TNextResult result) where TQuery : QueryBase<TNextResult>
         {
             return StubQuery(Pleasure.Generator.Invent<TQuery>(), result);
         }
 
-        public MockMessage<TMessage, TResult> StubQueryAsNull<TQuery, TNextResult>() where TQuery : QueryBase<TNextResult> 
+        public MockMessage<TMessage, TResult> StubQueryAsNull<TQuery, TNextResult>() where TQuery : QueryBase<TNextResult>
         {
             return StubQuery<TQuery, TNextResult>(default(TNextResult));
         }
 
-        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(Action<IInventFactoryDsl<TQuery>> configure, TNextResult result) where TQuery : QueryBase<TNextResult> 
+        public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(Action<IInventFactoryDsl<TQuery>> configure, TNextResult result) where TQuery : QueryBase<TNextResult>
         {
             return StubQuery(Pleasure.Generator.Invent(configure), result);
         }
@@ -218,7 +249,7 @@ namespace Incoding.MSpecContrib
 
         public void ShouldBeIsResult(Action<TResult> verifyResult)
         {
-            verifyResult(Original.Result);
+            verifyResult((TResult)Original.Result);
         }
 
         #endregion
@@ -308,18 +339,6 @@ namespace Incoding.MSpecContrib
         public MockMessage<TMessage, TResult> StubLoadById<TEntity>(object id, TEntity res) where TEntity : class, IEntity, new()
         {
             return Stub(message => message.repository.StubLoadById(id, res));
-        }
-
-        [Obsolete("Please use method Execute instead of Original.Execute()",true)]
-        public void ShouldBePublished()
-        {
-            eventBroker.VerifyAll();
-        }
-
-        [Obsolete("Please use method Execute instead of Original.Execute()",true)]
-        public void ShouldPushed()
-        {
-            dispatcher.VerifyAll();
         }
 
         #endregion

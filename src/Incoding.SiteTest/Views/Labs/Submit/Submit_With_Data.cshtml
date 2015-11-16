@@ -1,19 +1,9 @@
-﻿        @using (Html.When(JqueryBind.Submit)
-                    .DoWithPreventDefault()
-                    .Submit(options =>
-                                {                                    
-                                    options.Data = new List<JqueryAjaxRoute>
-                                                       {
-                                                               new JqueryAjaxRoute
-                                                                   {
-                                                                           name = "optional",
-                                                                           value = Selector.Incoding.QueryString("Test")
-                                                                   }
-                                                       };
-                                })
-                    .AsHtmlAttributes()
-                    .ToBeginForm(Html, Url.Action("Submit", "Labs")))
-        {
-            <input name="value" type="text"/>
-            <input type="submit"  value="Save"/>
-        }
+﻿@using (Html.When(JqueryBind.Submit)
+            .PreventDefault()
+            .Submit(options => { options.Data = new RouteValueDictionary(new { value = "value", text = "text" }); })
+            .AsHtmlAttributes()
+            .ToBeginForm(Url.Action("Submit", "Labs")))
+{
+    <input name="value" type="text"/>
+    <input type="submit" value="Save"/>
+}

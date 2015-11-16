@@ -4,16 +4,18 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using Incoding.Quality;
     using JetBrains.Annotations;
 
     #endregion
 
-    public class UrlDispatcher
+    public class UrlDispatcher : IUrlDispatcher
     {
         #region Constants
 
@@ -46,22 +48,22 @@
 
         #endregion
 
-        #region Api Methods
+        #region IUrlDispatcher Members
 
-        public UrlQuery<TQuery> Query<TQuery>(object routes = null) where TQuery : new()
+        public IUrlQuery<TQuery> Query<TQuery>(object routes = null) where TQuery : new()
         {
             VerifySchema<TQuery>(routes);
             return new UrlQuery<TQuery>(urlHelper, routes);
         }
 
-        public UrlQuery<TQuery> Query<TQuery>(TQuery routes) where TQuery : new()
+        public IUrlQuery<TQuery> Query<TQuery>([NotNull] TQuery routes) where TQuery : new()
         {
-            return Query<TQuery>(routes as object);
+            return Query<TQuery>(routes: routes as object);
         }
 
-        public UrlPush Push<TCommand>(TCommand routes) where TCommand : new()
+        public UrlPush Push<TCommand>([NotNull] TCommand routes) where TCommand : new()
         {
-            return Push<TCommand>(routes as object);
+            return Push<TCommand>(routes: routes as object);
         }
 
         public UrlPush Push<TCommand>(object routes = null) where TCommand : new()
@@ -71,23 +73,21 @@
             return res.Push<TCommand>(routes);
         }
 
-        public string AsView([PathReference, NotNull] string incView)
+        public string AsView([PathReference] string incView)
         {
+            // ReSharper disable once Mvc.ActionNotResolved
+            // ReSharper disable once Mvc.ControllerNotResolved
             return urlHelper.Action("Render", "Dispatcher", new
                                                             {
                                                                     incView = incView, 
                                                             });
         }
 
-        public UrlModel<TModel> Model<TModel>()
-        {
-            return new UrlModel<TModel>(urlHelper, null);
-        }
-
-        public UrlModel<TModel> Model<TModel>(object routes)
+        public UrlModel<TModel> Model<TModel>(object routes = null)
         {
             VerifySchema<TModel>(routes);
-            return new UrlModel<TModel>(urlHelper, routes.GetType().IsTypicalType() ? new { incValue = routes } : routes);
+            var type = routes == null ? typeof(TModel) : routes.GetType();
+            return new UrlModel<TModel>(urlHelper, type.IsTypicalType() ? new { incValue = routes } : routes);
         }
 
         public UrlModel<TModel> Model<TModel>(TModel routes)
@@ -132,6 +132,8 @@
             public string AsView([PathReference, NotNull] string incView)
             {
                 defaultRoutes.Add("incView", incView);
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(model);
             }
@@ -139,7 +141,7 @@
             #endregion
         }
 
-        public class UrlQuery<TQuery>
+        public class UrlQuery<TQuery> : IUrlQuery<TQuery>
         {
             #region Fields
 
@@ -163,7 +165,13 @@
 
             #endregion
 
-            #region Api Methods
+            #region IUrlQuery<TQuery> Members
+
+            public UrlQuery<TQuery> ValidateOnly()
+            {
+                defaultRoutes.Add("incOnlyValidate", true);
+                return this;
+            }
 
             public UrlQuery<TQuery> EnableValidate()
             {
@@ -173,10 +181,12 @@
 
             public string AsFile(string incContentType = "", string incFileDownloadName = "")
             {
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("QueryToFile", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(new
                                                      {
-                                                             incContentType = incContentType,
+                                                             incContentType = incContentType, 
                                                              incFileDownloadName = incFileDownloadName
                                                      })
                                 .AppendToQueryString(query);
@@ -184,6 +194,8 @@
 
             public string AsJson()
             {
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("Query", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(query);
             }
@@ -191,7 +203,9 @@
             public string AsView([PathReference, NotNull] string incView)
             {
                 defaultRoutes.Add("incView", incView);
-                return urlHelper.Action("Render", "Dispatcher", defaultRoutes)                                
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
+                return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(query);
             }
 
@@ -203,7 +217,7 @@
             }
         }
 
-        public class UrlPush
+        public class UrlPush 
         {
             #region Fields
 
@@ -211,11 +225,16 @@
 
             readonly Dictionary<Type, List<object>> dictionary = new Dictionary<Type, List<object>>();
 
+            bool onlyValidate;
+
             bool isCompositeAsArray;
 
             #endregion
 
             #region Constructors
+
+            [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor, true), ExcludeFromCodeCoverage]
+            public UrlPush() { }
 
             public UrlPush(UrlHelper urlHelper)
             {
@@ -224,7 +243,13 @@
 
             #endregion
 
-            #region Api Methods
+            #region IUrlPush Members
+
+            public UrlPush OnlyValidate()
+            {
+                onlyValidate = true;
+                return this;
+            }
 
             public UrlPush Push<TCommand>(object routes)
             {
@@ -253,6 +278,10 @@
                 var routeValues = new RouteValueDictionary { { "incTypes", dictionary.Select(r => GetTypeName(r.Key)).AsString(separatorByType) } };
                 if (isCompositeAsArray)
                     routeValues.Add("incIsCompositeAsArray", true);
+                if (onlyValidate)
+                    routeValues.Add("incOnlyValidate", true);
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("Push", "Dispatcher", routeValues)
                                 .AppendToQueryString(GetQueryString());
             }
@@ -291,6 +320,7 @@
 
         #endregion
 
+
         void VerifySchema<TOriginal>(object routes)
         {
             if (!IsVerifySchema || routes == null)
@@ -310,6 +340,19 @@
                                       ? type.FullName
                                       : type.Name;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
+        }
+
+        public interface IUrlQuery<TQuery>
+        {
+            UrlQuery<TQuery> ValidateOnly();
+
+            UrlQuery<TQuery> EnableValidate();
+
+            string AsFile(string incContentType = "", string incFileDownloadName = "");
+
+            string AsJson();
+
+            string AsView([PathReference, NotNull] string incView);
         }
     }
 }

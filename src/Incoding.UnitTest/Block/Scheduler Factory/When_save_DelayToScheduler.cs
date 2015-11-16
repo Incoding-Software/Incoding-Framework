@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System.Data;
     using Incoding.Block;
     using Incoding.Data;
     using Incoding.MSpecContrib;
@@ -14,10 +15,11 @@
     [Subject(typeof(DelayToScheduler)), Isolated]
     public class When_save_DelayToScheduler : SpecWithPersistenceSpecification<DelayToScheduler>
     {
-        It should_be_nhibernate = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildNhibernateRepository())
+        It should_be_nhibernate = () => new PersistenceSpecification<DelayToScheduler>()
                                                 .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
 
-        It should_be_ef = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildEFRepository(new IncDbContext("IncRealEFSchedulerDb", typeof(DelayToScheduler).Assembly)))
+        It should_be_ef = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildEFSessionFactory(new IncDbContext("IncRealEFSchedulerDb", typeof(DelayToScheduler).Assembly))
+                .Create(IsolationLevel.ReadUncommitted, true, null).GetRepository())
                                         .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
 
         It should_be_raven_db = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildRavenDbRepository(new DocumentStore

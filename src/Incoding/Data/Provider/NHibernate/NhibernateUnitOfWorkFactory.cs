@@ -5,7 +5,7 @@ namespace Incoding.Data
     using System.Data;
 
     #endregion
-    
+
     public class NhibernateUnitOfWorkFactory : IUnitOfWorkFactory
     {
         #region Fields
@@ -25,9 +25,9 @@ namespace Incoding.Data
 
         #region IUnitOfWorkFactory Members
 
-        public IUnitOfWork Create(IsolationLevel level, string connection = null)
+        public IUnitOfWork Create(IsolationLevel level, bool isFlush, string connection = null)
         {
-            return new NhibernateUnitOfWork(this.sessionFactory, connection, level);
+            return new NhibernateUnitOfWork(sessionFactory.Open(connection), level, isFlush);
         }
 
         #endregion

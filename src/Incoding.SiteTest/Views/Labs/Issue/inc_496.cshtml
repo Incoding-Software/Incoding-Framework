@@ -1,0 +1,5 @@
+﻿@(Html.When(JqueryBind.Click)
+              .Ajax(dispatcher => dispatcher.AsView("~/Views/Labs/Bind/Inc_Ajax_Error.cshtml"))
+              .OnSuccess(dsl => dsl.Self().JQuery.Dom.Html())
+              .AsHtmlAttributes()
+              .ToButton("Insert"))

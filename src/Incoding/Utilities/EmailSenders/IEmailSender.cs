@@ -7,6 +7,7 @@ namespace Incoding.Utilities
 
     #endregion
 
+    [Obsolete("Please use SendEmailCommand")]
     public interface IEmailSender : IDisposable
     {
         void Send(MailMessage mailMessage);

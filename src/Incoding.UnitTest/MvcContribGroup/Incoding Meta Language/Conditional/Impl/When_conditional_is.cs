@@ -22,7 +22,8 @@
                                                 .GetData()
                                                 .ShouldEqualConditionalIs(left: "||javascript*confirm('Message')||",
                                                                           right: "||value*True||",
-                                                                          method: "equal");
+                                                                          method: "equal");  
+  
 
         It should_be_is_confirm_false = () => new ConditionalIs(() => !Selector.JS.Confirm("Message"), true)
                                                       .GetData()

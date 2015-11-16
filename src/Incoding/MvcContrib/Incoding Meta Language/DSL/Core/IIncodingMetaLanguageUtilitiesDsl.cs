@@ -5,5 +5,6 @@ namespace Incoding.MvcContrib
         IncodingMetaCallbackDocumentDsl Document { get; }
 
         IncodingMetaCallbackWindowDsl Window { get; }
+        
     }
 }

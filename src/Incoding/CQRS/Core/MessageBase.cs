@@ -14,7 +14,7 @@
 
     #endregion
 
-    public abstract class MessageBase<TResult> : IMessage<TResult>
+    public abstract class MessageBase : IMessage
     {
         #region Fields
 
@@ -42,19 +42,25 @@
         #region IMessage<TResult> Members
 
         [IgnoreCompare("Design fixed"), JsonIgnore, IgnoreDataMember]
-        public virtual TResult Result { get; protected set; }
+        public virtual object Result { get; protected set; }
 
         [IgnoreCompare("Design fixed"), IgnoreDataMember]
         public MessageExecuteSetting Setting { get; set; }
 
-        public virtual void OnExecute(IDispatcher current, IUnitOfWork unitOfWork)
+        public virtual void OnExecute(IDispatcher current, Lazy<IUnitOfWork> unitOfWork)
         {
-            Result = default(TResult);
-            lazyRepository = new Lazy<IRepository>(() => { return unitOfWork.GetRepository(); });
+            Result = null;
+            lazyRepository = new Lazy<IRepository>(() => unitOfWork.Value.GetRepository());
             lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
             messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(current, Setting));
             Execute();
         }
+
+        #endregion
+
+        #region Api Methods
+
+        protected abstract void Execute();
 
         #endregion
 
@@ -64,20 +70,15 @@
         {
             #region Fields
 
-            readonly IDispatcher dispatcher;
-
-            readonly MessageExecuteSetting outerSetting;
+            readonly MessageDispatcher dispatcher;
 
             #endregion
 
             #region Constructors
 
-            public AsyncMessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
+            public AsyncMessageDispatcher(MessageDispatcher dispatcher)
             {
-                if (dispatcher == null)
-                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
                 this.dispatcher = dispatcher;
-                outerSetting = setting;
             }
 
             #endregion
@@ -86,26 +87,14 @@
 
             public Task<TQueryResult> Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null) where TQueryResult : class
             {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection, 
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
-                return Task<TQueryResult>.Factory.StartNew(() => dispatcher.Query(query, setting));
+                return Task<TQueryResult>.Factory.StartNew(() => dispatcher.Query(query, configuration));
             }
 
             public Task<object> Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
             {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection, 
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
                 return Task.Factory.StartNew(() =>
                                              {
-                                                 dispatcher.Push(command, new MessageExecuteSetting());
+                                                 dispatcher.Push(command, configuration);
                                                  return command.Result;
                                              });
             }
@@ -127,8 +116,7 @@
 
             public MessageDispatcher(IDispatcher dispatcher, MessageExecuteSetting setting)
             {
-                if (dispatcher == null)
-                    throw new Exception("External dispatcher should not be null on internal dispatcher creation");
+                Guard.NotNull("dispatcher", dispatcher, errorMessage: "External dispatcher should not be null on internal dispatcher creation");
                 this.dispatcher = dispatcher;
                 outerSetting = setting;
             }
@@ -139,34 +127,24 @@
 
             public AsyncMessageDispatcher Async()
             {
-                return new AsyncMessageDispatcher(dispatcher, outerSetting);
+                return new AsyncMessageDispatcher(this);
             }
 
-            public MessageDispatcher New(MessageExecuteSetting settings = null)
+            public IDispatcher New()
             {
-                return new MessageDispatcher(IoCFactory.Instance.TryResolve<IDispatcher>(), settings ?? new MessageExecuteSetting());
+                return IoCFactory.Instance.TryResolve<IDispatcher>();
             }
 
             public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null)
             {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection, 
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
-                return dispatcher.Query(query, setting);
+                configuration.Do(action => action(outerSetting));
+                return dispatcher.Query(query, outerSetting);
             }
 
             public void Push(CommandBase command, Action<MessageExecuteSetting> configuration = null)
             {
-                var setting = new MessageExecuteSetting
-                              {
-                                      Connection = outerSetting.Connection, 
-                                      DataBaseInstance = outerSetting.DataBaseInstance
-                              };
-                configuration.Do(action => action(setting));
-                dispatcher.Push(command, new MessageExecuteSetting());
+                configuration.Do(action => action(outerSetting));
+                dispatcher.Push(command, outerSetting);
             }
 
             #endregion
@@ -174,6 +152,5 @@
 
         #endregion
 
-        protected abstract void Execute();
     }
 }

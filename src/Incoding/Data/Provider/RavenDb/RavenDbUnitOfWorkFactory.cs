@@ -8,7 +8,7 @@
 
     #endregion
 
-    public class RavenDbUnitOfWorkFactory : IUnitOfWorkFactory
+    public class RavenDbUnitOfWorkFactory
     {
         #region Fields
 
@@ -27,9 +27,9 @@
 
         #region IUnitOfWorkFactory Members
 
-        public IUnitOfWork Create(IsolationLevel level, string connection = null)
+        public IUnitOfWork Create(IsolationLevel level, bool isFlush, string connection = null)
         {
-            return new RavenDbUnitOfWork(this.sessionFactory, connection,level);
+            return new RavenDbUnitOfWork(sessionFactory.Open(connection), level, isFlush);
         }
 
         #endregion

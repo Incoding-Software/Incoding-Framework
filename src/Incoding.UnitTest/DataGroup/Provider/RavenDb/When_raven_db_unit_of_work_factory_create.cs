@@ -2,33 +2,24 @@
 {
     #region << Using >>
 
-    using System.Data;
-    using System.Data.SqlClient;
     using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
+    using Raven.Client;
 
     #endregion
 
     [Subject(typeof(RavenDbUnitOfWorkFactory))]
-    public class When_raven_db_unit_of_work_factory_create
+    public class When_raven_db_unit_of_work_factory_create : Behavior_unit_of_work_factory
     {
-        #region Establish value
+        Because of = () =>
+                     {
+                         var document = Pleasure.MockAsObject<IDocumentSession>();
+                         var sessionFactory = Pleasure.MockAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(document));
+                         unitOfWork = new RavenDbUnitOfWorkFactory(sessionFactory)
+                                 .Create(isolated, isFlush, connectionString);
+                     };
 
-        static RavenDbUnitOfWorkFactory factory;
-
-        static IUnitOfWork unitOfWork;
-
-        #endregion
-
-        Establish establish = () =>
-                                  {
-                                      var sessionFactory = Pleasure.MockStrictAsObject<IRavenDbSessionFactory>();
-                                      factory = new RavenDbUnitOfWorkFactory(sessionFactory);
-                                  };
-
-        Because of = () => { unitOfWork = factory.Create(IsolationLevel.ReadCommitted, Pleasure.Generator.String()); };
-
-        It should_be_create = () => unitOfWork.ShouldNotBeNull();
+        Behaves_like<Behavior_unit_of_work_factory> verify;
     }
 }

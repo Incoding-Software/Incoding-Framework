@@ -2,39 +2,25 @@
 {
     #region << Using >>
 
-    using System.Data;
+    using System.Data.Entity;
     using Incoding.Data;
-    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
 
     #endregion
 
     [Subject(typeof(EntityFrameworkUnitOfWorkFactory))]
-    public class When_entity_framework_unit_of_work_factory
+    public class When_entity_framework_unit_of_work_factory : Behavior_unit_of_work_factory
     {
-        #region Establish value
-
-        static EntityFrameworkUnitOfWorkFactory factory;
-
-        static IsolationLevel isolated;
-
-        static string connectionString;
-
-        static IUnitOfWork unitOfWork;
-
-        #endregion
-
         Establish establish = () =>
-                                  {
-                                      isolated = Pleasure.Generator.Invent<IsolationLevel>();
-                                      connectionString = Pleasure.Generator.String();
-                                      var sessionFactory = Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>();
-                                      factory = new EntityFrameworkUnitOfWorkFactory(sessionFactory);
-                                  };
+                              {
+                                  var db = Pleasure.MockAsObject<DbContext>();
+                                  var sessionFactory = Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(db));
+                                  unitOfWork = new EntityFrameworkUnitOfWorkFactory(sessionFactory).Create(isolated, isFlush, connectionString);
+                              };
 
-        Because of = () => { unitOfWork = factory.Create(isolated, connectionString); };
+        Because of = () => { };
 
-        It should_be_isolated = () => unitOfWork.TryGetValue("isolationLevel").ShouldEqual(isolated);
+        Behaves_like<Behavior_unit_of_work_factory> verify;
     }
 }

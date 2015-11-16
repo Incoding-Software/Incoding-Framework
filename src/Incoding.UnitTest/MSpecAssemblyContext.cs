@@ -1,7 +1,7 @@
-﻿using Incoding.Data;
-
-namespace Incoding.UnitTest
+﻿namespace Incoding.UnitTest
 {
+    #region << Using >>
+
     #region << Using >>
 
     using System.Configuration;
@@ -13,7 +13,9 @@ namespace Incoding.UnitTest
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Machine.Specifications.Annotations;
-    using NHibernate.Context;
+    using NHibernate.Tool.hbm2ddl;
+
+    #endregion
 
     #endregion
 
@@ -29,7 +31,6 @@ namespace Incoding.UnitTest
 
         #region Factory constructors
 
-
         public static FluentConfiguration NhibernateFluent()
         {
             return Fluently
@@ -37,6 +38,7 @@ namespace Incoding.UnitTest
                     .Database(MsSqlConfiguration.MsSql2008
                                                 .ConnectionString(ConnectionString)
                                                 .ShowSql())
+                    .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
                     .Mappings(configuration => configuration.FluentMappings
                                                             .Add(typeof(DelayToScheduler.Map))
                                                             .AddFromAssembly(typeof(DbEntity).Assembly));
@@ -51,7 +53,7 @@ namespace Incoding.UnitTest
             var currentUiCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = currentUiCulture;
             Thread.CurrentThread.CurrentCulture = currentUiCulture;
-            PleasureForData.StartNhibernate(NhibernateFluent());
+            PleasureForData.StartNhibernate(() => NhibernateFluent());
         }
 
         public void OnAssemblyComplete() { }

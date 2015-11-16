@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System.Configuration;
+    using System.Data;
     using Incoding.Data;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
@@ -26,7 +27,7 @@
                                                 dbContext.Configuration.ValidateOnSaveEnabled = false;
                                                 dbContext.Configuration.LazyLoadingEnabled = true;
 
-                                                new PersistenceSpecification<DbEntity>(PleasureForData.BuildEFRepository(dbContext))
+                                                new PersistenceSpecification<DbEntity>(PleasureForData.BuildEFSessionFactory(dbContext).Create(IsolationLevel.ReadUncommitted, true).GetRepository())
                                                         .CheckProperty(r => r.Value, Pleasure.Generator.String())
                                                         .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
                                                         .CheckProperty(r => r.Reference)
@@ -34,14 +35,14 @@
                                                         .VerifyMappingAndSchema();
                                             };
 
-        It should_be_nhibernate = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildNhibernateRepository())
+        It should_be_nhibernate = () => new PersistenceSpecification<DbEntity>()
                                                 .CheckProperty(r => r.Value, Pleasure.Generator.String())
                                                 .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
                                                 .CheckProperty(r => r.Reference)
                                                 .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
                                                 .VerifyMappingAndSchema();
 
-        It should_be_nhibernate_without_mapping = () => new PersistenceSpecification<DbEntityWithoutMapping>(PleasureForData.BuildNhibernateRepository())
+        It should_be_nhibernate_without_mapping = () => new PersistenceSpecification<DbEntityWithoutMapping>()
                                                                 .VerifyMappingAndSchema();
 
         It should_be_mongo_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildMongoDbRepository(ConfigurationManager.ConnectionStrings["IncRealMongoDb"].ConnectionString))

@@ -8,24 +8,28 @@
 
     #endregion
 
-    public class RavenDbUnitOfWork : UnitOfWorkBase<IDocumentSession, IRavenDbSessionFactory>
+    public class RavenDbUnitOfWork : UnitOfWorkBase<IDocumentSession>
     {
         #region Fields
 
-        TransactionScope transaction;
+        readonly TransactionScope transaction;
 
         #endregion
 
         #region Constructors
 
-        public RavenDbUnitOfWork(IRavenDbSessionFactory sessionFactory, string connection, IsolationLevel level)
-                : base(sessionFactory, level, connection) { }
+        public RavenDbUnitOfWork(IDocumentSession session, IsolationLevel level, bool isFlush)
+                : base(session, level, isFlush)
+        {
+            transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
+            repository = new RavenDbRepository(session);
+        }
 
         #endregion
 
         protected override void InternalFlush()
         {
-            session.Value.SaveChanges();
+            session.SaveChanges();
         }
 
         protected override void InternalCommit()
@@ -36,13 +40,6 @@
         protected override void InternalSubmit()
         {
             transaction.Dispose();
-        }
-
-        public override IRepository GetRepository()
-        {
-            if (transaction == null)
-                transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
-            return new RavenDbRepository(session.Value);
         }
     }
 }

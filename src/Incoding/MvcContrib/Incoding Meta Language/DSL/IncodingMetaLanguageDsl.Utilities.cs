@@ -4,24 +4,15 @@
     {
         #region IIncodingMetaLanguageCallbackBodyDsl Members
 
-        public IIncodingMetaLanguageUtilitiesDsl Utilities
-        {
-            get { return this; }
-        }
+        public IIncodingMetaLanguageUtilitiesDsl Utilities { get { return this; } }
 
         #endregion
 
         #region IIncodingMetaLanguageUtilitiesDsl Members
 
-        public IncodingMetaCallbackWindowDsl Window
-        {
-            get { return new IncodingMetaCallbackWindowDsl(this); }
-        }
+        public IncodingMetaCallbackWindowDsl Window { get { return new IncodingMetaCallbackWindowDsl(this); } }
 
-        public IncodingMetaCallbackDocumentDsl Document
-        {
-            get { return new IncodingMetaCallbackDocumentDsl(this); }
-        }
+        public IncodingMetaCallbackDocumentDsl Document { get { return new IncodingMetaCallbackDocumentDsl(this); } }
 
         #endregion
     }

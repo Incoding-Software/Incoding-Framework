@@ -12,7 +12,7 @@
 
     #endregion
 
-    [Subject(typeof(SchedulerFactory))]
+    [Subject(typeof(StartSchedulerCommand))]
     public class When_scheduler_factory_initialize_with_global_throw
     {
         #region Establish value
@@ -21,21 +21,23 @@
 
         static Exception exception;
 
+        static MockCommand<StartSchedulerCommand> mockMessage;
+
         #endregion
 
         Establish establish = () =>
                               {
+                                  var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.Conditional, () => { throw new ArgumentException(); }));
                                   logger = Pleasure.Mock<ILogger>();
-                                  LoggingFactory.Instance.Initialize(logging => logging.WithPolicy(policy => policy.For("Test").Use(logger.Object)));
+                                  LoggingFactory.Instance.Initialize(logging => logging.WithPolicy(policy => policy.For(command.Log_Debug).Use(logger.Object)));
+
+                                  mockMessage = MockCommand<StartSchedulerCommand>
+                                          .When(command);
                               };
 
         Because of = () =>
                      {
-                         exception = Catch.Exception(() => SchedulerFactory.Instance.Initialize(scheduler =>
-                                                                                                {
-                                                                                                    scheduler.Log_Debug = "Test";
-                                                                                                    scheduler.Conditional = () => { throw new ArgumentException(); };
-                                                                                                }));
+                         exception = Catch.Exception(() => mockMessage.Execute());
                          Pleasure.Sleep1000Milliseconds();
                      };
 

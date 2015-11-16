@@ -1,5 +1,7 @@
 namespace Incoding.MSpecContrib
 {
+    using Machine.Specifications.Annotations;
+
     #region << Using >>
 
     using System;
@@ -25,7 +27,7 @@ namespace Incoding.MSpecContrib
         ICompareFactoryDsl<TActual, TExpected> ForwardToValue<TValue>(Expression<Func<TActual, TValue>> actualProp, TValue value);
 
         ICompareFactoryDsl<TActual, TExpected> ForwardToValue(string actualProp, object value);
-
+        
         ICompareFactoryDsl<TActual, TExpected> ForwardToAction(Expression<Func<TActual, object>> actualProp, Action<TActual> predicate);
 
         ICompareFactoryDsl<TActual, TExpected> ForwardToAction(string actualProp, Action<TActual> predicate);
@@ -38,11 +40,12 @@ namespace Incoding.MSpecContrib
 
         ICompareFactoryDsl<TActual, TExpected> IgnoreBecauseCalculate(Expression<Func<TActual, object>> actualIgnore);
 
-        ICompareFactoryDsl<TActual, TExpected> Ignore(string actualIgnore, string reason);
+        ICompareFactoryDsl<TActual, TExpected> Ignore(string actualIgnore, [UsedImplicitly] string reason);
 
         ICompareFactoryDsl<TActual, TExpected> IncludeAllFields();
 
         ICompareFactoryDsl<TActual, TExpected> SetMaxRecursionDeep(int deep);
+
         ICompareFactoryDsl<TActual, TExpected> IgnoreRecursionError();
 
         ICompareFactoryDsl<TActual, TExpected> NotNull(Expression<Func<TActual, object>> actualProp);

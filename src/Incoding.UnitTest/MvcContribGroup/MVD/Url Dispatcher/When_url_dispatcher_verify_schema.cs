@@ -37,18 +37,18 @@
                                       UrlDispatcher.IsVerifySchema = true;
                                   };
 
-        It should_be_push = () => Catch.Exception(() => urlDispatcher.Push<Fake>(new
-                                                                                     {
-                                                                                             Test = Pleasure.Generator.String(),
-                                                                                             TestNotFound = Pleasure.Generator.String()
-                                                                                     }))
+        It should_be_push = () => Catch.Exception(() => urlDispatcher.Push<Fake>(routes: new
+                                                                                         {
+                                                                                                 Test = Pleasure.Generator.String(),
+                                                                                                 TestNotFound = Pleasure.Generator.String()
+                                                                                         }))
                                        .ShouldBeOfType<ArgumentException>();
 
-        It should_be_query = () => Catch.Exception(() => urlDispatcher.Query<Fake>(new
-                                                                                       {
-                                                                                               Test = Pleasure.Generator.String(),
-                                                                                               TestNotFound = Pleasure.Generator.String()
-                                                                                       }))
+        It should_be_query = () => Catch.Exception(() => urlDispatcher.Query<Fake>(routes: new
+                                                                                           {
+                                                                                                   Test = Pleasure.Generator.String(),
+                                                                                                   TestNotFound = Pleasure.Generator.String()
+                                                                                           }))
                                         .ShouldBeOfType<ArgumentException>();
 
         It should_be_model = () => Catch.Exception(() => urlDispatcher.Model<Fake>(new

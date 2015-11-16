@@ -20,7 +20,7 @@
 
         #region Nested classes
 
-        [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true), ExcludeFromCodeCoverage]
+        [Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true), ExcludeFromCodeCoverage]
         public class Map : NHibernateEntityMap<Product>
         {
             ////ncrunch: no coverage start

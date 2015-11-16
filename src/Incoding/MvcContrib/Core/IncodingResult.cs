@@ -13,49 +13,63 @@ namespace Incoding.MvcContrib
 
     public class IncodingResult : ActionResult
     {
+        public override string ToString()
+        {
+            return Data.ToJsonString();
+        }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var response = context.HttpContext.Response;
+            var isMultiPart = context.HttpContext.Request.ContentType.Contains("multipart/form-data");
+            var isIe = context.HttpContext.Request.Browser.Browser.IsAnyEqualsIgnoreCase("IE");
+            response.ContentType = isMultiPart && isIe ? "text/html" : "application/json";                 
+            response.Write(Data.ToJsonString());
+        }
+
         #region Factory constructors
 
         public static IncodingResult Error(object data = null)
         {
             return new IncodingResult
-                       {
-                               Data = new JsonData(false, data, string.Empty)
-                       };
+                   {
+                           Data = new JsonData(false, data, string.Empty)
+                   };
         }
 
         public static IncodingResult Error(ModelStateDictionary modelState)
         {
             var errorData = modelState
                     .Select(valuePair => new JsonModelStateData
-                                             {
-                                                     name = valuePair.Key,
-                                                     isValid = !modelState[valuePair.Key].Errors.Any(),
-                                                     errorMessage = modelState[valuePair.Key].Errors
-                                                                                             .FirstOrDefault()
-                                                                                             .ReturnOrDefault(s => s.ErrorMessage, string.Empty)
-                                             });
+                                         {
+                                                 name = valuePair.Key,
+                                                 isValid = !modelState[valuePair.Key].Errors.Any(),
+                                                 errorMessage = modelState[valuePair.Key].Errors
+                                                                                         .FirstOrDefault()
+                                                                                         .ReturnOrDefault(s => s.ErrorMessage, string.Empty)
+                                         });
 
             return new IncodingResult
-                       {
-                               Data = new JsonData(false, errorData, string.Empty)
-                       };
+                   {
+                           Data = new JsonData(false, errorData, string.Empty)
+                   };
         }
 
         public static IncodingResult RedirectTo(string url)
         {
             Guard.NotNullOrWhiteSpace("url", url);
             return new IncodingResult
-                       {
-                               Data = new JsonData(true, string.Empty, url)
-                       };
+                   {
+                           Data = new JsonData(true, string.Empty, url)
+                   };
         }
 
         public static IncodingResult Success(object data = null)
         {
             return new IncodingResult
-                       {
-                               Data = new JsonData(true, data, string.Empty)
-                       };
+                   {
+                           Data = new JsonData(true, data, string.Empty),
+                   };
         }
 
         public static IncodingResult Success(Func<object, HelperResult> text)
@@ -115,17 +129,5 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
-        public override string ToString()
-        {
-            return Data.ToJsonString();
-        }
-
-        public override void ExecuteResult(ControllerContext context)
-        {
-            var response = context.HttpContext.Response;
-            response.ContentType = "application/json";
-            response.Write(Data.ToJsonString());
-        }
     }
 }

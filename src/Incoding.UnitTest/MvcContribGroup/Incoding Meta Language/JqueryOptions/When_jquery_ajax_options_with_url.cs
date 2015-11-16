@@ -2,34 +2,93 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
-    using System.Collections.Generic;
-    using Incoding.MSpecContrib;
+    using System.Linq;
+    using System.Web.Routing;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
     #endregion
 
     [Subject(typeof(JqueryAjaxOptions))]
-    public class When_jquery_ajax_options_with_url
+    public class When_jquery_ajax_options_with_data
     {
         #region Establish value
 
         static JqueryAjaxOptions options;
 
+        static RouteValueDictionary data = new RouteValueDictionary(new { value1 = 1, value2 = 2 });
+
         #endregion
 
-        Establish establish = () => { options = new JqueryAjaxOptions(JqueryAjaxOptions.Default); };
+        It should_be_get = () =>
+                           {
+                               options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                               options.Data = data;
+                               options.Data.ShouldEqual(data);
+                           };
 
-        Because of = () => options.Url = "/Dispatcher/Query?type=IsAuthorizeUserQuery&UserId=||cookie*OwnerId||&CustomerId=$('#id')";
+        It should_be_set_by_default = () =>
+                                      {
+                                          var def = JqueryAjaxOptions.Default;
+                                          def.Data = new RouteValueDictionary(new { Id = "id" });
+                                          options = new JqueryAjaxOptions(def);
+                                          options.Data.ShouldEqual(def.Data);
+                                      };
 
-        It should_be_has_data = () =>
-                                    {
-                                        var dataAsCollection = options["data"] as IEnumerable<object>;
-                                        dataAsCollection.ShouldEqualWeakEach(Pleasure.ToEnumerable<object>(new { name = "type", selector = "IsAuthorizeUserQuery" },
-                                                                                                           new { name = "UserId", selector = "||cookie*OwnerId||" },
-                                                                                                           new { name = "CustomerId", selector = "$('#id')" }));
-                                    };
+        It should_be_set_data_and_then_url = () =>
+                                             {
+                                                 options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                 options.Data = data;
+                                                 options.Url = "/Test/Home";
 
-        It should_be_clear_url = () => options["url"].ShouldEqual("/Dispatcher/Query");
+                                                 new[] { options["url"], options.Url }.All(o => o.ToString() == "/Test/Home?value1=1&value2=2").ShouldBeTrue();
+                                             };
+
+        It should_be_set_data_and_then_url_scenario_rap_appointment = () =>
+                                                                      {
+                                                                          options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                                          options.Data = new RouteValueDictionary(new
+                                                                                                                  {
+                                                                                                                          inc_csrf_token = Selector.JS.Eval("AjaxAdapter.Token"),
+                                                                                                                          CurrentAdmissionId = Selector.Incoding.QueryString("CurrentAdmissionId"),
+                                                                                                                          CurrentOrderId = Selector.Incoding.QueryString("CurrentOrderId"),
+                                                                                                                  });
+                                                                          options.Url = "/Dispatcher/Query?incType=GetDetailForAppointmentNameQuery&Id=$(this.self)";
+                                                                          new[] { options["url"], options.Url }.All(o => o.ToString() == "/Dispatcher/Query?incType=GetDetailForAppointmentNameQuery&Id=$(this.self)&inc_csrf_token=||javascript*AjaxAdapter.Token||&CurrentAdmissionId=||queryString*CurrentAdmissionId||&CurrentOrderId=||queryString*CurrentOrderId||").ShouldBeTrue();
+                                                                      };
+
+        It should_be_set_data_and_then_url_with_jquery_old = () =>
+                                                             {
+                                                                 options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                                 options.Data = data;
+                                                                 options.Url = "/Test/Home?value3=$('#aws')";
+                                                                 
+                                                                 new[] { options["url"], options.Url }.All(o => o.ToString() == "/Test/Home?value3=$('%23aws')&value1=1&value2=2").ShouldBeTrue();
+                                                             };
+
+        It should_be_set_data_with_empty_url = () =>
+                                               {
+                                                   options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                   options.Data = data;
+
+                                                   new[] { options["url"], options.Url }.All(o => o.ToString() == "?value1=1&value2=2").ShouldBeTrue();
+                                               };
+
+        It should_be_set_url_and_then_data = () =>
+                                             {
+                                                 options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                 options.Url = "/Test/Home";
+                                                 options.Data = data;
+
+                                                 new[] { options["url"], options.Url }.All(o => o.ToString() == "/Test/Home?value1=1&value2=2").ShouldBeTrue();
+                                             };
+
+        It should_be_set_data_with_null_url = () =>
+                                              {
+                                                  options = new JqueryAjaxOptions(new JqueryAjaxOptions());
+                                                  options.Data = data;
+
+                                                  new[] { options["url"], options.Url }.All(o => o.ToString() == "?value1=1&value2=2").ShouldBeTrue();
+                                              };
     }
 }

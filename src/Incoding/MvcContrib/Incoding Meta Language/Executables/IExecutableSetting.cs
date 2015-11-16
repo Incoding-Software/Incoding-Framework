@@ -9,16 +9,17 @@ namespace Incoding.MvcContrib
 
     public interface IExecutableSetting
     {
+        [Obsolete("Use If with expression")]
         IExecutableSetting If(Action<IConditionalBuilder> configuration);
 
         IExecutableSetting If(Expression<Func<bool>> expression);
-        
-        void TimeOut(double millisecond);
 
-        void TimeOut(TimeSpan time);
+        IExecutableSetting TimeOut(double millisecond);
 
-        void Interval(double millisecond, out string intervalId);
+        IExecutableSetting TimeOut(TimeSpan time);
 
-        void Interval(TimeSpan time, out string intervalId);
+        IExecutableSetting Interval(double millisecond, out string intervalId);
+
+        IExecutableSetting Interval(TimeSpan time, out string intervalId);
     }
 }

@@ -2,7 +2,7 @@
 {
     #region << Using >>
 
-    using System;    
+    using System;
     using System.Linq;
     using Incoding.CQRS;
     using Incoding.Extensions;
@@ -11,44 +11,65 @@
 
     /// <summary>
     ///     Query returns next date for Scheduler by provided settings.
-    /// </summary>    
+    /// </summary>
     public class GetRecurrencyDateQuery : QueryBase<DateTime?>
     {
+        #region Properties
+
+        public DateTime? EndDate { get; set; }
+
+        public DateTime? NowDate { get; set; }
+
+        public int? RepeatCount { get; set; }
+
+        public DayOfWeek? RepeatDays { get; set; }
+
+        public int RepeatInterval { get; set; }
+
+        public RepeatType Type { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        #endregion
+
+        #region Enums
+
         [Flags]
         public enum DayOfWeek
         {
-            Sunday = 1,
+            Sunday = 1, 
 
-            Monday = 2,
+            Monday = 2, 
 
-            Tuesday = 4,
+            Tuesday = 4, 
 
-            Wednesday = 6,
+            Wednesday = 8, 
 
-            Thursday = 8,
+            Thursday = 16, 
 
-            Friday = 16,
+            Friday = 32, 
 
-            Saturday = 32,
+            Saturday = 64, 
         }
 
         public enum RepeatType
         {
-            Once = 0,
+            Once = 0, 
 
-            Minutely = 1,
+            Minutely = 1, 
 
-            Hourly = 2,
+            Hourly = 2, 
 
-            Daily = 3,
+            Daily = 3, 
 
-            Weekly = 4,
+            Weekly = 4, 
 
-            Monthly = 5,
+            Monthly = 5, 
 
             Yearly = 6
         }
 
+        #endregion
 
         protected override DateTime? ExecuteResult()
         {
@@ -80,6 +101,7 @@
                             break;
                         }
                     }
+
                     if (notSetted)
                         nextDayOfWeek = dayOfWeeks[0].ToDayOfWeek();
 
@@ -98,17 +120,19 @@
                 {
                     if (nextDate > EndDate)
                         return null;
-                    if (nextDate >= now)
+                    if (nextDate > now)
                         return nextDate;
 
                     nextDate = nextDate.AddTimeByRepeatType(repeatType, repeatInterval);
                 }
             }
+
             if (RepeatCount > 0)
             {
-                for (int i = 1; i <= RepeatCount; i++)
+                var repeatCount = RepeatCount;
+                for (int i = 1; i <= repeatCount; i++)
                 {
-                    if (nextDate >= now)
+                    if (nextDate > now)
                         return nextDate;
 
                     nextDate = nextDate.AddTimeByRepeatType(repeatType, repeatInterval);
@@ -116,31 +140,14 @@
 
                 return null;
             }
+
             for (;;)
             {
-                if (nextDate >= now)
+                if (nextDate > now)
                     return nextDate;
 
                 nextDate = nextDate.AddTimeByRepeatType(repeatType, repeatInterval);
             }
         }
-
-        #region Properties
-
-        public DateTime? EndDate { get; set; }
-
-        public DateTime? NowDate { get; set; }
-
-        public int? RepeatCount { get; set; }
-
-        public DayOfWeek? RepeatDays { get; set; }
-
-        public int RepeatInterval { get; set; }
-
-        public RepeatType Type { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        #endregion
     }
 }

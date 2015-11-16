@@ -3,7 +3,6 @@
     #region << Using >>
 
     using System;
-    using System.Configuration;
     using System.Data;
     using System.Data.Entity;
     using Incoding.Data;
@@ -22,37 +21,35 @@
         static void Run(Action<EntityFrameworkUnitOfWork, Mock<DbContext>> action, bool isOpen = true)
         {
             var dbContext = Pleasure.Mock<DbContext>();
-            string connectionString = ConfigurationManager.ConnectionStrings["IncRealEFDb"].ConnectionString;
-            var sessionFactory = Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(dbContext.Object));
-            var unitOfWork = new EntityFrameworkUnitOfWork(sessionFactory, IsolationLevel.ReadCommitted, connectionString);
-            
+            var unitOfWork = new EntityFrameworkUnitOfWork(dbContext.Object, IsolationLevel.ReadCommitted, true);
+
             action(unitOfWork, dbContext);
         }
 
         #endregion
 
         It should_be_flush = () => Run((work, context) =>
-                                           {
-                                               work.Flush();
-                                               context.Verify(r => r.SaveChanges(), Times.Once());
-                                           });
+                                       {
+                                           work.Flush();
+                                           context.Verify(r => r.SaveChanges(), Times.Once());
+                                       });
 
         It should_be_flush_without_open = () => Run((work, context) =>
-                                                        {
-                                                            work.Flush();
-                                                            context.Verify(r => r.SaveChanges(), Times.Never());
-                                                        }, isOpen: false);
+                                                    {
+                                                        work.Flush();
+                                                        context.Verify(r => r.SaveChanges(), Times.Never());
+                                                    }, isOpen: false);
 
         It should_be_dispose = () => Run((work, context) =>
-                                             {
-                                                 work.Dispose();
-                                                 context.Verify(r => r.Dispose(), Times.Once());
-                                             });
+                                         {
+                                             work.Dispose();
+                                             context.Verify(r => r.Dispose(), Times.Once());
+                                         });
 
         It should_be_dispose_without_open = () => Run((work, context) =>
-                                                          {
-                                                              work.Dispose();
-                                                              context.Verify(r => r.Dispose(), Times.Never());
-                                                          }, isOpen: false);
+                                                      {
+                                                          work.Dispose();
+                                                          context.Verify(r => r.Dispose(), Times.Never());
+                                                      }, isOpen: false);
     }
 }

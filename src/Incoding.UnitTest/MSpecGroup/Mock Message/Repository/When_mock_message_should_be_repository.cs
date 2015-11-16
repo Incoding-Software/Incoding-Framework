@@ -1,6 +1,4 @@
-﻿using Incoding.Block.IoC;
-
-namespace Incoding.UnitTest.MSpecGroup
+﻿namespace Incoding.UnitTest.MSpecGroup
 {
     #region << Using >>
 
@@ -18,8 +16,6 @@ namespace Incoding.UnitTest.MSpecGroup
 
         class FakeEntity : IncEntityBase
         {
-
-
             #region Constructors
 
             public FakeEntity() { }
@@ -33,7 +29,6 @@ namespace Incoding.UnitTest.MSpecGroup
             #endregion
 
             // ReSharper disable MemberCanBePrivate.Local
-
             #region Properties
 
             public string Field { get; set; }
@@ -52,6 +47,12 @@ namespace Incoding.UnitTest.MSpecGroup
                 Repository.Save(new FakeEntity(Pleasure.Generator.TheSameString()));
                 Repository.Save(new FakeEntity(Pleasure.Generator.String()));
 
+                Repository.Saves(new[]
+                                 {
+                                         new FakeEntity("1"), 
+                                         new FakeEntity("2"), 
+                                 });
+
                 Repository.SaveOrUpdate(new FakeEntity(Pleasure.Generator.TheSameString()));
                 Repository.SaveOrUpdate(new FakeEntity(Pleasure.Generator.String()));
 
@@ -60,7 +61,6 @@ namespace Incoding.UnitTest.MSpecGroup
 
                 Repository.Flush();
                 Repository.Flush();
-
 
                 Repository.DeleteAll<FakeEntity>();
                 Repository.DeleteByIds<FakeEntity>(new object[] { 1, 2, 3 });
@@ -76,11 +76,10 @@ namespace Incoding.UnitTest.MSpecGroup
         #endregion
 
         Establish establish = () =>
-                                  {
-                                      mockMessage = MockCommand<FakeCommand>
-                                              .When(Pleasure.Generator.Invent<FakeCommand>())
-                                              ;
-                                  };
+                              {
+                                  mockMessage = MockCommand<FakeCommand>
+                                          .When(Pleasure.Generator.Invent<FakeCommand>());
+                              };
 
         Because of = () => mockMessage.Original.Execute();
 
@@ -89,6 +88,8 @@ namespace Incoding.UnitTest.MSpecGroup
         It should_be_save_entity = () => mockMessage.ShouldBeSave(new FakeEntity(Pleasure.Generator.TheSameString()));
 
         It should_be_save = () => mockMessage.ShouldBeSave<FakeEntity>(entity => entity.ShouldNotBeNull(), 2);
+
+        It should_be_saves = () => mockMessage.ShouldBeSaves<FakeEntity>(entities => entities.ShouldEqualWeakEach(new[] { new FakeEntity("1"), new FakeEntity("2") }));
 
         It should_be_flush = () => mockMessage.ShouldBeFlush(2);
 

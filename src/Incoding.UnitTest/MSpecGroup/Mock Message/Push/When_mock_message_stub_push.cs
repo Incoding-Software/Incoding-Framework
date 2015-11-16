@@ -68,6 +68,16 @@ namespace Incoding.UnitTest.MSpecGroup
                                                    Catch.Exception(mockMessage.Execute).ShouldNotBeNull();
                                                };
 
+        It should_be_stub_push_without_push_multiple = () =>
+                                                       {
+                                                           var input = Pleasure.Generator.Invent<FakeMockMessage>();
+                                                           var mockMessage = MockCommand<FakeMockMessage>
+                                                                   .When(input)
+                                                                   .StubPush(new FakeMockMessage { Id = Pleasure.Generator.TheSameString().Inverse() })
+                                                                   .StubPush(new FakeMockMessage { Id = Pleasure.Generator.TheSameString() });
+                                                           Catch.Exception(mockMessage.Execute).Message.ShouldEqual("Not Stub for FakeMockMessage");
+                                                       };
+
         It should_be_stub_push_invent = () =>
                                         {
                                             var input = Pleasure.Generator.Invent<FakeMockMessage>();

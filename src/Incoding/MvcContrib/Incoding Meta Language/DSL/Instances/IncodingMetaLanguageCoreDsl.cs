@@ -45,7 +45,7 @@
 
         #region Api Methods
 
-        [Obsolete("Use method Call instead")]
+        [Obsolete("Will be remove on next version then use method Call instead")]
         public IExecutableSetting Eval(string code)
         {
             return this.plugIn.Registry(new ExecutableEval(code));

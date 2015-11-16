@@ -8,6 +8,7 @@ namespace Incoding.MvcContrib
     using System.Web.Routing;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using Newtonsoft.Json;
 
     #endregion
 
@@ -59,7 +60,7 @@ namespace Incoding.MvcContrib
                 this.onEventStatus = isAll ? IncodingEventCanceled.All : value;
             }
         }
-
+        
         public JquerySelectorExtend Target
         {
             get { return this.target; }
@@ -79,8 +80,19 @@ namespace Incoding.MvcContrib
 
         public RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null)
         {
-            var res = AnonymousHelper.ToDictionary(htmlAttributes);
-            res = this.merges.Aggregate(res, (current, attributeMerge) => attributeMerge.Merge(current));
+            const string dataIncodingKey = "incoding";
+            var res = new RouteValueDictionary(AnonymousHelper.ToDictionary(htmlAttributes));
+            var callbacks = merges.Select(@base => @base.AsObject()).ToArray();
+
+            if (!res.ContainsKey(dataIncodingKey))
+                res.Add(dataIncodingKey, callbacks.ToJsonString());
+            else
+            {
+                var newArray = res[dataIncodingKey].ToString().DeserializeFromJson<ExecutableBase.Json[]>().ToList();
+                newArray.AddRange(callbacks);
+                res[dataIncodingKey] = newArray.ToJsonString();
+            }
+
             return res;
         }
 
@@ -109,6 +121,8 @@ namespace Incoding.MvcContrib
                 .OfType<ExecutableActionBase>()
                 .DoEach(@base => @base.SetFilter(filter));
         }
+
+        public bool IsLastAction { get { return merges.LastOrDefault() is ExecutableActionBase; } }
 
         #endregion
     }

@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
@@ -13,14 +14,14 @@
 
     #endregion
 
-    [Subject(typeof(MessageBase<>))]
+    [Subject(typeof(MessageBase))]
     public class When_message_base_event_broker
     {
         #region Fake classes
 
         class FakeEvent : IEvent { }
 
-        class FakeMessage : MessageBase<object>
+        class FakeMessage : MessageBase
         {
             protected override void Execute()
             {
@@ -45,7 +46,7 @@
                                   message = new FakeMessage();
                               };
 
-        Because of = () => message.OnExecute(Pleasure.MockStrictAsObject<IDispatcher>(), Pleasure.MockStrictAsObject<IUnitOfWork>());
+        Because of = () => message.OnExecute(Pleasure.MockStrictAsObject<IDispatcher>(), new Lazy<IUnitOfWork>(() => Pleasure.MockStrictAsObject<IUnitOfWork>()));
 
         It should_be_resolve_once = () => provider.Verify(r => r.TryGet<IEventBroker>(), Times.Once());
     }

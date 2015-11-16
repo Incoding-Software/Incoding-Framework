@@ -8,6 +8,7 @@
 
     public class JavaScriptSelector : Selector, IJavaScriptSelector
     {
+
         #region Constructors
 
         internal JavaScriptSelector(string selector)

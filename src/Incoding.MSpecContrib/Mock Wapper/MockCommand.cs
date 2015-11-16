@@ -21,7 +21,7 @@ namespace Incoding.MSpecContrib
         {
             return new MockCommand<TMessage>(instanceMessage);
         }
-
+        
         #endregion
 
     }

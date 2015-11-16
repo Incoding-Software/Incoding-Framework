@@ -3,6 +3,8 @@ namespace Incoding.MSpecContrib
     #region << Using >>
 
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
 
     #endregion
@@ -12,6 +14,8 @@ namespace Incoding.MSpecContrib
         IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property) where TGenerate : new();
 
         IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, TGenerate>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new();
+
+        IInventFactoryDsl<T> GenerateTo<TGenerate>(Expression<Func<T, IEnumerable<TGenerate>>> property, Action<IInventFactoryDsl<TGenerate>> innerDsl) where TGenerate : new();
         
         IInventFactoryDsl<T> Empty<TGenerate>(Expression<Func<T, TGenerate>> property);
 

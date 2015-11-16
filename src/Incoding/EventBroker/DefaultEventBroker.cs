@@ -16,6 +16,9 @@ namespace Incoding.EventBroker
 
         public void Publish<TEvent>(TEvent @event) where TEvent : class, IEvent
         {
+            if (!HasSubscriber(@event))
+                return;
+
             var eventType = @event.GetType();
 
             var allSubscriberTypes = IoCFactory.Instance.ResolveAll<object>(typeof(IEventSubscriber<>).MakeGenericType(new[] { eventType }));
@@ -30,21 +33,21 @@ namespace Incoding.EventBroker
                 var eventHandler = currentHandler;
 
                 Action handleEvent = () =>
+                                     {
+                                         try
                                          {
-                                             try
-                                             {
-                                                 handleMethod.Invoke(eventHandler, new object[] { @event });
-                                             }
-                                             catch (TargetInvocationException invocationException)
-                                             {
-                                                 var actualException = invocationException.InnerException;
-                                                 throw actualException;
-                                             }
-                                             finally
-                                             {
-                                                 ((IDisposable)eventHandler).Dispose();
-                                             }
-                                         };
+                                             handleMethod.Invoke(eventHandler, new object[] { @event });
+                                         }
+                                         catch (TargetInvocationException invocationException)
+                                         {
+                                             var actualException = invocationException.InnerException;
+                                             throw actualException;
+                                         }
+                                         finally
+                                         {
+                                             ((IDisposable)eventHandler).Dispose();
+                                         }
+                                     };
 
                 if (handleMethod.HasAttribute<HandlerAsyncAttribute>())
                     handleEvent.BeginInvoke(null, handleEvent);
@@ -53,14 +56,14 @@ namespace Incoding.EventBroker
             }
         }
 
-        public bool HasSubscriber<TEvent>(TEvent onAfterErrorExecuteEvent) where TEvent : IEvent
+        #endregion
+
+        bool HasSubscriber<TEvent>(TEvent onEvent) where TEvent : IEvent
         {
             var subscriberType = typeof(IEventSubscriber<>).MakeGenericType(new[] { typeof(TEvent) });
             return IoCFactory.Instance
                              .ResolveAll<object>(subscriberType)
                              .Any();
         }
-
-        #endregion
     }
 }

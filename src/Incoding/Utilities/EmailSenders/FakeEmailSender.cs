@@ -10,7 +10,7 @@ namespace Incoding.Utilities
     #endregion
 
     ////ncrunch: no coverage start
-    [UsedImplicitly, ExcludeFromCodeCoverage]
+    [UsedImplicitly, ExcludeFromCodeCoverage,Obsolete("Please use SendEmailCommand")]
     public class FakeEmailSender : IEmailSender
     {
         #region Fields

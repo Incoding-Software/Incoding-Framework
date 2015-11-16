@@ -8,6 +8,7 @@
     using System.Web.Mvc;
     using System.Web.WebPages;
     using Incoding.Extensions;
+    using Incoding.Maybe;
 
     #endregion
 
@@ -43,13 +44,13 @@
 
         public ITemplateSyntax<TModel> Up()
         {
-            this.level += "../";
+            level += "../";
             return this;
         }
 
         public string For(string field)
         {
-            return Build("{{" + this.level + field + "}}");
+            return Build("{{" + level + field + "}}");
         }
 
         public string For(Expression<Func<TModel, object>> field)
@@ -59,12 +60,12 @@
 
         public string For(Expression<Func<TModel, bool>> field)
         {
-            return Build("{{#if " + this.level + field.GetMemberName() + "}}true{{else}}false{{/if}}");
+            return Build("{{#if " + level + field.GetMemberName() + "}}true{{else}}false{{/if}}");
         }
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, string isTrue, string isFalse)
         {
-            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + isTrue + "{{else}}" + isFalse + "{{/if}}").ToMvcHtmlString();
+            return Build("{{#if " + level + field.GetMemberName() + "}}" + isTrue + "{{else}}" + isFalse + "{{/if}}").ToMvcHtmlString();
         }
 
         public MvcHtmlString Inline(Expression<Func<TModel, object>> field, MvcHtmlString isTrue, MvcHtmlString isFalse)
@@ -129,12 +130,12 @@
 
         public MvcHtmlString NotInline(Expression<Func<TModel, object>> field, string content)
         {
-            return Build("{{#unless " + this.level + field.GetMemberName() + "}}" + content + "{{/unless}}").ToMvcHtmlString();
+            return Build("{{#unless " + level + field.GetMemberName() + "}}" + content + "{{/unless}}").ToMvcHtmlString();
         }
 
         public MvcHtmlString ForRaw(string field)
         {
-            return Build("{{{" + this.level + field + "}}}").ToMvcHtmlString();
+            return Build("{{{" + level + field + "}}}").ToMvcHtmlString();
         }
 
         public MvcHtmlString ForRaw(Expression<Func<TModel, object>> field)
@@ -147,22 +148,20 @@
             return BuildNew<TNewModel>(field.GetMemberName(), HandlebarsType.Each);
         }
 
-        public ITemplateSyntax<TModel> Is(Expression<Func<TModel, object>> field)
+        public IDisposable Is(Expression<Func<TModel, object>> field)
         {
-            return BuildNew<TModel>(field.GetMemberName(), HandlebarsType.If);
+            return BuildNew<TModel>(field, HandlebarsType.If);
         }
 
-        public ITemplateSyntax<TModel> Not(Expression<Func<TModel, object>> field)
+        public IDisposable Not(Expression<Func<TModel, object>> field)
         {
-            return BuildNew<TModel>(field.GetMemberName(), HandlebarsType.Unless);
+            return BuildNew<TModel>(field, HandlebarsType.Unless);
         }
 
         public MvcHtmlString IsInline(Expression<Func<TModel, object>> field, string content)
         {
-            return Build("{{#if " + this.level + field.GetMemberName() + "}}" + content + "{{/if}}").ToMvcHtmlString();
+            return Build("{{#if " + level + field.GetMemberName() + "}}" + content + "{{/if}}").ToMvcHtmlString();
         }
-
-
 
         #endregion
 
@@ -170,35 +169,37 @@
 
         public void Dispose()
         {
-            this.htmlHelper.ViewContext.Writer.Write("{{/" + this.type.ToStringLower() + "}}");
+            htmlHelper.ViewContext.Writer.Write("{{/" + type.ToStringLower() + "}}");
         }
 
         #endregion
 
         ITemplateSyntax<T> BuildNew<T>(string newProperty, HandlebarsType newType)
         {
-            var res = new TemplateHandlebarsSyntax<T>(this.htmlHelper, newProperty, newType, this.level);
-            this.level = string.Empty;
+            var res = new TemplateHandlebarsSyntax<T>(htmlHelper, newProperty, newType, level);
+            level = string.Empty;
             return res;
+        }
+
+        ITemplateSyntax<T> BuildNew<T>(Expression<Func<TModel, object>> field, HandlebarsType newType)
+        {
+            if (field.Body.NodeType != ExpressionType.MemberAccess)
+            {
+                var expression = field.Body as UnaryExpression;
+                Guard.IsConditional("field", expression.With(r => r.Operand.NodeType) == ExpressionType.MemberAccess, errorMessage: Resources.Exception_Handlerbars_Only_Member_Access);
+            }
+
+            return BuildNew<T>(field.GetMemberName(), newType);
         }
 
         string Build(string res)
         {
-            this.level = string.Empty;
+            level = string.Empty;
             return res;
         }
     }
 
     #region Enums
-
-    public enum HandlebarsType
-    {
-        If,
-
-        Unless,
-
-        Each,
-    }
 
     #endregion
 }

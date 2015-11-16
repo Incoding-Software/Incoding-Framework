@@ -18,6 +18,24 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(IncodingResult))]
     public class When_incoding_result_execute_result
     {
+        Establish establish = () =>
+                              {
+                                  fake = Pleasure.Generator.Invent<FakeProp>();
+                                  response = Pleasure.Mock<HttpResponseBase>(mock => mock.SetupSet(r => r.ContentType = "application/json"));
+                                  var contextBase = Pleasure.MockStrictAsObject<HttpContextBase>(mock =>
+                                                                                                 {
+                                                                                                     mock.Setup(r => r.Response).Returns(response.Object);
+                                                                                                     mock.SetupGet(r => r.Request.Browser.Browser).Returns("IE".Inverse());
+                                                                                                     mock.SetupGet(r => r.Request.ContentType).Returns("multipart/form-data".Inverse());
+                                                                                                 });
+                                  controllerContext = new ControllerContext(contextBase, new RouteData(), Pleasure.MockAsObject<ControllerBase>());
+                              };
+
+        Because of = () => IncodingResult.Success(fake)
+                                         .ExecuteResult(controllerContext);
+
+        It should_be_execute_result = () => response.Verify(r => r.Write(new IncodingResult.JsonData(true, fake, string.Empty).ToJsonString()));
+
         #region Fake classes
 
         public class FakeProp
@@ -41,18 +59,5 @@ namespace Incoding.UnitTest.MvcContribGroup
         static FakeProp fake;
 
         #endregion
-
-        Establish establish = () =>
-                                  {
-                                      fake = Pleasure.Generator.Invent<FakeProp>();
-                                      response = Pleasure.Mock<HttpResponseBase>(mock => mock.SetupSet(r => r.ContentType = "application/json"));
-                                      var contextBase = Pleasure.MockStrictAsObject<HttpContextBase>(mock => mock.Setup(r => r.Response).Returns(response.Object));
-                                      controllerContext = new ControllerContext(contextBase, new RouteData(), Pleasure.MockAsObject<ControllerBase>());
-                                  };
-
-        Because of = () => IncodingResult.Success(fake)
-                                         .ExecuteResult(controllerContext);
-
-        It should_be_execute_result = () => response.Verify(r => r.Write(new IncodingResult.JsonData(true, fake, string.Empty).ToJsonString()));
     }
 }

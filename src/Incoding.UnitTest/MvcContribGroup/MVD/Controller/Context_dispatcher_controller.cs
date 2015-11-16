@@ -22,6 +22,40 @@
 
     public class Context_dispatcher_controller
     {
+
+        public class FakeFileByNameQuery<T> : QueryBase<byte[]>
+        {
+            ////ncrunch: no coverage start
+            protected override byte[] ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            ////ncrunch: no coverage end        
+        }
+
+
+        public class ShareGenericQuery<T> : QueryBase<T>
+        {
+            ////ncrunch: no coverage start
+            protected override T ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+
+            ////ncrunch: no coverage end        
+        }
+
+  
+
+
+        public class ShareQuery:QueryBase<string> {
+            protected override string ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         #region Fake classes
 
         public class FakeDispatcher : DispatcherControllerBase
@@ -46,6 +80,8 @@
 
         protected static Mock<HttpRequestBase> requestBase;
 
+        protected static Mock<HttpResponseBase> responseBase;
+
         #endregion
 
         protected static void Establish(Type[] types = null, bool isAjax = true)
@@ -63,7 +99,13 @@
                                                              if (isAjax)
                                                                  mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
                                                          });
-            controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock => mock.SetupGet(r => r.Request).Returns(requestBase.Object)), new RouteData(), controller);
+
+            responseBase = Pleasure.MockStrict<HttpResponseBase>();
+            controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock =>
+                                                                                                              {
+                                                                                                                  mock.SetupGet(r => r.Request).Returns(requestBase.Object);
+                                                                                                                  mock.SetupGet(r => r.Response).Returns(responseBase.Object);
+                                                                                                              }), new RouteData(), controller);
             controller.ValueProvider = Pleasure.MockStrictAsObject<IValueProvider>(mock => mock.Setup(r => r.GetValue(Pleasure.MockIt.IsAny<string>())).Returns(new ValueProviderResult(string.Empty, string.Empty, Thread.CurrentThread.CurrentCulture)));
 
             var modelBinderDictionary = new ModelBinderDictionary();

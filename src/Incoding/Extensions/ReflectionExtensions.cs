@@ -35,15 +35,17 @@ namespace Incoding.Extensions
         }
 
         public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
-        {            
+        {
             try
             {
                 return assembly.GetTypes();
             }
+                    ////ncrunch: no coverage start
             catch (ReflectionTypeLoadException e)
             {
                 return e.Types.Where(t => t != null);
             }
+            ////ncrunch: no coverage end
         }
 
         public static string GetMemberName(this LambdaExpression lambdaExpression)
@@ -117,7 +119,7 @@ namespace Incoding.Extensions
         {
             var memberInfo = GetMemberInfo(ob, property, BindingFlags.SetField | BindingFlags.SetProperty);
             if (memberInfo == null)
-                throw new InstanceNotFoundException("Not found property or field {0}".F(property));
+                throw new InstanceNotFoundException(Resources.Exception_Handlerbars_Only_Member_Access.F(property));
 
             var propertyInfo = memberInfo as PropertyInfo;
             if (propertyInfo != null)

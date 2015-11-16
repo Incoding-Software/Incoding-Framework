@@ -263,7 +263,7 @@
                                                                .Class("class")
                                                                .Class("class2")
                                                                .ToString()
-                                                               .ShouldEqual("$('.class.class2')");
+                                                               .ShouldEqual("$('.class .class2')");
 
         It should_be_classes = () => Selector.Jquery
                                              .Class("class", "class2")
@@ -326,12 +326,7 @@
                                           .Also(r => r.Class("next"))
                                           .ToString()
                                           .ShouldEqual("$('.first.next')");
-
-        It should_be_alt_also = () => Selector.Jquery
-                                              .Class("first next")
-                                              .ToString()
-                                              .ShouldEqual("$('.first.next')");
-
+  
         It should_be_complex = () => Selector.Jquery
                                              .Self()
                                              .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))

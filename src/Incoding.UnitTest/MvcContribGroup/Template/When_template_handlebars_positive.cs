@@ -22,20 +22,20 @@ namespace Incoding.UnitTest.MvcContribGroup
         #endregion
 
         Because of = () =>
-                         {
-                             each = new TemplateHandlebarsSyntax<FakeModel>(htmlHelper.Original, "data", HandlebarsType.Each, string.Empty);
-                             each.Dispose();
-                         };
+                     {
+                         each = new TemplateHandlebarsSyntax<FakeModel>(htmlHelper.Original, "data", HandlebarsType.Each, string.Empty);
+                         each.Dispose();
+                     };
 
         It should_be_write_start = () => htmlHelper.ShouldBeWriter("{{#each data}}");
 
         It should_be_write_end = () => htmlHelper.ShouldBeWriter("{{/each}}");
 
         It should_be_for_multiple = () =>
-                                        {
-                                            each.Up().For(r => r.Name).ShouldEqual("{{../Name}}");
-                                            each.For(r => r.Name).ShouldEqual("{{Name}}");
-                                        };
+                                    {
+                                        each.Up().For(r => r.Name).ShouldEqual("{{../Name}}");
+                                        each.For(r => r.Name).ShouldEqual("{{Name}}");
+                                    };
 
         It should_be_for = () => each.For(r => r.Name).ShouldEqual("{{Name}}");
 

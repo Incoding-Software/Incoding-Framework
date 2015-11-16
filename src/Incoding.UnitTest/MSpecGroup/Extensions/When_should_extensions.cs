@@ -164,7 +164,7 @@
                                            };
 
         It should_be_not_failure = () =>
-                                       {
+                                       {                                           
                                            var valResult = new ValidationResult();
                                            valResult.Errors.Add(new ValidationFailure("Property", Pleasure.Generator.TheSameString()));
                                            string customMessage = Pleasure.Generator.String();

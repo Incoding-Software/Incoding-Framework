@@ -4,7 +4,6 @@
 
     using System;
     using System.Data;
-    using System.Data.SqlClient;
     using Incoding.Data;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
@@ -21,72 +20,56 @@
     {
         #region Establish value
 
-        static void Run(Action<NhibernateUnitOfWork, Mock<ISession>, Mock<ITransaction>> action)
+        static void Run(Action<NhibernateUnitOfWork, Mock<ISession>, Mock<ITransaction>> action, bool isFlush = true)
         {
             var transaction = Pleasure.Mock<ITransaction>();
 
-            string dbConnection = Pleasure.Generator.Invent<SqlConnection>().ConnectionString;
             var session = Pleasure.Mock<ISession>(mock => mock.Setup(r => r.BeginTransaction(IsolationLevel.RepeatableRead)).Returns(transaction.Object));
 
-            var sessionFactory = Pleasure.MockStrictAsObject<INhibernateSessionFactory>(mock => mock.Setup(r => r.Open(dbConnection)).Returns(session.Object));
-            var nhibernateUnit = new NhibernateUnitOfWork(sessionFactory, dbConnection, IsolationLevel.RepeatableRead);
-
+            var nhibernateUnit = new NhibernateUnitOfWork(session.Object, IsolationLevel.RepeatableRead, isFlush);
+            session.Verify(r => r.BeginTransaction(IsolationLevel.RepeatableRead), Times.Once());
             action(nhibernateUnit, session, transaction);
         }
 
         #endregion
 
-        It should_be_commit_without_flush = () => Run((work, session, transaction) =>
-                                                      {
-                                                          var repository = work.GetRepository();
-                                                          work.Commit();
-                                                          transaction.Verify(r => r.Commit(), Times.Never());
-                                                      });
-
-        It should_be_commit = () => Run((work, session, transaction) =>
-                                        {
-                                            var repository = work.GetRepository();
-                                            work.Flush();
-                                            work.Commit();
-                                            transaction.Verify(r => r.Commit(), Times.Once());
-                                        });
-
-        It should_be_dispose_without_open = () => Run((work, session, transaction) =>
-                                                      {
-                                                          work.Dispose();
-                                                          session.Verify(r => r.Dispose(), Times.Never());
-                                                          transaction.Verify(r => r.Dispose(), Times.Never());
-                                                          work.TryGetValue<bool>("disposed").ShouldBeTrue();
-                                                      });
-
         It should_be_dispose = () => Run((work, session, transaction) =>
                                          {
-                                             var repository = work.GetRepository();
                                              work.Dispose();
                                              session.Verify(r => r.Dispose(), Times.Once());
                                              transaction.Verify(r => r.Dispose(), Times.Once());
+                                             transaction.Verify(r => r.Commit(), Times.Never());
                                              work.TryGetValue<bool>("disposed").ShouldBeTrue();
                                          });
 
+        It should_be_dispose_after_flush = () => Run((work, session, transaction) =>
+                                                     {
+                                                         work.Flush();
+                                                         work.Dispose();
+
+                                                         session.Verify(r => r.Dispose(), Times.Once());
+                                                         transaction.Verify(r => r.Dispose(), Times.Once());
+                                                         transaction.Verify(r => r.Commit(), Times.Once());
+                                                         work.TryGetValue<bool>("disposed").ShouldBeTrue();
+                                                         work.TryGetValue("isWasFlush").ShouldEqual(true);
+                                                     });
+
+        It should_be_flush_without_flush = () => Run((work, session, transaction) =>
+                                                     {
+                                                         work.Flush();
+
+                                                         session.Verify(r => r.Flush(), Times.Never());
+                                                         work.TryGetValue("isWasFlush").ShouldEqual(false);
+                                                     }, isFlush: false);
+
         It should_be_flush = () => Run((work, session, transaction) =>
                                        {
-                                           var repository = work.GetRepository();
-                                           session.Verify(r => r.BeginTransaction(IsolationLevel.RepeatableRead), Times.Once());
                                            work.Flush();
+
                                            session.Verify(r => r.Flush(), Times.Once());
+                                           work.TryGetValue("isWasFlush").ShouldEqual(true);
                                        });
 
-        It should_be_flush_without_open = () => Run((work, session, transaction) =>
-                                                    {
-                                                        work.Flush();
-                                                        session.Verify(r => r.Flush(), Times.Never());
-                                                    });
-
-        It should_be_get_repository = () => Run((work, session, transaction) =>
-                                                {
-                                                    var repository = work.GetRepository();
-                                                    session.Verify(r => r.BeginTransaction(IsolationLevel.RepeatableRead), Times.Once());
-                                                    repository.ShouldBeOfType<NhibernateRepository>();
-                                                });
+        It should_be_get_repository = () => Run((work, session, transaction) => work.GetRepository().ShouldBeOfType<NhibernateRepository>());
     }
 }

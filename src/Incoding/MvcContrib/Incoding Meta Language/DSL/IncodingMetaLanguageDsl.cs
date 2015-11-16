@@ -3,7 +3,6 @@
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Web;
@@ -12,11 +11,13 @@
 
     #endregion
 
-    public partial class IncodingMetaLanguageDsl : IncodingMetaLanguageCoreDsl,IIncodingMetaLanguageBindingDsl, IIncodingMetaLanguageEventBuilderDsl, IIncodingMetaLanguageCallbackBodyDsl, IIncodingMetaLanguageCallbackInstancesDsl
+    public partial class IncodingMetaLanguageDsl : IncodingMetaLanguageCoreDsl, IIncodingMetaLanguageBindingDsl, IIncodingMetaLanguageCallbackBodyDsl, IIncodingMetaLanguageCallbackInstancesDsl, IIncodingMetaLanguageSettingEventDsl
     {
         #region Fields
 
         readonly IncodingMetaContainer meta;
+
+        bool isWatingOn;
 
         #endregion
 
@@ -26,55 +27,108 @@
                 : this(currentBind.ToJqueryString()) { }
 
         public IncodingMetaLanguageDsl(string currentBind)
-            :base(null)
+                : base(null)
         {
-            this.plugIn = this;
-            this.meta = new IncodingMetaContainer();
+            plugIn = this;
+            meta = new IncodingMetaContainer();
             When(currentBind);
         }
 
         #endregion
 
-        public override string ToString()
-        {
-            throw new NotImplementedException("Please finishing IML expression with AsHtmlAttributes().ToTag(some)");
-        }
-
         #region IIncodingMetaLanguageBindingDsl Members
 
         public IIncodingMetaLanguageActionDsl Do()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.None;
+            meta.OnEventStatus = IncodingEventCanceled.None;
             return this;
         }
 
-        public IIncodingMetaLanguageActionDsl PreventDefault()
+        public IIncodingMetaLanguageSettingEventDsl PreventDefault()
         {
-            this.meta.OnEventStatus = this.meta.OnEventStatus == IncodingEventCanceled.StopPropagation ? IncodingEventCanceled.All : IncodingEventCanceled.PreventDefault;
+            meta.OnEventStatus = meta.OnEventStatus == IncodingEventCanceled.StopPropagation ? IncodingEventCanceled.All : IncodingEventCanceled.PreventDefault;
             return this;
         }
 
-        public IIncodingMetaLanguageActionDsl StopPropagation()
+        public IIncodingMetaLanguageSettingEventDsl StopPropagation()
         {
-            this.meta.OnEventStatus = this.meta.OnEventStatus == IncodingEventCanceled.PreventDefault ? IncodingEventCanceled.All : IncodingEventCanceled.StopPropagation;
+            meta.OnEventStatus = meta.OnEventStatus == IncodingEventCanceled.PreventDefault ? IncodingEventCanceled.All : IncodingEventCanceled.StopPropagation;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithPreventDefault()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.PreventDefault;
+            meta.OnEventStatus = IncodingEventCanceled.PreventDefault;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithStopPropagation()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.StopPropagation;
+            meta.OnEventStatus = IncodingEventCanceled.StopPropagation;
             return this;
         }
 
         public IIncodingMetaLanguageActionDsl DoWithPreventDefaultAndStopPropagation()
         {
-            this.meta.OnEventStatus = IncodingEventCanceled.All;
+            meta.OnEventStatus = IncodingEventCanceled.All;
+            return this;
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl OnError(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            return On(IncodingCallbackStatus.Error, action);
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl OnComplete(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            return On(IncodingCallbackStatus.Complete, action);
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl OnBegin(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            return On(IncodingCallbackStatus.Begin, action);
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl OnBreak(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            return On(IncodingCallbackStatus.Break, action);
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl OnSuccess(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            return On(IncodingCallbackStatus.Success, action);
+        }
+
+        public RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null)
+        {
+            return meta.AsHtmlAttributes(htmlAttributes);
+        }
+
+        public string AsStringAttributes(object htmlAttributes = null)
+        {
+            return meta.AsHtmlAttributes(htmlAttributes).Aggregate(string.Empty, (s, pair) => s += " {0}=\"{1}\" ".F(pair.Key, HttpUtility.HtmlEncode(pair.Value)));
+        }
+
+        public IIncodingMetaLanguageBindingDsl When(JqueryBind nextBind)
+        {
+            return When(nextBind.ToJqueryString());
+        }
+
+        public IIncodingMetaLanguageBindingDsl When(string nextBind)
+        {
+            isWatingOn = true;
+            meta.OnEventStatus = IncodingEventCanceled.None;
+            meta.OnBind = nextBind.ToLowerInvariant();
+
+            if (!meta.OnBind.EqualsWithInvariant("incoding"))
+                meta.OnBind += " incoding";
+
+            return this;
+        }
+
+        public IIncodingMetaLanguageEventBuilderDsl Where<TModel>(Expression<Func<TModel, bool>> expression)
+        {
+            meta.SetFilter(new ConditionalData<TModel>(expression, true));
             return this;
         }
 
@@ -84,7 +138,7 @@
 
         public IIncodingMetaLanguageCallbackInstancesDsl With(JquerySelectorExtend selector)
         {
-            this.meta.Target = selector;
+            meta.Target = selector;
             return this;
         }
 
@@ -125,7 +179,7 @@
 
         public IIncodingMetaLanguageCallbackInstancesDsl WithSelf(Func<JquerySelectorExtend, JquerySelectorExtend> self)
         {
-            var selector = Selector.Jquery.Self();            
+            var selector = Selector.Jquery.Self();
             return With(self(selector));
         }
 
@@ -139,86 +193,35 @@
         #region IIncodingMetaLanguageCallbackInstancesDsl Members
 
         public IExecutableSetting Registry(ExecutableBase callback)
-        {            
-            this.meta.Add(callback);
+        {
+            meta.Add(callback);
             return callback;
         }
 
         public void Lock()
         {
-            this.meta.LockTarget = true;
+            meta.LockTarget = true;
         }
 
         public void UnLock()
         {
-            this.meta.LockTarget = false;
+            meta.LockTarget = false;
         }
 
         #endregion
-
-        #region IIncodingMetaLanguageEventBuilderDsl Members
-
-        public IIncodingMetaLanguageEventBuilderDsl OnError(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        
+        public override string ToString()
         {
-            return On(IncodingCallbackStatus.Error, action);
+            throw new NotImplementedException("Please finishing IML expression with AsHtmlAttributes().ToTag(some)");
         }
-
-        public IIncodingMetaLanguageEventBuilderDsl OnComplete(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
-        {
-            return On(IncodingCallbackStatus.Complete, action);
-        }
-
-        public IIncodingMetaLanguageEventBuilderDsl OnBegin(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
-        {
-            return On(IncodingCallbackStatus.Begin, action);
-        }
-
-        public IIncodingMetaLanguageEventBuilderDsl OnBreak(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
-        {
-            return On(IncodingCallbackStatus.Break, action);
-        }
-
-        public IIncodingMetaLanguageEventBuilderDsl OnSuccess(Action<IIncodingMetaLanguageCallbackBodyDsl> action)
-        {
-            return On(IncodingCallbackStatus.Success, action);
-        }
-
-        public RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null)
-        {
-            return this.meta.AsHtmlAttributes(htmlAttributes);
-        }
-
-        public string AsStringAttributes(object htmlAttributes = null)
-        {
-            return this.meta.AsHtmlAttributes(htmlAttributes).Aggregate(string.Empty, (s, pair) => s += " {0}=\"{1}\" ".F(pair.Key, HttpUtility.HtmlEncode(pair.Value)));
-        }
-
-        public IIncodingMetaLanguageBindingDsl When(JqueryBind nextBind)
-        {
-            return When(nextBind.ToJqueryString());
-        }
-
-        public IIncodingMetaLanguageBindingDsl When(string nextBind)
-        {
-            this.meta.OnBind = nextBind.ToLowerInvariant();
-
-            if (!this.meta.OnBind.EqualsWithInvariant("incoding"))
-                this.meta.OnBind += " incoding";
-
-            return this;
-        }
-
-        public IIncodingMetaLanguageEventBuilderDsl Where<TModel>(Expression<Func<TModel, bool>> expression)
-        {
-            this.meta.SetFilter(new ConditionalData<TModel>(expression, true));
-            return this;
-        }
-
-        #endregion
 
         IIncodingMetaLanguageEventBuilderDsl On(IncodingCallbackStatus status, Action<IIncodingMetaLanguageCallbackBodyDsl> action)
         {
-            this.meta.OnCurrentStatus = status;
+            if (isWatingOn && !meta.IsLastAction)
+                meta.Add(new ExecutableDirectAction(string.Empty));
+
+            isWatingOn = false;
+            meta.OnCurrentStatus = status;
             action(this);
             return this;
         }

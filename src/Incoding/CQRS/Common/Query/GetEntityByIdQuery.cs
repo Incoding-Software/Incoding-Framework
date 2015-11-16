@@ -3,7 +3,9 @@ namespace Incoding.CQRS
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Incoding.Block;
     using Incoding.Data;
     using Incoding.Quality;
     using JetBrains.Annotations;
