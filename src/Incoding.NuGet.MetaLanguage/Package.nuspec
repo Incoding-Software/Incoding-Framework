@@ -31,11 +31,7 @@
         <dependency id="jQuery.Validation" />
         <dependency id="jQuery.Form" />
         <dependency id="underscore.js" />
-<<<<<<< HEAD
         <dependency id="Handlebars.hs" />
-=======
-        <dependency id="Handlebars" />
->>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
         <dependency id="jQuery" version="(1.9.1,2.0.0)" />
         <dependency id="FluentValidation.MVC3-signed" />
       </group>

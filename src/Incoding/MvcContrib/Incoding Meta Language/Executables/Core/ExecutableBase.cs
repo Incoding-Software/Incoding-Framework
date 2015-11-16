@@ -50,11 +50,7 @@ namespace Incoding.MvcContrib
 
         public IExecutableSetting TimeOut(TimeSpan millisecond)
         {
-<<<<<<< HEAD
             return TimeOut(millisecond.TotalMilliseconds);
-=======
-           return TimeOut(millisecond.TotalMilliseconds);
->>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
         }
 
         public IExecutableSetting Interval(double millisecond, out string intervalId)
@@ -67,11 +63,7 @@ namespace Incoding.MvcContrib
 
         public IExecutableSetting Interval(TimeSpan millisecond, out string intervalId)
         {
-<<<<<<< HEAD
             return Interval(millisecond.TotalMilliseconds, out intervalId);
-=======
-           return Interval(millisecond.TotalMilliseconds, out intervalId);
->>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
         }
 
         #endregion

@@ -37,8 +37,6 @@ namespace Incoding.MSpecContrib
 
         TEntity original;
 
-        IUnitOfWork unitOfWork;
-
         #endregion
 
         #region Constructors
@@ -49,7 +47,6 @@ namespace Incoding.MSpecContrib
                 this.repository = repository;
             else
             {
-<<<<<<< HEAD
                 unitOfWork = PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
                 this.repository = unitOfWork.GetRepository();
             }
@@ -63,16 +60,6 @@ namespace Incoding.MSpecContrib
         #region Properties
 
         public IRepository Repository { get { return repository; } }
-=======
-                this.unitOfWork = PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
-                this.repository = this.unitOfWork.GetRepository();
-            }
-            this.original = new TEntity();
-            this.properties = new List<string>();
-        }
-
-        public IRepository Repository { get { return this.repository; } }
->>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
 
         #endregion
 
@@ -157,7 +144,6 @@ namespace Incoding.MSpecContrib
             if (entityFromDb == null)
                 throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 
-<<<<<<< HEAD
             entityFromDb.ShouldEqualWeak(original, dsl =>
                                                    {
                                                        foreach (var ignoreProperty in ignoreProperties)
@@ -168,17 +154,6 @@ namespace Incoding.MSpecContrib
 
             if (unitOfWork != null)
                 unitOfWork.Dispose();
-=======
-            entityFromDb.ShouldEqualWeak(this.original, dsl =>
-                                                        {
-                                                            foreach (var ignoreProperty in this.ignoreProperties)
-                                                                dsl.Ignore(ignoreProperty, "Fixed");
-                                                            dsl.IgnoreRecursionError();
-                                                            dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
-                                                        });
-
-            this.unitOfWork.Dispose();
->>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()
