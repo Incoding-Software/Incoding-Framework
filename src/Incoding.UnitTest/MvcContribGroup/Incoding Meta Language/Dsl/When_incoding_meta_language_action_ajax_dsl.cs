@@ -159,7 +159,11 @@
         It should_be_ajax_query_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl("click")
                                                                              .Do()
                                                                              .Ajax(new FakeQuery()), 1000)
+<<<<<<< HEAD
                                                             .ShouldBeLessThan(50);
+=======
+                                                            .ShouldBeLessThan(35);
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
 
         It should_be_ajax_query_multiple_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl("click")
                                                                                       .Do()
@@ -195,7 +199,11 @@
         It should_be_ajax_command_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl("click")
                                                                                .Do()
                                                                                .Ajax(new FakeCommand()), 1000)
+<<<<<<< HEAD
                                                               .ShouldBeLessThan(40);
+=======
+                                                              .ShouldBeLessThan(30);
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
 
         It should_be_ajax_query_as_anonymous = () => new IncodingMetaLanguageDsl("click")
                                                              .Do()

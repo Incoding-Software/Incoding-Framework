@@ -23,8 +23,11 @@
     <dependencies>
         <group targetFramework="net40">                    
           <dependency id="Machine.Specifications" />
+<<<<<<< HEAD
           <dependency id="Machine.Specifications.Should" />
           <dependency id="Machine.Specifications.Runner.Console" />
+=======
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
           <dependency id="Moq" />          
           <dependency id="FluentNHibernate" />
           <dependency id="structuremap" />

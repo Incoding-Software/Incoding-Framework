@@ -203,8 +203,11 @@
             public string AsView([PathReference, NotNull] string incView)
             {
                 defaultRoutes.Add("incView", incView);
+<<<<<<< HEAD
                 // ReSharper disable once Mvc.ActionNotResolved
                 // ReSharper disable once Mvc.ControllerNotResolved
+=======
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
                 return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(query);
             }
@@ -280,8 +283,11 @@
                     routeValues.Add("incIsCompositeAsArray", true);
                 if (onlyValidate)
                     routeValues.Add("incOnlyValidate", true);
+<<<<<<< HEAD
                 // ReSharper disable once Mvc.ActionNotResolved
                 // ReSharper disable once Mvc.ControllerNotResolved
+=======
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
                 return urlHelper.Action("Push", "Dispatcher", routeValues)
                                 .AppendToQueryString(GetQueryString());
             }

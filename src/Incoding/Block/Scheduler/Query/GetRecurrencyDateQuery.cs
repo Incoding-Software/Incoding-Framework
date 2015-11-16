@@ -43,6 +43,7 @@
 
             Tuesday = 4, 
 
+<<<<<<< HEAD
             Wednesday = 8, 
 
             Thursday = 16, 
@@ -50,6 +51,15 @@
             Friday = 32, 
 
             Saturday = 64, 
+=======
+            Wednesday = 6, 
+
+            Thursday = 8, 
+
+            Friday = 16, 
+
+            Saturday = 32, 
+>>>>>>> 526ed043aec484b03a6909c90ff9c1aeaab14ade
         }
 
         public enum RepeatType

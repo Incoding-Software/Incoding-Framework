@@ -1,0 +1,74 @@
+# use glob syntax
+syntax: glob
+
+#Visual Studio files
+*.obj
+*.user
+*.aps
+*.pch
+*.vspscc
+*.vssscc
+*.DotSettings
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.sdf
+*.opensdf
+*.unsuccessfulbuild
+ipch/
+obj/
+[Bb]in
+[Dd]ebug*/
+[Rr]elease*/
+Ankh.NoLoad
+
+#MonoDevelop
+*.pidb
+*.userprefs
+
+#Tooling
+_ReSharper*/
+*.resharper
+[Tt]est[Rr]esult*
+
+#Project files
+[Bb]uild/
+
+
+# Office Temp Files
+~$*
+
+#NuGet
+packages/
+
+#ncrunch
+*[Nn][Cc][Rr][Uu][Nn][Cc][Hh]*
+*[Cc][Rr][Uu][Nn][Cc][Hh]*.local.xml
+
+#Ndepend
+NDependOut*/
+
+# visual studio database projects
+*.dbmdl
+
+#sass
+*.sass-cache*/
+
+
+#CI folder
+[Dd]eploy*/
+
+#environment
+src/Incoding.UnitTest/db.config
+
+
+src/Incoding.SiteTest/db.config
