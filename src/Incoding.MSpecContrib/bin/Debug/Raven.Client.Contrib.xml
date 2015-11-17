@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Raven.Client.Contrib</name>
+    </assembly>
+    <members>
+        <member name="M:Raven.Client.AdvancedSessionExtensions.GetDatabaseCommands(Raven.Client.IAdvancedDocumentSessionOperations)">
+            <summary>
+            Provides access to DatabaseCommands for the same database that the session was opened for.
+            </summary>
+            <param name="session">The Raven advanced session.</param>
+            <returns>A DatabaseCommands instance.</returns>
+        </member>
+        <member name="M:Raven.Client.AdvancedSessionExtensions.GetDatabaseName(Raven.Client.IAdvancedDocumentSessionOperations)">
+            <summary>
+            Gets the database name that the session was opened for.
+            </summary>
+            <param name="session">The Raven advanced session.</param>
+            <returns>The database name.</returns>
+        </member>
+        <member name="M:Raven.Client.AdvancedSessionExtensions.AddCascadeDeleteReference(Raven.Client.IAdvancedDocumentSessionOperations,System.Object,System.String[])">
+            <summary>
+            Adds one or more document keys to an entity's cascade delete metadata.
+            Requires the cascade delete bundle on the server.
+            </summary>
+            <param name="session">The Raven advanced session.</param>
+            <param name="entity">The entity to update.</param>
+            <param name="documentKeys">One or more keys to foreign documents.</param>
+        </member>
+        <member name="M:Raven.Client.Connection.DocumentExtensions.DocumentExists(Raven.Client.Connection.IDatabaseCommands,System.String)">
+            <summary>
+            Checks the database to see if a document with the id specified exists.
+            </summary>
+            <param name="databaseCommands">The database commands instance for a particular database.</param>
+            <param name="key">The document key.</param>
+            <returns>True if the document exists, false otherwise.</returns>
+        </member>
+        <member name="M:Raven.Client.Connection.DocumentExtensions.DocumentExists(Raven.Client.IAdvancedDocumentSessionOperations,System.String)">
+            <summary>
+            Checks the database to see if a document with the id specified exists.
+            </summary>
+            <param name="session">The advanced session instance for a particular database.</param>
+            <param name="key">The document key.</param>
+            <returns>True if the document exists, false otherwise.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetDocumentKeyPrefix``1(Raven.Client.IDocumentStore)">
+            <summary>
+            Gets the document key prefix for the given entity type.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <returns>The document key prefix string.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.DocumentIdMatches``1(Raven.Client.IDocumentStore,System.String)">
+            <summary>
+            Checks if the document id specified is valid for the given entity type.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The string document id.</param>
+            <returns>True if the id is valid, false otherwise.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetStringIdFor``1(Raven.Client.IDocumentStore,System.Int32)">
+            <summary>
+            Gets a string id for an entity, given an integer id.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The integer id.</param>
+            <returns>The string id.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetStringIdFor``1(Raven.Client.IDocumentStore,System.Guid)">
+            <summary>
+            Gets a string id for an entity, given a guid id.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The guid id.</param>
+            <returns>The string id.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetIntegerIdFor``1(Raven.Client.IDocumentStore,System.String)">
+            <summary>
+            Safely gets the integer portion of a string identifier for a particular entity type.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The string id, such as foos/1.</param>
+            <returns>The integer id.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if the inputs are not valid.</exception>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetGuidIdFor``1(Raven.Client.IDocumentStore,System.String)">
+            <summary>
+            Safely gets the guid portion of a string identifier for a particular entity type, when guid ids are used.
+            </summary>
+            <typeparam name="T">The type of the entity.</typeparam>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The string id, such as foos/d2dbfef3-a42e-4ab8-aa17-19a87da0358b.</param>
+            <returns>The guid id.</returns>
+            <exception cref="T:System.ArgumentException">Thrown if the inputs are not valid.</exception>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GetDocumentIdParts(Raven.Client.IDocumentStore,System.String)">
+            <summary>
+            Splits a composite document id into its parts for easy consumption.
+            </summary>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="id">The string id, such as foos/1/bar/2/whatever.</param>
+            <returns>An array of strings with each part as a separate element.</returns>
+        </member>
+        <member name="M:Raven.Client.DocumentIdExtensions.GenerateIdFor``1(Raven.Client.IAdvancedDocumentSessionOperations)">
+            <summary>
+            Generates a document id using the registered conventions, such as the Raven HiLo generator.
+            Returns the id without applying it to any particular entity, thus allowing you to pre-generate the id.
+            Useful for detached operations, such as in CQRS. For example, the id could be generated ahead of time,
+            returned to the caller, then used in a command message.  The entity would then be created in a command
+            handler, using the id from the message.  There are other scenarios that this can also be useful.
+            </summary>
+            <typeparam name="T">The entity type.</typeparam>
+            <param name="session">The current session.</param>
+            <returns>The generated string id.</returns>
+        </member>
+        <member name="M:Raven.Client.Linq.PagingExtensions.GetAllResultsWithPaging``1(Raven.Client.Linq.IRavenQueryable{``0},System.Int32,System.Boolean)">
+            <summary>
+            Executes the query and iterates over every page, returning all results.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.PagingExtensions.GetAllDocumentKeysWithPaging``1(Raven.Client.Linq.IRavenQueryable{``0},System.Int32,System.Boolean)">
+            <summary>
+            Executes the query and iterates over every page, returning all document keys that matched the query.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.PagingExtensions.ForEachWithPaging``1(Raven.Client.Linq.IRavenQueryable{``0},System.Action{``0},System.Int32,System.Boolean)">
+            <summary>
+            Executes the query and iterates over every page.  As each page is retrieved, the action is executed on the items for that page.
+            </summary>
+        </member>
+        <member name="T:Raven.Client.Listeners.CreatedDateListener">
+            <summary>
+            A client-side listener that adds a Created metadata value to every document being stored.
+            Uses the clock on the client.  For better precision, use a server-side trigger instead.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.TenantDatabaseExtensions.DatabaseExists(Raven.Client.IDocumentStore,System.String)">
+            <summary>
+            Checks if the database with the given name exists.
+            </summary>
+            <param name="documentStore">The Raven document store.</param>
+            <param name="databaseName">The name of the database to check for.</param>
+            <returns>True if the database exists, false otherwise.</returns>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.SyncCutoff``1(Raven.Client.Linq.IRavenQueryable{``0})">
+            <summary>
+            Modifies the query such that repeat calls use the same cutoff time as the first call.
+            Useful when paginating over results obtained with WaitForNonStaleResultsAsOfNow so that all pages use the same now.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.MetadataOnly(Raven.Client.IDocumentQueryCustomization)">
+            <summary>
+            When running in server mode, customizes the query to return only metadata - conserving http bandwidth.
+            Does nothing when running in embedded mode.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.OrderBy``1(Raven.Client.Linq.IRavenQueryable{``0},System.String[])">
+            <summary>
+            Order the results by the specified fields
+            The fields are the names of the fields to sort, defaulting to sorting by ascending.
+            You can prefix a field name with '-' to indicate sorting by descending or '+' to sort by ascending
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.OrderByDescending``1(Raven.Client.Linq.IRavenQueryable{``0},System.String[])">
+            <summary>
+            Order the results by the specified fields
+            The fields are the names of the fields to sort, defaulting to sorting by descending.
+            You can prefix a field name with '-' to indicate sorting by descending or '+' to sort by ascending
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.SkipTransformResults(Raven.Client.IDocumentQueryCustomization)">
+            <summary>
+            Customizes the query such that any transform results function defined on the index will not be executed,
+            returning just the raw results instead.
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Linq.QueryExtensions.SkipTransformResults``2(Raven.Client.IDocumentQueryBase{``0,``1})">
+            <summary>
+            Customizes the query such that any transform results function defined on the index will not be executed,
+            returning just the raw results instead.
+            </summary>
+        </member>
+    </members>
+</doc>

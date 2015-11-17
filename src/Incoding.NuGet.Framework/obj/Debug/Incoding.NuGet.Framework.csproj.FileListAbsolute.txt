@@ -1,0 +1,9 @@
+C:\Workspace\IncFramework\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.dll
+C:\Workspace\IncFramework\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.pdb
+C:\Workspace\IncFramework\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.dll
+C:\Workspace\IncFramework\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.pdb
+F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.pdb
+F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.Framework.csprojResolveAssemblyReference.cache
+F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.pdb
