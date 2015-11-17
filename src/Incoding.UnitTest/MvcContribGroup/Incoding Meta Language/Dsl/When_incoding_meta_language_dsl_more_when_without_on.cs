@@ -1,16 +1,12 @@
-﻿namespace Incoding.UnitTest.MvcContribGroup
+namespace Incoding.UnitTest.MvcContribGroup
 {
-    #region << Using >>
-
     using System.Linq;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
-    #endregion
-
     [Subject(typeof(IncodingMetaLanguageDsl))]
-    public class When_incoding_meta_language_dsl_more_when
+    public class When_incoding_meta_language_dsl_more_when_without_on
     {
         #region Establish value
 
@@ -22,7 +18,6 @@
                      {
                          metaBuilder = new IncodingMetaLanguageDsl(JqueryBind.Click)
                                  .Do().Direct()
-                                 .OnSuccess(r => r.Self().Core().Eval(Pleasure.Generator.TheSameString()))
                                  .When(JqueryBind.Blur)
                                  .Do().Direct()
                                  .OnSuccess(r => r.Self().Core().Eval(Pleasure.Generator.TheSameString()))
