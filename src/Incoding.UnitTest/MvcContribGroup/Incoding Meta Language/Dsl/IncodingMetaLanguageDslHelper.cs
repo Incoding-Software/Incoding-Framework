@@ -14,7 +14,7 @@
     {
         #region Factory constructors
 
-        public static IEnumerable<T> GetActions<T>(this IIncodingMetaLanguageEventBuilderDsl meta)
+        public static IEnumerable<T> GetAll<T>(this IIncodingMetaLanguageEventBuilderDsl meta)
         {
             var merges = (List<ExecutableBase>)meta
                                                        .TryGetValue("meta")
@@ -25,7 +25,7 @@
 
         public static T GetExecutable<T>(this IIncodingMetaLanguageEventBuilderDsl meta)
         {
-            return meta.GetActions<T>().FirstOrDefault();
+            return meta.GetAll<T>().FirstOrDefault();
         }
 
         public static void ShouldEqualData(this ExecutableBase executable, Dictionary<string, object> data)

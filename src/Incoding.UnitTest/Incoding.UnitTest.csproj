@@ -387,6 +387,8 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_bind.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_behaviors.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_more_when_without_on.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_more_when_without_on_2.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_more_when_without_on_3.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_throw.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_dsl_with.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Dsl\When_incoding_meta_language_action_ajax_dsl.cs" />

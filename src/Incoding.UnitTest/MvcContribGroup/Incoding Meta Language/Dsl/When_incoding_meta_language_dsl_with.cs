@@ -16,7 +16,7 @@
                                           .Do()
                                           .Direct()
                                           .OnSuccess(r => r.Self().Core().Form.Validation.Parse())
-                                          .GetActions<ExecutableValidationParse>()
+                                          .GetAll<ExecutableValidationParse>()
                                           .First()["target"]
                                           .ShouldEqual("$(this.self)");
 
@@ -24,7 +24,7 @@
                                           .Do()
                                           .Direct()
                                           .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
-                                          .GetActions<ExecutableValidationParse>()
+                                          .GetAll<ExecutableValidationParse>()
                                           .First()["target"]
                                           .ShouldEqual("$(this.self).closest('tr')");
 
@@ -39,15 +39,15 @@
                                                              })
                                                   .Should(dsl =>
                                                           {
-                                                              dsl.GetActions<ExecutableValidationParse>()
+                                                              dsl.GetAll<ExecutableValidationParse>()
                                                                  .First()["target"]
                                                                       .ShouldEqual("$(this.self)");
 
-                                                              dsl.GetActions<ExecutableValidationRefresh>()
+                                                              dsl.GetAll<ExecutableValidationRefresh>()
                                                                  .First()["target"]
                                                                       .ShouldEqual("$('#Id')");
 
-                                                              dsl.GetActions<ExecutableForm>()
+                                                              dsl.GetAll<ExecutableForm>()
                                                                  .First()["target"]
                                                                       .ShouldEqual("$('.class')");
                                                           });
@@ -62,11 +62,11 @@
                                                                .OnSuccess(dsl => dsl.WithId("Id").Core().Form.Validation.Refresh())
                                                                .Should(dsl =>
                                                                        {
-                                                                           dsl.GetActions<ExecutableValidationParse>()
+                                                                           dsl.GetAll<ExecutableValidationParse>()
                                                                               .First()["target"]
                                                                                    .ShouldEqual("$(this.self)");
 
-                                                                           dsl.GetActions<ExecutableValidationRefresh>()
+                                                                           dsl.GetAll<ExecutableValidationRefresh>()
                                                                               .First()["target"]
                                                                                    .ShouldEqual("$('#Id')");
                                                                        });
@@ -77,7 +77,7 @@
                                                    .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr)))
                                                                         .With(r => r.Id("Next"))
                                                                         .Core().Form.Validation.Parse())
-                                                   .GetActions<ExecutableValidationParse>()
+                                                   .GetAll<ExecutableValidationParse>()
                                                    .First()["target"]
                                                    .ShouldEqual("$(this.self).closest('tr').add('#Next')");
 
@@ -85,7 +85,7 @@
                                                  .Do()
                                                  .Direct()
                                                  .OnSuccess(dsl => dsl.With(r => r.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
-                                                 .GetActions<ExecutableValidationParse>()
+                                                 .GetAll<ExecutableValidationParse>()
                                                  .First()["target"]
                                                  .ShouldEqual("$(this.self).closest('tr')");
 
@@ -93,7 +93,7 @@
                                              .Do()
                                              .Direct()
                                              .OnSuccess(dsl => dsl.WithId("id").Core().Form.Validation.Parse())
-                                             .GetActions<ExecutableValidationParse>()
+                                             .GetAll<ExecutableValidationParse>()
                                              .First()["target"]
                                              .ShouldEqual("$('#id')");
 
@@ -101,7 +101,7 @@
                                                         .Do()
                                                         .Direct()
                                                         .OnSuccess(dsl => dsl.WithId<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
-                                                        .GetActions<ExecutableValidationParse>()
+                                                        .GetAll<ExecutableValidationParse>()
                                                         .First()["target"]
                                                         .ShouldEqual("$('#Value')");
 
@@ -109,7 +109,7 @@
                                                .Do()
                                                .Direct()
                                                .OnSuccess(dsl => dsl.WithName("Value").Core().Form.Validation.Parse())
-                                               .GetActions<ExecutableValidationParse>()
+                                               .GetAll<ExecutableValidationParse>()
                                                .First()["target"]
                                                .ShouldEqual("$('[name=\"Value\"]')");
 
@@ -117,7 +117,7 @@
                                                           .Do()
                                                           .Direct()
                                                           .OnSuccess(dsl => dsl.WithName<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
-                                                          .GetActions<ExecutableValidationParse>()
+                                                          .GetAll<ExecutableValidationParse>()
                                                           .First()["target"]
                                                           .ShouldEqual("$('[name=\"Value\"]')");
 
@@ -125,7 +125,7 @@
                                                 .Do()
                                                 .Direct()
                                                 .OnSuccess(dsl => dsl.WithClass("red").Core().Form.Validation.Parse())
-                                                .GetActions<ExecutableValidationParse>()
+                                                .GetAll<ExecutableValidationParse>()
                                                 .First()["target"]
                                                 .ShouldEqual("$('.red')");
 
@@ -133,7 +133,7 @@
                                                   .Do()
                                                   .Direct()
                                                   .OnSuccess(dsl => dsl.WithClass(B.Active).Core().Form.Validation.Parse())
-                                                  .GetActions<ExecutableValidationParse>()
+                                                  .GetAll<ExecutableValidationParse>()
                                                   .First()["target"]
                                                   .ShouldEqual("$('.active')");
 
@@ -141,7 +141,7 @@
                                                .Do()
                                                .Direct()
                                                .OnSuccess(dsl => dsl.WithSelf(extend => extend.Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
-                                               .GetActions<ExecutableValidationParse>()
+                                               .GetAll<ExecutableValidationParse>()
                                                .First()["target"]
                                                .ShouldEqual("$(this.self).closest('tr')");
 
@@ -149,7 +149,7 @@
                                                               .Do()
                                                               .Direct()
                                                               .OnSuccess(dsl => dsl.WithSelf(r => r.Closest(selector => selector.Class("group")).Find(s => s.Class("help"))).Form.Validation.Parse())
-                                                              .GetActions<ExecutableValidationParse>()
+                                                              .GetAll<ExecutableValidationParse>()
                                                               .First()["target"]
                                                               .ShouldEqual("$(this.self).closest('.group').find('.help')");
     }

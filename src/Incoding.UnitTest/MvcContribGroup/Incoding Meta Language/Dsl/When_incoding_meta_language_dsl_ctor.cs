@@ -11,11 +11,11 @@
     [Subject(typeof(IncodingMetaLanguageDsl))]
     public class When_incoding_meta_language_dsl_ctor
     {
-        It should_be_alway_incoding = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+        It should_be_always_incoding = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                     .Do()
                                                     .Direct()
                                                     .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
-                                                    .GetActions<ExecutableDirectAction>()
+                                                    .GetAll<ExecutableDirectAction>()
                                                     .First()["onBind"]
                                                     .ShouldEqual("click incoding");
 
@@ -23,7 +23,7 @@
                                                    .Do()
                                                    .Direct()
                                                    .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
-                                                   .GetActions<ExecutableDirectAction>()
+                                                   .GetAll<ExecutableDirectAction>()
                                                    .First()["onBind"]
                                                    .ShouldEqual("initincoding incoding");
 
@@ -31,7 +31,7 @@
                                                   .Do()
                                                   .Direct()
                                                   .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
-                                                  .GetActions<ExecutableDirectAction>()
+                                                  .GetAll<ExecutableDirectAction>()
                                                   .First()["onBind"]
                                                   .ShouldEqual("initincoding incchangeurl incoding");
 
@@ -39,7 +39,7 @@
                                                             .Do()
                                                             .Direct()
                                                             .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
-                                                            .GetActions<ExecutableDirectAction>()
+                                                            .GetAll<ExecutableDirectAction>()
                                                             .First()["onBind"]
                                                             .ShouldEqual("incoding");
 
@@ -47,7 +47,7 @@
                                                   .Do()
                                                   .Direct()
                                                   .OnSuccess(r => r.Self().Core().Break.If(builder => builder.Eval("code")))
-                                                  .GetActions<ExecutableDirectAction>()
+                                                  .GetAll<ExecutableDirectAction>()
                                                   .First()["onBind"]
                                                   .ShouldEqual("abcd incoding");
     }

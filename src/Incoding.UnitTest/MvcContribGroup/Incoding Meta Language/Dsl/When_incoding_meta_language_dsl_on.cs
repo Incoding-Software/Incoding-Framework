@@ -20,8 +20,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                     r.Self().Core().Form.Reset();
                                                                 });
 
-                                             languageEventBuilderDsl.GetActions<ExecutableBase>().Count().ShouldEqual(3);
-                                             languageEventBuilderDsl.GetActions<ExecutableDirectAction>().Count().ShouldEqual(1);
+                                             languageEventBuilderDsl.GetAll<ExecutableBase>().Count().ShouldEqual(3);
+                                             languageEventBuilderDsl.GetAll<ExecutableDirectAction>().Count().ShouldEqual(1);
                                              languageEventBuilderDsl.GetExecutable<ExecutableDirectAction>().ShouldNotBeNull();
                                              languageEventBuilderDsl.GetExecutable<ExecutableValidationParse>()["onStatus"].ShouldEqual(2);
                                              languageEventBuilderDsl.GetExecutable<ExecutableForm>()["onStatus"].ShouldEqual(2);
@@ -34,7 +34,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                               .When(JqueryBind.Blur)
                                                               .OnSuccess(r => r.Self().Core().Form.Validation.Refresh());
 
-                                                      languageEventBuilderDsl.GetActions<ExecutableDirectAction>().Count().ShouldEqual(2);
+                                                      languageEventBuilderDsl.GetAll<ExecutableDirectAction>().Count().ShouldEqual(2);
                                                       languageEventBuilderDsl.GetExecutable<ExecutableValidationParse>()["onStatus"].ShouldEqual(2);
                                                       languageEventBuilderDsl.GetExecutable<ExecutableValidationRefresh>()["onStatus"].ShouldEqual(2);
                                                   };

@@ -73,7 +73,7 @@
                                                                                  type = ConditionalOfType.Data.ToString(), 
                                                                                  inverse = false, 
                                                                                  property = "Type", 
-                                                                                 value = "1", 
+                                                                                 value = "Value2", 
                                                                                  method = "equal", 
                                                                                  and = true
                                                                          }, dsl => dsl.IncludeAllFields());

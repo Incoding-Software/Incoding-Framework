@@ -13,11 +13,27 @@
 
     public partial class IncodingMetaLanguageDsl : IncodingMetaLanguageCoreDsl, IIncodingMetaLanguageBindingDsl, IIncodingMetaLanguageCallbackBodyDsl, IIncodingMetaLanguageCallbackInstancesDsl, IIncodingMetaLanguageSettingEventDsl
     {
+        public override string ToString()
+        {
+            throw new NotImplementedException("Please finishing IML expression with AsHtmlAttributes().ToTag(some)");
+        }
+
+        IIncodingMetaLanguageEventBuilderDsl On(IncodingCallbackStatus status, Action<IIncodingMetaLanguageCallbackBodyDsl> action)
+        {
+            if (this.isEmptyAction)
+                meta.Add(new ExecutableDirectAction(string.Empty));
+
+            this.isEmptyAction = false;
+            meta.OnCurrentStatus = status;
+            action(this);
+            return this;
+        }
+
         #region Fields
 
         readonly IncodingMetaContainer meta;
 
-        bool isWatingOn;
+        bool isEmptyAction;
 
         #endregion
 
@@ -116,7 +132,7 @@
 
         public IIncodingMetaLanguageBindingDsl When(string nextBind)
         {
-            isWatingOn = true;
+            this.isEmptyAction = true;
             meta.OnEventStatus = IncodingEventCanceled.None;
             meta.OnBind = nextBind.ToLowerInvariant();
 
@@ -209,21 +225,5 @@
         }
 
         #endregion
-        
-        public override string ToString()
-        {
-            throw new NotImplementedException("Please finishing IML expression with AsHtmlAttributes().ToTag(some)");
-        }
-
-        IIncodingMetaLanguageEventBuilderDsl On(IncodingCallbackStatus status, Action<IIncodingMetaLanguageCallbackBodyDsl> action)
-        {
-            if (isWatingOn && !meta.IsLastAction)
-                meta.Add(new ExecutableDirectAction(string.Empty));
-
-            isWatingOn = false;
-            meta.OnCurrentStatus = status;
-            action(this);
-            return this;
-        }
     }
 }

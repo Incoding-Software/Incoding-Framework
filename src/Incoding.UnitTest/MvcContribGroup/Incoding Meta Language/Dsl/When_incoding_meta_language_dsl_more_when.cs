@@ -32,33 +32,35 @@
                      };
 
         It should_be_action_when_blur = () => metaBuilder
-                                                      .GetActions<ExecutableDirectAction>()
+                                                      .GetAll<ExecutableDirectAction>()
                                                       .SingleOrDefault(r => r["onBind"].ToString() == "blur incoding")
                                                       .ShouldNotBeNull();
 
         It should_be_action_when_click = () => metaBuilder
-                                                       .GetActions<ExecutableDirectAction>()
+                                                       .GetAll<ExecutableDirectAction>()
                                                        .SingleOrDefault(r => r["onBind"].ToString() == "click incoding")
                                                        .ShouldNotBeNull();
 
         It should_be_action_when_load = () => metaBuilder
-                                                      .GetActions<ExecutableDirectAction>()
+                                                      .GetAll<ExecutableDirectAction>()
                                                       .SingleOrDefault(r => r["onBind"].ToString() == "load incoding")
                                                       .ShouldNotBeNull();
 
         It should_be_callback_when_blur = () => metaBuilder
-                                                        .GetActions<ExecutableEval>()
+                                                        .GetAll<ExecutableEval>()
                                                         .SingleOrDefault(r => r["onBind"].ToString() == "blur incoding")
                                                         .ShouldNotBeNull();
 
         It should_be_callback_when_click = () => metaBuilder
-                                                         .GetActions<ExecutableEval>()
+                                                         .GetAll<ExecutableEval>()
                                                          .SingleOrDefault(r => r["onBind"].ToString() == "click incoding")
                                                          .ShouldNotBeNull();
 
         It should_be_callback_when_load = () => metaBuilder
-                                                        .GetActions<ExecutableEval>()
+                                                        .GetAll<ExecutableEval>()
                                                         .SingleOrDefault(r => r["onBind"].ToString() == "load incoding")
                                                         .ShouldNotBeNull();
+
+        It should_be_count = () => { metaBuilder.GetAll<ExecutableBase>().Count().ShouldEqual(6); };
     }
 }

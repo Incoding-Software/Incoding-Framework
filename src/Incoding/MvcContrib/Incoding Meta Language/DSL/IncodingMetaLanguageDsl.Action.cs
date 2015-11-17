@@ -19,24 +19,28 @@
     {
         #region IIncodingMetaLanguageActionDsl Members
 
+        IIncodingMetaLanguageEventBuilderDsl AddAction(ExecutableActionBase action)
+        {
+            isEmptyAction = false;
+            meta.Add(action);
+            return this;
+        }
+
         [Obsolete("Please use Selector.Event.Result")]
         public IIncodingMetaLanguageEventBuilderDsl Event()
         {
-            meta.Add(new ExecutableEventAction());
-            return this;
+           return AddAction(new ExecutableEventAction());
         }
 
         [Obsolete(@"Method not more require")]
         public IIncodingMetaLanguageEventBuilderDsl Direct()
         {
-            meta.Add(new ExecutableDirectAction(string.Empty));
-            return this;
+            return AddAction(new ExecutableDirectAction(string.Empty));
         }
 
         public IIncodingMetaLanguageEventBuilderDsl Direct(IncodingResult result)
         {
-            meta.Add(new ExecutableDirectAction(result.Data.ToJsonString()));
-            return this;
+            return AddAction(new ExecutableDirectAction(result.Data.ToJsonString()));
         }
 
         public IIncodingMetaLanguageEventBuilderDsl Direct(object result)
@@ -54,8 +58,7 @@
         {
             var options = new JqueryAjaxFormOptions(JqueryAjaxFormOptions.Default);
             configuration.Do(r => r(options));
-            meta.Add(new ExecutableSubmitAction(action(Selector.Jquery), options));
-            return this;
+            return AddAction(new ExecutableSubmitAction(action(Selector.Jquery), options));
         }
 
         public IIncodingMetaLanguageEventBuilderDsl Hash(string url = "", string prefix = "root")
@@ -92,8 +95,7 @@
         {
             var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
             configuration(options);
-            meta.Add(new ExecutableAjaxAction(true, prefix, options));
-            return this;
+            return AddAction(new ExecutableAjaxAction(true, prefix, options));
         }
 
         public IIncodingMetaLanguageEventBuilderDsl AjaxGet(string url)
@@ -120,8 +122,7 @@
             var options = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
             configuration(options);
             Guard.NotNullOrWhiteSpace("url", options.Url);
-            meta.Add(new ExecutableAjaxAction(false, string.Empty, options));
-            return this;
+            return AddAction(new ExecutableAjaxAction(false, string.Empty, options));
         }
 
         public IIncodingMetaLanguageEventBuilderDsl Ajax([NotNull] string url)

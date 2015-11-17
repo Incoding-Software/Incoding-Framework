@@ -1,52 +1,48 @@
-﻿<!DOCTYPE html>
+﻿@using Incoding.Maybe
+<!DOCTYPE html>
 <html>
-    <head>
-        <title></title>
+<head>
+    <title></title>
 
-        @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
-        @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
 
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
 
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/mustache.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))
 
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
-        @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
-        <script>
-            TemplateFactory.Version = '@Guid.NewGuid().ToString()'
-        </script>
-    </head>
-    <body>
-    @using (Html.When(JqueryBind.InitIncoding).Do().Direct()
-                .OnSuccess(dsl =>
-                           {
-                               dsl.Window.Alert("catch");                             
-                           })
-                .AsHtmlAttributes(new { @class = "statusDependent declinedOption clearfix" })
-                .ToBeginTag(Html, HtmlTag.Div))
-    {
-        @(Html.When(JqueryBind.Click)
-              .DoWithPreventDefault()
-              .Submit()
-              .OnSuccess(dsl =>
-                             {
-                                 
-                             })
-              .OnError(dsl => dsl.With(Selector.Jquery.Id("target")).Core().Form.Validation.Refresh())
-              .AsHtmlAttributes()
-              .ToSubmit("Save"))
-    }
-    </body>
-
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.url.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.core.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.helper.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
+    <script>
+        TemplateFactory.Version = '@Guid.NewGuid().ToString()'
+    </script>
+</head>
+<body>
+@{
+    var uniqueId = Guid.NewGuid().ToString();
+}
+<div id="@uniqueId" >I've seen</div>
+@(Html.When(JqueryBind.InitIncoding)
+      .Ajax(option =>
+            {
+                option.Cache = false;
+                option.Type = HttpVerbs.Post;
+                option.Url = Url.Action("GetVal","Labs");
+            })            
+      .When(JqueryBind.Click)
+      .OnSuccess(dsl => dsl.WithId(uniqueId).JQuery.Manipulation.Remove())
+      .AsHtmlAttributes()
+      .ToTag(HtmlTag.A,"Test"))
+</body>
 </html>

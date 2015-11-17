@@ -22,7 +22,7 @@
                                                                                                     })
                                                                                     .AsHtmlAttributes(new { @class = "myClass" })
                                                                                     .ShouldNotBeNull(), 1000)
-                                                                   .ShouldBeLessThan(200);
+                                                                   .ShouldBeLessThan(250);
 
         It should_be_as_html_attribute = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                        .Do().Direct()
