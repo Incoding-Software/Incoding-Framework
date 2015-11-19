@@ -124,3 +124,6 @@ Views\Extensions\*
 
 Thumbs.db
 src/FunnelWeb.Web/files/
+*.pdb
+*.dll
+*.cache
