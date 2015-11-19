@@ -33,7 +33,7 @@
 
         #region Api Methods
 
-        public MvcHtmlString Label(Action<IncHorizontalControl<IncLabelControl>> configuration)
+        public MvcHtmlString Label(Action<IncHorizontalControl<IncLabelControl>> configuration = null)
         {
             return Group(new IncLabelControl(htmlHelper, property), configuration);
         }

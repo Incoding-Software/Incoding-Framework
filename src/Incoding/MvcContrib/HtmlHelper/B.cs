@@ -55,6 +55,12 @@ namespace Incoding.MvcContrib
         ///     Furthermore, .invisible can be used to toggle only the visibility of an element, meaning its display is not
         ///     modified and the element can still affect the flow of the document.
         /// </summary>
-        Hidden = 32
+        Hidden = 32,
+
+        /// <summary>
+        /// Use Bootstrap's predefined grid classes to align labels and groups of form controls in a horizontal layout by adding .form-horizontal to the form (which doesn't have to be a <form>). Doing so changes .form-groups to behave as grid rows, so no need for .row.
+        /// </summary>
+        [Description("form-horizontal")]
+        FormHorizontal = 64
     }
 }

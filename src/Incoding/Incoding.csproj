@@ -419,6 +419,7 @@
     <Compile Include="MvcContrib\Core\IncControllerBase.cs" />
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
     <Compile Include="MvcContrib\Extensions\BeginTag.cs" />
+    <Compile Include="MvcContrib\HtmlHelper\Offset.cs" />
     <Compile Include="MvcContrib\MVD\IUrlDispatcher.cs" />
     <Compile Include="MvcContrib\Primitive\Enctype.cs" />
     <Compile Include="MvcContrib\HtmlHelper\B.cs" />
@@ -649,7 +650,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

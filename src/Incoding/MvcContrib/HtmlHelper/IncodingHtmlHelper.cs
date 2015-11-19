@@ -70,6 +70,8 @@ namespace Incoding.MvcContrib
         public static string DropDownTemplateId = "incodingDropDownTemplate";
 
         public static BootstrapOfVersion BootstrapVersion = BootstrapOfVersion.v2;
+        public static Offset Def_Label_Offset = Offset.Col_xs_2;
+        public static Offset Def_Input_Offset = Offset.Col_xs_10;
 
         #endregion
 
