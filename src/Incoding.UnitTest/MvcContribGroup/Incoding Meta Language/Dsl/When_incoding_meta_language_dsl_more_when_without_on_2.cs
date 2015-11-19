@@ -36,6 +36,6 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                         .SingleOrDefault(r => r["onBind"].ToString() == "load incoding")
                                                         .ShouldNotBeNull();
 
-        It should_be_count = () => { metaBuilder.GetAll<ExecutableBase>().Count().ShouldEqual(2); };
+        It should_be_count = () => metaBuilder.GetAll<ExecutableBase>().Count().ShouldEqual(2);
     }
 }
