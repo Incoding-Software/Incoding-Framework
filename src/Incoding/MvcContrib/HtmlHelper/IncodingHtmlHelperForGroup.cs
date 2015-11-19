@@ -30,12 +30,11 @@
         #endregion
 
         ////ncrunch: no coverage start
-
         #region Api Methods
 
-        public MvcHtmlString Label(Action<IncHorizontalControl<IncLabelControl>> configuration = null)
+        public MvcHtmlString Static(Action<IncHorizontalControl<IncStaticControl<TModel, TProperty>>> configuration = null)
         {
-            return Group(new IncLabelControl(htmlHelper, property), configuration);
+            return Group(new IncStaticControl<TModel, TProperty>(htmlHelper, property), configuration);
         }
 
         public MvcHtmlString Hidden(Action<IncHiddenControl<TModel, TProperty>> configuration = null)

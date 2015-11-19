@@ -49,13 +49,17 @@ namespace Incoding.MvcContrib
         public override MvcHtmlString ToHtmlString()
         {
             bool isV3orMore = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3;
+            bool isStatic = Input.GetType().Name.Contains("IncStaticControl");
+
             Label.AddClass("control-label");
             if (isV3orMore)
                 Label.AddClass(GetOffsetAsClass(LabelOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Label_Offset)));
             if (isV3orMore)
-                Input.AddClass("form-control");
+                Input.AddClass(isStatic ? "form-control-static" : "form-control");
 
-            AddClass(isV3orMore ? "form-group" : "control-group");
+            AddClass(isV3orMore
+                             ? "form-group"
+                             : isStatic ? string.Empty : "control-group");
             if (GroupOffset.HasValue)
                 AddClass(GetOffsetAsClass(GroupOffset.Value));
 

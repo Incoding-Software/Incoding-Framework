@@ -420,6 +420,7 @@
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
     <Compile Include="MvcContrib\Extensions\BeginTag.cs" />
     <Compile Include="MvcContrib\HtmlHelper\Offset.cs" />
+    <Compile Include="MvcContrib\Incoding Controls\IncReadOnlyControl.cs" />
     <Compile Include="MvcContrib\MVD\IUrlDispatcher.cs" />
     <Compile Include="MvcContrib\Primitive\Enctype.cs" />
     <Compile Include="MvcContrib\HtmlHelper\B.cs" />
