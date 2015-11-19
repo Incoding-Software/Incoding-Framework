@@ -16,16 +16,9 @@ namespace Incoding.MvcContrib
         public IncHorizontalControl(IncLabelControl label, TInput input, IncControlBase validation)
         {
             Label = label;
-            Label.AddClass(IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3 ? "control-label " : "control-label");
-            Label.AddClass(GetOffsetAsClass(LabelOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Label_Offset)));
             Input = input;
-            if (IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3)
-                Input.AddClass("form-control");
             Validation = validation;
             HelpBlock = new IncHelpBlockControl();
-            AddClass(IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3 ? "form-group" : "control-group");
-            if (GroupOffset.HasValue)
-                AddClass(GetOffsetAsClass(GroupOffset.Value));
         }
 
         #endregion
@@ -55,13 +48,24 @@ namespace Incoding.MvcContrib
 
         public override MvcHtmlString ToHtmlString()
         {
+            bool isV3orMore = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3;
+            Label.AddClass("control-label");
+            if (isV3orMore)
+                Label.AddClass(GetOffsetAsClass(LabelOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Label_Offset)));
+            if (isV3orMore)
+                Input.AddClass("form-control");
+
+            AddClass(isV3orMore ? "form-group" : "control-group");
+            if (GroupOffset.HasValue)
+                AddClass(GetOffsetAsClass(GroupOffset.Value));
+
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(Label.ToHtmlString());
 
             var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), new RouteValueDictionary(new
                                                                                                                             {
-                                                                                                                                    @class = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3
+                                                                                                                                    @class = isV3orMore
                                                                                                                                                      ? GetOffsetAsClass(InputOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Input_Offset))
                                                                                                                                                      : "controls"
                                                                                                                             }));
