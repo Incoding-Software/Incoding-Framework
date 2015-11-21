@@ -72,6 +72,10 @@ namespace Incoding.MvcContrib
         ///     <form>). Doing so changes .form-groups to behave as grid rows, so no need for .row.
         /// </summary>
         [Description("form-horizontal")]
-        FormHorizontal = 64
+        FormHorizontal = 64,
+
+
+        [Description("form-group")]
+        FormGroup = 128,
     }
 }

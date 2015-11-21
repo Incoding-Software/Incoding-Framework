@@ -116,14 +116,7 @@ NDependOut*/
 # our output folder for build artifacts
 artifacts
 
-src/_NCrunch_FunnelWeb
-GitRepoConfig.xml
-build/NuGet/*
-build/Published/*
-Views\Extensions\*
 
-Thumbs.db
-src/FunnelWeb.Web/files/
 *.pdb
 *.dll
 *.cache
