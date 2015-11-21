@@ -1,7 +1,3 @@
-C:\Workspace\IncFramework\src\Incoding.NuGet.MSpecContrib\bin\Debug\Incoding.MSpecContrib.NuGet.dll
-C:\Workspace\IncFramework\src\Incoding.NuGet.MSpecContrib\bin\Debug\Incoding.MSpecContrib.NuGet.pdb
-C:\Workspace\IncFramework\src\Incoding.NuGet.MSpecContrib\obj\Debug\Incoding.MSpecContrib.NuGet.dll
-C:\Workspace\IncFramework\src\Incoding.NuGet.MSpecContrib\obj\Debug\Incoding.MSpecContrib.NuGet.pdb
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MSpecContrib\bin\Debug\Incoding.MSpecContrib.NuGet.dll
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MSpecContrib\bin\Debug\Incoding.MSpecContrib.NuGet.pdb
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MSpecContrib\obj\Debug\Incoding.NuGet.MSpecContrib.csprojResolveAssemblyReference.cache
