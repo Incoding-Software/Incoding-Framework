@@ -49,7 +49,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                            {
                                                var invent = new InventFactory<FakeGenerateObject>();
                                                invent.Empty(r => r.Fake);
-                                               Catch.Exception(() => invent.Create()).ShouldBeOfType<ArgumentException>();
+                                               Catch.Exception(() => invent.Create()).ShouldBeAssignableTo<ArgumentException>();
                                            };
 
         It should_be_empty = () =>

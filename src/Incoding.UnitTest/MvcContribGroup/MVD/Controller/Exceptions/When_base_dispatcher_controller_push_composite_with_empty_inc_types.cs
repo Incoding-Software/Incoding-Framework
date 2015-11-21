@@ -21,6 +21,6 @@
 
         Because of = () => { exception = Catch.Exception(() => controller.Push(string.Empty)); };
 
-        It should_be_argument_exception = () => exception.ShouldBeOfType<ArgumentException>();
+        It should_be_argument_exception = () => exception.ShouldBeAssignableTo<ArgumentException>();
     }
 }

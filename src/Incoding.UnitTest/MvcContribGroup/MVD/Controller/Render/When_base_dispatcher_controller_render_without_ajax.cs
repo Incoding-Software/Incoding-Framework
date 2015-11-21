@@ -28,11 +28,11 @@
 
         It should_be_render = () =>
                                   {
-                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeOfType<FakeRenderModelWithoutAjax>();
+                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeRenderModelWithoutAjax>();
                                       view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                                       viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
                                   };
 
-        It should_be_content = () => result.ShouldBeOfType<ContentResult>();
+        It should_be_content = () => result.ShouldBeAssignableTo<ContentResult>();
     }
 }

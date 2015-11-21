@@ -14,6 +14,7 @@ namespace Incoding.MvcContrib
         ///     containers to use in your projects. Note that, due to padding and more, neither container is nestable.
         ///     Use .container for a responsive fixed width container.
         /// </summary>
+        [Description("container")]
         Container = 1,
 
         /// <summary>
@@ -28,11 +29,13 @@ namespace Incoding.MvcContrib
         ///     For a elements, it's done with .active. However, you may use .active on buttons (and include the
         ///     aria-pressed="true" attribute) should you need to replicate the active state programmatically.
         /// </summary>
+        [Description("active")]
         Active = 4,
 
         /// <summary>
         ///     Make buttons look unclickable by fading them back with opacity.
         /// </summary>
+        [Description("disabled")]
         Disabled = 8,
 
         /// <summary>
@@ -44,6 +47,7 @@ namespace Incoding.MvcContrib
         ///     Furthermore, .invisible can be used to toggle only the visibility of an element, meaning its display is not
         ///     modified and the element can still affect the flow of the document.
         /// </summary>
+        [Description("hide"),Obsolete("Please use B.Hidden")]
         Hide = 16,
 
         /// <summary>
@@ -55,6 +59,7 @@ namespace Incoding.MvcContrib
         ///     Furthermore, .invisible can be used to toggle only the visibility of an element, meaning its display is not
         ///     modified and the element can still affect the flow of the document.
         /// </summary>
+        [Description("hidden"), ]
         Hidden = 32
     }
 }

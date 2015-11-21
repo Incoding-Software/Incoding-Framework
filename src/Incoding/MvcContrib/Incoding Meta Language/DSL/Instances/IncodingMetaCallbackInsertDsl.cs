@@ -16,20 +16,6 @@ namespace Incoding.MvcContrib
 
     public class IncodingMetaCallbackInsertDsl
     {
-        #region Fields
-
-        readonly IIncodingMetaLanguagePlugInDsl plugIn;
-
-        string insertProperty = string.Empty;
-
-        string insertTemplateSelector = string.Empty;
-
-        bool prepare;
-
-        string content = Selector.Result;
-
-        #endregion
-
         #region Constructors
 
         public IncodingMetaCallbackInsertDsl(IIncodingMetaLanguagePlugInDsl plugIn)
@@ -38,8 +24,6 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
-
 
 #if DEBUG
         [Obsolete("Please use selector as argument", false), ExcludeFromCodeCoverage]
@@ -101,6 +85,52 @@ namespace Incoding.MvcContrib
             return this;
         }
 
+        /// <summary>
+        ///     Remove the set of matched elements from the DOM.
+        /// </summary>
+        public IExecutableSetting Remove()
+        {
+            return this.plugIn.Core().JQuery.Call("remove");
+        }
+
+        /// <summary>
+        ///     Remove all child nodes of the set of matched elements from the DOM.
+        /// </summary>
+        public IExecutableSetting Empty()
+        {
+            return this.plugIn.Core().JQuery.Call("empty");
+        }
+
+        /// <summary>
+        ///     Remove the set of matched elements from the DOM.
+        /// </summary>
+        public IExecutableSetting Detach()
+        {
+            return this.plugIn.Core().JQuery.Call("detach");
+        }
+
+        /// <summary>
+        ///     Wrap an HTML structure around each element in the set of matched elements.
+        /// </summary>
+        /// <param name="selector">
+        ///     <see cref="Selector" />
+        /// </param>
+        public IExecutableSetting Wrap()
+        {
+            return this.plugIn.Core().JQuery.Call("wrap", this.content);
+        }
+
+        /// <summary>
+        ///     Wrap an HTML structure around all elements in the set of matched elements.
+        /// </summary>
+        /// <param name="selector">
+        ///     <see cref="Selector" />
+        /// </param>
+        public IExecutableSetting WrapAll()
+        {
+            return this.plugIn.Core().JQuery.Call(this.content);
+        }
+
         [Obsolete("Please use On with Selector.Result.For<T>(r=>r.Prop)", false)]
         public IncodingMetaCallbackInsertDsl For<TModel>(Expression<Func<TModel, object>> property)
         {
@@ -138,7 +168,7 @@ namespace Incoding.MvcContrib
         }
 
         /// <summary>
-        /// Insert content, specified by the parameter, to the end of each element in the set of matched elements.
+        ///     Insert content, specified by the parameter, to the end of each element in the set of matched elements.
         /// </summary>
         public IExecutableSetting Append()
         {
@@ -170,5 +200,19 @@ namespace Incoding.MvcContrib
         {
             return plugIn.Registry(new ExecutableInsert(method, insertProperty, insertTemplateSelector, prepare, content));
         }
+
+        #region Fields
+
+        readonly IIncodingMetaLanguagePlugInDsl plugIn;
+
+        string insertProperty = string.Empty;
+
+        string insertTemplateSelector = string.Empty;
+
+        bool prepare;
+
+        string content = Selector.Result;
+
+        #endregion
     }
 }

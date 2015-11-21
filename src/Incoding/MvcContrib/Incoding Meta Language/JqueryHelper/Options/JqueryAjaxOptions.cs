@@ -23,7 +23,7 @@ namespace Incoding.MvcContrib
         #region Static Fields
 
         public static readonly JqueryAjaxOptions Default = new JqueryAjaxOptions();
-
+        
         #endregion
 
         #region Fields

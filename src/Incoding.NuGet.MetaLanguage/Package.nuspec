@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>1.4.0.40-beta</version>
+    <version>1.4.0.58-beta</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -31,7 +31,7 @@
         <dependency id="jQuery.Validation" />
         <dependency id="jQuery.Form" />
         <dependency id="underscore.js" />
-        <dependency id="Handlebars.hs" />
+        <dependency id="Handlebars.js" />
         <dependency id="jQuery" version="(1.9.1,2.0.0)" />
         <dependency id="FluentValidation.MVC3-signed" />
       </group>

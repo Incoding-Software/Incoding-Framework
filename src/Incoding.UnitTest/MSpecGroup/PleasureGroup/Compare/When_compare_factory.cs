@@ -770,7 +770,7 @@
                                                                            compare.Ignore(r => r.Result, "Test");
                                                                            Catch
                                                                                    .Exception(() => compare.Ignore(r => r.Result, "Test"))
-                                                                                   .ShouldBeOfType<SpecificationException>();
+                                                                                   .ShouldBeAssignableTo<SpecificationException>();
                                                                        };
 
         It should_be_throw_exception_if_property_duplicate_in_forward_to_value = () =>
@@ -779,7 +779,7 @@
                                                                                      compare.ForwardToValue(r => r.Result, "Test");
                                                                                      Catch
                                                                                              .Exception(() => compare.ForwardToValue(r => r.Result, "Test"))
-                                                                                             .ShouldBeOfType<SpecificationException>();
+                                                                                             .ShouldBeAssignableTo<SpecificationException>();
                                                                                  };
 
         It should_be_throw_exception_if_property_duplicate_in_forward = () =>
@@ -788,7 +788,7 @@
                                                                             compare.Forward(r => r.Result, r => r.Result2);
                                                                             Catch
                                                                                     .Exception(() => compare.Forward(r => r.Result, r => r.Result2))
-                                                                                    .ShouldBeOfType<SpecificationException>();
+                                                                                    .ShouldBeAssignableTo<SpecificationException>();
                                                                         };
 
         It should_be_throw_exception_if_property_duplicate_in_forward_to_action = () =>
@@ -797,7 +797,7 @@
                                                                                       compare.ForwardToAction(r => r.Result, fakeCompare => { });
                                                                                       Catch
                                                                                               .Exception(() => compare.ForwardToAction(r => r.Result, fakeCompare => { }))
-                                                                                              .ShouldBeOfType<SpecificationException>();
+                                                                                              .ShouldBeAssignableTo<SpecificationException>();
                                                                                   };
 
         #endregion

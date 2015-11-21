@@ -37,7 +37,7 @@
                                                            left.OrderBy(r => r.Id);
                                                            Catch
                                                                    .Exception(() => left.ShouldEqual(new AdHocOrderSpecification<FakeEntity>()))
-                                                                   .ShouldBeOfType<SpecificationException>();
+                                                                   .ShouldBeAssignableTo<SpecificationException>();
                                                        };
 
         It should_be_different_expressions = () =>
@@ -49,7 +49,7 @@
                                                      right.OrderBy(r => r.Prop);
                                                      Catch
                                                              .Exception(() => left.ShouldEqual(right))
-                                                             .ShouldBeOfType<SpecificationException>();
+                                                             .ShouldBeAssignableTo<SpecificationException>();
                                                  };
 
         It should_be_different_type = () =>
@@ -61,7 +61,7 @@
                                               right.OrderByDescending(r => r.Id);
                                               Catch
                                                       .Exception(() => left.ShouldEqual(right))
-                                                      .ShouldBeOfType<SpecificationException>();
+                                                      .ShouldBeAssignableTo<SpecificationException>();
                                           };
     }
 }

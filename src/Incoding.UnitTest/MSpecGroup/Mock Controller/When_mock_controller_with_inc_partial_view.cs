@@ -56,6 +56,6 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_render_by_action = () => mockController.ShouldBeRenderModel<int>(i => i.ShouldEqual(10), "ViewName");
 
-        It should_not_be_render_self_without_model = () => Catch.Exception(() => mockController.ShouldBeRenderView()).ShouldBeOfType<MockException>();
+        It should_not_be_render_self_without_model = () => Catch.Exception(() => mockController.ShouldBeRenderView()).ShouldBeAssignableTo<MockException>();
     }
 }

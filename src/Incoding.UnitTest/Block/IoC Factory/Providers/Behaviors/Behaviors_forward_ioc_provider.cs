@@ -32,7 +32,7 @@ namespace Incoding.UnitTest.Block
         It should_be_forward_to_instance = () =>
                                                {
                                                    ioCProvider.Forward<ILogger>(new FakeLogger());
-                                                   ioCProvider.TryGet<ILogger>().ShouldBeOfType<FakeLogger>();
+                                                   ioCProvider.TryGet<ILogger>().ShouldBeAssignableTo<FakeLogger>();
                                                };
     }
 }

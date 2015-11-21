@@ -37,6 +37,6 @@
 
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(composite)); };
 
-        It should_be_throw = () => exception.ShouldBeOfType<IncFakeException>();
+        It should_be_throw = () => exception.ShouldBeAssignableTo<IncFakeException>();
     }
 }

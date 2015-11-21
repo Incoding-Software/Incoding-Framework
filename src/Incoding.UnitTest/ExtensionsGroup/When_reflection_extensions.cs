@@ -208,7 +208,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
                 .GetProtected().ShouldEqual(Pleasure.Generator.TheSameString());
 
         It should_be_set_field_with_wrong_name = () => Catch.Exception(() => new FakeSetValueClass().SetValue("NotFoundProperty", "Value"))
-                .ShouldBeOfType<InstanceNotFoundException>();
+                .ShouldBeAssignableTo<InstanceNotFoundException>();
 
         It should_be_try_get_value_with_wrong_name = () => new FakeSetValueClass()
                 .TryGetValue("NotFoundField")

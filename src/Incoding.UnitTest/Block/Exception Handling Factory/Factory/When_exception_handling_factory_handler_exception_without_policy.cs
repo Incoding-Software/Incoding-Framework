@@ -27,6 +27,6 @@
 
         Because of = () => { exception = Catch.Exception(() => exceptionHandling.Handler(new ArgumentException())); };
 
-        It should_be_re_throw_same_exception = () => exception.ShouldBeOfType<ArgumentException>();
+        It should_be_re_throw_same_exception = () => exception.ShouldBeAssignableTo<ArgumentException>();
     }
 }

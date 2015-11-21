@@ -29,20 +29,6 @@
     </script>
 </head>
 <body>
-@{
-    var uniqueId = Guid.NewGuid().ToString();
-}
-<div id="@uniqueId" >I've seen</div>
-@(Html.When(JqueryBind.InitIncoding)
-      .Ajax(option =>
-            {
-                option.Cache = false;
-                option.Type = HttpVerbs.Post;
-                option.Url = Url.Action("GetVal","Labs");
-            })            
-      .When(JqueryBind.Click)
-      .OnSuccess(dsl => dsl.WithId(uniqueId).JQuery.Manipulation.Remove())
-      .AsHtmlAttributes()
-      .ToTag(HtmlTag.A,"Test"))
+
 </body>
 </html>

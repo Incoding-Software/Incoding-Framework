@@ -37,7 +37,7 @@
                                                            left.Join(r => r.Prop);
                                                            Catch
                                                                    .Exception(() => left.ShouldEqual(new AdHocFetchNhibernateSpecification<FakeEntity>()))
-                                                                   .ShouldBeOfType<SpecificationException>();
+                                                                   .ShouldBeAssignableTo<SpecificationException>();
                                                        };
 
         It should_be_different_expressions = () =>
@@ -48,7 +48,7 @@
                                                      right.Join(r => r.Id);
                                                      Catch
                                                              .Exception(() => left.ShouldEqual(right))
-                                                             .ShouldBeOfType<SpecificationException>();
+                                                             .ShouldBeAssignableTo<SpecificationException>();
                                                  };
     }
 }

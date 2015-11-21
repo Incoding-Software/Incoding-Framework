@@ -44,7 +44,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
         It should_be_return_or_throws_with_throws = () => Catch
                                                                   .Exception(() => nullValue.ReturnOrThrows(r => r.Prop, new ArgumentException()))
-                                                                  .ShouldBeOfType<ArgumentException>();
+                                                                  .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_return_or_throws_with_value = () => value
                                                                  .ReturnOrThrows(r => r.Prop, new ArgumentException())

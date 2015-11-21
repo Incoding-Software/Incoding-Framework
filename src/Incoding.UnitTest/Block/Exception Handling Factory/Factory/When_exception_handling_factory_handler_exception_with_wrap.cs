@@ -31,9 +31,9 @@ namespace Incoding.UnitTest.Block
 
         It should_be_wrap = () =>
                                 {
-                                    exception.ShouldBeOfType<ApplicationException>();
+                                    exception.ShouldBeAssignableTo<ApplicationException>();
                                     var applicationException = (ApplicationException)exception;
-                                    applicationException.InnerException.ShouldBeOfType<ArgumentException>();
+                                    applicationException.InnerException.ShouldBeAssignableTo<ArgumentException>();
                                     applicationException.Message.ShouldEqual(Pleasure.Generator.TheSameString());
                                 };
     }

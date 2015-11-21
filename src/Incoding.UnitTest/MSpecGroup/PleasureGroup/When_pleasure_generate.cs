@@ -32,7 +32,7 @@
                                                      Catch.Exception(() => left.ShouldEqualWeakEach(right)).ShouldNotBeNull();
                                                  };
 
-        It should_be_generate_enum_with_wrong_type = () => Catch.Exception(() => Pleasure.Generator.EnumAsInt(typeof(When_pleasure_generate))).ShouldBeOfType<ArgumentException>();
+        It should_be_generate_enum_with_wrong_type = () => Catch.Exception(() => Pleasure.Generator.EnumAsInt(typeof(When_pleasure_generate))).ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_generate_enum = () => Pleasure.Generator.Enum<DayOfWeek>().ShouldNotEqual(DayOfWeek.Sunday);
 

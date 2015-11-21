@@ -21,7 +21,7 @@ namespace Incoding.UnitTest.Block
                                    Action<LogMessage> verify = message =>
                                                                    {
                                                                        message.Message.ShouldEqual(Pleasure.Generator.TheSameString());
-                                                                       message.Exception.ShouldBeOfType<ArgumentException>();
+                                                                       message.Exception.ShouldBeAssignableTo<ArgumentException>();
                                                                        message.State.ShouldEqual(Pleasure.Generator.The20120406Noon());
                                                                    };
                                    defaultMockLogger.Verify(r => r.Log(Pleasure.MockIt.Is(verify)));

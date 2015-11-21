@@ -25,7 +25,7 @@ namespace Incoding.UnitTest.Block
                                              .ForAll()
                                              .Catch(exception =>
                                                         {
-                                                            exception.ShouldBeOfType<ArgumentException>();
+                                                            exception.ShouldBeAssignableTo<ArgumentException>();
                                                             isCatch = true;
                                                         })
                                              .Handle(new ArgumentException())
@@ -38,7 +38,7 @@ namespace Incoding.UnitTest.Block
                                           .ForAll()
                                           .Wrap(exception => new ApplicationException(string.Empty, exception))
                                           .Handle(new ArgumentException())
-                                          .ShouldBeOfType<ApplicationException>();
+                                          .ShouldBeAssignableTo<ApplicationException>();
 
         It should_be_re_throw = () => new ExceptionPolicy()
                                               .ForAll()

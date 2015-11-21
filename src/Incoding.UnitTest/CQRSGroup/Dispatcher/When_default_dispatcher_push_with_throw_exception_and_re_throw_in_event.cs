@@ -71,7 +71,7 @@ namespace Incoding.UnitTest
 
         Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
 
-        It should_be_re_throw = () => exception.ShouldBeOfType<MyException>();
+        It should_be_re_throw = () => exception.ShouldBeAssignableTo<MyException>();
 
 
     }

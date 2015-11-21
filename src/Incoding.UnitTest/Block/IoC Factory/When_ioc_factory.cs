@@ -34,13 +34,13 @@ namespace Incoding.UnitTest.Block
         It should_be_get_by_type = () =>
                                        {
                                            iocProvider.Setup(r => r.Get<ILogger>(typeof(ILogger))).Returns(new ClipboardLogger());
-                                           iocFactory.Resolve<ILogger>(typeof(ILogger)).ShouldBeOfType<ClipboardLogger>();
+                                           iocFactory.Resolve<ILogger>(typeof(ILogger)).ShouldBeAssignableTo<ClipboardLogger>();
                                        };
 
         It should_be_try_get_by_type = () =>
                                            {
                                                iocProvider.Setup(r => r.TryGet<ILogger>(typeof(ILogger))).Returns(new ClipboardLogger());
-                                               iocFactory.TryResolve<ILogger>(typeof(ILogger)).ShouldBeOfType<ClipboardLogger>();
+                                               iocFactory.TryResolve<ILogger>(typeof(ILogger)).ShouldBeAssignableTo<ClipboardLogger>();
                                            };
 
         It should_be_try_resolve = () =>

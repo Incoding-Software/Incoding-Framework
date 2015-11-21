@@ -23,24 +23,24 @@ namespace Incoding.UnitTest.MSpecGroup
                                                                                      .Exception(() => inventFactory
                                                                                                               .IgnoreBecauseAuto(r => r.StrValue)
                                                                                                               .Ignore(r => r.StrValue, "Test"))
-                                                                                     .ShouldBeOfType<ArgumentException>();
+                                                                                     .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_throw_exception_if_property_duplicate_in_tuning = () => Catch
                                                                                      .Exception(() => inventFactory
                                                                                                               .Tuning(r => r.StrValue, "Test")
                                                                                                               .Tuning(r => r.StrValue, "Test"))
-                                                                                     .ShouldBeOfType<ArgumentException>();
+                                                                                     .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_throw_exception_if_property_duplicate_in_empty = () => Catch
                                                                                     .Exception(() => inventFactory
                                                                                                              .Empty(r => r.StrValue)
                                                                                                              .Empty(r => r.StrValue))
-                                                                                    .ShouldBeOfType<ArgumentException>();
+                                                                                    .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_throw_exception_if_property_duplicate_in_generate_to = () => Catch
                                                                                           .Exception(() => inventFactory
                                                                                                                    .GenerateTo(r => r.Fake)
                                                                                                                    .GenerateTo(r => r.Fake))
-                                                                                          .ShouldBeOfType<ArgumentException>();
+                                                                                          .ShouldBeAssignableTo<ArgumentException>();
     }
 }

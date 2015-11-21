@@ -70,6 +70,6 @@
                                            work.TryGetValue("isWasFlush").ShouldEqual(true);
                                        });
 
-        It should_be_get_repository = () => Run((work, session, transaction) => work.GetRepository().ShouldBeOfType<NhibernateRepository>());
+        It should_be_get_repository = () => Run((work, session, transaction) => work.GetRepository().ShouldBeAssignableTo<NhibernateRepository>());
     }
 }

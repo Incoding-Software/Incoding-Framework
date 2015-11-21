@@ -26,7 +26,7 @@ namespace Incoding.UnitTest
 
         Because of = () => { exception = Catch.Exception(() => dictionary = DictionaryAsString.Parse(source)); };
 
-        It should_be_invalid_operation = () => exception.ShouldBeOfType<ArgumentException>();
+        It should_be_invalid_operation = () => exception.ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_null_dictionary = () => dictionary.ShouldBeNull();
     }

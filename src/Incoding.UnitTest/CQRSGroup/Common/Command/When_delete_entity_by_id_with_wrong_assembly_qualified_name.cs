@@ -28,6 +28,6 @@ namespace Incoding.UnitTest
 
         Because of = () => { exception = Catch.Exception(() => mockCommand.Original.Execute()); };
 
-        It should_be_inc_exception = () => exception.ShouldBeOfType<IncFrameworkException>();
+        It should_be_inc_exception = () => exception.ShouldBeAssignableTo<IncFrameworkException>();
     }
 }

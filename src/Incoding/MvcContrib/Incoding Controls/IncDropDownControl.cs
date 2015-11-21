@@ -21,6 +21,8 @@ namespace Incoding.MvcContrib
 
         readonly Expression<Func<TModel, TProperty>> property;
 
+        private JqueryAjaxOptions options = new JqueryAjaxOptions(IncodingHtmlHelper.DropDownOption);
+
         #endregion
 
         #region Constructors
@@ -30,7 +32,7 @@ namespace Incoding.MvcContrib
             this.htmlHelper = htmlHelper;
             this.property = property;
             Data = new SelectList(new string[0]);
-            Template = Selector.Jquery.Id(IncodingHtmlHelper.DropDownTemplateId);            
+            Template = IncodingHtmlHelper.DropDownTemplateId;
             InitBind = JqueryBind.InitIncoding;
         }
 
@@ -40,9 +42,9 @@ namespace Incoding.MvcContrib
 
         public JqueryBind InitBind { get; set; }
 
-        public bool? Cache { get; set; }
+        public JqueryAjaxOptions Options { get { return this.options; } set { this.options = value; } }
 
-        public string Url { get; set; }
+        public string Url { get { return Options.Url; } set { Options.Url = value; } }
 
         public SelectList Data { get; set; }
 
@@ -64,41 +66,38 @@ namespace Incoding.MvcContrib
             if (isAjax || isIml)
             {
                 var meta = isAjax ? this.htmlHelper.When(InitBind).Do().Ajax(options =>
-                                                                                 {
-                                                                                     options.Url = Url;
-                                                                                     options.Type =HttpVerbs.Get;
-                                                                                     if (Cache.HasValue)
-                                                                                         options.Cache = Cache.Value;
-                                                                                 }) : this.htmlHelper.When(InitBind).Do().Direct();
+                                                                             {
+                                                                                 options.Url = Url;
+                                                                                 options.Type = HttpVerbs.Get;
+                                                                             })
+                                   : this.htmlHelper.When(InitBind).Do().Direct();
                 this.attributes.Merge(meta.OnSuccess(dsl =>
+                                                     {
+                                                         if (isAjax)
                                                          {
-                                                             if (isAjax)
+                                                             dsl.Self().Insert.WithTemplate(Template).Html();
+                                                             foreach (var vm in optionals)
                                                              {
-                                                                 dsl.Self().Core().Insert.WithTemplate(Template).Html();
-                                                                 foreach (var vm in optionals)
-                                                                 {
-                                                                     var option = new TagBuilder(HtmlTag.Option.ToStringLower());
-                                                                     option.SetInnerText(vm.Text);
-                                                                     option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), vm.Value);
-                                                                     dsl.Self().Core().JQuery.Manipulation.Prepend(new MvcHtmlString(option.ToString()).ToHtmlString());
-                                                                 }
-
-                                                                 var selected = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData).Model;
-                                                                 if (selected != null)
-                                                                     dsl.Self().Core().JQuery.Attributes.Val(selected);
+                                                                 var option = new TagBuilder(HtmlTag.Option.ToStringLower());
+                                                                 option.SetInnerText(vm.Text);
+                                                                 option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), vm.Value);
+                                                                 dsl.Self().JQuery.Dom.Use(new MvcHtmlString(option.ToString()).ToHtmlString()).Prepend();
                                                              }
 
-                                                             OnInit.Do(action => action(dsl));
-                                                             OnEvent.Do(action => action(dsl));
-                                                         })
+                                                             var selected = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData).Model;
+                                                             if (selected != null)
+                                                                 dsl.Self().JQuery.Attributes.Val(selected);
+                                                         }
+
+                                                         OnInit.Do(action => action(dsl));
+                                                         OnEvent.Do(action => action(dsl));
+                                                     })
                                           .When(JqueryBind.Change)
-                                          .Do()
-                                          .Direct()
                                           .OnSuccess(dsl =>
-                                                         {
-                                                             OnChange.Do(action => action(dsl));
-                                                             OnEvent.Do(action => action(dsl));
-                                                         })
+                                                     {
+                                                         OnChange.Do(action => action(dsl));
+                                                         OnEvent.Do(action => action(dsl));
+                                                     })
                                           .AsHtmlAttributes());
             }
 

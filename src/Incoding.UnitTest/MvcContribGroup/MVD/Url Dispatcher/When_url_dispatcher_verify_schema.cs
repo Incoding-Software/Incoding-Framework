@@ -42,20 +42,20 @@
                                                                                                  Test = Pleasure.Generator.String(),
                                                                                                  TestNotFound = Pleasure.Generator.String()
                                                                                          }))
-                                       .ShouldBeOfType<ArgumentException>();
+                                       .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_query = () => Catch.Exception(() => urlDispatcher.Query<Fake>(routes: new
                                                                                            {
                                                                                                    Test = Pleasure.Generator.String(),
                                                                                                    TestNotFound = Pleasure.Generator.String()
                                                                                            }))
-                                        .ShouldBeOfType<ArgumentException>();
+                                        .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_model = () => Catch.Exception(() => urlDispatcher.Model<Fake>(new
                                                                                        {
                                                                                                Test = Pleasure.Generator.String(),
                                                                                                TestNotFound = Pleasure.Generator.String()
                                                                                        }))
-                                        .ShouldBeOfType<ArgumentException>();
+                                        .ShouldBeAssignableTo<ArgumentException>();
     }
 }

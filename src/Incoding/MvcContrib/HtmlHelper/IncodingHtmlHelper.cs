@@ -67,7 +67,9 @@ namespace Incoding.MvcContrib
 
         #region Static Fields
 
-        public static string DropDownTemplateId = "incodingDropDownTemplate";
+        public static Selector DropDownTemplateId = "incodingDropDownTemplate".ToId();
+
+        public static JqueryAjaxOptions DropDownOption = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
 
         public static BootstrapOfVersion BootstrapVersion = BootstrapOfVersion.v2;
 

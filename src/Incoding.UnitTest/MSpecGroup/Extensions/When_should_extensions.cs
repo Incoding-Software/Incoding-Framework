@@ -83,19 +83,19 @@
                                                              .Exception(() => Pleasure
                                                                                       .ToDictionary(new KeyValuePair<string, int>(Pleasure.Generator.TheSameString(), 1))
                                                                                       .ShouldNotBeKey(Pleasure.Generator.TheSameString()))
-                                                             .ShouldBeOfType<SpecificationException>();
+                                                             .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_key_value_with_wrong_key = () => Catch
                                                               .Exception(() => Pleasure
                                                                                        .ToDictionary(new KeyValuePair<string, int>(Pleasure.Generator.TheSameString(), Pleasure.Generator.TheSameNumber()))
                                                                                        .ShouldBeKeyValue(Pleasure.Generator.String(), Pleasure.Generator.TheSameNumber()))
-                                                              .ShouldBeOfType<SpecificationException>();
+                                                              .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_key_value_with_wrong_value = () => Catch
                                                                 .Exception(() => Pleasure
                                                                                          .ToDictionary(new KeyValuePair<string, int>(Pleasure.Generator.TheSameString(), Pleasure.Generator.TheSameNumber()))
                                                                                          .ShouldBeKeyValue(Pleasure.Generator.TheSameString(), Pleasure.Generator.PositiveNumber()))
-                                                                .ShouldBeOfType<SpecificationException>();
+                                                                .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_date = () => DateTime.Now.ShouldBeDate(DateTime.Now.AddMinutes(2));
 
@@ -115,7 +115,7 @@
                                                                                         DateTime? leftNullable = DateTime.Now;
                                                                                         DateTime? rightNullable = null;
                                                                                         leftNullable.ShouldBeDate(rightNullable);
-                                                                                    }).ShouldBeOfType<SpecificationException>();
+                                                                                    }).ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_time_with_time_span = () => new TimeSpan(1, 2, 3).ShouldBeTime(1, 2, 3);
 
@@ -176,7 +176,7 @@
                                                {
                                                    var valResult = new ValidationResult();
                                                    valResult.Errors.Add(new ValidationFailure("AnyProperty", Pleasure.Generator.TheSameString()));
-                                                   Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString())).ShouldBeOfType<SpecificationException>();
+                                                   Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString())).ShouldBeAssignableTo<SpecificationException>();
                                                };
 
         It should_be_failure_by_count = () =>
@@ -186,7 +186,7 @@
                                                 string error = Pleasure.Generator.String();
                                                 valResult.Errors.Add(new ValidationFailure("Property", error));
                                                 var exception = Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString()));
-                                                exception.ShouldBeOfType<SpecificationException>();
+                                                exception.ShouldBeAssignableTo<SpecificationException>();
 
                                                 var st = new StringBuilder();
                                                 st.AppendLine("Expected: 2 failure But was:  1 failure");
@@ -199,7 +199,7 @@
                                                      var validationResult = new ValidationResult();
                                                      var errorMessages = Pleasure.ToArray(Pleasure.Generator.String(), Pleasure.Generator.String(), Pleasure.Generator.String());
                                                      var exception = Catch.Exception(() => validationResult.ShouldBeFailure<When_should_extensions>(r => r.Property, errorMessages));
-                                                     exception.ShouldBeOfType<SpecificationException>();
+                                                     exception.ShouldBeAssignableTo<SpecificationException>();
                                                      exception.Message.ShouldContain("Expected: {0} failure But was:  {1} failure".F(validationResult.Errors.Count, errorMessages.Length));
                                                  };
 
@@ -210,7 +210,7 @@
                                                                                                   new ValidationFailure("Property", Pleasure.Generator.TheSameString()),
                                                                                                   new ValidationFailure("Property", Pleasure.Generator.String())
                                                                                           });
-                                                 Catch.Exception(() => valResult.ShouldNotBeFailure<When_should_extensions>(r => r.Property)).ShouldBeOfType<SpecificationException>();
+                                                 Catch.Exception(() => valResult.ShouldNotBeFailure<When_should_extensions>(r => r.Property)).ShouldBeAssignableTo<SpecificationException>();
                                              };
 
         It should_not_be_failure = () => new ValidationResult()

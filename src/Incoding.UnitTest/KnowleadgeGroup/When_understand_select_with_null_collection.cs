@@ -26,7 +26,7 @@ namespace Incoding.UnitTest.KnowleadgeGroup
 
         Because of = () => { exception = Catch.Exception(() => { newCollection = nullCollection.Select(r => r.ToString()); }); };
 
-        It should_be_with_exception = () => exception.ShouldBeOfType<ArgumentException>();
+        It should_be_with_exception = () => exception.ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_new_collection_null = () => newCollection.ShouldBeNull();
     }

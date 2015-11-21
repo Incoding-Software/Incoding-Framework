@@ -30,7 +30,7 @@
 
         It should_be_render = () =>
                                   {
-                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeOfType<FakeRenderModelByFullName>();
+                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeRenderModelByFullName>();
                                       view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                                       viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
                                   };

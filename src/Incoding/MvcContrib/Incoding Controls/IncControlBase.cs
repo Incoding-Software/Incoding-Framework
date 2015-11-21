@@ -29,17 +29,13 @@ namespace Incoding.MvcContrib
 
             if (isIml)
             {
-                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
-                                              .Do()
-                                              .Direct()
+                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)                                              
                                               .OnSuccess(dsl =>
                                                          {
                                                              OnInit.Do(action => action(dsl));
                                                              OnEvent.Do(action => action(dsl));
                                                          })
-                                              .When(JqueryBind.Change)
-                                              .Do()
-                                              .Direct()
+                                              .When(JqueryBind.Change)                                              
                                               .OnSuccess(dsl =>
                                                          {
                                                              OnChange.Do(action => action(dsl));

@@ -28,7 +28,7 @@ namespace Incoding.MSpecContrib
         {
             ShouldBeIncoding(actionResult, data =>
                                                {
-                                                   data.data.ShouldBeOfType<TData>();
+                                                   data.data.ShouldBeAssignableTo<TData>();
                                                    verify((TData)data.data);
                                                });
         }
@@ -74,7 +74,7 @@ namespace Incoding.MSpecContrib
         {
             var viewResult = actionResult as ViewResult;
             viewResult.ShouldNotBeNull();
-            viewResult.Model.ShouldBeOfType<TModel>();
+            viewResult.Model.ShouldBeAssignableTo<TModel>();
             expected((TModel)viewResult.Model);
         }
 
@@ -132,7 +132,7 @@ namespace Incoding.MSpecContrib
         static string GetMethodBodyName<TController>(this Expression<Action<TController>> action) where TController : Controller
         {
             action.ShouldNotBeNull();
-            action.Body.ShouldBeOfType<MethodCallExpression>();
+            action.Body.ShouldBeAssignableTo<MethodCallExpression>();
             return ((MethodCallExpression)action.Body).Method.Name;
         }
 

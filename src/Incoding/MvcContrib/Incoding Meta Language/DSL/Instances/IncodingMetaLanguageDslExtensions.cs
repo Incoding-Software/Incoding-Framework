@@ -10,7 +10,7 @@
     {
         #region Factory constructors
 
-        public static void Behaviors(this IIncodingMetaLanguagePlugInDsl plugInDsl, Action<IIncodingMetaLanguagePlugInDsl> action)
+        public static void Behaviors(this IIncodingMetaLanguageCallbackInstancesDsl plugInDsl, Action<IIncodingMetaLanguageCallbackInstancesDsl> action)
         {
             var behaviorDsl = (IIncodingMetaLanguageBehaviorDsl)plugInDsl;
             behaviorDsl.Lock();

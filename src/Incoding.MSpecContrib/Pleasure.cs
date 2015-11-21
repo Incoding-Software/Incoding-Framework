@@ -450,7 +450,7 @@ namespace Incoding.MSpecContrib
 
             public static T IsNotNull<T>()
             {
-                return Is<T>(r => r.ShouldBeOfType<T>());
+                return Is<T>(r => r.ShouldBeAssignableTo<T>());
             }
 
             public static T IsNull<T>()

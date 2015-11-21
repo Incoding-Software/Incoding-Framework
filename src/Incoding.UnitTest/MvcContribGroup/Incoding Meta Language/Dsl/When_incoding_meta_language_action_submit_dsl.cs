@@ -18,7 +18,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .Should(action =>
                                                         {
                                                             action["formSelector"].ShouldEqual(Selector.Jquery.Self().ToString());
-                                                            action["options"].ShouldBeOfType<Dictionary<string, object>>();
+                                                            action["options"].ShouldBeAssignableTo<Dictionary<string, object>>();
                                                         });
 
         It should_be_submit_on = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -27,7 +27,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                .Should(action =>
                                                            {
                                                                action["formSelector"].ShouldEqual("$('#id').parent('abbr')");
-                                                               action["options"].ShouldBeOfType<Dictionary<string, object>>();
+                                                               action["options"].ShouldBeAssignableTo<Dictionary<string, object>>();
                                                            });
     }
 }

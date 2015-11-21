@@ -17,7 +17,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         Because of = () => { result = controller.PushSuccessResult(new FakeCommand(), () => { return new EmptyResult(); }); };
 
-        It should_be_custom = () => result.ShouldBeOfType<EmptyResult>();
+        It should_be_custom = () => result.ShouldBeAssignableTo<EmptyResult>();
 
         It should_be_push = () => dispatcher.ShouldBePush(new FakeCommand());
     }

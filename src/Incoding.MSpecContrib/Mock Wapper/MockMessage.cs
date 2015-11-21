@@ -187,12 +187,12 @@ namespace Incoding.MSpecContrib
 
         public void ShouldNotBeSave<TEntity>() where TEntity : class, IEntity, new()
         {
-            ShouldBeSave<TEntity>(r => r.ShouldBeOfType<TEntity>(), 0);
+            ShouldBeSave<TEntity>(r => r.ShouldBeAssignableTo<TEntity>(), 0);
         }
 
         public void ShouldNotBeSaveOrUpdate<TEntity>() where TEntity : class, IEntity, new()
         {
-            ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldBeOfType<TEntity>(), 0);
+            ShouldBeSaveOrUpdate<TEntity>(r => r.ShouldBeAssignableTo<TEntity>(), 0);
         }
 
         public void ShouldBeSaveOrUpdate<TEntity>(Action<TEntity> verify, int callCount = 1) where TEntity : class, IEntity, new()

@@ -49,11 +49,11 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_redirect_to_action_with_wrong_action = () => Catch
                                                                           .Exception(() => RedirectTo(new { controller = "Home", action = "List" }).ShouldBeRedirectToAction<HomeController>(x => x.Index()))
-                                                                          .ShouldBeOfType<SpecificationException>();
+                                                                          .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_redirect_to_action_with_wrong_controller = () => Catch
                                                                               .Exception(() => RedirectTo(new { controller = "Person", action = "Index" }).ShouldBeRedirectToAction<HomeController>(x => x.Index()))
-                                                                              .ShouldBeOfType<SpecificationException>();
+                                                                              .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_model = () => new ViewResult { ViewData = { Model = Pleasure.Generator.TheSameString() } }.ShouldBeModel(Pleasure.Generator.TheSameString());
 
@@ -83,7 +83,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_model_with_wrong_view_result = () => Catch
                                                                   .Exception(() => new ViewResult().ShouldBeModel<string>(s => s.ShouldBeEmpty()))
-                                                                  .ShouldBeOfType<SpecificationException>();
+                                                                  .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_incoding_success_with_data = () => IncodingResult
                                                                 .Success(Pleasure.Generator.TheSameString())
@@ -102,8 +102,8 @@ namespace Incoding.UnitTest.MSpecGroup
                                                         .ShouldBeIncodingDataIsNull();
 
         It should_be_incoding_data_with_wrong_type = () => Catch
-                                                                   .Exception(() => IncodingResult.Success(Pleasure.Generator.TheSameString()).ShouldBeIncodingData<int>(s => s.ShouldBeOfType<int>()))
-                                                                   .ShouldBeOfType<SpecificationException>();
+                                                                   .Exception(() => IncodingResult.Success(Pleasure.Generator.TheSameString()).ShouldBeIncodingData<int>(s => s.ShouldBeAssignableTo<int>()))
+                                                                   .ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_incoding_fail_with_data = () => IncodingResult
                                                              .Error(Pleasure.Generator.TheSameString())

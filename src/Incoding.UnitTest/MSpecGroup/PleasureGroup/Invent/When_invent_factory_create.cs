@@ -168,7 +168,7 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_long_nullable = () => new InventFactory<FakeGenerateObject>().Create().LongValueNullable.ShouldBeGreaterThan(0);
 
-        It should_be_object_as_string = () => new InventFactory<FakeGenerateObject>().Create().ObjValue.ShouldBeOfType<string>();
+        It should_be_object_as_string = () => new InventFactory<FakeGenerateObject>().Create().ObjValue.ShouldBeAssignableTo<string>();
 
         It should_be_stream = () => new InventFactory<FakeGenerateObject>().Create().StreamValue.ShouldNotBeNull();
 

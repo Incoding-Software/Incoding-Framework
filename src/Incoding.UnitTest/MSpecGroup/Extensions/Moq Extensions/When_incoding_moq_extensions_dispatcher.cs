@@ -84,7 +84,7 @@
 
                                                   Catch
                                                           .Exception(() => dispatcher.ShouldBePush(command))
-                                                          .ShouldBeOfType<MockException>();
+                                                          .ShouldBeAssignableTo<MockException>();
                                               };
 
         It should_be_push_with_wrong_setting = () =>
@@ -96,7 +96,7 @@
 
                                                    Catch
                                                            .Exception(() => dispatcher.ShouldBePush(command, Pleasure.Generator.Invent<MessageExecuteSetting>(dsl => dsl.MuteCtor())))
-                                                           .ShouldBeOfType<MockException>();
+                                                           .ShouldBeAssignableTo<MockException>();
                                                };
 
         It should_be_push_composite = () =>
@@ -145,7 +145,7 @@
                                                                                                                     {
                                                                                                                             DataBaseInstance = Pleasure.Generator.String()
                                                                                                                     }))
-                                                                  .ShouldBeOfType<MockException>();
+                                                                  .ShouldBeAssignableTo<MockException>();
                                                       };
 
         It should_be_push_composite_with_setting = () =>
@@ -173,7 +173,7 @@
                                                                                                                           {
                                                                                                                                   Connection = @"Data Source=any;Database=different;"
                                                                                                                           }))
-                                                              .ShouldBeOfType<MockException>();
+                                                              .ShouldBeAssignableTo<MockException>();
                                                   };
 
         It should_not_be_push = () =>
@@ -208,7 +208,7 @@
 
                                            dispatcher.StubPushAsThrow(command, new IncFakeException());
 
-                                           Catch.Exception(() => dispatcher.Object.Push(command)).ShouldBeOfType<IncFakeException>();
+                                           Catch.Exception(() => dispatcher.Object.Push(command)).ShouldBeAssignableTo<IncFakeException>();
                                        };
 
         It should_stub_push_as_throw_without_push = () =>
@@ -232,7 +232,7 @@
                                                                                                      {
                                                                                                          composite.Quote(Pleasure.Generator.Invent<FakeCommand>());
                                                                                                          composite.Quote(command);
-                                                                                                     })).ShouldBeOfType<IncFakeException>();
+                                                                                                     })).ShouldBeAssignableTo<IncFakeException>();
                                                     };
 
         It should_stub_push_as_throw_with_composite = () =>
@@ -247,7 +247,7 @@
                                                           commandComposite.Quote(command, setting);
                                                           Catch
                                                                   .Exception(() => dispatcher.Object.Push(commandComposite))
-                                                                  .ShouldBeOfType<IncFakeException>();
+                                                                  .ShouldBeAssignableTo<IncFakeException>();
                                                       };
     }
 

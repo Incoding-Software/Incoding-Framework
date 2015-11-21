@@ -108,12 +108,12 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_insert_with_template_by_selector_ajax = () => Catch.Exception(() => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                                                  .Do().Direct()
                                                                                                  .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateByUrl(Pleasure.Generator.TheSameString().ToAjaxGet()).Text()))
-                                                                        .ShouldBeOfType<ArgumentException>();
+                                                                        .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_insert_with_template_by_view_path = () => Catch.Exception(() => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                                              .Do().Direct()
                                                                                              .OnSuccess(dsl => dsl.With(targetSelector).Core().Insert.WithTemplateByUrl("~/View").Text()))
-                                                                    .ShouldBeOfType<ArgumentException>();
+                                                                    .ShouldBeAssignableTo<ArgumentException>();
 
         It should_be_with_after = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do().Direct()

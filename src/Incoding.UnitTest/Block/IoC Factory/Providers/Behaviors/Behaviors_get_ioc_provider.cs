@@ -37,7 +37,7 @@ namespace Incoding.UnitTest.Block
 
         It should_be_try_get = () => ioCProvider.TryGet<IEmailSender>().ShouldBeTheSameAs(defaultInstance);
 
-        It should_be_try_get_by_named = () => ioCProvider.TryGetByNamed<ILogger>(consoleNameInstance).ShouldBeOfType<ConsoleLogger>();
+        It should_be_try_get_by_named = () => ioCProvider.TryGetByNamed<ILogger>(consoleNameInstance).ShouldBeAssignableTo<ConsoleLogger>();
 
         It should_be_try_get_by_type = () => ioCProvider.TryGet<IEmailSender>(typeof(IEmailSender)).ShouldBeTheSameAs(defaultInstance);
     }

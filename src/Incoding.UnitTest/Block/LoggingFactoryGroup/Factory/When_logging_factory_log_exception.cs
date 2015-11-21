@@ -25,7 +25,7 @@ namespace Incoding.UnitTest.Block
                                {
                                    Action<LogMessage> verify = message =>
                                                                    {
-                                                                       message.Exception.ShouldBeOfType<ArgumentException>();
+                                                                       message.Exception.ShouldBeAssignableTo<ArgumentException>();
                                                                        message.Message.ShouldEqual(Pleasure.Generator.TheSameString());
                                                                        message.State.ShouldBeNull();
                                                                    };

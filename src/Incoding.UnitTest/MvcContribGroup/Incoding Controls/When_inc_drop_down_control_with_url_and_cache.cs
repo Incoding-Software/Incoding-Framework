@@ -16,7 +16,7 @@
                                   {
                                       control = new IncDropDownControl<FakeModel, string>(mockHtmlHelper.Original, model => model.Prop);
                                       control.Url = "Url";
-                                      control.Cache = true;
+                                      control.Options.Cache = true;
                                   };
 
         Because of = () => { result = control.ToHtmlString(); };
