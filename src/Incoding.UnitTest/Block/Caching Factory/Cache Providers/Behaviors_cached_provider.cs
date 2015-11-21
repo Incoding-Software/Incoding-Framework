@@ -86,9 +86,9 @@ namespace Incoding.UnitTest.Block
                                       cachedProvider.Set(new FakeCacheKey(), valueToCache);
                                       cachedProvider.Set(new FakeCacheCustomHierarchy(), new FakeSerializeObject());
 
-                                      cachedProvider.DeleteAll();
 
                                       cachedProvider.Get<FakeSerializeObject>(new FakeCacheKey()).ShouldBeNull();
+                                      cachedProvider.DeleteAll();
                                       cachedProvider.Get<FakeSerializeObject>(new FakeCacheCustomHierarchy()).ShouldBeNull();
                                   };
 
