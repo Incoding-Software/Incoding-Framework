@@ -7,3 +7,8 @@ F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug\Incod
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.Framework.csprojResolveAssemblyReference.cache
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.dll
 F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.pdb
+C:\TempProject\IncFrameworkGit\Incoding-Framework\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.dll
+C:\TempProject\IncFrameworkGit\Incoding-Framework\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.pdb
+C:\TempProject\IncFrameworkGit\Incoding-Framework\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.Framework.csprojResolveAssemblyReference.cache
+C:\TempProject\IncFrameworkGit\Incoding-Framework\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.dll
+C:\TempProject\IncFrameworkGit\Incoding-Framework\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.pdb

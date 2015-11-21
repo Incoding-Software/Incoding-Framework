@@ -9399,15 +9399,6 @@
             <param name="message">The message.</param>
             <param name="inner">The inner.</param>
         </member>
-        <member name="M:Raven.Abstractions.Exceptions.ConcurrencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Raven.Abstractions.Exceptions.ConcurrencyException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
-        </member>
         <member name="P:Raven.Abstractions.Exceptions.ConcurrencyException.ExpectedETag">
             <summary>
             Gets or sets the expected E tag.
@@ -9848,14 +9839,6 @@
             </summary>
             <param name="json">A <see cref="T:System.String"/> that contains JSON.</param>
             <returns>A <see cref="T:Raven.Json.Linq.RavenJToken"/> populated from the string that contains JSON.</returns>
-        </member>
-        <member name="M:Raven.Json.Linq.RavenJToken.TryParse(System.String,Raven.Json.Linq.RavenJToken@)">
-            <summary>
-            Load a <see cref="T:Raven.Json.Linq.RavenJToken"/> from a string that contains JSON.
-            </summary>
-            <param name="json">A <see cref="T:System.String"/> that contains JSON.</param>
-            <param name="token">A <see cref="T:Raven.Json.Linq.RavenJToken"/> populated from the string that contains JSON.</param>
-            <returns>Returns true if parsing was succesful. False otherwise.</returns>
         </member>
         <member name="M:Raven.Json.Linq.RavenJToken.Load(Raven.Imports.Newtonsoft.Json.JsonReader)">
             <summary>
@@ -10984,17 +10967,6 @@
             </summary>
             <value>The spatial options.</value>
         </member>
-        <member name="P:Raven.Abstractions.Indexing.IndexDefinition.InternalFieldsMapping">
-            <summary>
-            Internal map of field names to expressions generating them
-            Only relevant for auto indexes and only used internally
-            </summary>
-        </member>
-        <member name="P:Raven.Abstractions.Indexing.IndexDefinition.DisableInMemoryIndexing">
-            <summary>
-            Prevent index from being kept in memory. Default: false
-            </summary>
-        </member>
         <member name="P:Raven.Abstractions.Indexing.TransformerDefinition.TransformResults">
             <summary>
             Gets or sets the translator function
@@ -11601,11 +11573,6 @@
             Gets or sets the Source.
             </summary>
             <value>The Source.</value>
-        </member>
-        <member name="P:Raven.Abstractions.Smuggler.SmugglerOptions.MaxStepsForTransformScript">
-            <summary>
-            Maximum number of steps that transform script can have
-            </summary>
         </member>
         <member name="P:Raven.Abstractions.Smuggler.SmugglerOptions.BackupPath">
             <summary>

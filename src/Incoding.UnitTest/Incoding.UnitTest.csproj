@@ -376,7 +376,9 @@
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_file_control_inc_483.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control_without_message.cs" />
-    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v2.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_input_as_static.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_display_name.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_label_control_with_name.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_radio_button_control_checked.cs" />
