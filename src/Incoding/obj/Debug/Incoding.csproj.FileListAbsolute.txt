@@ -123,3 +123,6 @@ F:\Workspace\Incoding-Framework-Git\src\Incoding\obj\Debug\Incoding.Resources.re
 F:\Workspace\Incoding-Framework-Git\src\Incoding\obj\Debug\Incoding.csproj.GenerateResource.Cache
 F:\Workspace\Incoding-Framework-Git\src\Incoding\obj\Debug\Incoding.dll
 F:\Workspace\Incoding-Framework-Git\src\Incoding\obj\Debug\Incoding.pdb
+F:\Workspace\Incoding-Framework-Git\src\Incoding\bin\Debug\System.Web.Razor.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding\bin\Debug\System.Web.WebPages.Razor.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding\bin\Debug\Microsoft.Web.Infrastructure.dll

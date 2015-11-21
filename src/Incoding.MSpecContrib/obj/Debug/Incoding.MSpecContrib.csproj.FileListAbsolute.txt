@@ -68,3 +68,6 @@ F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\bin\Debug\tr\Fluen
 F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\obj\Debug\Incoding.MSpecContrib.csprojResolveAssemblyReference.cache
 F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\obj\Debug\Incoding.MSpecContrib.dll
 F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\obj\Debug\Incoding.MSpecContrib.pdb
+F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\bin\Debug\System.Web.Razor.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\bin\Debug\System.Web.WebPages.Razor.dll
+F:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\bin\Debug\Microsoft.Web.Infrastructure.dll
