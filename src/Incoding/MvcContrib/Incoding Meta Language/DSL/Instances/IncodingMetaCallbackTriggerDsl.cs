@@ -70,6 +70,11 @@ namespace Incoding.MvcContrib
             return Invoke(JqueryBind.Change);
         }
 
+        public IExecutableSetting InitIncoding()
+        {
+            return Invoke(JqueryBind.InitIncoding);
+        }
+
         public IncodingMetaCallbackTriggerDsl For<TModel>(Expression<Func<TModel, object>> property)
         {
             this.triggerProperty = property.GetMemberName();

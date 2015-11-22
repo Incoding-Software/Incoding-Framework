@@ -17,7 +17,7 @@ namespace Incoding.MvcContrib
     {
         #region Fields
 
-        protected readonly RouteValueDictionary attributes = new RouteValueDictionary();
+        protected RouteValueDictionary attributes = new RouteValueDictionary();
 
         #endregion
 
@@ -29,13 +29,13 @@ namespace Incoding.MvcContrib
 
             if (isIml)
             {
-                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)                                              
+                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
                                               .OnSuccess(dsl =>
                                                          {
                                                              OnInit.Do(action => action(dsl));
                                                              OnEvent.Do(action => action(dsl));
                                                          })
-                                              .When(JqueryBind.Change)                                              
+                                              .When(JqueryBind.Change)
                                               .OnSuccess(dsl =>
                                                          {
                                                              OnChange.Do(action => action(dsl));

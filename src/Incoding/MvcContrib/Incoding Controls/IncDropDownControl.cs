@@ -71,33 +71,33 @@ namespace Incoding.MvcContrib
                                                                                  options.Type = HttpVerbs.Get;
                                                                              })
                                    : this.htmlHelper.When(InitBind).Do().Direct();
-                meta.OnSuccess(dsl =>
-                               {
-                                   if (isAjax)
-                                   {
-                                       dsl.Self().Insert.WithTemplate(Template).Html();
-                                       foreach (var vm in optionals)
-                                       {
-                                           var option = new TagBuilder(HtmlTag.Option.ToStringLower());
-                                           option.SetInnerText(vm.Text);
-                                           option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), vm.Value);
-                                           dsl.Self().JQuery.Dom.Use(new MvcHtmlString(option.ToString()).ToHtmlString()).Prepend();
-                                       }
+               this.attributes = meta.OnSuccess(dsl =>
+               {
+                   if (isAjax)
+                   {
+                       dsl.Self().Insert.WithTemplate(Template).Html();
+                       foreach (var vm in optionals)
+                       {
+                           var option = new TagBuilder(HtmlTag.Option.ToStringLower());
+                           option.SetInnerText(vm.Text);
+                           option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), vm.Value);
+                           dsl.Self().JQuery.Dom.Use(new MvcHtmlString(option.ToString()).ToHtmlString()).Prepend();
+                       }
 
-                                       var selected = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData).Model;
-                                       if (selected != null)
-                                           dsl.Self().JQuery.Attributes.Val(selected);
-                                   }
+                       var selected = ModelMetadata.FromLambdaExpression(this.property, this.htmlHelper.ViewData).Model;
+                       if (selected != null)
+                           dsl.Self().JQuery.Attributes.Val(selected);
+                   }
 
-                                   OnInit.Do(action => action(dsl));
-                                   OnEvent.Do(action => action(dsl));
-                               })
+                   OnInit.Do(action => action(dsl));
+                   OnEvent.Do(action => action(dsl));
+               })
                     .When(JqueryBind.Change)
                     .OnSuccess(dsl =>
-                               {
-                                   OnChange.Do(action => action(dsl));
-                                   OnEvent.Do(action => action(dsl));
-                               })
+                    {
+                        OnChange.Do(action => action(dsl));
+                        OnEvent.Do(action => action(dsl));
+                    })
                     .AsHtmlAttributes(this.attributes);
             }
 
