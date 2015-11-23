@@ -60,25 +60,43 @@ namespace Incoding.MvcContrib
         {
             #region Fields
 
-            readonly SelectList asSelectList;
+            readonly IList<KeyValueVm> keyValueVms;
 
             #endregion
 
             #region Constructors
 
             public IncSelectList(IEnumerable<KeyValueVm> keyValueVms)
-                    : this(new SelectList(keyValueVms, "Value", "Text")) { }
+            {
+                this.keyValueVms = keyValueVms.ToList();
+            }
 
             public IncSelectList(SelectList asSelectList)
             {
-                this.asSelectList = asSelectList;
+                keyValueVms = new List<KeyValueVm>();
+                foreach (var item in asSelectList.Items)
+                {
+                    keyValueVms.Add(item.GetType().IsTypicalType()
+                                            ? new KeyValueVm(item.ToString())
+                                            : new KeyValueVm(item.TryGetValue(asSelectList.DataValueField), item.TryGetValue(asSelectList.DataTextField).With(r => r.ToString())));
+                }
             }
 
             #endregion
 
             #region Properties
 
-            public SelectList AsSelectList { get { return asSelectList; } }
+            public SelectList AsSelectList { get { return new SelectList(keyValueVms, "Value", "Text"); } }
+
+            #endregion
+
+            #region Api Methods
+
+            public void AddOptional(IList<KeyValueVm> defaults)
+            {
+                for (int i = 0; i < defaults.Count; i++)
+                    keyValueVms.Insert(i, defaults[i]);
+            }
 
             #endregion
 
@@ -107,7 +125,6 @@ namespace Incoding.MvcContrib
 
         public override MvcHtmlString ToHtmlString()
         {
-            var optionals = Optional.Recovery(new KeyValueVm[0]);
             bool isAjax = !string.IsNullOrWhiteSpace(Url);
 
             bool isIml = OnInit != null ||
@@ -127,7 +144,7 @@ namespace Incoding.MvcContrib
                                                 if (isAjax)
                                                 {
                                                     dsl.Self().Insert.WithTemplate(Template).Html();
-                                                    foreach (var vm in optionals)
+                                                    foreach (var vm in Optional.Recovery(new KeyValueVm[0]))
                                                     {
                                                         var option = new TagBuilder(HtmlTag.Option.ToStringLower());
                                                         option.SetInnerText(vm.Text);
@@ -152,9 +169,10 @@ namespace Incoding.MvcContrib
                                  .AsHtmlAttributes(attributes);
             }
 
-            return !isAjax && optionals.Any()
-                           ? htmlHelper.DropDownListFor(property, Data.AsSelectList, optionals.FirstOrDefault().Text, attributes)
-                           : htmlHelper.DropDownListFor(property, Data.AsSelectList, attributes);
+            if (!isAjax)
+                Data.AddOptional(Optional.Recovery(new KeyValueVm[0]).ToList());
+
+            return htmlHelper.DropDownListFor(property, Data.AsSelectList, attributes);
         }
     }
 }

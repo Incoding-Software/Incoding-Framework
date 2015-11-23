@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
+    using System.Web;
     using Incoding.Block.IoC;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
@@ -112,7 +113,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                          incodingHtml
                                                                  .RenderDropDownTemplate()
                                                                  .ToHtmlString()
-                                                                 .ShouldEqual("<script id=\"incodingDropDownTemplate\" type=\"text/template\">TheSameString</script>");
+                                                                 .ShouldEqual("<script id=\"{0}\" type=\"text/template\">TheSameString</script>".F(HttpUtility.HtmlEncode(IncodingHtmlHelper.DropDownTemplateId.ToString())));
                                                      };
     }
 }

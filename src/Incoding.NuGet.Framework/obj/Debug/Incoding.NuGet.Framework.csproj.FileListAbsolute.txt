@@ -1,4 +1,0 @@
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.dll
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug\Incoding.NuGet.pdb
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.dll
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\obj\Debug\Incoding.NuGet.pdb

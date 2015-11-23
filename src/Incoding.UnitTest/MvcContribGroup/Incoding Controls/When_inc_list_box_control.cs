@@ -23,6 +23,6 @@
                          };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<select id=\"Prop\" multiple=\"multiple\" name=\"Prop\"><option value=\"\">Optional</option>\r\n<option selected=\"selected\">TheSameString</option>\r\n</select>");
+                                          .ShouldEqual("<select id=\"Prop\" multiple=\"multiple\" name=\"Prop\"><option value=\"Optional\">Optional</option>\r\n<option selected=\"selected\" value=\"TheSameString\">TheSameString</option>\r\n</select>");
     }
 }

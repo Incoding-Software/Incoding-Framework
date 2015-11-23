@@ -1,5 +1,0 @@
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\bin\Debug\Incoding.NuGet.MetaLanguage.dll
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\bin\Debug\Incoding.NuGet.MetaLanguage.pdb
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\obj\Debug\Incoding.NuGet.MetaLanguage.csprojResolveAssemblyReference.cache
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\obj\Debug\Incoding.NuGet.MetaLanguage.dll
-F:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\obj\Debug\Incoding.NuGet.MetaLanguage.pdb
