@@ -15,7 +15,7 @@
                          result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
                                  .Password(control =>
                                            {
-                                               control.MaxLenght = 10;
+                                               control.MaxLength = 10;
                                                control.Placeholder = "Placeholder";
                                            });
                      };
