@@ -23,29 +23,6 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        #region Properties
-
-        public Offset? GroupOffset { get; set; }
-
-        public Offset? LabelOffset { get; set; }
-
-        public Offset? InputOffset { get; set; }
-
-        public IncLabelControl Label { get; set; }
-
-        public TInput Input { get; set; }
-
-        public IncControlBase Validation { get; set; }
-
-        public IncHelpBlockControl HelpBlock { get; set; }
-
-        #endregion
-
-        string GetOffsetAsClass(Offset set)
-        {
-            return set.ToString().Replace("_", "-").ToLower();
-        }
-
         public override MvcHtmlString ToHtmlString()
         {
             bool isV3orMore = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3;
@@ -53,15 +30,15 @@ namespace Incoding.MvcContrib
 
             Label.AddClass("control-label");
             if (isV3orMore)
-                Label.AddClass(GetOffsetAsClass(LabelOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Label_Offset)));
+                Label.AddClass(IncodingHtmlHelper.Def_Label_Class.AsClass());
             if (isV3orMore)
-                Input.AddClass(isStatic ? "form-control-static" : "form-control");
+                Input.AddClass(isStatic ? B.Form_static_control.AsClass() : B.Form_control.AsClass());
 
             AddClass(isV3orMore
                              ? "form-group"
                              : isStatic ? string.Empty : "control-group");
-            if (GroupOffset.HasValue)
-                AddClass(GetOffsetAsClass(GroupOffset.Value));
+            if (isV3orMore)
+                AddClass(IncodingHtmlHelper.Def_Group_Class.AsClass());
 
             var stringBuilder = new StringBuilder();
 
@@ -70,7 +47,7 @@ namespace Incoding.MvcContrib
             var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), new RouteValueDictionary(new
                                                                                                                             {
                                                                                                                                     @class = isV3orMore
-                                                                                                                                                     ? GetOffsetAsClass(InputOffset.GetValueOrDefault(IncodingHtmlHelper.Def_Input_Offset))
+                                                                                                                                                     ? IncodingHtmlHelper.Def_Input_Class.AsClass()
                                                                                                                                                      : "controls"
                                                                                                                             }));
             stringBuilder.Append(controlContainer);
@@ -81,5 +58,17 @@ namespace Incoding.MvcContrib
             var controlGroup = IncodingHtmlHelper.CreateTag(HtmlTag.Div, new MvcHtmlString(stringBuilder.ToString()), AnonymousHelper.ToDictionary(attributes));
             return new MvcHtmlString(controlGroup.ToString());
         }
+
+        #region Properties
+
+        public IncLabelControl Label { get; set; }
+
+        public TInput Input { get; set; }
+
+        public IncControlBase Validation { get; set; }
+
+        public IncHelpBlockControl HelpBlock { get; set; }
+
+        #endregion
     }
 }

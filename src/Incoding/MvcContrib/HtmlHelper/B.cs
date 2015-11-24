@@ -2,8 +2,21 @@ namespace Incoding.MvcContrib
 {
     #region << Using >>
 
+    #region << Using >>
+
     using System;
     using System.ComponentModel;
+    using Incoding.Extensions;
+
+    #endregion
+
+    public static class BExtensions
+    {
+        public static string AsClass(this B b)
+        {
+            return b.ToLocalization();
+        }
+    }
 
     #endregion
 
@@ -11,7 +24,7 @@ namespace Incoding.MvcContrib
     ///     Bootstrap classes
     /// </summary>
     [Flags]
-    public enum B
+    public enum B : long
     {
         /// <summary>
         ///     Bootstrap requires a containing element to wrap site contents and house our grid system. You may choose one of two
@@ -25,7 +38,7 @@ namespace Incoding.MvcContrib
         ///     Use .container-fluid for a full width container, spanning the entire width of your viewport.
         /// </summary>
         [Description("container-fluid")]
-        ContainerFluid = 2,
+        Container_fluid = 2,
 
         /// <summary>
         ///     Active state Buttons will appear pressed (with a darker background, darker border, and inset shadow) when active.
@@ -72,10 +85,48 @@ namespace Incoding.MvcContrib
         ///     <form>). Doing so changes .form-groups to behave as grid rows, so no need for .row.
         /// </summary>
         [Description("form-horizontal")]
-        FormHorizontal = 64,
-
+        Form_horizontal = 64,
 
         [Description("form-group")]
-        FormGroup = 128,
+        Form_group = 128,
+
+        [Description("col-xs-1")]
+        Col_xs_1 = 256,
+
+        [Description("col-xs-2")]
+        Col_xs_2 = 512,
+
+        [Description("col-xs-3")]
+        Col_xs_3 = 1024,
+
+        [Description("col-xs-4")]
+        Col_xs_4 = 2048,
+
+        [Description("col-xs-5")]
+        Col_xs_5 = 4096,
+
+        [Description("col-xs-6")]
+        Col_xs_6 = 8912,
+
+        [Description("col-xs-7")]
+        Col_xs_7 = 17824,
+
+        [Description("col-xs-8")]
+        Col_xs_8 = 35648,
+
+        [Description("col-xs-9")]
+        Col_xs_9 = 71296,
+
+        [Description("col-xs-10")]
+        Col_xs_11 = 142592,
+
+        [Description("col-xs-10")]
+        Col_xs_12 = 285184,
+
+        [Description("form-control")]
+        Form_control = 570368,
+
+        [Description("form-control-static")]
+        Form_static_control = 1140736
     }
 }

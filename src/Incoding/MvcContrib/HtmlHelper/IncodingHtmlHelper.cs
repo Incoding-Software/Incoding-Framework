@@ -72,8 +72,12 @@ namespace Incoding.MvcContrib
         public static JqueryAjaxOptions DropDownOption = new JqueryAjaxOptions(JqueryAjaxOptions.Default);
 
         public static BootstrapOfVersion BootstrapVersion = BootstrapOfVersion.v2;
-        public static Offset Def_Label_Offset = Offset.Col_xs_2;
-        public static Offset Def_Input_Offset = Offset.Col_xs_10;
+
+        public static B Def_Label_Class  = B.Col_xs_5;
+
+        public static B Def_Input_Class = B.Col_xs_7;
+
+        public static B Def_Group_Class =  B.Col_xs_12;
 
         #endregion
 
