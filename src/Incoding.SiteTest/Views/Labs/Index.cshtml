@@ -1,4 +1,5 @@
-﻿@using Incoding.Maybe
+﻿@using Incoding.Extensions
+@model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
 <head>
@@ -29,6 +30,10 @@
     </script>
 </head>
 <body>
-    
+<input type="text" id="test" />
+@(Html.When(JqueryBind.Click)
+      .OnSuccess(dsl => dsl.Window.Alert("Test").If(() => Selector.JS.Confirm("test".ToId().Val())))
+      .AsHtmlAttributes()
+      .ToButton("ad"))
 </body>
 </html>
