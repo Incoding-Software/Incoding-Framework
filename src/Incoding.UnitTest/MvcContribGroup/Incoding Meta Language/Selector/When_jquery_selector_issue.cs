@@ -56,20 +56,19 @@
                                             {
                                                 foreach (var pair in new Dictionary<Func<JquerySelectorExtend, JquerySelectorExtend>, string>
                                                                      {
-                                                                             { selector => selector.Attr(HtmlAttribute.Value), "attr('value')" }, 
-                                                                             { selector => selector.Attr("value"), "attr('value')" }, 
-                                                                             { selector => selector.Css(CssStyling.Width), "css('width')" }, 
-                                                                             { selector => selector.Is(JqueryExpression.Submit), "is($(':submit'))" }, 
-                                                                             { selector => selector.Is(jquerySelector => jquerySelector.Class("test")), "is($('.test'))" }, 
-                                                                             { selector => selector.Width(), "width()" }, 
-                                                                             { selector => selector.Height(), "height()" }, 
+                                                                             { selector => selector.Attr(HtmlAttribute.Value), "attr('value')" },
+                                                                             { selector => selector.Attr("value"), "attr('value')" },
+                                                                             { selector => selector.Css(CssStyling.Width), "css('width')" },
+                                                                             { selector => selector.Is(JqueryExpression.Submit), "is($(':submit'))" },
+                                                                             { selector => selector.Is(jquerySelector => jquerySelector.Class("test")), "is($('.test'))" },
+                                                                             { selector => selector.Width(), "width()" },
+                                                                             { selector => selector.Height(), "height()" },
                                                                      })
                                                 {
                                                     var self = Selector.Jquery.Self();
                                                     Pleasure.Do3(i => { pair.Key(self).ToString().ShouldEqual("$(this.self)." + pair.Value); });
                                                 }
                                             };
-
 
         It should_be_98 = () => Selector.Jquery.Class("extraCheckbox")
                                         .Not(selector => selector.Expression(JqueryExpression.Checked))
@@ -107,5 +106,10 @@
                                                    .EqualsAttribute(HtmlAttribute.Type, "text")
                                                    .ToString()
                                                    .ShouldEqual("$('input[type=\"text\"]')");
+
+        It should_be_tag_also_attr_by_at_once = () => Selector.Jquery.Tag(HtmlTag.Input)
+                                                              .EqualsAttribute(HtmlAttribute.Multiple)
+                                                              .ToString()
+                                                              .ShouldEqual("$('input[multiple=\"multiple\"]')");
     }
 }

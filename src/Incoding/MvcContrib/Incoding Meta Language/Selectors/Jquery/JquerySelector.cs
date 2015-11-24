@@ -17,13 +17,9 @@
     /// </summary>
     public class JquerySelector : Selector
     {
-        #region Constructors
+        #region Properties
 
-        internal JquerySelector(string selector)
-                : base(selector) { }
-
-        internal JquerySelector(JquerySelector selector)
-                : base((Selector)selector) { }
+        internal bool IsSimple { get { return !methods.Any(); } }
 
         #endregion
 
@@ -38,9 +34,18 @@
 
         #endregion
 
-        #region Properties
+        static string FixedAsAttribute(string attribute, string value, string global)
+        {
+            return "[{0}{1}=\"{2}\"]".F(attribute.ToLower(), global, value);
+        }
 
-        internal bool IsSimple { get { return !methods.Any(); } }
+        #region Constructors
+
+        internal JquerySelector(string selector)
+                : base(selector) { }
+
+        internal JquerySelector(JquerySelector selector)
+                : base((Selector)selector) { }
 
         #endregion
 
@@ -330,11 +335,15 @@
             return EqualsAttribute(attribute.ToString(), value);
         }
 
-        #endregion
-
-        static string FixedAsAttribute(string attribute, string value, string global)
+        /// <summary>
+        ///     Selects elements that have the specified <c>attribute</c> with a <c>value</c> exactly equal to a certain
+        ///     <c>value</c>.
+        /// </summary>
+        public JquerySelectorExtend EqualsAttribute(HtmlAttribute attribute)
         {
-            return "[{0}{1}=\"{2}\"]".F(attribute.ToLower(), global, value);
+            return EqualsAttribute(attribute, attribute.ToStringLower());
         }
+
+        #endregion
     }
 }
