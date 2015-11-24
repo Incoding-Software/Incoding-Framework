@@ -21,38 +21,12 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        protected RouteValueDictionary GetAttributes()
-        {
-            bool isIml = OnInit != null ||
-                         OnChange != null ||
-                         OnEvent != null;
-
-            if (isIml)
-            {
-                this.attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
-                                              .OnSuccess(dsl =>
-                                                         {
-                                                             OnInit.Do(action => action(dsl));
-                                                             OnEvent.Do(action => action(dsl));
-                                                         })
-                                              .When(JqueryBind.Change)
-                                              .OnSuccess(dsl =>
-                                                         {
-                                                             OnChange.Do(action => action(dsl));
-                                                             OnEvent.Do(action => action(dsl));
-                                                         })
-                                              .AsHtmlAttributes());
-            }
-
-            return this.attributes;
-        }
-
         #region Properties
 
         /// <summary>
         ///     <see cref="HtmlAttribute.TabIndex" />
         /// </summary>
-        public int TabIndex { set { this.attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
+        public int TabIndex { set { attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
         public bool ReadOnly
         {
@@ -60,9 +34,9 @@ namespace Incoding.MvcContrib
             {
                 string key = HtmlAttribute.Readonly.ToStringLower();
                 if (value)
-                    this.attributes.Set(key, key);
+                    attributes.Set(key, key);
                 else
-                    this.attributes.Remove(key);
+                    attributes.Remove(key);
             }
         }
 
@@ -107,8 +81,8 @@ namespace Incoding.MvcContrib
         /// </summary>
         public void RemoveAttr(string attr)
         {
-            if (this.attributes.ContainsKey(attr))
-                this.attributes.Remove(attr);
+            if (attributes.ContainsKey(attr))
+                attributes.Remove(attr);
         }
 
         /// <summary>
@@ -116,7 +90,7 @@ namespace Incoding.MvcContrib
         /// </summary>
         public void SetAttr(string attr, object value)
         {
-            this.attributes.Set(attr.ToLower(), value.With(r => r.ToString()));
+            attributes.Set(attr.ToLower(), value.With(r => r.ToString()));
         }
 
         public void Attr(RouteValueDictionary attr)
@@ -126,9 +100,9 @@ namespace Incoding.MvcContrib
             if (attr.ContainsKey(dataIncodingKey))
             {
                 var meta = new List<object>();
-                if (this.attributes.ContainsKey(dataIncodingKey))
+                if (attributes.ContainsKey(dataIncodingKey))
                 {
-                    meta = (this.attributes[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer)
+                    meta = (attributes[dataIncodingKey].ToString().DeserializeFromJson<object>() as JContainer)
                             .Cast<object>()
                             .ToList();
                 }
@@ -139,7 +113,7 @@ namespace Incoding.MvcContrib
                 attr.Set(dataIncodingKey, meta.ToJsonString());
             }
 
-            this.attributes.Merge(attr);
+            attributes.Merge(attr);
         }
 
         public void Attr(object attr)
@@ -147,15 +121,46 @@ namespace Incoding.MvcContrib
             Attr(AnonymousHelper.ToDictionary(attr));
         }
 
+        public void AddClass(B @class)
+        {
+            AddClass(@class.AsClass());
+        }
+
         public void AddClass(string @class)
         {
             const string key = "class";
-            if (this.attributes.ContainsKey(key))
-                this.attributes[key] += " " + @class;
+            if (attributes.ContainsKey(key))
+                attributes[key] += " " + @class;
             else
-                this.attributes.Add(key, @class);
+                attributes.Add(key, @class);
         }
 
         #endregion
+
+        protected RouteValueDictionary GetAttributes()
+        {
+            bool isIml = OnInit != null ||
+                         OnChange != null ||
+                         OnEvent != null;
+
+            if (isIml)
+            {
+                attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
+                                         .OnSuccess(dsl =>
+                                                    {
+                                                        OnInit.Do(action => action(dsl));
+                                                        OnEvent.Do(action => action(dsl));
+                                                    })
+                                         .When(JqueryBind.Change)
+                                         .OnSuccess(dsl =>
+                                                    {
+                                                        OnChange.Do(action => action(dsl));
+                                                        OnEvent.Do(action => action(dsl));
+                                                    })
+                                         .AsHtmlAttributes());
+            }
+
+            return attributes;
+        }
     }
 }

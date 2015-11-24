@@ -26,9 +26,9 @@
                                   var input = new IncHiddenControl<FakeModel, object>(mockHtmlHelper.Original, expression);
                                   var validation = new IncValidationControl(mockHtmlHelper.Original, expression);
                                   control = new IncHorizontalControl<IncHiddenControl<FakeModel, object>>(label, input, validation);
-                                  control.LabelOffset = Offset.Col_xs_5;
-                                  control.InputOffset = Offset.Col_xs_7;
-                                  control.GroupOffset = Offset.Col_md_12;
+                                  control.Label.AddClass(B.Col_xs_5);
+                                  control.Input.AddClass(B.Col_xs_7);
+                                  control.AddClass(B.Col_xs_12);
                               };
 
         Because of = () => { result = control.ToHtmlString(); };
