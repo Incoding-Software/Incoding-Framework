@@ -16,13 +16,10 @@
 
         #endregion
 
-        It should_be_autocomplete_true = () =>
-                                         {
-                                             new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                                     .TextBox(boxControl => { boxControl.Autocomplete = true; })
-                                                     .ToHtmlString()
-                                                     .ShouldEqual("<input autocomplete=\"autocomplete\" id=\"Prop\" name=\"Prop\" type=\"text\" value=\"TheSameString\" />");
-                                         };
+        It should_be_autocomplete_true = () => new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
+                                                       .TextBox(boxControl => { boxControl.Autocomplete = true; })
+                                                       .ToHtmlString()
+                                                       .ShouldEqual("<input autocomplete=\"autocomplete\" id=\"Prop\" name=\"Prop\" type=\"text\" value=\"TheSameString\" />");
 
         It should_be_full = () => new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
                                           .TextBox(boxControl =>
@@ -30,7 +27,7 @@
                                                        boxControl.Placeholder = "placeholder";
                                                        boxControl.TabIndex = 5;
                                                        boxControl.ReadOnly = true;
-                                                       boxControl.MaxLenght = 10;
+                                                       boxControl.MaxLength = 10;
                                                        boxControl.AddClass("class");
                                                        boxControl.AddClass("class2");
                                                        boxControl.Autocomplete = false;

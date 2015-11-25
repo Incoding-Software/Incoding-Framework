@@ -5,8 +5,9 @@
 <head>
     <title></title>
 
-    @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
-    @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/bootstrap.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/bootstrap-theme.css"))
+    
 
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
@@ -30,10 +31,21 @@
     </script>
 </head>
 <body>
-<input type="text" id="test" />
-@(Html.When(JqueryBind.Click)
-      .OnSuccess(dsl => dsl.Window.Alert("Test").If(() => Selector.JS.Confirm("test".ToId().Val())))
-      .AsHtmlAttributes()
-      .ToButton("ad"))
+    <form class="form-horizontal">
+        @Html.ForGroup(r=>r.Name).TextBox(control =>
+                                          {
+                                              control.Label.Name = "Name";                                              
+                                          })
+        @Html.ForGroup(r=>r.Name).TextBox(control =>
+                                          {
+                                              control.Label.Name = "Name 2";                                              
+                                              control.AddClass(B.Col_xs_offset_4);
+                                          })        
+        @Html.ForGroup(r=>r.Name).TextBox(control =>
+                                          {
+                                              control.Label.Name = "Name 2";                                              
+                                              control.AddClass(B.Col_xs_offset_4);
+                                          })
+    </form>
 </body>
 </html>

@@ -22,7 +22,7 @@ namespace Incoding.MvcContrib
         #endregion
 
         #region Properties
-
+        
         /// <summary>
         ///     <see cref="HtmlAttribute.TabIndex" />
         /// </summary>
@@ -52,6 +52,11 @@ namespace Incoding.MvcContrib
 
         public abstract MvcHtmlString ToHtmlString();
 
+        public string GetAttr(HtmlAttribute attr)
+        {
+            return attributes[attr.ToStringLower()].With(r => r.ToString());
+        }
+
         /// <summary>
         ///     <see cref="HtmlAttribute.AutoComplete" />
         /// </summary>
@@ -73,7 +78,7 @@ namespace Incoding.MvcContrib
         /// </summary>
         public void RemoveAttr(HtmlAttribute attr)
         {
-            RemoveAttr(attr);
+            RemoveAttr(attr.ToStringLower());
         }
 
         /// <summary>
@@ -163,4 +168,5 @@ namespace Incoding.MvcContrib
             return attributes;
         }
     }
+
 }

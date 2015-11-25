@@ -27,7 +27,7 @@
         Because of = () => { result = control.ToHtmlString(); };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<div class=\"form-group\"><label class=\"control-label col-xs-2\" for=\"Prop\">Prop</label><div class=\"col-xs-10\"><p class=\"form-control-static\">TheSameString</p></div></div>");
+                                          .ShouldEqual("<div class=\"form-group col-xs-12\"><label class=\"control-label col-xs-5\" for=\"Prop\">Prop</label><div class=\"col-xs-7\"><p class=\"form-control-static\">TheSameString</p></div></div>");
 
         Cleanup clean = () => IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v2;
     }

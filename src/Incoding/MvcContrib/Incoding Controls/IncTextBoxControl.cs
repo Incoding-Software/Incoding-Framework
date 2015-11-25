@@ -37,7 +37,7 @@ namespace Incoding.MvcContrib
         /// </summary>
         public string Placeholder { set { this.attributes.Set(HtmlAttribute.Placeholder.ToStringLower(), value); } }
 
-        public int MaxLenght { set { this.attributes.Set(HtmlAttribute.MaxLength.ToStringLower(), value); } }
+        public int MaxLength { set { this.attributes.Set(HtmlAttribute.MaxLength.ToStringLower(), value); } }
 
         public bool Autocomplete
         {
@@ -46,7 +46,7 @@ namespace Incoding.MvcContrib
                 if (value)
                     SetAttr(HtmlAttribute.AutoComplete);
                 else
-                    RemoveAttr(HtmlAttribute.AutoComplete.ToStringLower());
+                    RemoveAttr(HtmlAttribute.AutoComplete);
             }
         }
 
