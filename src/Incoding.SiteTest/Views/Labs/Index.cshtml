@@ -3,10 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-
-    @Html.Incoding().Link(Url.Content("~/Content/bootstrap.css"))
-    @Html.Incoding().Link(Url.Content("~/Content/bootstrap-theme.css"))
+    <title></title>    
+    @Html.Incoding().Link(Url.Content("~/Content/bootstrap.min.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/bootstrap-theme.min.css"))
     
 
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery-1.7.2.min.js"))
@@ -31,21 +30,141 @@
     </script>
 </head>
 <body>
-    <form class="form-horizontal">
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name";                                              
-                                          })
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name 2";                                              
-                                              control.AddClass(B.Col_xs_offset_4);
-                                          })        
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name 2";                                              
-                                              control.AddClass(B.Col_xs_offset_4);
-                                          })
+<div class="container">
+    <form class="form-horizontal" role="form">
+        <div class="row">
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="inputEmail" class="col-md-4 control-label">Email:</label>
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="inputPassword" class="col-md-4 control-label">Password:</label>
+                    <div class="col-md-8">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="inputLabel3" class="col-md-4 control-label">Label 3:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="inputLabel3" placeholder="Label 3">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="inputLabel4" class="col-md-4 control-label">Label 4:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="inputLabel4" placeholder="Label 4">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input5" class="col-md-4 control-label">1234567890:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input5" placeholder="input 5">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input6" class="col-md-4 control-label">123456789012:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input6" placeholder="input 6">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input7" class="col-md-4 control-label">12345678901234:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input7" placeholder="input 7">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input8" class="col-md-4 control-label">1234567890123456:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input8" placeholder="input 8">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input9" class="col-md-4 control-label">123456789012345678:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input9" placeholder="input 9">
+                    </div>
+                </div>
+            </div>
+            <div class=" col-lg-4">
+                <div class="form-group">
+                    <label for="input10" class="col-md-4 control-label">12345678901234567890:</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="input10" placeholder="input 10">
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.row this actually does not appear to be needed with the form-horizontal -->
     </form>
+
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group ">
+                <label class="control-label col-xs-4">Name</label>
+                <div class="col-xs-8">                    
+                        <input type="text" class="form-control"/>
+                        <input type="text" class="form-control" />                                        
+                </div>
+            </div>
+            @*@Html.Group(s =>
+                        {
+                            s.For(r => r.Name).TextBox(control =>
+                                                {
+                                                    control.Label.Name = "Name";
+                                                    control.AddClass(B.Col_xs_3);
+                                                    control.Input.AddClass(B.Col_xs_7);
+                                                })    
+                            s.For(r => r.Name2).DropDown(control =>
+                                                {
+                                                    control.Label.Name = "Name";
+                                                    control.AddClass(B.Col_xs_3);
+                                                    control.Input.AddClass(B.Col_xs_7);
+                                                })                                                
+                        })*@
+
+            @Html.ForGroup(r => r.Name).TextBox(control =>
+                                                {
+                                                    control.Label.Name = "Name";
+                                                    control.AddClass(B.Col_xs_3);
+                                                    control.Input.AddClass(B.Col_xs_7);
+                                                })
+            @Html.ForGroup(r => r.Name).TextBox(control =>
+                                                {
+                                                    control.Label.Name = "Name 2";
+                                                    control.AddClass(B.Col_xs_2 | B.Col_xs_offset_6);
+                                                    control.Input.AddClass(B.Col_xs_9);
+                                                    control.Label.AddClass(B.Hidden);
+                                                })
+            <div class="col-xs-12"></div>
+            @Html.ForGroup(r => r.Name).TextBox(control =>
+                                                {
+                                                    control.Label.Name = "Name 2";
+                                                    control.AddClass(B.Col_xs_3);
+                                                    control.Input.AddClass(B.Col_xs_7);
+                                                })
+        </form>
+
+    </div>
+
+</div>
 </body>
 </html>
