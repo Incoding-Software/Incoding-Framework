@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<package >
+
+<package>
   <metadata>
     <id>Incoding.Framework</id>
-    <version>1.4.0.58-beta</version>
+    <version>1.4.0.79-beta</version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -12,8 +13,8 @@
       Define behavior of your Ajax dynamic pages with NO Javascript code.
       CQRS implementation is simpler than you thinked of it.
       Mspec helpers would shorter time spent on unit testing
-    </description> 
-    <releaseNotes>      
+    </description>
+    <releaseNotes>
     </releaseNotes>
     <summary>
       Incoding Framework back-end
@@ -26,20 +27,20 @@
     <copyright>Copyright  2013 - 2015</copyright>
     <dependencies>
       <group targetFramework="net40">
-        <dependency id="structuremap" />                 
-        <dependency id="FluentNHibernate" />          
-        <dependency id="JetBrains.Annotations" />
-        <dependency id="FluentValidation.MVC3-signed" />
-        </group>            
+        <dependency id="structuremap" version="3.1.6.186" />
+        <dependency id="FluentNHibernate" version="2.0.3.0" />
+        <dependency id="JetBrains.Annotations" version="9.2.0.0" />
+        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+      </group>
     </dependencies>
     <references>
-      <reference file="incoding.dll" />             
+      <reference file="incoding.dll" />
     </references>
     <tags>incoding, web framework, framework,cqrs, repository</tags>
   </metadata>
-  <files>        
+  <files>
     <file src="tools\" target="tools" />
-    <file src="content\" target="content" />    
-    <file src="lib\" target="lib" />    
+    <file src="content\" target="content" />
+    <file src="lib\" target="lib" />
   </files>
 </package>
