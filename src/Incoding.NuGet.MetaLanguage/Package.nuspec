@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>1.4.0.58-beta</version>
+    <version>1.4.0.79-beta</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -24,16 +24,16 @@
     <dependencies>
       <group targetFramework="net40">
         <dependency id="WebActivator" />
-        <dependency id="Newtonsoft.Json" />        
-        <dependency id="FluentNHibernate" />        
-        <dependency id="JetBrains.Annotations" />        
+        <dependency id="Newtonsoft.Json" version="7.0.0.0" />
+        <dependency id="FluentNHibernate" version="2.0.3.0" />
+        <dependency id="JetBrains.Annotations" version="9.2.0.0" />        
         <dependency id="Microsoft.jQuery.Unobtrusive.Validation" />
         <dependency id="jQuery.Validation" />
         <dependency id="jQuery.Form" />
         <dependency id="underscore.js" />
-        <dependency id="Handlebars.js" />
+        <dependency id="Handlebars.js" version="3.0.0.0" />
         <dependency id="jQuery" version="(1.9.1,2.0.0)" />
-        <dependency id="FluentValidation.MVC3-signed" />
+        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
       </group>
     </dependencies>
     <references>

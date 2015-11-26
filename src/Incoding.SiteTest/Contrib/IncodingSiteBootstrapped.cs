@@ -47,6 +47,8 @@
             var managerDb = IoCFactory.Instance.TryResolve<IManagerDataBase>();
             if (!managerDb.IsExist())
                 managerDb.Create();
+
+            IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
         }
 
         #endregion

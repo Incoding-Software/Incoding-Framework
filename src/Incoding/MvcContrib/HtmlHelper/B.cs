@@ -146,34 +146,34 @@ namespace Incoding.MvcContrib
         [Description("col-xs-offset-1")]
         Col_xs_offset_1 = 2097152, 
 
-        [Description("col-xs_offset-2")]
+        [Description("col-xs-offset-2")]
         Col_xs_offset_2 = 4194304, 
 
-        [Description("col-xs_offset-3")]
+        [Description("col-xs-offset-3")]
         Col_xs_offset_3 = 8388608, 
 
-        [Description("col-xs_offset-4")]
+        [Description("col-xs-offset-4")]
         Col_xs_offset_4 = 16777216, 
 
-        [Description("col-xs_offset-5")]
+        [Description("col-xs-offset-5")]
         Col_xs_offset_5 = 33554432, 
 
-        [Description("col-xs_offset-6")]
+        [Description("col-xs-offset-6")]
         Col_xs_offset_6 = 67108864, 
 
-        [Description("col-xs_offset-7")]
+        [Description("col-xs-offset-7")]
         Col_xs_offset_7 = 134217728, 
 
-        [Description("col-xs_offset-8")]
+        [Description("col-xs-offset-8")]
         Col_xs_offset_8 = 268435456, 
 
-        [Description("col-xs_offset-9")]
+        [Description("col-xs-offset-9")]
         Col_xs_offset_9 = 536870912, 
 
-        [Description("col-xs_offset-11")]
+        [Description("col-xs-offset-11")]
         Col_xs_offset_11 = 1073741824, 
 
-        [Description("col-xs_offset-12")]
+        [Description("col-xs-offset-12")]
         Col_xs_offset_12 = 2147483648, 
     }
 }

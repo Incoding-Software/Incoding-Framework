@@ -76,9 +76,7 @@ namespace Incoding.MvcContrib
         public static B Def_Label_Class  = B.Col_xs_5;
 
         public static B Def_Input_Class = B.Col_xs_7;
-
-        public static B Def_Group_Class =  B.Col_xs_12;
-
+        
         #endregion
 
         ////ncrunch: no coverage end
