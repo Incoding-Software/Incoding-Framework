@@ -60,12 +60,6 @@
 
         public class FakeDispatcher : DispatcherControllerBase
         {
-            #region Constructors
-
-            public FakeDispatcher()
-                    : base(new[] { typeof(Context_dispatcher_controller).Assembly }) { }
-
-            #endregion
         }
 
         #endregion

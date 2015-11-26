@@ -189,6 +189,7 @@
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Domain\AddProductCommand.cs" />
+    <Compile Include="Domain\GetProductQuery.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\Sample.cs" />
     <Compile Include="Global.asax.cs">
@@ -264,6 +265,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="DispatcherHttpHandler.ashx" />
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.0.js" />
     <Content Include="Scripts\jquery-2.0.0.min.js" />

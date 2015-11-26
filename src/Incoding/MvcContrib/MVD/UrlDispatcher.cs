@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.Block.IoC;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using Incoding.Quality;
@@ -19,11 +21,11 @@
     {
         #region Constants
 
-        internal const string separatorByGeneric = "/";
+        public const string separatorByGeneric = "/";
 
-        internal const string separatorByPair = "|";
+        public const string separatorByPair = "|";
 
-        internal const string separatorByType = "&";
+        public const string separatorByType = "&";
 
         #endregion
 
@@ -336,7 +338,7 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = DispatcherControllerBase.duplicates.Any(r => r == type)
+            string mainName = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new GetDuplicatesQuery()).Any(r => r == type)
                                       ? type.FullName
                                       : type.Name;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;

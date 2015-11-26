@@ -20,12 +20,6 @@
 
         public class FakeDispatcher : DispatcherControllerBase
         {
-            #region Constructors
-
-            public FakeDispatcher()
-                    : base(typeof(FakeDispatcher).Assembly, type => type.Name == "EB61C30C_4F25_4CDA_8625_8E3BBA8D4521") { }
-
-            #endregion
         }
 
         #endregion
