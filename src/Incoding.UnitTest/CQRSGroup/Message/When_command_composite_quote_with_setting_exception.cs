@@ -27,7 +27,11 @@
 
         Establish establish = () =>
                               {
-                                  var message = Pleasure.Mock<CommandBase>(mock => mock.Setup(r => r.OnExecute(dispatcher, Pleasure.MockIt.IsNotNull<Lazy<IUnitOfWork>>())).Throws(new IncFakeException()));
+                                  var message = Pleasure.Mock<CommandBase>(mock =>
+                                                                           {
+                                                                               mock.Setup(r => r.OnExecute(dispatcher, Pleasure.MockIt.IsNotNull<Lazy<IUnitOfWork>>())).Throws(new IncFakeException());
+                                                                               mock.SetupGet(r=>r.Setting).ReturnsInvent();
+                                                                           });
 
                                   onSpy = Pleasure.Spy();
 

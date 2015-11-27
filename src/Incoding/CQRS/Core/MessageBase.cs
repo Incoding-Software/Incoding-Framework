@@ -45,7 +45,7 @@
         public virtual object Result { get; protected set; }
 
         [IgnoreCompare("Design fixed"), IgnoreDataMember]
-        public MessageExecuteSetting Setting { get; set; }
+        public virtual MessageExecuteSetting Setting { get; set; }
 
         public virtual void OnExecute(IDispatcher current, Lazy<IUnitOfWork> unitOfWork)
         {
