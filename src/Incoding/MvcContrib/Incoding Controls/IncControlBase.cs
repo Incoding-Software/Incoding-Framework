@@ -135,7 +135,15 @@ namespace Incoding.MvcContrib
         {
             const string key = "class";
             if (attributes.ContainsKey(key))
-                attributes[key] += " " + @class;
+            {
+                var orig = attributes[key].ToString();
+                if (@class.Contains("col-xs-"))
+                {
+                    for (int i = 1; i <= 12; i++)
+                        orig = orig.Replace("col-xs-{0}".F(i), "");
+                }
+                attributes[key] = orig + " " + @class;
+            }
             else
                 attributes.Add(key, @class);
         }

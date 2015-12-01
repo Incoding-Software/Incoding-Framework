@@ -33,11 +33,11 @@
 </head>
 <body>
 @Html.Incoding().RenderDropDownTemplate()
-@(Html.When(JqueryBind.Click)
-      .Do()
-      .Ajax(new AddProductCommand())
-      .OnSuccess(dsl => dsl. Window.Alert("test"))
-      .AsHtmlAttributes()
-      .ToButton("Test"))
+@Html.ForGroup(r=>r.Name).TextBox(control =>
+                                  {
+                                      control.Label.Name = "Test";
+                                      control.Label.AddClass(B.Col_xs_3);
+                                      control.Control.AddClass(B.Col_xs_9);                                      
+                                  })
 </body>
 </html>

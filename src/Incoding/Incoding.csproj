@@ -425,6 +425,7 @@
     <Compile Include="MvcContrib\Core\IncControllerBase.cs" />
     <Compile Include="MvcContrib\Core\IncControllerFactory.cs" />
     <Compile Include="MvcContrib\Extensions\BeginTag.cs" />
+    <Compile Include="MvcContrib\Incoding Controls\IncDivControl.cs" />
     <Compile Include="MvcContrib\Incoding Controls\IncReadOnlyControl.cs" />
     <Compile Include="MvcContrib\MVD\CreateByTypeQuery.cs" />
     <Compile Include="MvcContrib\MVD\DispatcherHttpHandler.cs" />
