@@ -186,6 +186,9 @@ namespace Incoding.MvcContrib
         Radio = 17179869184,
 
         [Description("radio-line")]
-        Radio_inline = 34359738368
+        Radio_inline = 34359738368,
+
+        [Description("col-xs-10")]
+        Col_xs_10 = 68719476736,
     }
 }

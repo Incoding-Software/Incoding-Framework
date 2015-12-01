@@ -33,9 +33,11 @@
 </head>
 <body>
 @Html.Incoding().RenderDropDownTemplate()
-@{
-    var url = Url.Dispatcher().Push<AddProductCommand>().ToString();
-    var test = "";
-}
+@(Html.When(JqueryBind.Click)
+      .Do()
+      .Ajax(new AddProductCommand())
+      .OnSuccess(dsl => dsl. Window.Alert("test"))
+      .AsHtmlAttributes()
+      .ToButton("Test"))
 </body>
 </html>

@@ -85,14 +85,14 @@
             var commands = isCompositeAsArray
                                    ? ((IEnumerable<CommandBase>)dispatcher.Query(new CreateByTypeQuery()
                                                                                  {
-                                                                                         Type = splitByType[0], 
-                                                                                         IsGroup = true, 
+                                                                                         Type = splitByType[0],
+                                                                                         IsGroup = true,
                                                                                          Request = Request
                                                                                  })).ToList()
                                    : splitByType.Select(r => (CommandBase)dispatcher.Query(new CreateByTypeQuery()
                                                                                            {
-                                                                                                   Type = r, 
-                                                                                                   IsGroup = true, 
+                                                                                                   Type = r,
+                                                                                                   IsGroup = false,
                                                                                                    Request = Request
                                                                                            })).ToList();
 
