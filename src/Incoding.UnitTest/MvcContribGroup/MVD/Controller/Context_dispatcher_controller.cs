@@ -60,6 +60,11 @@
 
         public class FakeDispatcher : DispatcherControllerBase
         {
+            public FakeDispatcher(Assembly type, Func<Type, bool> filterTypes = null)
+                    : base(type, filterTypes) { }
+
+            public FakeDispatcher(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
+                    : base(assemblies, filterTypes) { }
         }
 
         #endregion
@@ -83,7 +88,7 @@
             
             dispatcher = Pleasure.Mock<IDispatcher>();
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
-            controller = new FakeDispatcher();
+            controller = new FakeDispatcher(Assembly.GetCallingAssembly());
 
             requestBase = Pleasure.Mock<HttpRequestBase>(mock =>
                                                          {

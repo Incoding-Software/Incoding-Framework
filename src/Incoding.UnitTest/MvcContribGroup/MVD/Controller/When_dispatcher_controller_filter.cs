@@ -18,8 +18,13 @@
 
         public class EB61C30C_4F25_4CDA_8625_8E3BBA8D4521 { }
 
-        public class FakeDispatcher : DispatcherControllerBase
+        public class  FakeDispatcher : DispatcherControllerBase
         {
+            public FakeDispatcher(Assembly type, Func<Type, bool> filterTypes = null)
+                    : base(type, filterTypes) { }
+
+            public FakeDispatcher(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
+                    : base(assemblies, filterTypes) { }
         }
 
         #endregion
@@ -35,7 +40,7 @@
         Establish establish = () =>
                               {
                                   typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-                                  controller = new FakeDispatcher();
+                                  controller = new FakeDispatcher(Assembly.GetEntryAssembly());
                               };
 
         Because of = () => { types = typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as List<Type>; };

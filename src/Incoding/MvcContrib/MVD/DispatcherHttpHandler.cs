@@ -92,13 +92,13 @@
                                         : instanceForRender;
                     }
 
-                    using (var sw = new StringWriter())
-                    {
-                        var viewResult = ViewEngines.Engines.FindPartialView(CreateController<DispatcherControllerBase>().ControllerContext, context.Request.Params["incView"]);
-                        var viewContext = new ViewContext(CreateController<DispatcherControllerBase>().ControllerContext, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
-                        viewResult.View.Render(viewContext, sw);
-                        context.Response.Write(IncodingResult.Success(sw.GetStringBuilder().ToString()).ToJsonString());
-                    }
+                    //using (var sw = new StringWriter())
+                    //{
+                    //    var viewResult = ViewEngines.Engines.FindPartialView(CreateController<DispatcherControllerBase>().ControllerContext, context.Request.Params["incView"]);
+                    //    var viewContext = new ViewContext(CreateController<DispatcherControllerBase>().ControllerContext, viewResult.View, new ViewDataDictionary(model), new TempDataDictionary(), sw);
+                    //    viewResult.View.Render(viewContext, sw);
+                    //    context.Response.Write(IncodingResult.Success(sw.GetStringBuilder().ToString()).ToJsonString());
+                    //}
 
                     break;
                 case Verb.Push:

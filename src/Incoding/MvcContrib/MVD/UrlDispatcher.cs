@@ -21,11 +21,11 @@
     {
         #region Constants
 
-        public const string separatorByGeneric = "/";
+        internal const string separatorByGeneric = "/";
 
-        public const string separatorByPair = "|";
+        internal const string separatorByPair = "|";
 
-        public const string separatorByType = "&";
+        internal const string separatorByType = "&";
 
         #endregion
 
@@ -80,9 +80,9 @@
             // ReSharper disable once Mvc.ActionNotResolved
             // ReSharper disable once Mvc.ControllerNotResolved
             return urlHelper.Action("Render", "Dispatcher", new
-                                                            {
-                                                                    incView = incView,
-                                                            });
+            {
+                incView = incView,
+            });
         }
 
         public UrlModel<TModel> Model<TModel>(object routes = null)
@@ -187,10 +187,10 @@
                 // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("QueryToFile", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(new
-                                                     {
-                                                             incContentType = incContentType,
-                                                             incFileDownloadName = incFileDownloadName
-                                                     })
+                                {
+                                    incContentType = incContentType,
+                                    incFileDownloadName = incFileDownloadName
+                                })
                                 .AppendToQueryString(query);
             }
 
@@ -255,9 +255,6 @@
 
             public UrlPush Push<TCommand>(object routes)
             {
-                if (routes == null)
-                    routes = new { };
-
                 var type = typeof(TCommand);
                 bool isContains = dictionary.ContainsKey(type);
                 if (isContains)
@@ -317,13 +314,14 @@
                 return query;
             }
 
-            public static implicit operator string(UrlPush s)
+            public static implicit operator string (UrlPush s)
             {
                 return s.ToString();
             }
         }
 
         #endregion
+
 
         void VerifySchema<TOriginal>(object routes)
         {
@@ -340,12 +338,9 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new IsUniqueTypeByNameQuery()
-                                                                                  {
-                                                                                          Type = type
-                                                                                  })
-                                      ? type.Name
-                                      : type.FullName;
+            string mainName = DispatcherControllerBase.duplicates.Any(r => r == type)
+                                      ? type.FullName
+                                      : type.Name;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
         }
 

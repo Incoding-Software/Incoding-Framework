@@ -15,7 +15,13 @@
     {
         #region Fake classes
 
-        public class FakeDispatcher : DispatcherControllerBase { }
+        public class FakeDispatcher : DispatcherControllerBase {
+            public FakeDispatcher(Assembly type, Func<Type, bool> filterTypes = null)
+                    : base(type, filterTypes) { }
+
+            public FakeDispatcher(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
+                    : base(assemblies, filterTypes) { }
+        }
 
         #endregion
 
@@ -31,7 +37,7 @@
                               {
                                   typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
                                   typeof(DispatcherControllerBase).GetField("duplicates", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-                                  controller = new FakeDispatcher();
+                                  controller = new FakeDispatcher(Assembly.GetCallingAssembly());
                               };
 
         Because of = () => { duplicates = typeof(DispatcherControllerBase).GetField("duplicates", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as List<Type>; };
