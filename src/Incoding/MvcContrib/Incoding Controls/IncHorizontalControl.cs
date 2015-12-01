@@ -47,15 +47,15 @@ namespace Incoding.MvcContrib
             if (isV3orMore && isForDefClass(Label))
                 Label.AddClass(IncodingHtmlHelper.Def_Label_Class.AsClass());
 
-            AddClass(isV3orMore ? "form-group" : isStatic ? string.Empty : "control-group");
-            
+            AddClass(isV3orMore ? IncodingHtmlHelper.Def_Input_Class.AsClass() : isStatic ? string.Empty : "control-group");
+
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(Label.ToHtmlString());
-            
+
             if (isV3orMore)
                 Input.AddClass(isStatic ? B.Form_static_control.AsClass() : B.Form_control.AsClass());
-            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(),GetAttributes());
+            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), GetAttributes());
 
             stringBuilder.Append(controlContainer);
 
