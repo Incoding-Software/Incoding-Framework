@@ -255,6 +255,9 @@
 
             public UrlPush Push<TCommand>(object routes)
             {
+                if (routes == null)
+                    routes = new { };
+
                 var type = typeof(TCommand);
                 bool isContains = dictionary.ContainsKey(type);
                 if (isContains)

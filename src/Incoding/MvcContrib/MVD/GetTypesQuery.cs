@@ -26,7 +26,6 @@ namespace Incoding.MvcContrib.MVD
 
         public List<Assembly> Assemblies { get; set; }
 
-        
         #endregion
 
         protected override List<Type> ExecuteResult()
@@ -43,10 +42,9 @@ namespace Incoding.MvcContrib.MVD
                     return duplicates;
 
                 ////ncrunch: no coverage end
-                var temp = Assemblies
-                        .Select(s => s.GetLoadableTypes())
-                        .SelectMany(r => r);
-                
+                var temp = AppDomain.CurrentDomain.GetAssemblies()
+                                    .Select(r => r.GetLoadableTypes())
+                                    .SelectMany(r => r);
 
                 duplicates.AddRange(temp.Where(r => temp.Count(s => s.Name == r.Name) > 1));
                 return duplicates;

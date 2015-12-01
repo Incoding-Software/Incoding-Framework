@@ -1,4 +1,5 @@
 ﻿@using Incoding.Extensions
+@using Incoding.SiteTest
 @model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
@@ -32,12 +33,9 @@
 </head>
 <body>
 @Html.Incoding().RenderDropDownTemplate()
-<form class="form-horizontal">
-    @Html.ForGroup(r => r.Name).DropDown(control =>
-{
-    control.Input.Url = Url.Action("FetchCountry");
-})
-
-</form>
+@{
+    var url = Url.Dispatcher().Push<AddProductCommand>().ToString();
+    var test = "";
+}
 </body>
 </html>
