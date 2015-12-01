@@ -24,20 +24,35 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        #region Properties
+
+        public IncLabelControl Label { get; set; }
+
+        public TInput Input { get; set; }
+
+        public IncDivControl Control { get; set; }
+
+        public IncControlBase Validation { get; set; }
+
+        public IncHelpBlockControl HelpBlock { get; set; }
+
+        #endregion
+
         public override MvcHtmlString ToHtmlString()
         {
             Func<IncControlBase, bool> isForDefClass = @base => !@base.GetAttr(HtmlAttribute.Class).With(r => r.Contains("col-"));
             bool isV3orMore = IncodingHtmlHelper.BootstrapVersion == BootstrapOfVersion.v3;
             bool isStatic = Input.GetType().Name.Contains("IncStaticControl");
 
-            if(isV3orMore)
+            if (isV3orMore)
                 AddClass(B.Form_group);
 
             Label.AddClass(B.Control_label);
             if (isV3orMore && isForDefClass(Label))
                 Label.AddClass(IncodingHtmlHelper.Def_Label_Class.AsClass());
 
-            Control.AddClass(isV3orMore ? IncodingHtmlHelper.Def_Control_Class.AsClass() : isStatic ? string.Empty : "control-group");
+            if (string.IsNullOrWhiteSpace(Control.GetAttr(HtmlAttribute.Class)))
+                Control.AddClass(isV3orMore ? IncodingHtmlHelper.Def_Control_Class.AsClass() : isStatic ? string.Empty : "control-group");
 
             var stringBuilder = new StringBuilder();
 
@@ -54,19 +69,5 @@ namespace Incoding.MvcContrib
             var controlGroup = IncodingHtmlHelper.CreateTag(HtmlTag.Div, new MvcHtmlString(stringBuilder.ToString()), GetAttributes());
             return new MvcHtmlString(controlGroup.ToString());
         }
-
-        #region Properties
-
-        public IncLabelControl Label { get; set; }
-
-        public TInput Input { get; set; }
-
-        public IncDivControl Control { get; set; }
-
-        public IncControlBase Validation { get; set; }
-
-        public IncHelpBlockControl HelpBlock { get; set; }
-
-        #endregion
     }
 }

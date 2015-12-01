@@ -37,7 +37,7 @@
                               {
                                   typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
                                   typeof(DispatcherControllerBase).GetField("duplicates", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-                                  controller = new FakeDispatcher(Assembly.GetCallingAssembly());
+                                  controller = new FakeDispatcher(typeof(FakeDispatcher).Assembly);
                               };
 
         Because of = () => { duplicates = typeof(DispatcherControllerBase).GetField("duplicates", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as List<Type>; };
