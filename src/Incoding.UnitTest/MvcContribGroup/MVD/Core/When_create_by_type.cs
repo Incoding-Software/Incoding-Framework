@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -13,11 +14,12 @@
     {
         Establish establish = () =>
                               {
-                                  CreateByTypeQuery query = Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(UniqueNameClass).Name));
+                                  CreateByTypeQuery query = Pleasure.Generator.Invent<CreateByTypeQuery>();
                                   expected = Pleasure.Generator.Invent<UniqueNameClass>();
 
                                   mockQuery = MockQuery<CreateByTypeQuery, object>
                                           .When(query);
+                                  //.StubQuery<CreateByTypeQuery.FindTypeByName, Type>(r => r.Tuning(s=>s.), typeof(UniqueNameClass));
                               };
 
         Because of = () => mockQuery.Original.Execute();

@@ -80,8 +80,7 @@
 
         protected static void Establish(Type[] types = null, bool isAjax = true)
         {
-            typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-
+            
             dispatcher = Pleasure.Mock<IDispatcher>();
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
             controller = new FakeDispatcher();

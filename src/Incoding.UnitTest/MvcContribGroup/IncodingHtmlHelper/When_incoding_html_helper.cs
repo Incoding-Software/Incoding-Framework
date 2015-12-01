@@ -113,7 +113,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                          incodingHtml
                                                                  .RenderDropDownTemplate()
                                                                  .ToHtmlString()
-                                                                 .ShouldEqual("<script id=\"{0}\" type=\"text/template\">TheSameString</script>".F(HttpUtility.HtmlEncode(IncodingHtmlHelper.DropDownTemplateId.ToString())));
+                                                                 .ShouldEqual("<script id=\"{0}\" type=\"text/template\">TheSameString</script>".F("incodingDropDownTemplate"));
                                                      };
     }
 }

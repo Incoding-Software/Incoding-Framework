@@ -31,22 +31,13 @@
     </script>
 </head>
 <body>
-    <form class="form-horizontal">
-        <a href="@Url.Dispatcher().AsView("~/Views/Labs/Bind/Inc_Ajax_Error.cshtml")">Test</a>
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name";                                              
-                                          })
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name 2";                                              
-                                              control.AddClass(B.Col_xs_offset_4);
-                                          })        
-        @Html.ForGroup(r=>r.Name).TextBox(control =>
-                                          {
-                                              control.Label.Name = "Name 2";                                              
-                                              control.AddClass(B.Col_xs_offset_4);
-                                          })
-    </form>
+@Html.Incoding().RenderDropDownTemplate()
+<form class="form-horizontal">
+    @Html.ForGroup(r => r.Name).DropDown(control =>
+{
+    control.Input.Url = Url.Action("FetchCountry");
+})
+
+</form>
 </body>
 </html>

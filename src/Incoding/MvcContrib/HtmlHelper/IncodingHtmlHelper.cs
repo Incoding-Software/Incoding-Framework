@@ -76,6 +76,8 @@ namespace Incoding.MvcContrib
         public static B Def_Label_Class  = B.Col_xs_5;
 
         public static B Def_Input_Class = B.Col_xs_7;
+
+        public static B? Def_Group_Class = B.Col_xs_12;
         
         #endregion
 
@@ -240,7 +242,7 @@ namespace Incoding.MvcContrib
         {
             var templateFactory = IoCFactory.Instance.TryResolve<ITemplateFactory>() ?? new TemplateHandlebarsFactory();
             string template = templateFactory.GetDropDownTemplate();
-            return new MvcHtmlString(CreateScript(DropDownTemplateId, HtmlType.TextTemplate, string.Empty, new MvcHtmlString(template)).ToString());
+            return new MvcHtmlString(CreateScript("incodingDropDownTemplate", HtmlType.TextTemplate, string.Empty, new MvcHtmlString(template)).ToString());
         }
 
         #endregion

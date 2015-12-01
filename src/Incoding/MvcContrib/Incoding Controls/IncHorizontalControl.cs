@@ -52,15 +52,10 @@ namespace Incoding.MvcContrib
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(Label.ToHtmlString());
-            var containerForControl = new RouteValueDictionary(new
-                                                               {
-                                                                       @class = isV3orMore
-                                                                                        ? isForDefClass(Input) ? IncodingHtmlHelper.Def_Input_Class.AsClass() : Input.GetAttr(HtmlAttribute.Class)
-                                                                                        : "controls"
-                                                               });
+            
             if (isV3orMore)
                 Input.AddClass(isStatic ? B.Form_static_control.AsClass() : B.Form_control.AsClass());
-            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(), containerForControl);
+            var controlContainer = IncodingHtmlHelper.CreateTag(HtmlTag.Div, Input.ToHtmlString(),GetAttributes());
 
             stringBuilder.Append(controlContainer);
 

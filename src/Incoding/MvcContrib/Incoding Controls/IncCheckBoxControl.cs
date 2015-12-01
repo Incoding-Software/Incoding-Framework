@@ -6,20 +6,18 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using Incoding.Extensions;
 
     #endregion
 
     public class IncCheckBoxControl<TModel, TProperty> : IncControlBase
     {
-        #region Fields
+        public enum ModeOf
+        {
+            Normal = 0,
 
-        readonly HtmlHelper<TModel> htmlHelper;
-
-        readonly Expression<Func<TModel, TProperty>> property;
-
-        readonly IncLabelControl label;
-
-        #endregion
+            Inline = 1
+        }
 
         #region Constructors
 
@@ -27,16 +25,8 @@ namespace Incoding.MvcContrib
         {
             this.htmlHelper = htmlHelper;
             this.property = property;
-            this.label = new IncLabelControl(htmlHelper, property);
-            this.label.AddClass("checkbox");
+            this.Label = new IncLabelControl(htmlHelper, property);
         }
-
-        #endregion
-
-        #region Properties
-        
-        public IncLabelControl Label { get { return this.label; } }
-
 
         #endregion
 
@@ -47,10 +37,34 @@ namespace Incoding.MvcContrib
             bool result;
             if (metadata.Model != null && bool.TryParse(metadata.Model.ToString(), out result))
                 isChecked = result;
-            var checkBox = this.htmlHelper.CheckBox(ExpressionHelper.GetExpressionText(this.property), isChecked ?? false, GetAttributes());
 
-            this.label.Name = checkBox.ToHtmlString() + this.label.Name;
-            return this.label.ToHtmlString();
+            var div = new TagBuilder(HtmlTag.Div.ToStringLower());
+            div.AddCssClass(Mode == ModeOf.Normal ? B.Checkbox.AsClass() : B.Checkbox_inline.AsClass());
+            var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
+            spanAsLabel.InnerHtml = this.Label.Name;
+            var label = new TagBuilder(HtmlTag.Label.ToStringLower());
+            label.InnerHtml = this.htmlHelper.CheckBox(ExpressionHelper.GetExpressionText(this.property), isChecked ?? false, GetAttributes()).ToHtmlString()
+                              + new TagBuilder(HtmlTag.I.ToStringLower()).ToString(TagRenderMode.Normal)
+                              + spanAsLabel.ToString(TagRenderMode.Normal);
+            div.InnerHtml = label.ToString(TagRenderMode.Normal);
+
+            return new MvcHtmlString(div.ToString(TagRenderMode.Normal));
         }
+
+        #region Fields
+
+        readonly HtmlHelper<TModel> htmlHelper;
+
+        readonly Expression<Func<TModel, TProperty>> property;
+
+        #endregion
+
+        #region Properties
+
+        public IncLabelControl Label { get; }
+
+        public ModeOf Mode { get; set; }
+
+        #endregion
     }
 }
