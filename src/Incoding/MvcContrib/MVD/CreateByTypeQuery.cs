@@ -34,7 +34,7 @@
         {
             #region Static Fields
 
-            static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
+            internal static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
 
             #endregion
 

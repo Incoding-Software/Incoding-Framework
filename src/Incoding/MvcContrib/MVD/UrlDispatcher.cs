@@ -81,7 +81,7 @@
             // ReSharper disable once Mvc.ControllerNotResolved
             return urlHelper.Action("Render", "Dispatcher", new
                                                             {
-                                                                    incView = incView, 
+                                                                    incView = incView,
                                                             });
         }
 
@@ -119,8 +119,8 @@
             {
                 defaultRoutes = new RouteValueDictionary
                                 {
-                                        { "incType", GetTypeName(typeof(TModel)) }, 
-                                        { "incIsModel", true }, 
+                                        { "incType", GetTypeName(typeof(TModel)) },
+                                        { "incIsModel", true },
                                 };
 
                 this.urlHelper = urlHelper;
@@ -188,7 +188,7 @@
                 return urlHelper.Action("QueryToFile", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(new
                                                      {
-                                                             incContentType = incContentType, 
+                                                             incContentType = incContentType,
                                                              incFileDownloadName = incFileDownloadName
                                                      })
                                 .AppendToQueryString(query);
@@ -219,7 +219,7 @@
             }
         }
 
-        public class UrlPush 
+        public class UrlPush
         {
             #region Fields
 
@@ -325,7 +325,6 @@
 
         #endregion
 
-
         void VerifySchema<TOriginal>(object routes)
         {
             if (!IsVerifySchema || routes == null)
@@ -341,9 +340,12 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new GetDuplicatesQuery()).Any(r => r == type)
-                                      ? type.FullName
-                                      : type.Name;
+            string mainName = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new IsUniqueTypeByNameQuery()
+                                                                                  {
+                                                                                          Type = type
+                                                                                  })
+                                      ? type.Name
+                                      : type.FullName;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
         }
 
