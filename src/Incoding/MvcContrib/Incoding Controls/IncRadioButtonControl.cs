@@ -59,7 +59,7 @@ namespace Incoding.MvcContrib
 
         public object Value { get; set; }
 
-        public IncLabelControl Label { get; }
+        public IncLabelControl Label { get; protected set; }
 
         public ModeOf Mode { get; set; }
 

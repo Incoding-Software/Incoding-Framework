@@ -61,7 +61,7 @@ namespace Incoding.MvcContrib
 
         #region Properties
 
-        public IncLabelControl Label { get; }
+        public IncLabelControl Label { get; protected set; }
 
         public ModeOf Mode { get; set; }
 
