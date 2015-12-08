@@ -9,15 +9,16 @@ namespace Incoding.MvcContrib
     using Incoding.Extensions;
 
     #endregion
+    public enum ModeOfRadio
+    {
+        Normal = 0,
+
+        Inline = 1
+    }
+
 
     public class IncRadioButtonControl<TModel, TProperty> : IncControlBase
     {
-        public enum ModeOf
-        {
-            Normal = 0,
-
-            Inline = 1
-        }
 
         #region Constructors
 
@@ -35,7 +36,7 @@ namespace Incoding.MvcContrib
             string value = Value.ToString();
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
-            div.AddCssClass(Mode == ModeOf.Normal ? B.Radio.AsClass() : B.Radio_inline.AsClass());
+            div.AddCssClass(Mode == ModeOfRadio.Normal ? B.Radio.AsClass() : B.Radio_inline.AsClass());
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name ?? value;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());
@@ -61,7 +62,7 @@ namespace Incoding.MvcContrib
 
         public IncLabelControl Label { get; protected set; }
 
-        public ModeOf Mode { get; set; }
+        public ModeOfRadio Mode { get; set; }
 
         #endregion
     }

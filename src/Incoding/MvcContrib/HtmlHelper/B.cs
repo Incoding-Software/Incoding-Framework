@@ -179,13 +179,13 @@ namespace Incoding.MvcContrib
         [Description("checkbox")]
         Checkbox = 4294967296,
 
-        [Description("checkbox-line")]
+        [Description("checkbox-inline")]
         Checkbox_inline = 8589934592,
 
         [Description("radio")]
         Radio = 17179869184,
 
-        [Description("radio-line")]
+        [Description("radio-inline")]
         Radio_inline = 34359738368,
 
         [Description("col-xs-10")]

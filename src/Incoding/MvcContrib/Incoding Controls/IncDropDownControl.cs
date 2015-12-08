@@ -31,6 +31,7 @@ namespace Incoding.MvcContrib
 
         public override MvcHtmlString ToHtmlString()
         {
+            var currentUrl = Url ?? Data.Url;
             bool isAjax = !string.IsNullOrWhiteSpace(Url);
 
             bool isIml = OnInit != null ||
@@ -39,11 +40,7 @@ namespace Incoding.MvcContrib
 
             if (isAjax || isIml)
             {
-                var meta = isAjax ? htmlHelper.When(InitBind).Do().Ajax(options =>
-                                                                        {
-                                                                            options.Url = Url;
-                                                                            options.Type = HttpVerbs.Get;
-                                                                        })
+                var meta = isAjax ? htmlHelper.When(InitBind).Do().Ajax(currentUrl)
                                    : htmlHelper.When(InitBind).Do().Direct();
                 attributes = meta.OnSuccess(dsl =>
                                             {
@@ -97,7 +94,8 @@ namespace Incoding.MvcContrib
 
         public JqueryAjaxOptions Options { get { return options; } set { options = value; } }
 
-        public string Url { get { return Data.Url ?? Options.Url; } set { Options.Url = value; } }
+        [Obsolete("Please use Data instead of Url")]
+        public string Url { get; set; }
 
         public IncSelectList Data { get; set; }
 

@@ -10,14 +10,16 @@ namespace Incoding.MvcContrib
 
     #endregion
 
+    public enum ModeOfCheckbox
+    {
+        Normal = 0,
+
+        Inline = 1
+    }
+
+
     public class IncCheckBoxControl<TModel, TProperty> : IncControlBase
     {
-        public enum ModeOf
-        {
-            Normal = 0,
-
-            Inline = 1
-        }
 
         #region Constructors
 
@@ -39,7 +41,7 @@ namespace Incoding.MvcContrib
                 isChecked = result;
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
-            div.AddCssClass(Mode == ModeOf.Normal ? B.Checkbox.AsClass() : B.Checkbox_inline.AsClass());
+            div.AddCssClass(Mode == ModeOfCheckbox.Normal ? B.Checkbox.AsClass() : B.Checkbox_inline.AsClass());
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());
@@ -63,7 +65,7 @@ namespace Incoding.MvcContrib
 
         public IncLabelControl Label { get; protected set; }
 
-        public ModeOf Mode { get; set; }
+        public ModeOfCheckbox Mode { get; set; }
 
         #endregion
     }
