@@ -28,6 +28,7 @@
                                   control = new IncHorizontalControl<IncHiddenControl<FakeModel, object>>(label, input, validation);
                                   control.Label.AddClass(B.Col_xs_5);
                                   control.Input.AddClass(B.Col_xs_7);
+                                  control.Control.AddClass(B.Col_xs_7);
                                   control.AddClass(B.Col_xs_12);
                               };
 

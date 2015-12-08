@@ -40,7 +40,7 @@
         Establish establish = () =>
                               {
                                   typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-                                  controller = new FakeDispatcher(Assembly.GetEntryAssembly());
+                                  controller = new FakeDispatcher(typeof(FakeDispatcher).Assembly);
                               };
 
         Because of = () => { types = typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as List<Type>; };
