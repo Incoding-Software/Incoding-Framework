@@ -16,7 +16,7 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .Checkbox(boxControl =>
+                                     .CheckBox(boxControl =>
                                                    {
                                                        boxControl.Label.Name = Pleasure.Generator.TheSameString();
                                                        boxControl.Label.AddClass("special");

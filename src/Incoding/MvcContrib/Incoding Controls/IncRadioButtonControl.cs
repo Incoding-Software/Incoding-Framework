@@ -7,6 +7,7 @@ namespace Incoding.MvcContrib
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     using Incoding.Extensions;
+    using Incoding.Maybe;
 
     #endregion
     public enum ModeOfRadio
@@ -32,11 +33,13 @@ namespace Incoding.MvcContrib
         #endregion
 
         public override MvcHtmlString ToHtmlString()
-        {
-            string value = Value.ToString();
+        {            
+            string value = Value.With(r=>r.ToString());
+            Guard.NotNullOrWhiteSpace("'value'", value);
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
             div.AddCssClass(Mode == ModeOfRadio.Normal ? B.Radio.AsClass() : B.Radio_inline.AsClass());
+            div.AddCssClass(GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(), string.Empty).ToString());
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name ?? value;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());

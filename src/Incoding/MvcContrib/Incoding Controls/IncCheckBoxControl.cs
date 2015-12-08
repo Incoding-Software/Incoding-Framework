@@ -3,10 +3,12 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
     using Incoding.Extensions;
+    using Raven.Abstractions.Extensions;
 
     #endregion
 
@@ -42,6 +44,8 @@ namespace Incoding.MvcContrib
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
             div.AddCssClass(Mode == ModeOfCheckbox.Normal ? B.Checkbox.AsClass() : B.Checkbox_inline.AsClass());
+            div.AddCssClass(GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(),string.Empty).ToString());
+
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());

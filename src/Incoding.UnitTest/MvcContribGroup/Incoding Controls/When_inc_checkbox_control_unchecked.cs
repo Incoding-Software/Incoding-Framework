@@ -14,7 +14,7 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .Checkbox(boxControl => { boxControl.Label.Name = Pleasure.Generator.TheSameString(); });
+                                     .CheckBox(boxControl => { boxControl.Label.Name = Pleasure.Generator.TheSameString(); });
                          };
 
         It should_be_render = () =>

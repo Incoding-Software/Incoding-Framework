@@ -61,7 +61,7 @@
             return Control(new IncListBoxControl<TModel, TProperty>(this.htmlHelper, this.property), configuration);
         }
 
-        public MvcHtmlString Checkbox(Action<IncCheckBoxControl<TModel, TProperty>> configuration = null)
+        public MvcHtmlString CheckBox(Action<IncCheckBoxControl<TModel, TProperty>> configuration = null)
         {
             return Control(new IncCheckBoxControl<TModel, TProperty>(this.htmlHelper, this.property), configuration);
         }
