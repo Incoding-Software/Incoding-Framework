@@ -33,11 +33,9 @@
 </head>
 <body>
 @Html.Incoding().RenderDropDownTemplate()
-@Html.ForGroup(r=>r.Name).TextBox(control =>
-                                  {
-                                      control.Label.Name = "Test";
-                                      control.Label.AddClass(B.Col_xs_3);
-                                      control.Control.AddClass(B.Col_xs_9);                                      
-                                  })
+@Html.For(r=>r.Name).DropDown(control =>
+                              {
+                                  control.Data = Url.Action("FetchCountry", "Labs");
+                              })
 </body>
 </html>

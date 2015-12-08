@@ -32,7 +32,7 @@ namespace Incoding.MvcContrib
         public override MvcHtmlString ToHtmlString()
         {
             var currentUrl = Url ?? Data.Url;
-            bool isAjax = !string.IsNullOrWhiteSpace(Url);
+            bool isAjax = !string.IsNullOrWhiteSpace(currentUrl);
 
             bool isIml = OnInit != null ||
                          OnChange != null ||
