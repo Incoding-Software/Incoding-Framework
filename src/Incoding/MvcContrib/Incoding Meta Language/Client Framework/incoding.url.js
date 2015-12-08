@@ -6,21 +6,21 @@ function purl(existsUrl) {
 
         this.parseUri = function(url) {
 
-            var uri = { attr : {}, param : {} };
-            var hashSeparated = '#';           
+            var uri = { attr: {}, param: {} };
+            var hashSeparated = '#';
             if (url.contains(hashSeparated)) {
                 uri.attr['fragment'] = url.split(hashSeparated)[1].replace("!", "");
 
                 var current = this;
                 var fparams = {};
-                $.each(uri.attr['fragment'].split('&'), function() {
+                $.each(uri.attr['fragment'].split('&'), function () {
 
                     var prefix = this.contains(":") ? this.split(':')[0] : 'root';
                     var fragmentQuery = this.contains("?") ? this.split('?')[1] : this;
                     fragmentQuery = fragmentQuery.replace(prefix + ':', '');
 
                     var paramsByPrefix = current.parseString(fragmentQuery, '/');
-                    $.eachProperties(paramsByPrefix, function() {
+                    $.eachProperties(paramsByPrefix, function () {
                         var fullKey = "{0}__{1}".f(prefix, this);
                         fparams[fullKey] = paramsByPrefix[this];
                     });
@@ -185,12 +185,12 @@ function purl(existsUrl) {
             return uniquePrefixes;
         },
 
-        furl : function(prefix) {
+        furl: function (prefix) {
 
-            var urls = { root : '' };
+            var urls = { root: '' };
 
             var allUrls = this.data.attr['fragment'].contains("&") ? this.data.attr['fragment'].split('&') : [this.data.attr['fragment']];
-            $(allUrls).each(function() {
+            $(allUrls).each(function () {
                 if (this.contains(':')) {
                     var splitByPrefix = this.split(':');
                     urls[splitByPrefix[0]] = splitByPrefix[1];

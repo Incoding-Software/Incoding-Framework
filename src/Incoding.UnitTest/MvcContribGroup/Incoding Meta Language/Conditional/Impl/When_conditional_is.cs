@@ -209,6 +209,12 @@
                                                                          right: "||value*True||",
                                                                          method: "notequal");
 
+        It should_javascript_hash_is_empty = () => new ConditionalIs(() => Selector.JS.Location.Hash.IsEmpty(), true)
+                                               .GetData()
+                                               .ShouldEqualConditionalIs(left: "",
+                                                                         right: "||javascript*window.location.hash||",
+                                                                         method: "isempty");
+
         #region Fake classes
 
         class FakeModel

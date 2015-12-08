@@ -12,34 +12,6 @@ function testEvalMethod(arg1, arg2, arg3) {
 
 function TestHelper() {
 
-    /*
-    this.Spy = function (spy) {
-        
-        var uniqueName = function () {
-            var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-            for (var i = 0; i < 5; i++)
-                text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-            return text;
-        }
-
-        
-        $.eachProperties(spy, function() {
-            var value = spy[this];
-
-            if (_.isFunction(value)) {
-                spyOn(spy, this).andCallFake(value);
-            }
-            else {
-                spyOn(spy, this).andReturn(value);
-            }
-        });
-
-        return spy;
-    };
-*/
 
     this.SandboxSubmit = function() {
         var res = $('<input>').attr({ id : 'sandboxSubmit', type : 'submit', name : 'sandboxSubmit' });
@@ -662,6 +634,13 @@ describe('Incoding', function() {
                             var href = 'Home/Index#!User/Index?';
                             var url = $.url(href);
                             expect(url.toHref()).toEqual('Home/Index#!User/Index?');
+                        });
+
+
+                        it('Should be to href with hash url (pazar issue)', function () {
+                            var href = 'http://localhost:9435/mk/Dispatcher/Render?incType=GetAdvertiserIndexPageQuery&incView=~%2FViews%2FAdvertiser%2FIndex.cshtml#!/mk/Dispatcher/Render?incType=GetAccountSavedAdNotificationQry/incView=~%2FViews%2FAdvertiser%2FSaved.cshtml';
+                            var url = $.url(href);
+                            expect(url.furl('root')).toEqual('/mk/Dispatcher/Render');
                         });
 
                     });

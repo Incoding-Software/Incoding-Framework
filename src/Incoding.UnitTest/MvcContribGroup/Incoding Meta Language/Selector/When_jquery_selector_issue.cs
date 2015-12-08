@@ -111,5 +111,6 @@
                                                               .EqualsAttribute(HtmlAttribute.Multiple)
                                                               .ToString()
                                                               .ShouldEqual("$('input[multiple=\"multiple\"]')");
+        
     }
 }

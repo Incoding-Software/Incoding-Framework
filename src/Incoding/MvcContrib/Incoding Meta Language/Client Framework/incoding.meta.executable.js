@@ -219,8 +219,9 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
     var current = this;
 
     var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
+    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(ajaxOptions.url);
     var url = ajaxOptions.url;
-    if (!ExecutableHelper.IsNullOrEmpty(url)) {
+    if (!isEmptyUrl) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
             ajaxOptions.data.push({ name : this, selector : current.tryGetVal(queryFromString[this]) });
@@ -229,7 +230,7 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
     }
     if (current.jsonData.hash) {
         var href = $.url(document.location.href);
-        if (ExecutableHelper.IsNullOrEmpty(url.split('?')[0])) {
+        if (isEmptyUrl || ExecutableHelper.IsNullOrEmpty(url.split('?')[0])) {
             ajaxOptions.url = href.furl(current.jsonData.prefix);
         }
 
