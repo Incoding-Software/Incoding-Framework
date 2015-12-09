@@ -189,8 +189,11 @@
                            : Content(RenderToString(incView, model));
         }
 
-        public virtual ActionResult Push(string incTypes, bool? incIsCompositeAsArray = false, bool? incOnlyValidate = false)
+        public virtual ActionResult Push(string incTypes,string incType = "",  bool? incIsCompositeAsArray = false, bool? incOnlyValidate = false)
         {
+            if (!string.IsNullOrWhiteSpace(incType))
+                incTypes = incType;
+
             Guard.NotNullOrWhiteSpace("incTypes", incTypes);
 
             var splitByType = incTypes.Split(UrlDispatcher.separatorByType.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

@@ -33,7 +33,7 @@
                                                                             });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakePushComposite1ByNameWithGroupCommand).Name, true); };
+        Because of = () => { result = controller.Push(typeof(FakePushComposite1ByNameWithGroupCommand).Name, string.Empty,true); };
 
         It should_be_push_1 = () => dispatcher.ShouldBePush(command1);
 
