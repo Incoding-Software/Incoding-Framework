@@ -431,21 +431,22 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
-ExecutableValidationRefresh.prototype.internalExecute = function() {
+ExecutableValidationRefresh.prototype.internalExecute = function () {
 
     var current = this;
     var inputErrorClass = 'input-validation-error';
     var messageErrorClass = 'field-validation-error';
     var messageValidClass = 'field-validation-valid';
+    var attrSpan = 'data-valmsg-for';
     var result = ExecutableHelper.IsNullOrEmpty(current.result) ? [] : current.result;
-    $(result).each(function() {
+    $(result).each(function () {
 
         var name = this.name.toString();
-        var input = $('[name]', current.target).filter(function() {
+        var input = $('[name]', current.target).filter(function () {
             return $(this).attr('name').toLowerCase() == name.toLowerCase();
         });
-        var span = $('[data-valmsg-for]', current.target).filter(function() {
-            return $(this).attr('data-valmsg-for').toLowerCase() == name.toLowerCase();
+        var span = $('[{0}]'.f(attrSpan), current.target).filter(function () {
+            return $(this).attr(attrSpan).toLowerCase() == name.toLowerCase();
         });
 
         if (ExecutableHelper.ToBool(this.isValid)) {
@@ -460,15 +461,18 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
                 .removeClass(messageValidClass)
                 .addClass(messageErrorClass)
                 .html($('<span/>')
-                    .attr({ for : name, generated : true })
+                    .attr({ for: name, generated: true })
                     .html(this.errorMessage));
         }
 
     });
 
     if ($(result).length === 0) {
-        $(current.target).find('.input-validation-error').removeClass(inputErrorClass);
-        $(current.target).find('.field-validation-error').addClass(messageValidClass).removeClass(messageErrorClass).empty();
+        $(current.target).find('.' + inputErrorClass).removeClass(inputErrorClass);
+        $('[{0}]'.f(attrSpan), current.target).removeClass(messageErrorClass)
+            .addClass(messageValidClass)
+            .empty();
+        $(current.target).find('.' + messageErrorClass).addClass(messageValidClass).removeClass(messageErrorClass).empty();
     }
 
     $($(current.target).is('form') ? current.target : $('form', this.target))
@@ -477,6 +481,7 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
 };
 
 //#endregion
+
 
 //#region class ExecutableEval extend from ExecutableBase
 
