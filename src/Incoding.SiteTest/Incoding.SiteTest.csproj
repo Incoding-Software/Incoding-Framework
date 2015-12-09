@@ -188,6 +188,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
+    <Compile Include="Domain\AddAsSyncProductCommand.cs" />
+    <Compile Include="Domain\TestCommand.cs" />
     <Compile Include="Domain\AddProductCommand.cs" />
     <Compile Include="Domain\GetProductQuery.cs" />
     <Compile Include="Domain\Product.cs" />

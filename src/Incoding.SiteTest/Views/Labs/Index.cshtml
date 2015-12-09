@@ -1,6 +1,7 @@
 ﻿@using System.Data
 @using Incoding.Extensions
 @using Incoding.SiteTest
+@using Incoding.SiteTest.Controllers
 @model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
@@ -33,10 +34,10 @@
     </script>
 </head>
 <body>
-@Html.For(r => r.Name).RadioButton(control =>
-                                {
-                                    control.Label.Name = "Care Plan";
-                                    control.Value = "Test";                                    
-                                })
+@(Html.When(JqueryBind.Click)      
+      .Ajax(new TestCommand())
+      .OnSuccess(dsl => {})
+      .AsHtmlAttributes()
+      .ToButton("Test"))
 </body>
 </html>

@@ -12,6 +12,7 @@
 
     public class Product : IncEntityBase
     {
+        
         #region Properties
 
         public virtual string Name { get; set; }

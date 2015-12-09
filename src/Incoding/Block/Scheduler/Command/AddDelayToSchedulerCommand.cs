@@ -46,15 +46,22 @@
                                        {
                                                Type = GetRecurrencyDateQuery.RepeatType.Once
                                        };
+            var type = Command.GetType();
+            var option = type.FirstOrDefaultAttribute<OptionOfDelayAttribute>() ?? new OptionOfDelayAttribute();
             Repository.Save(new DelayToScheduler
                             {
-                                    Command = Command.ToJsonString(), 
-                                    Type = Command.GetType().AssemblyQualifiedName, 
-                                    UID = UID, 
-                                    Priority = Priority, 
-                                    Status = DelayOfStatus.New, 
-                                    Recurrence = Recurrency, 
-                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow))
+                                    Command = Command.ToJsonString(),
+                                    Type = type.AssemblyQualifiedName,
+                                    UID = UID,
+                                    Priority = Priority,
+                                    Status = DelayOfStatus.New,
+                                    Recurrence = Recurrency,
+                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow)),
+                                    Option = new DelayToScheduler.OptionOfDelay()
+                                             {
+                                                     Async = option.Async,
+                                                     TimeOut = option.TimeOut
+                                             }
                             });
         }
     }

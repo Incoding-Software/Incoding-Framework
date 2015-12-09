@@ -14,63 +14,6 @@
     /// </summary>
     public class GetRecurrencyDateQuery : QueryBase<DateTime?>
     {
-        #region Properties
-
-        public DateTime? EndDate { get; set; }
-
-        public DateTime? NowDate { get; set; }
-
-        public int? RepeatCount { get; set; }
-
-        public DayOfWeek? RepeatDays { get; set; }
-
-        public int RepeatInterval { get; set; }
-
-        public RepeatType Type { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        #endregion
-
-        #region Enums
-
-        [Flags]
-        public enum DayOfWeek
-        {
-            Sunday = 1, 
-
-            Monday = 2, 
-
-            Tuesday = 4, 
-
-            Wednesday = 8, 
-
-            Thursday = 16, 
-
-            Friday = 32, 
-
-            Saturday = 64, 
-        }
-
-        public enum RepeatType
-        {
-            Once = 0, 
-
-            Minutely = 1, 
-
-            Hourly = 2, 
-
-            Daily = 3, 
-
-            Weekly = 4, 
-
-            Monthly = 5, 
-
-            Yearly = 6
-        }
-
-        #endregion
-
         protected override DateTime? ExecuteResult()
         {
             if (Type == RepeatType.Once)
@@ -149,5 +92,62 @@
                 nextDate = nextDate.AddTimeByRepeatType(repeatType, repeatInterval);
             }
         }
+
+        #region Properties
+
+        public DateTime? EndDate { get; set; }
+
+        public DateTime? NowDate { get; set; }
+
+        public int? RepeatCount { get; set; }
+
+        public DayOfWeek? RepeatDays { get; set; }
+
+        public int RepeatInterval { get; set; }
+
+        public RepeatType Type { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        #endregion
+
+        #region Enums
+
+        [Flags]
+        public enum DayOfWeek
+        {
+            Sunday = 1,
+
+            Monday = 2,
+
+            Tuesday = 4,
+
+            Wednesday = 8,
+
+            Thursday = 16,
+
+            Friday = 32,
+
+            Saturday = 64,
+        }
+
+        public enum RepeatType
+        {
+            Once = 0,
+
+            Minutely = 1,
+
+            Hourly = 2,
+
+            Daily = 3,
+
+            Weekly = 4,
+
+            Monthly = 5,
+
+            Yearly = 6
+        }
+
+        #endregion
     }
 }

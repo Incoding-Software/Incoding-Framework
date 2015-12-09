@@ -26,9 +26,9 @@
         {
             IoCFactory.Instance.Initialize(init => init.WithProvider(new StructureMapIoCProvider(registry =>
                                                                                                      {
-                                                                                                         registry.For<IDispatcher>().Singleton().Use<DefaultDispatcher>();
-                                                                                                         registry.For<IEventBroker>().Singleton().Use<DefaultEventBroker>();
-                                                                                                         registry.For<ITemplateFactory>().Singleton().Use<TemplateDoTFactory>();
+                                                                                                         registry.For<IDispatcher>().Use<DefaultDispatcher>();
+                                                                                                         registry.For<IEventBroker>().Use<DefaultEventBroker>();
+                                                                                                         registry.For<ITemplateFactory>().Use<TemplateDoTFactory>();
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()
@@ -40,8 +40,7 @@
                                                                                                                  
                                                                                                          registry.For<IManagerDataBase>().Singleton().Use(() => new NhibernateManagerDataBase(configure));
                                                                                                          registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
-                                                                                                         registry.For<IUnitOfWorkFactory>().Singleton().Use<NhibernateUnitOfWorkFactory>();
-                                                                                                         registry.For<IRepository>().Use<NhibernateRepository>();
+                                                                                                         registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();                                                                                                         
                                                                                                      })));
 
             var managerDb = IoCFactory.Instance.TryResolve<IManagerDataBase>();
@@ -49,6 +48,11 @@
                 managerDb.Create();
 
             IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
+
+            IoCFactory.Instance.TryResolve<IDispatcher>().Push(new StartSchedulerCommand()
+                                                               {
+                                                                       FetchSize = 10                                                                      
+                                                               });
         }
 
         #endregion

@@ -1,16 +1,12 @@
 ﻿namespace Incoding.SiteTest
 {
-    #region << Using >>
-
     using System.Threading;
     using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.Extensions;
 
-    #endregion
-
-    [OptionOfDelay(Async = true)]
-    public class AddProductCommand : CommandBase
+    [OptionOfDelay(Async = false)]
+    public class AddAsSyncProductCommand : CommandBase
     {
         #region Properties
 
@@ -20,7 +16,7 @@
 
         protected override void Execute()
         {
-            Repository.Save(new Product { Name = "Async" });
+            Repository.Save(new Product { Name = "Sync" + Name });
             Thread.Sleep(1.Seconds());
         }
     }

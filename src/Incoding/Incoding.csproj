@@ -292,6 +292,9 @@
     <Compile Include="Block\Logging\Policy\LoggingPolicy.cs" />
     <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusByUIDCommand.cs" />
     <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusCommand.cs" />
+    <Compile Include="Block\Scheduler\Persistence\OptionOfDelayAttribute.cs" />
+    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerAsyncWhere.cs" />
+    <Compile Include="Block\Scheduler\Specification\DelayToSChedulerSort.cs" />
     <Compile Include="Block\Scheduler\Query\GetRecurrencyDateQuery.cs" />
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByUIDWhereSpec.cs" />
     <Compile Include="Block\Scheduler\InitScheduler.cs" />

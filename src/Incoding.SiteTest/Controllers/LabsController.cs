@@ -5,7 +5,6 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using Incoding.CQRS;
     using Incoding.MvcContrib;
     using Incoding.SiteTest.VM;
 
@@ -61,13 +60,5 @@
         }
 
         #endregion
-    }
-
-    public class TestCommand : CommandBase
-    {
-        protected override void Execute()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

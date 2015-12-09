@@ -79,6 +79,11 @@
             return Group(new IncListBoxControl<TModel, TProperty>(htmlHelper, property), configuration);
         }
 
+        public MvcHtmlString RadioButton(Action<IncHorizontalControl<IncRadioButtonControl<TModel, TProperty>>> configuration = null)
+        {
+            return Group(new IncRadioButtonControl<TModel, TProperty>(htmlHelper, property), configuration);
+        }
+
         #endregion
 
         MvcHtmlString Group<TInput>(TInput input, Action<IncHorizontalControl<TInput>> configuration) where TInput : IncControlBase
