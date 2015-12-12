@@ -367,10 +367,10 @@ ExecutableInsert.prototype.internalExecute = function() {
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
-        target = $(current.target).next();
+        target = $(current.target).nextAll();
     }
     if (current.jsonData.insertType.toLowerCase() === 'before') {
-        target = $(current.target).prev();
+        target = $(current.target).prevAll();
     }
     IncodingEngine.Current.parse(target);
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));

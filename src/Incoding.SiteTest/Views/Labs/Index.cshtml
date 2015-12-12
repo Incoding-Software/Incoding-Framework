@@ -2,7 +2,7 @@
 @using Incoding.Extensions
 @using Incoding.SiteTest
 @using Incoding.SiteTest.Controllers
-@model Incoding.SiteTest.AddProductCommand
+@model Incoding.SiteTest.AddProductCommand[]
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,10 +34,16 @@
     </script>
 </head>
 <body>
-@(Html.When(JqueryBind.Click)      
-      .Ajax(new TestCommand())
-      .OnSuccess(dsl => {})
-      .AsHtmlAttributes()
-      .ToButton("Test"))
+@Html.Incoding().RenderDropDownTemplate()
+@for (int i = 0; i < Model.Length; i++)
+{
+    @Html.ForGroup(r => r[i].Name).DropDown(control =>
+                                            {
+                                                control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                                control.Input.OnChange = dsl => dsl.Window.Alert("test");
+                                                control.Label.AddClass(B.Hidden);
+                                                control.Control.AddClass(B.Col_xs_12);
+                                            })
+}
 </body>
 </html>

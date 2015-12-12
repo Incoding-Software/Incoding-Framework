@@ -190,5 +190,7 @@ namespace Incoding.MvcContrib
 
         [Description("col-xs-10")]
         Col_xs_10 = 68719476736,
+
+        
     }
 }
