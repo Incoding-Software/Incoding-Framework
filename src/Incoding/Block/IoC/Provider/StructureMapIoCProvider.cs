@@ -44,12 +44,12 @@ namespace Incoding.Block.IoC
 
         public TInstance TryGet<TInstance>() where TInstance : class
         {
-            return this.container.TryGetInstance<TInstance>();
+            return this.container.GetAllInstances<TInstance>().FirstOrDefault();
         }
 
         public TInstance Get<TInstance>(Type type) where TInstance : class
         {
-            return (TInstance)this.container.GetInstance(type);
+            return this.container.GetAllInstances(type).OfType<TInstance>().FirstOrDefault();
         }
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)

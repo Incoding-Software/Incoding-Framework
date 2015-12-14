@@ -8,6 +8,7 @@
     using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.CQRS;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -25,9 +26,7 @@
         {
             Action<bool> execute = (isAsync) =>
                                    {
-                                  
-                                       bool finished = false;
-                                       while (!finished)
+                                       while (true)
                                        {
                                            try
                                            {
@@ -44,31 +43,43 @@
                                                        var closureResponse = response;
 
                                                        dispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
-                                                       var task = new Task(() =>
-                                                                           {
-                                                                               var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
-                                                                               try
-                                                                               {
-                                                                                   newDispatcher.Push(composite =>
-                                                                                                      {
-                                                                                                          composite.Quote(closureResponse.Instance);
-                                                                                                          composite.Quote(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, });
-                                                                                                      });                                                                                   
-                                                                               }
-                                                                               catch (Exception ex)
-                                                                               {
-                                                                                   newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand
-                                                                                                      {
-                                                                                                              Id = closureResponse.Id,
-                                                                                                              Status = DelayOfStatus.Error,
-                                                                                                              Description = ex.ToString()
-                                                                                                      });
-                                                                               }
-                                                                           }, TaskCreationOptions.LongRunning);
-                                                       task.Start();
 
+                                                       CancellationTokenSource source = new CancellationTokenSource();
+                                                       if(isAsync)
+                                                           source.CancelAfter(response.TimeOut.Seconds());
+                                                       
+                                                       var task = Task.Factory.StartNew(() =>
+                                                                             {
+                                                                                 var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
+                                                                                 try
+                                                                                 {
+                                                                                     newDispatcher.Push(composite =>
+                                                                                                        {
+                                                                                                            composite.Quote(closureResponse.Instance);
+                                                                                                            composite.Quote(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, });
+                                                                                                        });
+                                                                                 }
+                                                                                 catch (Exception ex)
+                                                                                 {
+                                                                                     newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand
+                                                                                                        {
+                                                                                                                Id = closureResponse.Id,
+                                                                                                                Status = DelayOfStatus.Error,
+                                                                                                                Description = ex.ToString()
+                                                                                                        });
+                                                                                 }
+                                                                             }, source.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                                                       
                                                        if (!isAsync)
-                                                           task.Wait();
+                                                       {
+                                                           if(!task.Wait(response.TimeOut))
+                                                               dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
+                                                               {
+                                                                   Id = closureResponse.Id,
+                                                                   Status = DelayOfStatus.Error,
+                                                                   Description = "Timeout"
+                                                               });
+                                                       }
                                                    }
                                                    Thread.Sleep(Interval);
                                                }
@@ -80,8 +91,8 @@
 
                                                if (!string.IsNullOrWhiteSpace(Log_Debug))
                                                    LoggingFactory.Instance.LogException(Log_Debug, ex);
-                                               finished = true;
                                            }
+                                           Thread.Sleep(5.Seconds());
                                        }
                                    };
             Task.Factory.StartNew(() => execute(true), TaskCreationOptions);

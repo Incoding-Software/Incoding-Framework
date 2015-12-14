@@ -3,9 +3,11 @@
     #region << Using >>
 
     using System;
+    using System.Linq;
     using FluentValidation;
     using FluentValidation.Mvc;
     using Incoding.Block.IoC;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -33,8 +35,11 @@
         {
             var genericType = typeof(AbstractValidator<>).MakeGenericType(new[] { type });
 
-            var validator = IoCFactory.Instance.TryResolve<IValidator>(genericType);
-            return validator;
+            var validator = IoCFactory.Instance.ResolveAll<IValidator>(genericType);
+            var count = validator.Count;
+            if(count > 1)
+                throw new IndexOutOfRangeException("{0} Validators found for instance {1}".F(count, genericType));
+            return validator.FirstOrDefault();
         }
 
         #endregion
