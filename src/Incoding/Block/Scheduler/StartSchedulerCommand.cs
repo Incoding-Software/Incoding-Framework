@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using Incoding.Block.IoC;
@@ -44,20 +45,17 @@
 
                                                        dispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
 
-                                                       CancellationTokenSource source = new CancellationTokenSource();
-                                                       if(isAsync)
-                                                           source.CancelAfter(response.TimeOut.Seconds());
-                                                       
                                                        var task = Task.Factory.StartNew(() =>
                                                                              {
                                                                                  var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
                                                                                  try
                                                                                  {
-                                                                                     newDispatcher.Push(composite =>
-                                                                                                        {
-                                                                                                            composite.Quote(closureResponse.Instance);
-                                                                                                            composite.Quote(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, });
-                                                                                                        });
+                                                                                     Stopwatch sw = new Stopwatch();
+                                                                                     sw.Start();
+                                                                                     newDispatcher.Push(closureResponse.Instance);
+                                                                                     sw.Stop();
+                                                                                     var description = sw.Elapsed.TotalSeconds > closureResponse.TimeOut ? "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut) : null;
+                                                                                     newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
                                                                                  }
                                                                                  catch (Exception ex)
                                                                                  {
@@ -68,17 +66,11 @@
                                                                                                                 Description = ex.ToString()
                                                                                                         });
                                                                                  }
-                                                                             }, source.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+                                                                             }, TaskCreationOptions.LongRunning);
                                                        
                                                        if (!isAsync)
                                                        {
-                                                           if(!task.Wait(response.TimeOut))
-                                                               dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
-                                                               {
-                                                                   Id = closureResponse.Id,
-                                                                   Status = DelayOfStatus.Error,
-                                                                   Description = "Timeout"
-                                                               });
+                                                           task.Wait(response.TimeOut);
                                                        }
                                                    }
                                                    Thread.Sleep(Interval);
