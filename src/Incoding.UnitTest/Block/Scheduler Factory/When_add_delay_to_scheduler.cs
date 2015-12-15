@@ -14,35 +14,6 @@
     [Subject(typeof(AddDelayToSchedulerCommand))]
     public class When_add_delay_to_scheduler
     {
-        #region Fake classes
-
-        public class FakeCommand : CommandBase
-        {
-            #region Properties
-
-            public string Prop1 { get; set; }
-
-            public string Prop2 { get; set; }
-
-            public string Prop3 { get; set; }
-
-            #endregion
-
-            protected override void Execute() { }
-        }
-
-        #endregion
-
-        #region Establish value
-
-        static MockMessage<AddDelayToSchedulerCommand, object> mockCommand;
-
-        static CommandBase command;
-
-        static DateTime? nextDt;
-
-        #endregion
-
         Establish establish = () =>
                               {
                                   When_add_delay_to_scheduler.command = Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.GenerateTo(r => r.Setting, dsl => { }));
@@ -58,14 +29,48 @@
         Because of = () => mockCommand.Original.Execute();
 
         It should_be_saves = () => mockCommand.ShouldBeSave<DelayToScheduler>(scheduler => scheduler.ShouldEqualWeak(command, (dsl) => dsl.IgnoreBecauseCalculate(r => r.Id)
+                                                                                                                                          .ForwardToValue(r => r.Option, new DelayToScheduler.OptionOfDelay()
+                                                                                                                                                                         {
+                                                                                                                                                                                 Async = true
+                                                                                                                                                                         })
                                                                                                                                           .ForwardToValue(r => r.UID, mockCommand.Original.UID)
                                                                                                                                           .ForwardToValue(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
                                                                                                                                           .ForwardToValue(r => r.StartsOn, nextDt.GetValueOrDefault(mockCommand.Original.Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow)))
                                                                                                                                           .ForwardToValue(r => r.Status, DelayOfStatus.New)
-                                                                                                                                          .ForwardToValue(r=>r.Priority,mockCommand.Original.Priority)
+                                                                                                                                          .ForwardToValue(r => r.Priority, mockCommand.Original.Priority)
                                                                                                                                           .ForwardToValue(r => r.Command, command.ToJsonString())
                                                                                                                                           .ForwardToValue(r => r.Recurrence, mockCommand.Original.Recurrency)
                                                                                                                                           .IgnoreBecauseNotUse(r => r.Description)
                                                                                                                                           .IgnoreBecauseCalculate(r => r.Instance)));
+
+        #region Fake classes
+
+        [OptionOfDelay(Async = true)]
+        public class FakeCommand : CommandBase
+        {
+            protected override void Execute() { }
+
+            #region Properties
+
+            public string Prop1 { get; set; }
+
+            public string Prop2 { get; set; }
+
+            public string Prop3 { get; set; }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Establish value
+
+        static MockMessage<AddDelayToSchedulerCommand, object> mockCommand;
+
+        static CommandBase command;
+
+        static DateTime? nextDt;
+
+        #endregion
     }
 }

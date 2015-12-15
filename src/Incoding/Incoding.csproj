@@ -270,6 +270,7 @@
     <Compile Include="Block\IoC\Core\IIocProvider.cs" />
     <Compile Include="Block\IoC\IoCFactory.cs" />
     <Compile Include="Block\IoC\IoCInit.cs" />
+    <Compile Include="Block\IoC\Provider\DryIocProvider.cs" />
     <Compile Include="Block\IoC\Provider\NinjectIoCProvider.cs" />
     <Compile Include="Block\IoC\Provider\StructureMapIoCProvider.cs" />
     <Compile Include="Block\Logging\Core\DefaultParserException.cs" />
@@ -385,6 +386,9 @@
     <Compile Include="Data\Provider\RavenDb\RavenDbSessionFactory.cs" />
     <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWork.cs" />
     <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWorkFactory.cs" />
+    <Compile Include="DryIoc\Container.cs" />
+    <Compile Include="DryIoc\FactoryCompiler.cs" />
+    <Compile Include="DryIoc\Ported-net45.cs" />
     <Compile Include="EventBroker\Core\IEvent.cs" />
     <Compile Include="EventBroker\Core\IEventBroker.cs" />
     <Compile Include="EventBroker\Core\IEventSubscriber.cs" />
@@ -660,7 +664,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

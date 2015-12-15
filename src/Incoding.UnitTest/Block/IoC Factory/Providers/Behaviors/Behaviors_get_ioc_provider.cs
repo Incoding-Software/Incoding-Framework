@@ -2,7 +2,8 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
-    using System.Diagnostics;
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Incoding.Block.IoC;
@@ -17,23 +18,30 @@ namespace Incoding.UnitTest.Block
     [Behaviors]
     public class Behaviors_get_ioc_provider : Context_IoC_Provider
     {
-        It should_be_get_all = () =>
-                                   {
-                                       int allByAssembly = Assembly
-                                               .GetAssembly(typeof(IFakePlugIn)).GetTypes()
-                                               .Where(r => !r.IsAnyEquals(typeof(IFakePlugIn)))
-                                               .Count(r => r.IsImplement<IFakePlugIn>());
+        private static Dictionary<Type, int> performacneDictionary = new Dictionary<Type, int>()
+                                                                     {
+                                                                             { typeof(StructureMapIoCProvider), 3 },
+                                                                             { typeof(NinjectIoCProvider), 100 },
+                                                                             { typeof(DryIocProvider), 5 }
+                                                                     };
 
-                                       ioCProvider.GetAll<IFakePlugIn>(typeof(IFakePlugIn)).Count().ShouldEqual(allByAssembly);
-                                   };
+        It should_be_get_all = () =>
+                               {
+                                   int allByAssembly = Assembly
+                                           .GetAssembly(typeof(IFakePlugIn)).GetTypes()
+                                           .Where(r => !r.IsAnyEquals(typeof(IFakePlugIn)))
+                                           .Count(r => r.IsImplement<IFakePlugIn>());
+
+                                   ioCProvider.GetAll<IFakePlugIn>(typeof(IFakePlugIn)).Count().ShouldEqual(allByAssembly);
+                               };
 
         It should_be_get_by_type = () => ioCProvider.Get<IEmailSender>(typeof(IEmailSender)).ShouldBeTheSameAs(defaultInstance);
 
         It should_be_performance_try_get = () => Pleasure.Do(i => ioCProvider.TryGet<IEmailSender>().ShouldNotBeNull(), 1000)
-                                                         .ShouldBeLessThan(ioCProvider is StructureMapIoCProvider ? 15 : 100);
+                                                         .ShouldBeLessThan(performacneDictionary[ioCProvider.GetType()]);
 
         It should_be_performance_try_get_by_named = () => Pleasure.Do(i => ioCProvider.TryGetByNamed<ILogger>(consoleNameInstance).ShouldNotBeNull(), 1000)
-                                                                  .ShouldBeLessThan(ioCProvider is StructureMapIoCProvider ? 15 : 100);
+                                                                  .ShouldBeLessThan(performacneDictionary[ioCProvider.GetType()]);
 
         It should_be_try_get = () => ioCProvider.TryGet<IEmailSender>().ShouldBeTheSameAs(defaultInstance);
 

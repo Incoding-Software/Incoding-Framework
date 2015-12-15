@@ -49,7 +49,7 @@ namespace Incoding.Block.IoC
 
         public TInstance Get<TInstance>(Type type) where TInstance : class
         {
-            return this.container.GetAllInstances(type).OfType<TInstance>().FirstOrDefault();
+            return this.container.GetAllInstances(type).Cast<TInstance>().FirstOrDefault();
         }
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)

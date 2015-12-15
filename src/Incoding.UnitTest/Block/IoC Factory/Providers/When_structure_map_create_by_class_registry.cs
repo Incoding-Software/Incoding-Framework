@@ -13,6 +13,18 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(StructureMapIoCProvider))]
     public class When_structure_map_create_by_class_registry : Context_IoC_Provider
     {
+        Establish establish = () => { ioCProvider = new StructureMapIoCProvider(new CustomRegistry()); };
+
+        Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
+
+        Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
+
+        Behaves_like<Behaviors_expected_exception_ioc_provider> verify_expected_exception;
+
+        Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
+
+        Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
+
         #region Fake classes
 
         public class CustomRegistry : Registry
@@ -25,27 +37,15 @@ namespace Incoding.UnitTest.Block
                 For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance);
 
                 Scan(scanner =>
-                         {
-                             scanner.Assembly(typeof(IFakePlugIn).Assembly);
-                             scanner.AddAllTypesOf<IFakePlugIn>();
-                         });
+                     {
+                         scanner.Assembly(typeof(IFakePlugIn).Assembly);
+                         scanner.AddAllTypesOf<IFakePlugIn>();
+                     });
             }
 
             #endregion
         }
 
         #endregion
-
-        Establish establish = () => { ioCProvider = new StructureMapIoCProvider(new CustomRegistry()); };
-
-        Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
-
-        Behaves_like<Behaviors_expected_exception_ioc_provider> verify_expected_exception;
-
-        Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
-
-        Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
-
-        Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
     }
 }

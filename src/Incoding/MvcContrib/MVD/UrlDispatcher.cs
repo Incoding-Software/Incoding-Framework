@@ -75,7 +75,7 @@
             return res.Push<TCommand>(routes);
         }
 
-        public string AsView([PathReference] string incView)
+        public string AsView([PathReference,NotNull] string incView)
         {
             // ReSharper disable once Mvc.ActionNotResolved
             // ReSharper disable once Mvc.ControllerNotResolved
