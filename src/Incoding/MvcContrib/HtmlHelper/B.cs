@@ -128,9 +128,6 @@ namespace Incoding.MvcContrib
         [Description("col-xs-9")]
         Col_xs_9 = 65536,
 
-        [Description("col-xs-11")]
-        Col_xs_11 = 142592,
-
         [Description("col-xs-12")]
         Col_xs_12 = 131072,
 
@@ -191,6 +188,7 @@ namespace Incoding.MvcContrib
         [Description("col-xs-10")]
         Col_xs_10 = 68719476736,
 
-        
+        [Description("col-xs-11")]
+        Col_xs_11 = 68719476736 * 2,
     }
 }
