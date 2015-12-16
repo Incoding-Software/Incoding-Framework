@@ -21,6 +21,16 @@ namespace Incoding.Block.IoC
 
         #endregion
 
+        #region Disposable
+
+        public void Dispose()
+        {
+            if (this.container != null)
+                this.container.Dispose();
+        }
+
+        #endregion
+
         #region Constructors
 
         public StructureMapIoCProvider(Registry registry)
@@ -54,7 +64,7 @@ namespace Incoding.Block.IoC
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)
         {
-            return this.container.GetAllInstances(typeInstance).Cast<TInstance>();
+            return this.container.GetAllInstances(typeInstance).OfType<TInstance>();
         }
 
         public TInstance TryGet<TInstance>(Type type) where TInstance : class
@@ -62,9 +72,9 @@ namespace Incoding.Block.IoC
             return (TInstance)this.container.TryGetInstance(type);
         }
 
-        public TInstance TryGetByNamed<TInstance>(string named) where TInstance : class
+        public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class
         {
-            return this.container.TryGetInstance<TInstance>(named);
+            return this.container.TryGetInstance<TInstance>(named.ToString());
         }
 
         public void Eject<TInstance>()
@@ -76,16 +86,6 @@ namespace Incoding.Block.IoC
         {
             Eject<TInstance>();
             this.container.Configure(configurationExpression => configurationExpression.For<TInstance>().Use(newInstance));
-        }
-
-        #endregion
-
-        #region Disposable
-
-        public void Dispose()
-        {
-            if (this.container != null)
-                this.container.Dispose();
         }
 
         #endregion

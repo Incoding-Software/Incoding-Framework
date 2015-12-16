@@ -19,7 +19,7 @@ namespace Incoding.UnitTest.Block
                                       ioCProvider = new NinjectIoCProvider(kernel =>
                                                                                {
                                                                                    kernel.Bind<IEmailSender>().ToConstant(defaultInstance);
-                                                                                   kernel.Bind<ILogger>().To<ConsoleLogger>().Named(consoleNameInstance);
+                                                                                   kernel.Bind<ILogger>().To<ConsoleLogger>().Named(consoleNameInstance.ToString());
                                                                                    kernel.Bind(scanner => scanner.From(typeof(IFakePlugIn).Assembly)
                                                                                                                  .Select(type => type.IsImplement<IFakePlugIn>() && !type.IsAnyEquals(typeof(IFakePlugIn)))
                                                                                                                  .BindAllInterfaces());

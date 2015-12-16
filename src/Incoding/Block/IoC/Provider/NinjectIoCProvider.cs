@@ -77,9 +77,9 @@ namespace Incoding.Block.IoC
             return (TInstance)this.kernel.TryGet(type);
         }
 
-        public TInstance TryGetByNamed<TInstance>(string named) where TInstance : class
+        public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class
         {
-            return this.kernel.TryGet<TInstance>(named);
+            return this.kernel.TryGet<TInstance>(named.ToString());
         }
 
         #endregion

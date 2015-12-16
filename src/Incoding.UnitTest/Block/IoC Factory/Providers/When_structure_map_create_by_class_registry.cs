@@ -13,7 +13,10 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(StructureMapIoCProvider))]
     public class When_structure_map_create_by_class_registry : Context_IoC_Provider
     {
-        Establish establish = () => { ioCProvider = new StructureMapIoCProvider(new CustomRegistry()); };
+        Establish establish = () =>
+                              {
+                                  ioCProvider = new StructureMapIoCProvider(new CustomRegistry());
+                              };
 
         Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
 
@@ -34,7 +37,7 @@ namespace Incoding.UnitTest.Block
             public CustomRegistry()
             {
                 For<IEmailSender>().Use(defaultInstance);
-                For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance);
+                For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance.ToString());
 
                 Scan(scanner =>
                      {

@@ -270,6 +270,11 @@
                                              .ToString()
                                              .ShouldEqual("$('.class,.class2')");
 
+        It should_be_multiple_class = () => Selector.Jquery
+                                             .Class("class").Filter(r=>r.Class("class2"))
+                                             .ToString()
+                                             .ShouldEqual("$('.class').filter('.class2')");
+
         It should_be_class_trim = () => Selector.Jquery
                                                 .Class("  class   ")
                                                 .ToString()

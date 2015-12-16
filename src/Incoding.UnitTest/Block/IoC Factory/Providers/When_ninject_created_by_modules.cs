@@ -35,7 +35,7 @@ namespace Incoding.UnitTest.Block
 
             public override void Load()
             {
-                Bind<ILogger>().To<ConsoleLogger>().Named(consoleNameInstance);
+                Bind<ILogger>().To<ConsoleLogger>().Named(consoleNameInstance.ToString());
             }
 
             #endregion

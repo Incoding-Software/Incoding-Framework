@@ -17,7 +17,7 @@ namespace Incoding.UnitTest.Block
                                       ioCProvider = new StructureMapIoCProvider(registry =>
                                                                                     {
                                                                                         registry.For<IEmailSender>().Use(defaultInstance);
-                                                                                        registry.For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance);
+                                                                                        registry.For<ILogger>().Use<ConsoleLogger>().Named(consoleNameInstance.ToString());
 
                                                                                         registry.Scan(scanner =>
                                                                                                           {

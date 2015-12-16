@@ -20,9 +20,9 @@ namespace Incoding.UnitTest.Block
     {
         private static Dictionary<Type, int> performacneDictionary = new Dictionary<Type, int>()
                                                                      {
-                                                                             { typeof(StructureMapIoCProvider), 3 },
+                                                                             { typeof(StructureMapIoCProvider), 9 },
                                                                              { typeof(NinjectIoCProvider), 100 },
-                                                                             { typeof(DryIocProvider), 5 }
+                                                                             { typeof(DryIocProvider), 3 }
                                                                      };
 
         It should_be_get_all = () =>
@@ -38,10 +38,10 @@ namespace Incoding.UnitTest.Block
         It should_be_get_by_type = () => ioCProvider.Get<IEmailSender>(typeof(IEmailSender)).ShouldBeTheSameAs(defaultInstance);
 
         It should_be_performance_try_get = () => Pleasure.Do(i => ioCProvider.TryGet<IEmailSender>().ShouldNotBeNull(), 1000)
-                                                         .ShouldBeLessThan(performacneDictionary[ioCProvider.GetType()]);
+                                                         .ShouldBeLessThanOrEqualTo(performacneDictionary[ioCProvider.GetType()]);
 
         It should_be_performance_try_get_by_named = () => Pleasure.Do(i => ioCProvider.TryGetByNamed<ILogger>(consoleNameInstance).ShouldNotBeNull(), 1000)
-                                                                  .ShouldBeLessThan(performacneDictionary[ioCProvider.GetType()]);
+                                                                  .ShouldBeLessThanOrEqualTo(performacneDictionary[ioCProvider.GetType()]);
 
         It should_be_try_get = () => ioCProvider.TryGet<IEmailSender>().ShouldBeTheSameAs(defaultInstance);
 

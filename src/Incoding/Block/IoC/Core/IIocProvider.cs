@@ -4,6 +4,7 @@ namespace Incoding.Block.IoC
 
     using System;
     using System.Collections.Generic;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -13,17 +14,17 @@ namespace Incoding.Block.IoC
 
         void Eject<TInstance>();
 
-        void Forward<TNew>(TNew newInstance) where TNew : class;
+        void Forward<TNew>([NotNull] TNew newInstance) where TNew : class;
 
-        TInstance Get<TInstance>(Type type) where TInstance : class;
+        TInstance Get<TInstance>([NotNull] Type type) where TInstance : class;
 
-        IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance);
+        IEnumerable<TInstance> GetAll<TInstance>([NotNull] Type typeInstance);
 
         TInstance TryGet<TInstance>() where TInstance : class;
 
-        TInstance TryGet<TInstance>(Type type) where TInstance : class;
+        TInstance TryGet<TInstance>([NotNull] Type type) where TInstance : class;
 
-        TInstance TryGetByNamed<TInstance>(string named) where TInstance : class;
+        TInstance TryGetByNamed<TInstance>([NotNull] object named) where TInstance : class;
 
         #endregion
     }

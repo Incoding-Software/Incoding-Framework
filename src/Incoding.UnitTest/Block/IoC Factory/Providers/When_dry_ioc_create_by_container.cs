@@ -14,11 +14,18 @@ namespace Incoding.UnitTest.Block
     {
         Establish establish = () =>
                               {
-                                  var container = new Container(rules:Rules.Default,scopeContext:new ThreadScopeContext());
+                                  var container = new Container(rules: Rules.Default                                      
+                                                                            .WithDefaultReuseInsteadOfTransient(new ResolutionScopeReuse())
+                                                                            .WithDefaultIfAlreadyRegistered(IfAlreadyRegistered.AppendNotKeyed));
                                   container.RegisterInstance(defaultInstance);
-                                  container.Register<ClipboardLogger>();
-                                  container.Register<ConsoleLogger>(serviceKey: consoleNameInstance);
+                                  container.Register<ILogger, ClipboardLogger>();
+                                  container.Register<ILogger, ConsoleLogger>(serviceKey: consoleNameInstance,reuse:new ResolutionScopeReuse());
+                                  container.Register<IFakePlugIn, FakePlugIn1>();
+                                  container.Register<IFakePlugIn, FakePlugIn2>();
+                                  
                                   ioCProvider = new DryIocProvider(container);
+                                  
+
                               };
 
         //Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;

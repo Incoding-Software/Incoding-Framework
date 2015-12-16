@@ -9,6 +9,12 @@
 
     public class Context_IoC_Provider
     {
+        public enum Named
+        {
+            First,
+            Second
+        }
+
         #region Static Fields
 
         protected static readonly IEmailSender defaultInstance = new FakeEmailSender(message => { });
@@ -17,7 +23,7 @@
 
         // ReSharper disable ConvertToConstant.Global 
         // ReSharper disable FieldCanBeMadeReadOnly.Global
-        protected static string consoleNameInstance = "namedInstance";
+        protected static Named consoleNameInstance = Named.Second;
 
         #endregion
 

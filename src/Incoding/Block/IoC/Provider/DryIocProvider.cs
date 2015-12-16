@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using DryIoc;
+    using Incoding.Block.Logging;
 
     #endregion
 
@@ -49,7 +50,7 @@
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)
         {
-            return this.container.ResolveMany<TInstance>(typeInstance);
+            return this.container.ResolveMany<TInstance>(typeInstance, ResolveManyBehavior.AsFixedArray);
         }
 
         public TInstance TryGet<TInstance>() where TInstance : class
@@ -62,12 +63,9 @@
             return this.container.Resolve<TInstance>(type, IfUnresolved.ReturnDefault);
         }
 
-        public TInstance TryGetByNamed<TInstance>(string named) where TInstance : class
-        {
-            var keyValuePairs = this.container.Resolve<KeyValuePair<string, TInstance>[]>();
-            return keyValuePairs
-                            .FirstOrDefault(r => r.Key == named)
-                            .Value;
+        public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class
+        {            
+            return this.container.Resolve<TInstance>(serviceKey: named, ifUnresolved: IfUnresolved.ReturnDefault);
         }
     }
 }

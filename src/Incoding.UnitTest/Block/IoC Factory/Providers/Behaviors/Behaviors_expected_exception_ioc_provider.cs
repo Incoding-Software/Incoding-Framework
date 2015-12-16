@@ -4,6 +4,7 @@ namespace Incoding.UnitTest.Block
 
     using System.Collections.Generic;
     using System.Linq;
+    using Incoding.Block.Logging;
     using Machine.Specifications;
 
     #endregion
@@ -15,13 +16,15 @@ namespace Incoding.UnitTest.Block
 
         It should_be_not_found_try_get_by_type_without_exception = () => Catch.Exception(() => ioCProvider.TryGet<IFake>(typeof(IFake))).ShouldBeNull();
 
+        It should_be_not_found_try_get_named_by_type_without_exception = () => Catch.Exception(() => ioCProvider.TryGetByNamed<ILogger>(Named.First)).ShouldBeNull();
+
         It should_be_not_found_get_all_without_exception_ = () =>
-                                                                {
-                                                                    IEnumerable<IFake> allInstanceFromIoC = null;
-                                                                    var exception = Catch.Exception(() => { allInstanceFromIoC = ioCProvider.GetAll<IFake>(typeof(IFake)); });
-                                                                    exception.ShouldBeNull();
-                                                                    allInstanceFromIoC.Count().ShouldEqual(0);
-                                                                };
+                                                            {
+                                                                IEnumerable<IFake> allInstanceFromIoC = null;
+                                                                var exception = Catch.Exception(() => { allInstanceFromIoC = ioCProvider.GetAll<IFake>(typeof(IFake)); });
+                                                                exception.ShouldBeNull();
+                                                                allInstanceFromIoC.Count().ShouldEqual(0);
+                                                            };
 
         It should_be_not_found_try_get_without_exception = () => Catch.Exception(() => ioCProvider.TryGet<IFake>()).ShouldBeNull();
     }
