@@ -28,8 +28,7 @@
 
         public void Dispose()
         {
-            if (!this.container.IsDisposed)
-                this.container.Dispose();
+            
         }
 
         public void Eject<TInstance>()
