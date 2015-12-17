@@ -15,6 +15,17 @@
     [Subject(typeof(IncValidatorFactory))]
     public class When_inc_validation_factory
     {
+        Establish establish = () =>
+                              {
+                                  incValidationFactory = new IncValidatorFactory();
+                                  iocProvider = Pleasure.Mock<IIoCProvider>();
+                                  IoCFactory.Instance.Initialize(init => init.WithProvider(iocProvider.Object));
+                              };
+
+        Because of = () => incValidationFactory.GetValidator<FakeValidation>();
+
+        It should_be_resolve = () => iocProvider.Verify(r => r.GetAll<IValidator>(typeof(AbstractValidator<FakeValidation>)));
+
         #region Fake classes
 
         class FakeValidation { }
@@ -28,16 +39,5 @@
         static Mock<IIoCProvider> iocProvider;
 
         #endregion
-
-        Establish establish = () =>
-                                  {
-                                      incValidationFactory = new IncValidatorFactory();
-                                      iocProvider = Pleasure.Mock<IIoCProvider>();
-                                      IoCFactory.Instance.Initialize(init => init.WithProvider(iocProvider.Object));
-                                  };
-
-        Because of = () => incValidationFactory.GetValidator<FakeValidation>();
-
-        It should_be_resolve = () => iocProvider.Verify(r => r.TryGet<IValidator>(typeof(AbstractValidator<FakeValidation>)));
     }
 }

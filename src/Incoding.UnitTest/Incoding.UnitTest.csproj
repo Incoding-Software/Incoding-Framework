@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Incoding.UnitTest</RootNamespace>
     <AssemblyName>Incoding.UnitTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <CodeContractsAssemblyMode>0</CodeContractsAssemblyMode>
@@ -119,9 +119,6 @@
       <HintPath>..\packages\Machine.Specifications.Should.0.8.0\lib\net40\Machine.Specifications.Should.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
-      <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.1\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -191,8 +188,6 @@
       <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.Net4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Services.Client" />
@@ -589,10 +584,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Block\IoC Factory\Providers\Context_ioc_provider.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_class_registry.cs" />
-    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_in_line_initialize.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Block\IoC Factory\When_ioc_factory.cs" />

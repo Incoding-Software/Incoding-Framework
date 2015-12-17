@@ -14,6 +14,7 @@
     public class IncValidatorFactory : IValidatorFactory
     {
         ////ncrunch: no coverage start
+
         #region Constructors
 
         public IncValidatorFactory()
@@ -24,6 +25,7 @@
         #endregion
 
         ////ncrunch: no coverage end
+
         #region IValidatorFactory Members
 
         public IValidator<T> GetValidator<T>()
@@ -37,7 +39,7 @@
 
             var validator = IoCFactory.Instance.ResolveAll<IValidator>(genericType);
             var count = validator.Count;
-            if(count > 1)
+            if (count > 1)
                 throw new IndexOutOfRangeException("{0} Validators found for instance {1}".F(count, genericType));
             return validator.FirstOrDefault();
         }

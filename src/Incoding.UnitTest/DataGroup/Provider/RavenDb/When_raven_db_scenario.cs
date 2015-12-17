@@ -116,7 +116,7 @@
                                   documentStore.Conventions.AllowQueriesOnId = true;
                                   documentStore.Conventions.MaxNumberOfRequestsPerSession = 1000;
                                   documentStore.Initialize();
-                                  IndexCreation.CreateIndexes(typeof(CityIndex).Assembly, documentStore);
+                                  
 
                                   country = new Country
                                             {

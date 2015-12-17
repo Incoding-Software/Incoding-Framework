@@ -117,7 +117,7 @@ namespace Incoding.MvcContrib
         Col_xs_5 = 4096,
 
         [Description("col-xs-6")]
-        Col_xs_6 = 8912,
+        Col_xs_6 = 4096 * 2,
 
         [Description("col-xs-7")]
         Col_xs_7 = 16384,
@@ -190,5 +190,9 @@ namespace Incoding.MvcContrib
 
         [Description("col-xs-11")]
         Col_xs_11 = 68719476736 * 2,
+
+        [Description("text-center")]
+        Text_center = 68719476736 * 4
+
     }
 }

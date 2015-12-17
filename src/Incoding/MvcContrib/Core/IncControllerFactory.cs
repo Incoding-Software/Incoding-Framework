@@ -11,23 +11,12 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    [ExcludeFromCodeCoverage, UsedImplicitly]
+    [ExcludeFromCodeCoverage, UsedImplicitly, Obsolete("On next version should be removed. Please do not use IoC on ctor controller")]
     public class IncControllerFactory : DefaultControllerFactory
     {
         #region Fields
 
         readonly string[] rootNamespaces = new string[] { };
-
-        #endregion
-
-        #region Constructors
-
-        public IncControllerFactory() { }
-
-        public IncControllerFactory(string[] rootNamespaces)
-        {
-            this.rootNamespaces = rootNamespaces;
-        }
 
         #endregion
 
@@ -52,6 +41,17 @@ namespace Incoding.MvcContrib
         }
 
         ////ncrunch: no coverage end
+
+        #endregion
+
+        #region Constructors
+
+        public IncControllerFactory() { }
+
+        public IncControllerFactory(string[] rootNamespaces)
+        {
+            this.rootNamespaces = rootNamespaces;
+        }
 
         #endregion
     }

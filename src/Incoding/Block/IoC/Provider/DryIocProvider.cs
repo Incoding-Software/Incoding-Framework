@@ -4,9 +4,7 @@
 
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using DryIoc;
-    using Incoding.Block.Logging;
 
     #endregion
 
@@ -26,10 +24,7 @@
             this.container = container;
         }
 
-        public void Dispose()
-        {
-            
-        }
+        public void Dispose() { }
 
         public void Eject<TInstance>()
         {
@@ -44,27 +39,31 @@
 
         public TInstance Get<TInstance>(Type type) where TInstance : class
         {
-            return (TInstance)this.container.Resolve(type);
+            using (var scope = this.container.OpenScope())
+                return (TInstance)scope.Resolve(type);
         }
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)
         {
-            return this.container.ResolveMany<TInstance>(typeInstance, ResolveManyBehavior.AsFixedArray);
+            using (var scope = this.container.OpenScope())
+                return scope.ResolveMany<TInstance>(typeInstance, ResolveManyBehavior.AsFixedArray);
         }
 
         public TInstance TryGet<TInstance>() where TInstance : class
         {
-            return this.container.Resolve<TInstance>(IfUnresolved.ReturnDefault);
+            using (var scope = this.container.OpenScope())
+                return scope.Resolve<TInstance>(IfUnresolved.ReturnDefault);
         }
 
         public TInstance TryGet<TInstance>(Type type) where TInstance : class
         {
-            return this.container.Resolve<TInstance>(type, IfUnresolved.ReturnDefault);
+            using (var scope = this.container.OpenScope())
+                return scope.Resolve<TInstance>(type, IfUnresolved.ReturnDefault);
         }
 
         public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class
         {            
-            return this.container.Resolve<TInstance>(serviceKey: named, ifUnresolved: IfUnresolved.ReturnDefault);
+                return this.container.Resolve<TInstance>(serviceKey: named, ifUnresolved: IfUnresolved.ReturnDefault);
         }
     }
 }

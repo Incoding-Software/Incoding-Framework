@@ -37,6 +37,13 @@ namespace Incoding.UnitTest.Block
 
         It should_be_get_by_type = () => ioCProvider.Get<IEmailSender>(typeof(IEmailSender)).ShouldBeTheSameAs(defaultInstance);
 
+        It should_be_asyn_perfromance_try_get = () =>
+                                                {
+                                                    Pleasure.MultiThread.Do(() => ioCProvider.TryGet<IEmailSender>().ShouldNotBeNull(), 1000)
+                                                            .WaitOne(performacneDictionary[ioCProvider.GetType()].Seconds())
+                                                            .ShouldBeTrue();
+                                                };
+
         It should_be_performance_try_get = () => Pleasure.Do(i => ioCProvider.TryGet<IEmailSender>().ShouldNotBeNull(), 1000)
                                                          .ShouldBeLessThanOrEqualTo(performacneDictionary[ioCProvider.GetType()]);
 

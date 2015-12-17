@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System.Threading;
+    using FluentValidation;
     using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.Extensions;
@@ -12,6 +13,14 @@
     [OptionOfDelay(Async = true)]
     public class AddProductCommand : CommandBase
     {
+        public class Validator : AbstractValidator<AddProductCommand>
+        {
+            public Validator()
+            {
+                RuleFor(r => r.Name).NotEmpty();
+            }
+        }
+
         #region Properties
 
         public string Name { get; set; }

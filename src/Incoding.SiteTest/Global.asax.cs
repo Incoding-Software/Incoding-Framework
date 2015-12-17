@@ -20,8 +20,7 @@
         {
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
-            ControllerBuilder.Current.SetControllerFactory(new IncControllerFactory());
+            
             IncodingSiteBootstrapped.Start();
         }
 
