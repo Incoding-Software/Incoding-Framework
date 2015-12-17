@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
+    using FluentValidation;
     using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.Extensions;
@@ -19,6 +20,7 @@ namespace Incoding.UnitTest.Block
                                       ioCProvider = new NinjectIoCProvider(kernel =>
                                                                                {
                                                                                    kernel.Bind<IEmailSender>().ToConstant(defaultInstance);
+                                                                                   kernel.Bind(typeof(AbstractValidator<FakeCommand>)).To<TestValidator>();
                                                                                    kernel.Bind<ILogger>().To<ConsoleLogger>().Named(consoleNameInstance.ToString());
                                                                                    kernel.Bind(scanner => scanner.From(typeof(IFakePlugIn).Assembly)
                                                                                                                  .Select(type => type.IsImplement<IFakePlugIn>() && !type.IsAnyEquals(typeof(IFakePlugIn)))

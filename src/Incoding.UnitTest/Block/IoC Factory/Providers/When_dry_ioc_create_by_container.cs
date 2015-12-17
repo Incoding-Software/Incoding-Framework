@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
+    using System.Collections.Generic;
     using DryIoc;
     using FluentValidation;
     using Incoding.Block.IoC;
@@ -23,6 +24,7 @@ namespace Incoding.UnitTest.Block
                                   container.Register<ILogger, ConsoleLogger>(serviceKey: consoleNameInstance, reuse: new ResolutionScopeReuse());
                                   container.Register<IFakePlugIn, FakePlugIn1>();
                                   container.Register<IFakePlugIn, FakePlugIn2>();
+                                  container.Register(typeof(AbstractValidator<FakeCommand>), typeof(TestValidator));
 
                                   ioCProvider = new DryIocProvider(container);
                               };
@@ -37,17 +39,5 @@ namespace Incoding.UnitTest.Block
 
         Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
 
-        public class FakeCommand
-        {
-            public string Name { get; set; }
-        }
-
-        public class TestValidator : AbstractValidator<FakeCommand>
-        {
-            public TestValidator()
-            {
-                RuleFor(r => r.Name).NotEmpty();
-            }
-        }
     }
 }

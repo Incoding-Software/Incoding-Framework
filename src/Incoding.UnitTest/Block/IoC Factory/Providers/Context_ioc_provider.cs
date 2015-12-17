@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using FluentValidation;
     using Incoding.Block.IoC;
     using Incoding.Utilities;
 
@@ -32,6 +33,20 @@
         public class FakePlugIn1 : IFakePlugIn { }
 
         public class FakePlugIn2 : IFakePlugIn { }
+
+
+        public class FakeCommand
+        {
+            public string Name { get; set; }
+        }
+
+        public class TestValidator : AbstractValidator<FakeCommand>
+        {
+            public TestValidator()
+            {
+                RuleFor(r => r.Name).NotEmpty();
+            }
+        }
 
         #endregion
 

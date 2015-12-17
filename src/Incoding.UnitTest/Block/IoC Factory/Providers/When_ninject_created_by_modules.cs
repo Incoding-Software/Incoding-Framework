@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
+    using FluentValidation;
     using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.Extensions;
@@ -15,6 +16,18 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(NinjectIoCProvider))]
     public class When_ninject_created_by_modules : Context_IoC_Provider
     {
+        Establish establish = () => { ioCProvider = new NinjectIoCProvider(new CustomInstrumentationModule(), new CustomLoggerModule(), new CustomEmailSenderModule()); };
+
+        Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
+
+        Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
+
+        Behaves_like<Behaviors_expected_exception_ioc_provider> verify_expected_exception;
+
+        Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
+
+        Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
+
         #region Fake classes
 
         class CustomInstrumentationModule : NinjectModule
@@ -24,6 +37,7 @@ namespace Incoding.UnitTest.Block
             public override void Load()
             {
                 Bind<IEmailSender>().ToConstant(defaultInstance);
+                Bind(typeof(AbstractValidator<FakeCommand>)).To<TestValidator>();
             }
 
             #endregion
@@ -52,17 +66,5 @@ namespace Incoding.UnitTest.Block
         }
 
         #endregion
-
-        Establish establish = () => { ioCProvider = new NinjectIoCProvider(new CustomInstrumentationModule(), new CustomLoggerModule(), new CustomEmailSenderModule()); };
-
-        Behaves_like<Behaviors_get_ioc_provider> verify_get_and_try_get_operation;
-
-        Behaves_like<Behaviors_expected_exception_ioc_provider> verify_expected_exception;
-
-        Behaves_like<Behaviors_forward_ioc_provider> verify_forward;
-
-        Behaves_like<Behaviors_eject_ioc_provider> verify_eject;
-
-        Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
     }
 }

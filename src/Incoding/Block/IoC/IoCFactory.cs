@@ -5,8 +5,8 @@ namespace Incoding.Block.IoC
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using Incoding.Block.Core;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -26,7 +26,7 @@ namespace Incoding.Block.IoC
 
         #region Api Methods
 
-        public void Forward<TInstance>(TInstance newInstance) where TInstance : class
+        public void Forward<TInstance>([NotNull] TInstance newInstance) where TInstance : class
         {
             this.init.Provider.Forward(newInstance);
         }
@@ -36,7 +36,7 @@ namespace Incoding.Block.IoC
             this.init.Provider.Eject<TInstance>();
         }
 
-        public TInstance Resolve<TInstance>(Type typeInstance) where TInstance : class
+        public TInstance Resolve<TInstance>([NotNull] Type typeInstance) where TInstance : class
         {
             Guard.NotNull("typeInstance", typeInstance);
 
@@ -49,9 +49,8 @@ namespace Incoding.Block.IoC
             return ResolveAll<TInstance>(typeof(TInstance));
         }
 
-        public List<TInstance> ResolveAll<TInstance>(Type typeInstance) where TInstance : class
+        public List<TInstance> ResolveAll<TInstance>([NotNull] Type typeInstance) where TInstance : class
         {
-            Guard.NotNull("typeInstance", typeInstance);
             var allInstances = this.init.Provider.GetAll<TInstance>(typeInstance).ToList();
             return allInstances;
         }
@@ -62,17 +61,14 @@ namespace Incoding.Block.IoC
             return resolve;
         }
 
-        public TInstance TryResolveByNamed<TInstance>(string named) where TInstance : class
+        public TInstance TryResolveByNamed<TInstance>([NotNull] string named) where TInstance : class
         {
             var resolve = this.init.Provider.TryGetByNamed<TInstance>(named);
             return resolve;
         }
 
-        public TInstance TryResolve<TInstance>(Type typeInstance) where TInstance : class
+        public TInstance TryResolve<TInstance>([NotNull] Type typeInstance) where TInstance : class
         {
-            string errorMessage = "Can't resolve null type for" + typeof(TInstance).FullName;
-            Guard.NotNull("typeInstance", typeInstance, errorMessage);
-
             var resolve = this.init.Provider.TryGet<TInstance>(typeInstance);
             return resolve;
         }

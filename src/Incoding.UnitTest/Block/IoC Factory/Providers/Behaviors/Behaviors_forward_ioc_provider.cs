@@ -11,6 +11,16 @@ namespace Incoding.UnitTest.Block
     [Behaviors]
     public class Behaviors_forward_ioc_provider : Context_IoC_Provider
     {
+        It should_be_forward_to_instance = () =>
+                                           {
+                                               try
+                                               {
+                                                   ioCProvider.Forward<ILogger>(new FakeLogger());
+                                                   ioCProvider.TryGet<ILogger>().ShouldBeAssignableTo<FakeLogger>();
+                                               }
+                                               catch (NotSupportedException) { }
+                                           };
+
         #region Fake classes
 
         class FakeLogger : ILogger
@@ -28,11 +38,5 @@ namespace Incoding.UnitTest.Block
         }
 
         #endregion
-
-        It should_be_forward_to_instance = () =>
-                                               {
-                                                   ioCProvider.Forward<ILogger>(new FakeLogger());
-                                                   ioCProvider.TryGet<ILogger>().ShouldBeAssignableTo<FakeLogger>();
-                                               };
     }
 }

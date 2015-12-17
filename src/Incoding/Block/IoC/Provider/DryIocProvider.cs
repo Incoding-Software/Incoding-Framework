@@ -24,7 +24,9 @@
             this.container = container;
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+        }
 
         public void Eject<TInstance>()
         {
@@ -62,8 +64,9 @@
         }
 
         public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class
-        {            
-                return this.container.Resolve<TInstance>(serviceKey: named, ifUnresolved: IfUnresolved.ReturnDefault);
+        {
+            using (var scope = this.container.OpenScope())
+                return scope.Resolve<TInstance>(serviceKey: named, ifUnresolved: IfUnresolved.ReturnDefault);
         }
     }
 }

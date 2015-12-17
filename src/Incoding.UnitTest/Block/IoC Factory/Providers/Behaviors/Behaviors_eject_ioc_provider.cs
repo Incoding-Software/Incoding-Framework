@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.Block
 {
     #region << Using >>
 
+    using System;
     using System.Linq;
     using Incoding.Block.Logging;
     using Machine.Specifications;
@@ -13,8 +14,15 @@ namespace Incoding.UnitTest.Block
     {
         It should_be_eject = () =>
                              {
-                                 ioCProvider.Eject<ILogger>();
-                                 ioCProvider.GetAll<ILogger>(typeof(ILogger)).Count().ShouldEqual(0);
+                                 try
+                                 {
+                                     ioCProvider.Eject<ILogger>();
+                                     ioCProvider.GetAll<ILogger>(typeof(ILogger)).Count().ShouldEqual(0);
+                                 }
+                                 catch (NotSupportedException)
+                                 {
+                                     //mute because not every can doing it                                     
+                                 }
                              };
     }
 }

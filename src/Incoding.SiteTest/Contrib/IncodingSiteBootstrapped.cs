@@ -2,11 +2,10 @@
 {
     #region << Using >>
 
+    using System;
     using System.Configuration;
     using System.Linq;
-    using System.Reflection;
     using System.Web.Mvc;
-    using DryIoc;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using FluentValidation;
@@ -15,11 +14,21 @@
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
-    using Incoding.Extensions;
+    using Incoding.Maybe;
     using Incoding.MvcContrib;
     using NHibernate.Tool.hbm2ddl;
+    using SimpleInjector;
 
     #endregion
+
+    /// <summary>
+    ///     Adds an unregistered type resolution for objects missing an IValidator.
+    /// </summary>
+    /// <typeparam name="T">The type.</typeparam>
+    internal sealed class ValidateNothingDecorator<T> : AbstractValidator<T>
+    {
+        // I do nothing :-)
+    }
 
     public static class IncodingSiteBootstrapped
     {
@@ -45,10 +54,9 @@
             //                                                                                             registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
             //                                                                                             registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();                                                                                                         
             //                                                                                         })));
-            var registry = new Container(scopeContext: new AsyncExecutionFlowScopeContext(),
-                                         rules: Rules.Default.WithDefaultReuseInsteadOfTransient(Reuse.Transient));
-            registry.Register<IDispatcher, DefaultDispatcher>();
-            registry.Register<ITemplateFactory, TemplateDoTFactory>();
+            var container = new Container();
+            container.Register<IDispatcher, DefaultDispatcher>();
+            container.Register<ITemplateFactory, TemplateDoTFactory>();
 
             var configure = Fluently
                     .Configure()
@@ -58,17 +66,17 @@
                                                             .Add<DelayToScheduler.Map>()
                                                             .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly));
 
-            registry.RegisterInstance<INhibernateSessionFactory>(new NhibernateSessionFactory(configure), reuse: Reuse.Singleton);
-            registry.Register<IUnitOfWorkFactory, NhibernateUnitOfWorkFactory>(made: FactoryMethod.ConstructorWithResolvableArguments);
+            container.RegisterSingleton<INhibernateSessionFactory>(() => new NhibernateSessionFactory(configure));
+            container.Register<IUnitOfWorkFactory, NhibernateUnitOfWorkFactory>();
 
-            foreach (var implementingClass in Assembly.GetExecutingAssembly()
-                                                      .GetTypes()
-                                                      .Where(type => type.IsImplement(typeof(AbstractValidator<>))))
-            {
-                var factory = new ReflectionFactory(implementingClass, Reuse.Singleton, Made.Default, Setup.Default);
-                registry.Register(implementingClass.GetBaseType(), factory);
-            }
-            IoCFactory.Instance.Initialize(init => init.WithProvider(new DryIocProvider(registry)));
+            foreach (var implementingClass in typeof(AddProductCommand).Assembly.GetExportedTypes()
+                                                                       .Where(type => type.BaseType.With(r => r.Name.StartsWith("AbstractValidator"))))
+                container.Register(implementingClass.BaseType, implementingClass, Lifestyle.Singleton);
+
+            // Add unregistered type resolution for objects missing an IValidator<T>
+            // This should be placed after the registration of IValidator<>
+            container.RegisterConditional(typeof(IValidator<>), typeof(ValidateNothingDecorator<>), Lifestyle.Singleton, context => !context.Handled);
+            IoCFactory.Instance.Initialize(init => init.WithProvider(new SimpleInjectorIoCProvider(container)));
 
             FluentValidationModelValidatorProvider.Configure();
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));

@@ -179,6 +179,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RavenDB.Database.2.5.2971\lib\net40\Raven.Database.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=3.1.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.3.1.2\lib\net45\SimpleInjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="StructureMap, Version=3.1.6.186, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\structuremap.3.1.6.186\lib\net40\StructureMap.dll</HintPath>
@@ -230,6 +234,7 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
     <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_disposable_ioc_provider.cs" />
     <Compile Include="Block\IoC Factory\Providers\When_dry_ioc_create_by_container.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_simple_injector_ioc.cs" />
     <Compile Include="Block\Scheduler Factory\When_get_recurrency_date.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_available_starts_on.cs" />
     <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status_by_uid.cs" />
@@ -305,8 +310,6 @@
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_catch.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_wrap.cs" />
     <Compile Include="Block\Exception Handling Factory\Factory\When_exception_handling_factory_handler_exception_with_nothing.cs" />
-    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_in_line_initialize.cs" />
-    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_modules.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Logging Policy\When_logging_policy_with_logger.cs" />
     <Compile Include="Block\LoggingFactoryGroup\when_default_parser_exception.cs" />
     <Compile Include="Block\LoggingFactoryGroup\Factory\When_logging_factory_log.cs" />
@@ -786,7 +789,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
