@@ -41,7 +41,7 @@
 
         public TInstance Get<TInstance>(Type type) where TInstance : class
         {
-            return this.container.GetInstance(type) as TInstance;
+            return (TInstance)this.container.GetInstance(type);
         }
 
         public IEnumerable<TInstance> GetAll<TInstance>(Type typeInstance)

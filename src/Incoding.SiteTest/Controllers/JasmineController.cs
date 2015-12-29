@@ -56,6 +56,17 @@
             return View(vm);
         }
 
+        [HttpGet]
+        public ActionResult Perfromance(string jqueryVersion)
+        {
+            var vm = new JasmineIndexContainer
+                     {
+                             JqueryVersion = string.IsNullOrWhiteSpace(jqueryVersion) ? "1.8.0" : jqueryVersion,
+                     };
+
+            return View(vm);
+        }
+
         #endregion
     }
 }

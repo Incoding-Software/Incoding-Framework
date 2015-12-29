@@ -58,12 +58,12 @@
             return new UrlQuery<TQuery>(urlHelper, routes);
         }
 
-        public IUrlQuery<TQuery> Query<TQuery>([NotNull] TQuery routes) where TQuery : new()
+        public IUrlQuery<TQuery> Query<TQuery>( TQuery routes) where TQuery : new()
         {
             return Query<TQuery>(routes: routes as object);
         }
 
-        public UrlPush Push<TCommand>([NotNull] TCommand routes) where TCommand : new()
+        public UrlPush Push<TCommand>(TCommand routes) where TCommand : new()
         {
             return Push<TCommand>(routes: routes as object);
         }
@@ -75,7 +75,7 @@
             return res.Push<TCommand>(routes);
         }
 
-        public string AsView([PathReference,NotNull] string incView)
+        public string AsView([PathReference] string incView)
         {
             // ReSharper disable once Mvc.ActionNotResolved
             // ReSharper disable once Mvc.ControllerNotResolved

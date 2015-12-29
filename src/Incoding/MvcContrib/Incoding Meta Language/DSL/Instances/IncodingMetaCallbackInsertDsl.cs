@@ -39,12 +39,12 @@ namespace Incoding.MvcContrib
         [Obsolete("Please use WithTemplateByUrl/WithTemplateByView")]
         public IncodingMetaCallbackInsertDsl WithTemplate([NotNull] Selector selector)
         {
-            insertTemplateSelector = selector;
+            this.insertTemplateSelector = selector;
             return this;
         }
 
         [Obsolete("Please use WithTemplateByUrl/WithTemplateByView")]
-        public IncodingMetaCallbackInsertDsl WithTemplate(JquerySelectorExtend selector)
+        public IncodingMetaCallbackInsertDsl WithTemplate([NotNull] JquerySelectorExtend selector)
         {
             return WithTemplate(selector as Selector);
         }

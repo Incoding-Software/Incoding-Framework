@@ -11,7 +11,7 @@ namespace Incoding.MvcContrib.MVD
         UrlDispatcher.UrlPush Push<TCommand>([NotNull] TCommand routes) where TCommand : new();
 
         UrlDispatcher.UrlPush Push<TCommand>(object routes = null) where TCommand : new();
-
+            
         string AsView([PathReference, NotNull] string incView);
 
         UrlDispatcher.UrlModel<TModel> Model<TModel>(object routes = null);

@@ -1,0 +1,88 @@
+﻿    @using Incoding.Extensions
+@using Incoding.SiteTest
+@model JasmineIndexContainer
+           
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    @Html.Incoding().Link(Url.Content("~/Content/Site.css"))
+    @Html.Incoding().Link(Url.Content("~/Content/css/jasmine.css"))
+
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery-{0}.min.js".F(Model.JqueryVersion)))
+    @Html.Incoding().Script(Url.Content("~/Scripts/underscore.js"))
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.form.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.history.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/handlebars.js"))
+
+
+
+    <script src="@Url.Content("~/Scripts/incoding.url.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.core.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.helper.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")"> </script>
+    <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")"> </script>
+
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/JSON2.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-jquery.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jasmine-html.js"))
+    @Html.Incoding().Script(Url.Content("~/Scripts/jquery.mockjax.js"))
+
+
+    @Html.Incoding().Script(Url.Content("~/Scripts/inc-performance.js"))
+
+
+    <script type="text/javascript">
+        IncodingEngine.Current = {
+            parse : function() {
+
+            }
+        };
+        (function() {
+
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
+
+            var htmlReporter = new jasmine.HtmlReporter();
+
+            jasmineEnv.addReporter(htmlReporter);
+
+            jasmineEnv.specFilter = function(spec) {
+                return htmlReporter.specFilter(spec);
+            };
+
+            var currentWindowOnload = window.onload;
+
+            window.onload = function() {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                execJasmine();
+            };
+
+            function execJasmine() {
+                jasmineEnv.execute();
+            }
+
+        })();
+    </script>
+</head>
+
+<body>
+<div id="simpleIML">
+    @for (int i = 0; i < 1000; i++)
+    {
+        @(Html.When(JqueryBind.Click)
+              .OnSuccess(dsl => dsl.Window.Alert("Test"))
+              .AsHtmlAttributes()
+              .ToDiv())
+    }
+</div>
+</body>

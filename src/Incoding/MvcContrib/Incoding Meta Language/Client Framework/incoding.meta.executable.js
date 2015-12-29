@@ -2,25 +2,27 @@
 
 //#region class ExecutableFactory
 
-function ExecutableFactory() {
-
+function ExecutableFactory() {    
 }
 
 // ReSharper disable UnusedParameter
+
 ExecutableFactory.Create = function(type, data, self) {
 
-    var json = _.isObject(data) ? data : $.parseJSON(data);
-
-    var executable = eval('new ' + type + '();');
-    executable.jsonData = json;
-    executable.onBind = json.onBind;
+    var cacheExecutable = document[type];
+    if (!cacheExecutable) {
+        document[type] = eval('new ' + type + '();');
+    }
+    var executable = $.extend({}, cacheExecutable);
+    executable.jsonData = data;
+    executable.onBind = data.onBind;
     executable.self = self;
-    executable.timeOut = json.timeOut;
-    executable.interval = json.interval;
-    executable.intervalId = json.intervalId;
-    executable.ands = json.ands;
+    executable.timeOut = data.timeOut;
+    executable.interval = data.interval;
+    executable.intervalId = data.intervalId;
+    executable.ands = data.ands;
     executable.getTarget = function() {
-        return eval(json.target);
+        return eval(data.target);
     };
 
     return executable;
@@ -363,6 +365,7 @@ ExecutableInsert.prototype.internalExecute = function() {
             insertContent = insertContent.replace(/>\s+(?=<\/?(t|c)[hardfob])/gm, '>');
         }
     }
+
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
 
     var target = current.target;

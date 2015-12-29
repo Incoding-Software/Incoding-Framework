@@ -239,6 +239,7 @@
     <Content Include="Scripts\blanket.jasmine.adapter.js" />
     <Content Include="Scripts\blanket.min.js" />
     <Content Include="Scripts\handlebars.js" />
+    <Content Include="Scripts\inc-performance.js" />
     <Content Include="Scripts\incoding.core.js" />
     <Content Include="Scripts\incoding.meta.conditional.js" />
     <Content Include="Scripts\incoding.meta.engine.js" />
@@ -331,6 +332,7 @@
     <Content Include="Views\Labs\Ajax And Form Data\Default.cshtml" />
     <Content Include="Views\Labs\Issue\inc_496.cshtml" />
     <Content Include="Views\Labs\DoT\DropDown.cshtml" />
+    <Content Include="Views\Jasmine\Perfromance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -29,23 +29,21 @@ function IncodingMetaElement(element) {
 
     this.element = element;
     this.runner = tryGetData(element, keyIncodingRunner);
-    this.executables = !ExecutableHelper.IsNullOrEmpty(tryGetData(element, 'incoding')) ? $.parseJSON(tryGetData(element, 'incoding')) : '';
+    this.executables = $.parseJSON(tryGetData(element, 'incoding'));
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
 
-        $.each(IncSpecialBinds.DocumentBinds, function() {
-            if (!eventName.contains(this)) {
-                return true;
-            }
-
-            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
-                new IncodingMetaElement(currentElement)
-                    .invoke(e, result);
-                return false;
+        if (IncSpecialBinds.DocumentBinds.contains(eventName)) {
+            $.each(IncSpecialBinds.DocumentBinds, function() {
+                eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
+                $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+                    new IncodingMetaElement(currentElement)
+                        .invoke(e, result);
+                    return false;
+                });
             });
-        });
+        }
 
         if (eventName === '') {
             return;
@@ -231,44 +229,39 @@ IncodingResult.Empty = new IncodingResult({ data : '', redirectTo : '', success 
 
 function IncodingEngine() {
 
-    this.parse = function (context) {
+    this.parse = function(context) {
 
         var incSelector = '[incoding]';
         var defferedInit = [];
         $(incSelector, context)
-            .add($(context).is(incSelector) ? context : '')
-            .each(function() {                    
+            .add(context)
+            .each(function() {
                 var incodingMetaElement = new IncodingMetaElement(this);
 
                 var runner = new IncodingRunner();
                 var wasAddBinds = [];
 
                 $(incodingMetaElement.executables).each(function() {
-                    var metaData = this;
 
-                    var jsonData = _.isObject(metaData.data) ? metaData.data : $.parseJSON(metaData.data);
+                    var executableInstance = ExecutableFactory.Create(this.type, this.data, incodingMetaElement.element);
+                    runner.Registry(this.type, this.data.onStatus, executableInstance);
 
-                    var executableInstance = ExecutableFactory.Create(metaData.type, jsonData, incodingMetaElement.element);
-                    runner.Registry(metaData.type, jsonData.onStatus, executableInstance);
-
-                    var bindName = jsonData.onBind.toString();
+                    var bindName = this.data.onBind.toString();
                     if (wasAddBinds.contains(bindName)) {
                         return true;
                     }
 
                     wasAddBinds.push(bindName);
-                    var onEventStatus = ExecutableHelper.IsNullOrEmpty(metaData.data.onEventStatus) ? '1' : metaData.data.onEventStatus;                
                     incodingMetaElement.bind(bindName
                         .toString()
                         .replaceAll(IncSpecialBinds.InitIncoding, '')
                         .replaceAll(' ' + IncSpecialBinds.InitIncoding, '')
-                        .replaceAll(IncSpecialBinds.InitIncoding + ' ', '')                                                
-                        .trim()
-                        .toString(), onEventStatus.toString());
+                        .replaceAll(IncSpecialBinds.InitIncoding + ' ', '')
+                        .trim(), this.data.onEventStatus.toString());
                 });
                 incodingMetaElement.flushRunner(runner);
                 $(this).removeAttr('incoding');
-                
+
                 var hasInitIncoding = $.grep(wasAddBinds, function(r) {
                     return r.contains(IncSpecialBinds.InitIncoding);
                 }).length != 0;
@@ -277,7 +270,7 @@ function IncodingEngine() {
                     incodingMetaElement.bind(IncSpecialBinds.InitIncoding, '4');
                     defferedInit.push(this);
                 }
-                
+
             });
 
         $(defferedInit).each(function() {
