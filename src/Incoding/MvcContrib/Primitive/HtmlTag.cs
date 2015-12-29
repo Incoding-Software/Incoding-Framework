@@ -3,189 +3,197 @@
     // ReSharper disable UnusedMember.Global
     public enum HtmlTag
     {
-        A, 
+        A,
 
-        Abbr, 
+        Abbr,
 
-        Acronym, 
+        Acronym,
 
-        Address, 
+        Address,
 
-        Applet, 
+        Applet,
 
-        Area, 
+        Area,
 
-        Article, 
+        Article,
 
-        Aside, 
+        Aside,
 
-        Audio, 
+        Audio,
 
-        B, 
+        B,
 
-        Base, 
+        Base,
 
-        BaseFont, 
+        BaseFont,
 
-        Bdi, 
+        Bdi,
 
-        Bdo, 
+        Bdo,
 
-        BgSound, 
+        BgSound,
 
-        Big, 
+        Big,
 
-        Blink, 
+        Blink,
 
-        BlockQuote, 
+        BlockQuote,
 
-        Body, 
+        Body,
 
-        Br, 
+        Br,
 
-        Canvas, 
+        Canvas,
 
-        Caption, 
+        Caption,
 
-        Center, 
+        Center,
 
-        Cite, 
+        Cite,
 
-        Code, 
+        Code,
 
-        Col, 
+        Col,
 
-        ColGroup, 
+        ColGroup,
 
-        Command, 
+        Command,
 
-        Comment, 
+        Comment,
 
-        DataList, 
+        DataList,
 
-        Dd, 
+        Dd,
 
-        Del, 
+        Del,
 
-        Details, 
+        Details,
 
-        Dir, 
+        Dir,
 
-        Div, 
+        Div,
 
-        Dl, 
+        Dl,
 
-        Dt, 
+        Dt,
 
-        Em, 
+        Em,
 
-        Embed, 
+        Embed,
 
-        FieldSet, 
+        FieldSet,
 
-        FigCaption, 
+        FigCaption,
 
-        Figure, 
+        Figure,
 
-        Font, 
+        Font,
 
-        Footer, 
+        Footer,
 
-        Frame, 
+        Frame,
 
-        FrameSet, 
+        FrameSet,
 
-        H1, 
+        H1,
 
-        H2, 
+        H2,
 
-        H3, 
+        H3,
 
-        H4, 
+        H4,
 
-        H5, 
+        H5,
 
-        H6, 
+        H6,
 
-        Head, 
+        Head,
 
-        Header, 
+        Header,
 
-        HGroup, 
+        HGroup,
 
-        Hr, 
+        Hr,
 
-        Html, 
+        Html,
 
-        IFrame, 
+        IFrame,
 
-        Ins, 
+        Ins,
 
-        IsIndex, 
+        IsIndex,
 
-        Legend, 
+        Legend,
 
-        Menu, 
+        Menu,
 
-        Meter, 
+        Meter,
 
-        Mark, 
+        Mark,
 
-        Map, 
+        Map,
 
-        Nav, 
+        Nav,
 
-        Listing, 
+        Listing,
 
-        Span, 
+        Span,
 
-        P, 
+        P,
 
-        Ul, 
+        Ul,
 
-        Li, 
+        Li,
 
-        Form, 
+        Form,
 
-        Link, 
+        Link,
 
-        Input, 
+        Input,
 
-        Button, 
+        Button,
 
-        Img, 
+        Img,
 
-        Script, 
+        Script,
 
-        Label, 
+        Label,
 
-        I, 
+        I,
 
-        Tr, 
+        Tr,
 
-        Td, 
+        Td,
 
-        Th, 
+        Th,
 
-        TextArea, 
+        TextArea,
 
-        Table, 
+        Table,
 
-        TBody, 
+        TBody,
 
-        THead, 
+        THead,
 
-        TFooter, 
+        TFooter,
 
-        Section, 
+        Section,
 
-        Select, 
+        Select,
 
-        Option, 
+        Option,
 
         OptGroup,
 
-        Pre
+        Pre,
+
+        S,
+
+        Small,
+        
+        Strong,
+
+        
     }
 
     // ReSharper restore UnusedMember.Global

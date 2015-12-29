@@ -23,7 +23,6 @@
             Setting = delay.Instance.Setting;
         }
 
-        [UsedImplicitly, Obsolete(ObsoleteMessage.SerializeConstructor, false), ExcludeFromCodeCoverage]
         public AddDelayToSchedulerCommand() { }
 
         #endregion

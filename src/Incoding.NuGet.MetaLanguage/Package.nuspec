@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<package >
+
+<package>
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>1.4.0.79-beta</version>
+    <version>1.4.0.116-beta</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -13,7 +14,7 @@
       Template engine cache
     </releaseNotes>
     <summary>
-     Incoding framework front-end
+      Incoding framework front-end
     </summary>
     <language>en-US</language>
     <projectUrl>http://incframework.com</projectUrl>
@@ -26,24 +27,37 @@
         <dependency id="WebActivator" />
         <dependency id="Newtonsoft.Json" version="7.0.0.0" />
         <dependency id="FluentNHibernate" version="2.0.3.0" />
-        <dependency id="JetBrains.Annotations" version="9.2.0.0" />        
+        <dependency id="JetBrains.Annotations" version="9.2.0.0" />
         <dependency id="Microsoft.jQuery.Unobtrusive.Validation" />
         <dependency id="jQuery.Validation" />
         <dependency id="jQuery.Form" />
         <dependency id="underscore.js" />
         <dependency id="Handlebars.js" version="3.0.0.0" />
-        <dependency id="jQuery" version="(1.9.1,2.0.0)" />
+        <dependency id="jQuery" version="1.9.1" />
+        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="WebActivator" />
+        <dependency id="Newtonsoft.Json" version="7.0.0.0" />
+        <dependency id="FluentNHibernate" version="2.0.3.0" />
+        <dependency id="JetBrains.Annotations" version="9.2.0.0" />
+        <dependency id="Microsoft.jQuery.Unobtrusive.Validation" />
+        <dependency id="jQuery.Validation" />
+        <dependency id="jQuery.Form" />
+        <dependency id="underscore.js" />
+        <dependency id="Handlebars.js" version="3.0.0.0" />
+        <dependency id="jQuery" version="1.9.1" />
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
       </group>
     </dependencies>
     <references>
-      <reference file="incoding.dll" />     
+      <reference file="incoding.dll" />
     </references>
     <tags>ajax, incoding, no-js,rich client application,single page,iml, web framework, framework</tags>
   </metadata>
   <files>
     <file src="lib\" target="lib" />
     <file src="tools\" target="tools" />
-    <file src="content\" target="content" />    
+    <file src="content\" target="content" />
   </files>
 </package>

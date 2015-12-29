@@ -674,21 +674,21 @@ function purl(existsUrl) {
 
         this.parseUri = function(url) {
 
-            var uri = { attr : {}, param : {} };
-            var hashSeparated = '#';           
+            var uri = { attr: {}, param: {} };
+            var hashSeparated = '#';
             if (url.contains(hashSeparated)) {
                 uri.attr['fragment'] = url.split(hashSeparated)[1].replace("!", "");
 
                 var current = this;
                 var fparams = {};
-                $.each(uri.attr['fragment'].split('&'), function() {
+                $.each(uri.attr['fragment'].split('&'), function () {
 
                     var prefix = this.contains(":") ? this.split(':')[0] : 'root';
                     var fragmentQuery = this.contains("?") ? this.split('?')[1] : this;
                     fragmentQuery = fragmentQuery.replace(prefix + ':', '');
 
                     var paramsByPrefix = current.parseString(fragmentQuery, '/');
-                    $.eachProperties(paramsByPrefix, function() {
+                    $.eachProperties(paramsByPrefix, function () {
                         var fullKey = "{0}__{1}".f(prefix, this);
                         fparams[fullKey] = paramsByPrefix[this];
                     });
@@ -853,12 +853,12 @@ function purl(existsUrl) {
             return uniquePrefixes;
         },
 
-        furl : function(prefix) {
+        furl: function (prefix) {
 
-            var urls = { root : '' };
+            var urls = { root: '' };
 
             var allUrls = this.data.attr['fragment'].contains("&") ? this.data.attr['fragment'].split('&') : [this.data.attr['fragment']];
-            $(allUrls).each(function() {
+            $(allUrls).each(function () {
                 if (this.contains(':')) {
                     var splitByPrefix = this.split(':');
                     urls[splitByPrefix[0]] = splitByPrefix[1];
@@ -1251,23 +1251,21 @@ function IncodingMetaElement(element) {
 
     this.element = element;
     this.runner = tryGetData(element, keyIncodingRunner);
-    this.executables = !ExecutableHelper.IsNullOrEmpty(tryGetData(element, 'incoding')) ? $.parseJSON(tryGetData(element, 'incoding')) : '';
+    this.executables = $.parseJSON(tryGetData(element, 'incoding'));
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
 
-        $.each(IncSpecialBinds.DocumentBinds, function() {
-            if (!eventName.contains(this)) {
-                return true;
-            }
-
-            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
-                new IncodingMetaElement(currentElement)
-                    .invoke(e, result);
-                return false;
+        if (IncSpecialBinds.DocumentBinds.contains(eventName)) {
+            $.each(IncSpecialBinds.DocumentBinds, function() {
+                eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
+                $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+                    new IncodingMetaElement(currentElement)
+                        .invoke(e, result);
+                    return false;
+                });
             });
-        });
+        }
 
         if (eventName === '') {
             return;
@@ -1453,44 +1451,39 @@ IncodingResult.Empty = new IncodingResult({ data : '', redirectTo : '', success 
 
 function IncodingEngine() {
 
-    this.parse = function (context) {
+    this.parse = function(context) {
 
         var incSelector = '[incoding]';
         var defferedInit = [];
         $(incSelector, context)
-            .add($(context).is(incSelector) ? context : '')
-            .each(function() {                    
+            .add(context)
+            .each(function() {
                 var incodingMetaElement = new IncodingMetaElement(this);
 
                 var runner = new IncodingRunner();
                 var wasAddBinds = [];
 
                 $(incodingMetaElement.executables).each(function() {
-                    var metaData = this;
 
-                    var jsonData = _.isObject(metaData.data) ? metaData.data : $.parseJSON(metaData.data);
+                    var executableInstance = ExecutableFactory.Create(this.type, this.data, incodingMetaElement.element);
+                    runner.Registry(this.type, this.data.onStatus, executableInstance);
 
-                    var executableInstance = ExecutableFactory.Create(metaData.type, jsonData, incodingMetaElement.element);
-                    runner.Registry(metaData.type, jsonData.onStatus, executableInstance);
-
-                    var bindName = jsonData.onBind.toString();
+                    var bindName = this.data.onBind.toString();
                     if (wasAddBinds.contains(bindName)) {
                         return true;
                     }
 
                     wasAddBinds.push(bindName);
-                    var onEventStatus = ExecutableHelper.IsNullOrEmpty(metaData.data.onEventStatus) ? '1' : metaData.data.onEventStatus;                
                     incodingMetaElement.bind(bindName
                         .toString()
                         .replaceAll(IncSpecialBinds.InitIncoding, '')
                         .replaceAll(' ' + IncSpecialBinds.InitIncoding, '')
-                        .replaceAll(IncSpecialBinds.InitIncoding + ' ', '')                                                
-                        .trim()
-                        .toString(), onEventStatus.toString());
+                        .replaceAll(IncSpecialBinds.InitIncoding + ' ', '')
+                        .trim(), this.data.onEventStatus.toString());
                 });
                 incodingMetaElement.flushRunner(runner);
                 $(this).removeAttr('incoding');
-                
+
                 var hasInitIncoding = $.grep(wasAddBinds, function(r) {
                     return r.contains(IncSpecialBinds.InitIncoding);
                 }).length != 0;
@@ -1499,7 +1492,7 @@ function IncodingEngine() {
                     incodingMetaElement.bind(IncSpecialBinds.InitIncoding, '4');
                     defferedInit.push(this);
                 }
-                
+
             });
 
         $(defferedInit).each(function() {
@@ -1532,25 +1525,27 @@ $(document).ready(function() {
 
 //#region class ExecutableFactory
 
-function ExecutableFactory() {
-
+function ExecutableFactory() {    
 }
 
 // ReSharper disable UnusedParameter
+
 ExecutableFactory.Create = function(type, data, self) {
 
-    var json = _.isObject(data) ? data : $.parseJSON(data);
-
-    var executable = eval('new ' + type + '();');
-    executable.jsonData = json;
-    executable.onBind = json.onBind;
+    var cacheExecutable = document[type];
+    if (!cacheExecutable) {
+        document[type] = eval('new ' + type + '();');
+    }
+    var executable = $.extend({}, cacheExecutable);
+    executable.jsonData = data;
+    executable.onBind = data.onBind;
     executable.self = self;
-    executable.timeOut = json.timeOut;
-    executable.interval = json.interval;
-    executable.intervalId = json.intervalId;
-    executable.ands = json.ands;
+    executable.timeOut = data.timeOut;
+    executable.interval = data.interval;
+    executable.intervalId = data.intervalId;
+    executable.ands = data.ands;
     executable.getTarget = function() {
-        return eval(json.target);
+        return eval(data.target);
     };
 
     return executable;
@@ -1749,8 +1744,9 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
     var current = this;
 
     var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
+    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(ajaxOptions.url);
     var url = ajaxOptions.url;
-    if (!ExecutableHelper.IsNullOrEmpty(url)) {
+    if (!isEmptyUrl) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
             ajaxOptions.data.push({ name : this, selector : current.tryGetVal(queryFromString[this]) });
@@ -1759,7 +1755,7 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
     }
     if (current.jsonData.hash) {
         var href = $.url(document.location.href);
-        if (ExecutableHelper.IsNullOrEmpty(url.split('?')[0])) {
+        if (isEmptyUrl || ExecutableHelper.IsNullOrEmpty(url.split('?')[0])) {
             ajaxOptions.url = href.furl(current.jsonData.prefix);
         }
 
@@ -1892,14 +1888,15 @@ ExecutableInsert.prototype.internalExecute = function() {
             insertContent = insertContent.replace(/>\s+(?=<\/?(t|c)[hardfob])/gm, '>');
         }
     }
+
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
-        target = $(current.target).next();
+        target = $(current.target).nextAll();
     }
     if (current.jsonData.insertType.toLowerCase() === 'before') {
-        target = $(current.target).prev();
+        target = $(current.target).prevAll();
     }
     IncodingEngine.Current.parse(target);
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
@@ -1960,21 +1957,22 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
-ExecutableValidationRefresh.prototype.internalExecute = function() {
+ExecutableValidationRefresh.prototype.internalExecute = function () {
 
     var current = this;
     var inputErrorClass = 'input-validation-error';
     var messageErrorClass = 'field-validation-error';
     var messageValidClass = 'field-validation-valid';
+    var attrSpan = 'data-valmsg-for';
     var result = ExecutableHelper.IsNullOrEmpty(current.result) ? [] : current.result;
-    $(result).each(function() {
+    $(result).each(function () {
 
         var name = this.name.toString();
-        var input = $('[name]', current.target).filter(function() {
+        var input = $('[name]', current.target).filter(function () {
             return $(this).attr('name').toLowerCase() == name.toLowerCase();
         });
-        var span = $('[data-valmsg-for]', current.target).filter(function() {
-            return $(this).attr('data-valmsg-for').toLowerCase() == name.toLowerCase();
+        var span = $('[{0}]'.f(attrSpan), current.target).filter(function () {
+            return $(this).attr(attrSpan).toLowerCase() == name.toLowerCase();
         });
 
         if (ExecutableHelper.ToBool(this.isValid)) {
@@ -1989,15 +1987,18 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
                 .removeClass(messageValidClass)
                 .addClass(messageErrorClass)
                 .html($('<span/>')
-                    .attr({ for : name, generated : true })
+                    .attr({ for: name, generated: true })
                     .html(this.errorMessage));
         }
 
     });
 
     if ($(result).length === 0) {
-        $(current.target).find('.input-validation-error').removeClass(inputErrorClass);
-        $(current.target).find('.field-validation-error').addClass(messageValidClass).removeClass(messageErrorClass).empty();
+        $(current.target).find('.' + inputErrorClass).removeClass(inputErrorClass);
+        $('[{0}]'.f(attrSpan), current.target).removeClass(messageErrorClass)
+            .addClass(messageValidClass)
+            .empty();
+        $(current.target).find('.' + messageErrorClass).addClass(messageValidClass).removeClass(messageErrorClass).empty();
     }
 
     $($(current.target).is('form') ? current.target : $('form', this.target))
@@ -2006,6 +2007,7 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
 };
 
 //#endregion
+
 
 //#region class ExecutableEval extend from ExecutableBase
 

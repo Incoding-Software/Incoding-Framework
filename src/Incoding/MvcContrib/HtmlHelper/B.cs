@@ -192,7 +192,78 @@ namespace Incoding.MvcContrib
         Col_xs_11 = 68719476736 * 2,
 
         [Description("text-center")]
-        Text_center = 68719476736 * 4
+        Text_center = 68719476736 * 4,
 
+        [Description("text-left")]
+        Text_left = 68719476736 * 8,
+
+        [Description("text-right")]
+        Text_right = 68719476736 * 8,
+
+        [Description("text-justify")]
+        Text_justify = 68719476736 * 32,
+
+        [Description("text-nowrap")]
+        Text_nowrap = 68719476736 * 64,
+
+        [Description("text-lowercase")]
+        Text_lowercase = 68719476736 * 128,
+
+        [Description("text-uppercase")]
+        Text_uppercase = 68719476736 * 256,
+
+        [Description("text-capitalize")]
+        Text_capitalize = 68719476736 * 512,
+
+        [Description("row")]
+        Row = 68719476736 * 1024,
+
+        [Description("list-unstyled")]
+        List_unstyled = 68719476736 * 2048,
+
+        [Description("list-inline")]
+        List_inline = 68719476736 * 4096,
+
+        [Description("dl-horizontal")]
+        Dl_horizontal = 68719476736 * 8192,
+
+        [Description("table")]
+        Table = 68719476736 * (8192 * 2),
+
+        [Description("table-striped")]
+        Table_striped = 68719476736 * (8192 * 4),
+
+        [Description("table-bordered")]
+        Table_bordered = 68719476736 * (8192 * 8),
+
+        [Description("table-hover")]
+        Table_hover = 68719476736 * (8192 * 16),
+
+        [Description("table-condensed")]
+        Table_condensed = 68719476736 * (8192 * 32),
+
+        [Description("success")]
+        Success = 68719476736 * (8192 * 64),
+
+        [Description("info")]
+        Info = 68719476736 * (8192 * 128),
+
+        [Description("warning")]
+        Warning = 68719476736 * (8192 * 256),
+
+        [Description("danger")]
+        Danger = 68719476736 * (8192 * 512),
+
+        [Description("btn")]
+        Btn = 68719476736 * (8192 * 1024),
+
+        [Description("btn-default")]
+        Btn_default = 68719476736 * (8192 * 2048),
+
+        [Description("btn-primary")]
+        Btn_primary = 68719476736 * (8192 * 4096),
+
+        [Description("btn-success")]
+        Btn_success = 68719476736 * (8192 * 8192),
     }
 }
