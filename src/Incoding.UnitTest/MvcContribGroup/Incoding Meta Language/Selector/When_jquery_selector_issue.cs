@@ -17,6 +17,10 @@
                                          .ToString()
                                          .ShouldEqual("$('.nestedInputList input')");
 
+        It should_be_self_with_has_attribute= () => Selector.Jquery.Self().HasAttribute(HtmlAttribute.Placeholder)
+                                         .ToString()
+                                         .ShouldEqual("$(this.self).filter");
+
         It should_be_124 = () => Selector.Jquery.Name("SelectedDropOutType")
                                          .Tag(HtmlTag.Option)
                                          .Expression(JqueryExpression.Selected)
