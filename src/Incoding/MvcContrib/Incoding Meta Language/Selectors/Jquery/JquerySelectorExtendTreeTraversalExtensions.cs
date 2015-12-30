@@ -121,6 +121,20 @@
         /// </summary>
         /// <param name="original">
         /// </param>
+        /// <param name="classes">
+        ///     Bootstrapp classes
+        /// </param>
+        public static JquerySelectorExtend Closest(this JquerySelectorExtend original, B classes)
+        {
+            return original.Closest(selector => selector.Class(classes));
+        }
+
+        /// <summary>
+        ///     For each element in the set, get the first element that tag the action by testing the element itself and traversing
+        ///     up through its ancestors in the DOM tree.
+        /// </summary>
+        /// <param name="original">
+        /// </param>
         /// <param name="selector">
         ///     Selector
         /// </param>

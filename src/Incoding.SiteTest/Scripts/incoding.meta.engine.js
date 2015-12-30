@@ -6,30 +6,12 @@ function IncodingMetaElement(element) {
 
     var keyIncodingRunner = 'incoding-runner';
 
-    var tryGetData = function(item, key) {
-
-        var tempData = $(item).attr(key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        tempData = $(item).prop(key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        tempData = $.data(item, key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        return $(item).data(key);
-
-    };
-
     this.element = element;
-    this.runner = tryGetData(element, keyIncodingRunner);
-    this.executables = $.parseJSON(tryGetData(element, 'incoding'));
+    this.attr = $(element).attr('incoding');
+    this.runner = $.data(element, keyIncodingRunner);
+    this.getExecutables = function() {
+        return JSON.parse(this.attr);
+    };
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
@@ -45,7 +27,7 @@ function IncodingMetaElement(element) {
             });
         }
 
-        if (eventName === '') {
+        if (eventName === "") {
             return;
         }
 
@@ -100,7 +82,7 @@ IncodingRunner.prototype = {
 
         var current = this;
 
-        var filterExecutableByEvent = function (executable) {            
+        var filterExecutableByEvent = function(executable) {
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
                 executable.event = event;
@@ -113,7 +95,7 @@ IncodingRunner.prototype = {
                 this.execute();
             });
         }
-        catch(ex) {
+        catch (ex) {
             if (ex instanceof IncClientException) {
                 $($.grep(this.breakes, filterExecutableByEvent)).each(function() {
                     this.execute(ex);
@@ -196,7 +178,7 @@ function IncodingResult(result) {
             }
             return res;
         }
-        catch(e) {
+        catch (e) {
             console.log('fail parse result:{0}'.f(json));
             console.log('with exception:{0}'.f(e));
             return '';
@@ -234,14 +216,14 @@ function IncodingEngine() {
         var incSelector = '[incoding]';
         var defferedInit = [];
         $(incSelector, context)
-            .add(context)
+            .add($(context).is(incSelector) ? context : '')
             .each(function() {
                 var incodingMetaElement = new IncodingMetaElement(this);
 
                 var runner = new IncodingRunner();
                 var wasAddBinds = [];
 
-                $(incodingMetaElement.executables).each(function() {
+                $(incodingMetaElement.getExecutables()).each(function() {
 
                     var executableInstance = ExecutableFactory.Create(this.type, this.data, incodingMetaElement.element);
                     runner.Registry(this.type, this.data.onStatus, executableInstance);
@@ -260,7 +242,7 @@ function IncodingEngine() {
                         .trim(), this.data.onEventStatus.toString());
                 });
                 incodingMetaElement.flushRunner(runner);
-                $(this).removeAttr('incoding');
+                this.removeAttr('incoding');
 
                 var hasInitIncoding = $.grep(wasAddBinds, function(r) {
                     return r.contains(IncSpecialBinds.InitIncoding);

@@ -829,25 +829,14 @@ describe('Incoding', function() {
                     expect(new IncodingMetaElement(instanceSandBox).runner).toBeTruthy();
                 });
 
-                it('Should be runner from attribute', function() {
-                    instanceSandBox.attr('incoding-runner', true);
-                    expect(new IncodingMetaElement(instanceSandBox).runner).toBeTruthy();
-                });
-
-                it('Should be runner from prop', function() {
-                    instanceSandBox.prop('incoding-runner', true);
-                    expect(new IncodingMetaElement(instanceSandBox).runner).toBeTruthy();
-                });
-
                 it('Should be element', function() {
                     expect(new IncodingMetaElement(instanceSandBox).element).toEqual(instanceSandBox);
                 });
 
-                it('Should be executables', function() {
-                    var jsonData = '[{ "type" : "Action" }, { "type" : "Action2" }]';
-                    instanceSandBox.attr({ "incoding" : jsonData.toString() });
+                it('Should be executables', function() {                    
+                    instanceSandBox.attr({ "incoding" : '[{ "type" : "Action" }, { "type" : "Action2" }]' });
 
-                    var callbacks = new IncodingMetaElement(instanceSandBox).executables;
+                    var callbacks = new IncodingMetaElement(instanceSandBox).getExecutables();
 
                     expect(callbacks.length).toEqual(2);
                     expect(callbacks[0]).toEqual({ type : 'Action' });
@@ -1372,7 +1361,7 @@ describe('Incoding', function() {
                 it('Should be create', function() {
 
                     var sandboxSubmit = TestHelper.Instance.SandboxSubmit();
-                    var executable = ExecutableFactory.Create('ExecutableInsert', '{ "onBind":"Value","timeOut":5, "interval":10,"intervalId":"id","target":"$(\'#sandboxSubmit\')","ands":[1,2] }', instanceSandBox);
+                    var executable = ExecutableFactory.Create('ExecutableInsert', $.parseJSON('{ "onBind":"Value","timeOut":5, "interval":10,"intervalId":"id","target":"$(\'#sandboxSubmit\')","ands":[1,2] }'), instanceSandBox);
 
                     expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));
                     expect($(executable.getTarget()).get(0)).toEqual($(sandboxSubmit).get(0));
@@ -1385,7 +1374,7 @@ describe('Incoding', function() {
                 });
 
                 it('Should be create with self target', function() {
-                    var executable = ExecutableFactory.Create('ExecutableInsert', '{ "onBind":"Value","timeOut":5,"target":"$(this.self)" }', instanceSandBox);
+                    var executable = ExecutableFactory.Create('ExecutableInsert', $.parseJSON('{ "onBind":"Value","timeOut":5,"target":"$(this.self)" }'), instanceSandBox);
 
                     expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));
                     expect($(executable.getTarget()).get(0)).toEqual($(instanceSandBox).get(0));
@@ -1405,30 +1394,19 @@ describe('Incoding', function() {
 
                     it('Should be ExecutableFactory.Create', function() {
 
-                        var incData = '[{ "type" : "DirectAction", "data" : { "innerText" : "innerText", "onBind" : "click" } }]';
+                        var incData = '[{ "type" : "DirectAction", "data" : { "innerText" : "innerText", "onBind" : "click", "onEventStatus":1 } }]';
                         $(instanceSandBox).attr('incoding', incData);
 
                         spyOn(ExecutableFactory, 'Create');
 
                         engine.parse(instanceSandBox);
 
-                        expect(ExecutableFactory.Create).toHaveBeenCalledWith('DirectAction', { "innerText" : "innerText", "onBind" : "click" }, jasmine.any(Object));
+                        expect(ExecutableFactory.Create).toHaveBeenCalledWith('DirectAction', { "innerText" : "innerText", "onBind" : "click", "onEventStatus" : 1 }, jasmine.any(Object));
                     });
 
-                    it('Should be ignore element with exists runner', function() {
+                    it('Should be only once', function() {
 
-                        spyOn(ExecutableFactory, 'Create');
-                        $(instanceSandBox).data('incoding-runner', {});
-
-                        engine.parse(instanceSandBox);
-
-                        expect($(instanceSandBox).data('events')).toBeFalsy();
-                        expect(ExecutableFactory.Create).not.toHaveBeenCalled();
-                    });
-
-                    it('Should be once', function() {
-
-                        $(instanceSandBox).attr('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur" } }]');
+                        $(instanceSandBox).attr('incoding', '[{ "type" : "Action", "data" : { "onBind" : "click blur","onEventStatus":1  } }]');
 
                         spyOn(ExecutableFactory, 'Create');
 
@@ -1436,17 +1414,6 @@ describe('Incoding', function() {
                         engine.parse(instanceSandBox);
 
                         expect(ExecutableFactory.Create.callCount).toEqual(1);
-
-                    });
-
-                    it('Should be with empty incoding', function() {
-
-                        $(instanceSandBox).attr('incoding', '');
-                        spyOn(ExecutableFactory, 'Create');
-
-                        engine.parse(instanceSandBox);
-
-                        expect(ExecutableFactory.Create.callCount).toEqual(0);
 
                     });
 
@@ -1463,7 +1430,7 @@ describe('Incoding', function() {
                         });
 
                         var stubMetaBind = function(bind) {
-                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([{ type : 'ExecutableDirectAction', data : { onBind : bind } }]));
+                            instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([{ type: 'ExecutableDirectAction', data: { onBind: bind, onEventStatus: 1 } }]));
                             fakeExecute.onBind = bind;
                         };
 
@@ -1487,8 +1454,8 @@ describe('Incoding', function() {
 
                         it('Should be bind once', function() {
                             instanceSandBox = $('#sandbox').attr('incoding', JSON.stringify([
-                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } },
-                                { type : 'ExecutableDirectAction', data : { onBind : 'click' } }
+                                { type : 'ExecutableDirectAction', data : { onBind : 'click', onEventStatus : 1 } },
+                                { type : 'ExecutableDirectAction', data : { onBind : 'click', onEventStatus : 1 } }
                             ]));
                             fakeExecute.onBind = 'click';
 
