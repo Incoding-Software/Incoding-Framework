@@ -242,7 +242,7 @@ function IncodingEngine() {
                         .trim(), this.data.onEventStatus.toString());
                 });
                 incodingMetaElement.flushRunner(runner);
-                this.removeAttr('incoding');
+                $(this).removeAttr('incoding');
 
                 var hasInitIncoding = $.grep(wasAddBinds, function(r) {
                     return r.contains(IncSpecialBinds.InitIncoding);
