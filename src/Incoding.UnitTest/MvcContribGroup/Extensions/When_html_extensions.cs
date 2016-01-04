@@ -76,12 +76,7 @@
                                                           meta.OnBind.ShouldEqual("initincoding incchangeurl incoding");
                                                       });
 
-
-        It should_be_bind_as_flags = () =>
-                                     {
-                                         (JqueryBind.In | JqueryBind.IncChangeUrl)
-                                     };
-
+        
         It should_be_when_string = () => htmlHelper
                                                  .Original
                                                  .When("blur")
