@@ -54,7 +54,7 @@ namespace Incoding.Block.IoC
 
         public TInstance TryGet<TInstance>() where TInstance : class
         {
-            return this.container.GetAllInstances<TInstance>().FirstOrDefault();
+            return this.container.TryGetInstance<TInstance>();
         }
 
         public TInstance Get<TInstance>(Type type) where TInstance : class

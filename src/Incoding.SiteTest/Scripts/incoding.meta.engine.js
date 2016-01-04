@@ -15,17 +15,18 @@ function IncodingMetaElement(element) {
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
+        $.each(IncSpecialBinds.DocumentBinds, function() {
+            if (!eventName.contains(this)) {
+                return true;
+            }
 
-        if (IncSpecialBinds.DocumentBinds.contains(eventName)) {
-            $.each(IncSpecialBinds.DocumentBinds, function() {
-                eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-                $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
-                    new IncodingMetaElement(currentElement)
-                        .invoke(e, result);
-                    return false;
-                });
+            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
+            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+                new IncodingMetaElement(currentElement)
+                    .invoke(e, result);
+                return false;
             });
-        }
+        });
 
         if (eventName === "") {
             return;

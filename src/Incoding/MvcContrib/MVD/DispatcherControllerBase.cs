@@ -49,15 +49,12 @@
                                                                        .ToArray());
             }
 
-            var instance = Activator.CreateInstance(instanceType);            
-            
+            var instance = Activator.CreateInstance(instanceType);
 
-            new DefaultModelBinder().BindModel(ControllerContext, new ModelBindingContext()
-            {
-                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
-                ModelState = ModelState,
-                ValueProvider = ValueProviderFactories.Factories.GetValueProvider(this.ControllerContext)
-            });
+            GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                     .Single(r => r.Name == "TryUpdateModel" && r.GetParameters().Length == 1)
+                     .MakeGenericMethod(instanceType)
+                     .Invoke(this, new[] { instance });
             return instance;
         }
 

@@ -103,7 +103,7 @@ namespace Incoding.MvcContrib
 
         IncGlobalError = 4294967296 * 2,
 
-        IncError = 4294967296 * 4
+        IncError = 8589934592 * 2
     }
 
     // ReSharper restore UnusedMember.Global
