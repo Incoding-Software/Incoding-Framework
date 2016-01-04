@@ -34,8 +34,8 @@ namespace Incoding.MvcContrib
             var currentUrl = Url ?? Data.Url;
             bool isAjax = !string.IsNullOrWhiteSpace(currentUrl);
 
-            var meta = isAjax ? htmlHelper.When(InitBind).Do().Ajax(currentUrl)
-                               : htmlHelper.When(InitBind).Do().Direct();
+            var meta = isAjax ? this.htmlHelper.When(InitBind).Ajax(currentUrl)
+                               : this.htmlHelper.When(InitBind);
             attributes = meta.OnSuccess(dsl =>
                                         {
                                             if (isAjax)
@@ -52,7 +52,9 @@ namespace Incoding.MvcContrib
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
                                             if (selected != null)
-                                                dsl.Self().JQuery.Attributes.Val(selected);
+                                                dsl.Self().JQuery.Attr.Val(selected);
+                                            else if (Optional.Values.Any())
+                                                dsl.Self().JQuery.Attr.Val(Optional.Values.OrderBy(r => r.Selected).First().Value);
 
                                             OnInit.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));
@@ -63,12 +65,12 @@ namespace Incoding.MvcContrib
                                             OnChange.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));
                                         })
-                             .AsHtmlAttributes(attributes);
+                             .AsHtmlAttributes(this.attributes);
 
             if (!isAjax)
                 Data.AddOptional(Optional.Values);
 
-            return htmlHelper.DropDownListFor(property, Data.AsSelectList, attributes);
+            return htmlHelper.DropDownListFor(this.property, Data.AsSelectList, this.attributes);
         }
 
         #region Fields
@@ -85,7 +87,7 @@ namespace Incoding.MvcContrib
 
         public JqueryBind InitBind { get; set; }
 
-        public JqueryAjaxOptions Options { get { return options; } set { options = value; } }
+        public JqueryAjaxOptions Options { get { return this.options; } set { this.options = value; } }
 
         [Obsolete("Please use Data instead of Url")]
         public string Url { get; set; }

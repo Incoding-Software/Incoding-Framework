@@ -33,17 +33,7 @@
         [HttpGet]
         public ActionResult Index()
         {
-            return View(new []
-                        {
-                                new AddProductCommand()
-                        {
-                                Name = "Russian"
-                        },
-                                new AddProductCommand()
-                        {
-                                Name = "USA"
-                        }
-                        });
+            return View();
         }
 
         [HttpPost]

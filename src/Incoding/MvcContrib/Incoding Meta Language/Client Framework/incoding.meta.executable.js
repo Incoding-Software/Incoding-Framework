@@ -9,11 +9,10 @@ function ExecutableFactory() {
 
 ExecutableFactory.Create = function(type, data, self) {
 
-    var cacheExecutable = document[type];
-    if (!cacheExecutable) {
+    if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
-    var executable = $.extend({}, cacheExecutable);
+    var executable = $.extend({}, document[type]);
     executable.jsonData = data;
     executable.onBind = data.onBind;
     executable.self = self;
