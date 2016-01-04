@@ -164,6 +164,8 @@ $.extend(ExecutableActionBase.prototype, {
                 }
 
                 console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncGlobalError));
+                $(this.self).trigger(jQuery.Event(IncSpecialBinds.IncError));
                 if (navigator.Ie8) {
                     return false; //stop execute
                 }

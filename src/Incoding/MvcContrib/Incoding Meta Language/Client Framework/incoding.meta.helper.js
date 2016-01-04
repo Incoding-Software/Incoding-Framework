@@ -41,6 +41,10 @@ IncSpecialBinds.IncAjaxSuccess = 'incajaxsuccess';
 
 IncSpecialBinds.IncInsert = 'incinsert';
 
+IncSpecialBinds.IncGlobalError = 'incglobalerror';
+
+IncSpecialBinds.IncError = 'incerror';
+
 IncSpecialBinds.DocumentBinds = [
     IncSpecialBinds.IncChangeUrl,
     IncSpecialBinds.IncAjaxBefore,
@@ -499,9 +503,23 @@ ExecutableHelper.IsNullOrEmpty = function (value) {
     return !hasOwnProperty;
 };
 
-ExecutableHelper.RedirectTo = function (destentationUrl) {
-    var decodeUri = decodeURIComponent(destentationUrl);
-    var decodeHash = decodeURIComponent(window.location.hash);
+ExecutableHelper.RedirectTo = function(destentationUrl) {
+    // decode url issue for special characters like % or /
+    // fixed like here: https://github.com/medialize/URI.js/commit/fd8ee89a024698986ebef57393fcedbe22631616
+    var decodeUri;
+    try {
+        decodeUri = decodeURIComponent(destentationUrl);
+    }
+    catch (ex) {
+        decodeUri = destentationUrl;
+    }
+    var decodeHash;
+    try {
+        decodeHash = decodeURIComponent(window.location.hash);
+    }
+    catch (ex) {
+        decodeHash = window.location.hash;
+    }
 
     var isSame = decodeUri.contains('#') && decodeHash.replace("#", "") == decodeUri.split('#')[1];
     if (isSame) {
