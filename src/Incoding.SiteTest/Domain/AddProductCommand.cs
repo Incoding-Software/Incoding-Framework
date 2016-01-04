@@ -24,6 +24,7 @@
         #region Properties
 
         public string Name { get; set; }
+        public string FromPost { get; set; }
 
         #endregion
 

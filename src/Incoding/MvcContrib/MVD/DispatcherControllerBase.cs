@@ -49,16 +49,14 @@
                                                                        .ToArray());
             }
 
-            var instance = Activator.CreateInstance(instanceType);
-
-            var formAndQuery = new FormCollection(Request.Form);
-            formAndQuery.Add(Request.QueryString);
+            var instance = Activator.CreateInstance(instanceType);            
+            
 
             new DefaultModelBinder().BindModel(ControllerContext, new ModelBindingContext()
             {
                 ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
                 ModelState = ModelState,
-                ValueProvider = formAndQuery
+                ValueProvider = ValueProviderFactories.Factories.GetValueProvider(this.ControllerContext)
             });
             return instance;
         }

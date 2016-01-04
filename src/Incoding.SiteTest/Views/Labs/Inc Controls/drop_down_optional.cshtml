@@ -1,0 +1,34 @@
+﻿@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Label.AddClass(B.Hidden);
+                                         control.Control.AddClass(B.Col_xs_12);
+                                     })
+
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = "";
+                                         control.Label.AddClass(B.Hidden);
+                                         control.Control.AddClass(B.Col_xs_12);
+                                     })
+
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = new KeyValueVm(Guid.Empty);
+                                         control.Label.AddClass(B.Hidden);
+                                         control.Control.AddClass(B.Col_xs_12);
+                                     })
+
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = new[]
+                                                                  {
+                                                                          new KeyValueVm(Guid.Empty),
+                                                                          new KeyValueVm("", "All", true),
+                                                                  };
+                                         control.Label.AddClass(B.Hidden);
+                                         control.Control.AddClass(B.Col_xs_12);
+                                     })

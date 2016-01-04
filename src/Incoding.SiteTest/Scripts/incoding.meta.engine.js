@@ -33,13 +33,11 @@ function IncodingMetaElement(element) {
 
         $(this.element).bind(eventName.toString(), function(e, result) {
 
-            new IncodingMetaElement(this)
-                .invoke(e, result);
-
             var strStatus = status.toString();
 
             if (strStatus === '4' || eventName === IncSpecialBinds.Incoding) {
-                return false;
+                e.stopPropagation(); // if native js trigger
+                e.preventDefault(); // if native js trigger                
             }
 
             if (strStatus === '2') {
@@ -49,7 +47,10 @@ function IncodingMetaElement(element) {
                 e.stopPropagation();
             }
 
-            return true;
+            new IncodingMetaElement(this)
+                .invoke(e, result);
+
+            return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
         });
     };
     this.invoke = function(e, result) {

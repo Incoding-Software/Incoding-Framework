@@ -333,6 +333,7 @@
     <Content Include="Views\Labs\Issue\inc_496.cshtml" />
     <Content Include="Views\Labs\DoT\DropDown.cshtml" />
     <Content Include="Views\Jasmine\Perfromance.cshtml" />
+    <Content Include="Views\Labs\Inc Controls\drop_down_optional.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
