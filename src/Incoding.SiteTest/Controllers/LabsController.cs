@@ -23,6 +23,15 @@
                                                   new KeyValueVm("USA")
                                           }));
         }
+        public ActionResult FetchCountryWithSelected()
+        {
+            return IncJson(new OptGroupVm(new List<KeyValueVm>
+                                          {
+                                                  new KeyValueVm("Russian"), 
+                                                  new KeyValueVm("UK","UK",true), 
+                                                  new KeyValueVm("USA")
+                                          }));
+        }
 
         [HttpGet]
         public ActionResult Inc_271()
@@ -33,7 +42,10 @@
         [HttpGet]
         public ActionResult Index()
         {
-            return View();
+            return View(new AddProductCommand()
+                        {
+                                HasValue = "USA"
+                        });
         }
 
         [HttpPost]

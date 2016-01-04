@@ -1,5 +1,4 @@
-﻿@using Incoding.SiteTest
-@model Incoding.SiteTest.AddProductCommand
+﻿@model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,10 +30,56 @@
     </script>
 </head>
 <body>
-<script>
-    $(function() {
-        $.post('@Url.Dispatcher().Push(new AddProductCommand())', {  name: 'Vlad' } );
-    })
-</script>
+@Html.Incoding().RenderDropDownTemplate()
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Label.Name = "Should be first";
+                                     })
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
+                                         control.Label.Name = "Should be selected UK";
+                                     })
+@Html.ForGroup(r => r.HasValue).DropDown(control =>
+                                         {
+                                             control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                             control.Label.Name = "Should be USA";
+                                         })
+@Html.ForGroup(r => r.HasValue).DropDown(control =>
+                                         {
+                                             control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
+                                             control.Label.Name = "Should be selected USA";
+                                         })
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = "";
+                                         control.Label.Name = "Should be empty";
+                                     })
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
+                                         control.Input.Optional = "";
+                                         control.Label.Name = "Should be UK";
+                                     })
+
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = new KeyValueVm(Guid.Empty);
+                                         control.Label.Name = "Should be guide empty";
+                                     })
+
+@Html.ForGroup(r => r.Name).DropDown(control =>
+                                     {
+                                         control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                         control.Input.Optional = new[]
+                                                                  {
+                                                                          new KeyValueVm(Guid.Empty),
+                                                                          new KeyValueVm("", "All", true),
+                                                                  };
+                                         control.Label.Name = "Should be ALL";
+                                     })
 </body>
 </html>

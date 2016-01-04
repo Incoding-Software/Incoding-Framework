@@ -53,8 +53,11 @@ namespace Incoding.MvcContrib
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
                                             if (selected != null)
                                                 dsl.Self().JQuery.Attr.Val(selected);
-                                            else if (Optional.Values.Any())
-                                                dsl.Self().JQuery.Attr.Val(Optional.Values.OrderBy(r => r.Selected).First().Value);
+                                            else
+                                            {
+                                                dsl.Self().JQuery.Attr.Val(Selector.Jquery.Self().Find(r => r.Tag(HtmlTag.Option).Expression(JqueryExpression.First)).Val())
+                                                   .If(() => Selector.Jquery.Self().Find(s => s.Tag(HtmlTag.Option).Expression(JqueryExpression.Selected)).Length() == 0);
+                                            }
 
                                             OnInit.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));

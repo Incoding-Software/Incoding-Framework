@@ -26,6 +26,8 @@
         public string Name { get; set; }
         public string FromPost { get; set; }
 
+        public string HasValue { get; set; }
+
         #endregion
 
         protected override void Execute()
