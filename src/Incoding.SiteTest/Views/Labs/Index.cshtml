@@ -58,7 +58,7 @@
                                              control.Label.Name = "Should be selected USA (with optional)";
                                              control.Input.Optional = "";
                                          })
-    @Html.ForGroup(r => r.HasValue).DropDown(control =>
+@Html.ForGroup(r => r.HasValue).DropDown(control =>
                                          {
                                              control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
                                              control.Label.Name = "Should be selected USA (with optional and )";
@@ -67,9 +67,15 @@
 @Html.ForGroup(r => r.Name).DropDown(control =>
                                      {
                                          control.Input.Data = Url.Action("FetchCountry", "Labs");
-                                         control.Input.Optional = "";
-                                         control.Label.Name = "Should be empty";
+                                         control.Input.Optional = new KeyValueVm("", "");
+                                         control.Label.Name = "Should be empty (optional)";
                                      })
+@Html.ForGroup(r => r.NameAsNull).DropDown(control =>
+                                           {
+                                               control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                               control.Input.Optional = new KeyValueVm("", "");
+                                               control.Label.Name = "Should be empty (optional) with value null";
+                                           })
 @Html.ForGroup(r => r.Name).DropDown(control =>
                                      {
                                          control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
@@ -94,5 +100,19 @@
                                                                   };
                                          control.Label.Name = "Should be ALL";
                                      })
+
+
+@Html.ForGroup(r => r.NameAsNull).DropDown(control =>
+                                           {
+                                               control.Input.InitBind = JqueryBind.InitIncoding | JqueryBind.None; 
+                                               control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                               control.Input.Optional = new KeyValueVm("", "");
+                                               control.Input.AddClass("test");
+                                               control.Label.Name = "Should be empty (optional) with value null (with trigger)";
+                                           })
+@(Html.When(JqueryBind.Click)      
+      .OnSuccess(dsl => dsl.WithClass("test").Trigger.None())
+      .AsHtmlAttributes()
+      .ToButton("Send none"))
 </body>
 </html>

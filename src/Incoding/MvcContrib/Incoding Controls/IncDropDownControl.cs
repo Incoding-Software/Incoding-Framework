@@ -40,8 +40,8 @@ namespace Incoding.MvcContrib
             attributes = meta.OnSuccess(dsl =>
                                         {
                                             if (isAjax)
-                                            {
-                                                dsl.Self().Insert.WithTemplate(Template).Html();
+                                            {                                                
+                                                dsl.Self().JQuery.Dom.Empty();
                                                 foreach (var vm in Optional.Values)
                                                 {
                                                     var option = new TagBuilder(HtmlTag.Option.ToStringLower());
@@ -49,6 +49,7 @@ namespace Incoding.MvcContrib
                                                     option.MergeAttribute(HtmlAttribute.Value.ToStringLower(), vm.Value);
                                                     dsl.Self().JQuery.Dom.Use(new MvcHtmlString(option.ToString()).ToHtmlString()).Prepend();
                                                 }
+                                                dsl.Self().Insert.WithTemplate(Template).Append();
                                             }
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;

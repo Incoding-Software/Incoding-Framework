@@ -13,6 +13,11 @@
     [OptionOfDelay(Async = true)]
     public class AddProductCommand : CommandBase
     {
+        public AddProductCommand()
+        {
+            NameAsNull = null;
+        }
+
         public class Validator : AbstractValidator<AddProductCommand>
         {
             public Validator()
@@ -24,6 +29,7 @@
         #region Properties
 
         public string Name { get; set; }
+        public string NameAsNull { get; set; }
         public string FromPost { get; set; }
 
         public string HasValue { get; set; }
