@@ -51,6 +51,19 @@
                                              control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
                                              control.Label.Name = "Should be selected USA";
                                          })
+
+@Html.ForGroup(r => r.HasValue).DropDown(control =>
+                                         {
+                                             control.Input.Data = Url.Action("FetchCountry", "Labs");
+                                             control.Label.Name = "Should be selected USA (with optional)";
+                                             control.Input.Optional = "";
+                                         })
+    @Html.ForGroup(r => r.HasValue).DropDown(control =>
+                                         {
+                                             control.Input.Data = Url.Action("FetchCountryWithSelected", "Labs");
+                                             control.Label.Name = "Should be selected USA (with optional and )";
+                                             control.Input.Optional = "";
+                                         })
 @Html.ForGroup(r => r.Name).DropDown(control =>
                                      {
                                          control.Input.Data = Url.Action("FetchCountry", "Labs");

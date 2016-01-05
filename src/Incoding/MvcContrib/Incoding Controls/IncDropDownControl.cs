@@ -8,6 +8,7 @@ namespace Incoding.MvcContrib
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using System.Web.Mvc.Html;
+    using Incoding.Block.Logging;
     using Incoding.Extensions;
     using Incoding.Maybe;
 
@@ -52,12 +53,12 @@ namespace Incoding.MvcContrib
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
                                             if (selected != null)
-                                                dsl.Self().JQuery.Attr.Val(selected);
-                                            else
                                             {
-                                                dsl.Self().JQuery.Attr.Val(Selector.Jquery.Self().Find(r => r.Tag(HtmlTag.Option).Expression(JqueryExpression.First)).Attr(HtmlAttribute.Value))
-                                                   .If(() => Selector.Jquery.Self().Find(s => s.Tag(HtmlTag.Option).Expression(JqueryExpression.Selected)).Length() == 0);
+                                                dsl.Self().JQuery.Attr.Val(selected)
+                                                   .If(() => Selector.Jquery.Self().Find(HtmlTag.Option).Filter(r => r.EqualsAttribute(HtmlAttribute.Value, selected.ToString())).Length() > 0);
                                             }
+                                            dsl.Self().JQuery.Attr.Val(Selector.Jquery.Self().Find(r => r.Tag(HtmlTag.Option).Expression(JqueryExpression.First)).Attr(HtmlAttribute.Value))
+                                               .If(() => Selector.Jquery.Self().Find(s => s.Tag(HtmlTag.Option).Expression(JqueryExpression.Selected)).Length() == 0);
 
                                             OnInit.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));
@@ -73,7 +74,7 @@ namespace Incoding.MvcContrib
             if (!isAjax)
                 Data.AddOptional(Optional.Values);
 
-            return htmlHelper.DropDownListFor(this.property, Data.AsSelectList, this.attributes);
+            return htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : Data.AsSelectList, this.attributes);
         }
 
         #region Fields
