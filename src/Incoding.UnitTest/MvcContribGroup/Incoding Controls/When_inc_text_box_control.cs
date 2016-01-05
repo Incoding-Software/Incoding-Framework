@@ -28,12 +28,13 @@
                                                        boxControl.TabIndex = 5;
                                                        boxControl.ReadOnly = true;
                                                        boxControl.Disabled = true;
+                                                       boxControl.Title = "title";
                                                        boxControl.MaxLength = 10;
                                                        boxControl.AddClass("class");
                                                        boxControl.AddClass("class2");
                                                        boxControl.Autocomplete = false;
                                                    })
                                           .ToHtmlString()
-                                          .ShouldEqual("<input class=\"class class2\" id=\"Prop\" maxlength=\"10\" name=\"Prop\" placeholder=\"placeholder\" readonly=\"readonly\" disabled=\"disabled\" tabindex=\"5\" type=\"text\" value=\"TheSameString\" />");
+                                          .ShouldEqual("<input class=\"class class2\" disabled=\"disabled\" id=\"Prop\" maxlength=\"10\" name=\"Prop\" placeholder=\"placeholder\" readonly=\"readonly\" tabindex=\"5\" title=\"title\" type=\"text\" value=\"TheSameString\" />");
     }
 }

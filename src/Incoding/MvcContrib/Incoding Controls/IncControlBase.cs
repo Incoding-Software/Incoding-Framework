@@ -54,6 +54,8 @@ namespace Incoding.MvcContrib
         /// </summary>
         public int TabIndex { set { attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
+        public string Title { get { return this.attributes.GetOrDefault(HtmlAttribute.Title.ToStringLower(), string.Empty).ToString(); } set { attributes.Set(HtmlAttribute.Title.ToStringLower(), value); } }
+
         public bool Disabled
         {
             get { return this.attributes.ContainsKey(HtmlAttribute.Disabled.ToStringLower()); }
