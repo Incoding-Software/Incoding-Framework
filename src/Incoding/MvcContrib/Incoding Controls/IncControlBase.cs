@@ -21,15 +21,55 @@ namespace Incoding.MvcContrib
 
         #endregion
 
+        protected RouteValueDictionary GetAttributes()
+        {
+            bool isIml = OnInit != null ||
+                         OnChange != null ||
+                         OnEvent != null;
+
+            if (isIml)
+            {
+                attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
+                                         .OnSuccess(dsl =>
+                                                    {
+                                                        OnInit.Do(action => action(dsl));
+                                                        OnEvent.Do(action => action(dsl));
+                                                    })
+                                         .When(JqueryBind.Change)
+                                         .OnSuccess(dsl =>
+                                                    {
+                                                        OnChange.Do(action => action(dsl));
+                                                        OnEvent.Do(action => action(dsl));
+                                                    })
+                                         .AsHtmlAttributes());
+            }
+
+            return attributes;
+        }
+
         #region Properties
-        
+
         /// <summary>
         ///     <see cref="HtmlAttribute.TabIndex" />
         /// </summary>
         public int TabIndex { set { attributes.Set(HtmlAttribute.TabIndex.ToStringLower(), value); } }
 
+        public bool Disabled
+        {
+            get { return this.attributes.ContainsKey(HtmlAttribute.Disabled.ToStringLower()); }
+            set
+            {
+                string key = HtmlAttribute.Disabled.ToStringLower();
+                if (value)
+                    attributes.Set(key, key);
+                else
+                    attributes.Remove(key);
+            }
+        }
+
         public bool ReadOnly
         {
+            get { return this.attributes.ContainsKey(HtmlAttribute.Readonly.ToStringLower()); }
             set
             {
                 string key = HtmlAttribute.Readonly.ToStringLower();
@@ -149,32 +189,5 @@ namespace Incoding.MvcContrib
         }
 
         #endregion
-
-        protected RouteValueDictionary GetAttributes()
-        {
-            bool isIml = OnInit != null ||
-                         OnChange != null ||
-                         OnEvent != null;
-
-            if (isIml)
-            {
-                attributes.Merge(new IncodingMetaLanguageDsl(JqueryBind.InitIncoding)
-                                         .OnSuccess(dsl =>
-                                                    {
-                                                        OnInit.Do(action => action(dsl));
-                                                        OnEvent.Do(action => action(dsl));
-                                                    })
-                                         .When(JqueryBind.Change)
-                                         .OnSuccess(dsl =>
-                                                    {
-                                                        OnChange.Do(action => action(dsl));
-                                                        OnEvent.Do(action => action(dsl));
-                                                    })
-                                         .AsHtmlAttributes());
-            }
-
-            return attributes;
-        }
     }
-
 }
