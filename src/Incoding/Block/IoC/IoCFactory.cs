@@ -21,7 +21,7 @@ namespace Incoding.Block.IoC
         #region Properties
 
         public static IoCFactory Instance { get { return instance.Value; } }
-
+         
         #endregion
 
         #region Api Methods
@@ -36,6 +36,7 @@ namespace Incoding.Block.IoC
             this.init.Provider.Eject<TInstance>();
         }
 
+        [Obsolete("Please use TryResolve instead of Resolve because")]
         public TInstance Resolve<TInstance>([NotNull] Type typeInstance) where TInstance : class
         {
             Guard.NotNull("typeInstance", typeInstance);

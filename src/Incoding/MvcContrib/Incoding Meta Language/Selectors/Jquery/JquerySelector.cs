@@ -237,10 +237,9 @@
         /// </summary>
         public JquerySelectorExtend Class(B @class)
         {
-            Enum.GetValues(typeof(B))
-                .Cast<B>()
-                .Where(r => @class.HasFlag(r))
-                .ForEach(bootstrap => AlsoSelector("." + Escaping(bootstrap.ToLocalization().Trim().ToLower())));
+            BExtensions.all
+                       .Where(r => @class.HasFlag(r))
+                       .ForEach(bootstrap => AlsoSelector("." + Escaping(bootstrap.ToLocalization().Trim().ToLower())));
 
             return new JquerySelectorExtend(selector);
         }

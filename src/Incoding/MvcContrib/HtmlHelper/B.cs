@@ -13,7 +13,7 @@ namespace Incoding.MvcContrib
     {
         #region Static Fields
 
-        static readonly B[] all = Enum.GetValues(typeof(B))
+       internal static readonly B[] all = Enum.GetValues(typeof(B))
                                       .Cast<B>()
                                       .ToArray();
 

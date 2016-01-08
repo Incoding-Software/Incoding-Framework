@@ -234,7 +234,11 @@
     <Compile Include="Block\Caching Factory\Factory\When_caching_factory_set_cache_through_retrieve.cs" />
     <Compile Include="Block\IoC Factory\Providers\Behaviors\Behaviors_disposable_ioc_provider.cs" />
     <Compile Include="Block\IoC Factory\Providers\When_dry_ioc_create_by_container.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_in_line_initialize.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_ninject_created_by_modules.cs" />
     <Compile Include="Block\IoC Factory\Providers\When_simple_injector_ioc.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_class_registry.cs" />
+    <Compile Include="Block\IoC Factory\Providers\When_structure_map_create_by_in_line_initialize.cs" />
     <Compile Include="Block\Scheduler Factory\When_get_recurrency_date.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_available_starts_on.cs" />
     <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status_by_uid.cs" />
@@ -789,7 +793,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
