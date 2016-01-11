@@ -7,11 +7,16 @@ function ConditionalFactory() {
 
 // ReSharper disable UnusedParameter
 ConditionalFactory.Create = function(data, executable) {
-    var conditional = eval('new ' + 'Conditional' + data.type + '();');
-    conditional.jsonData = data;
-    conditional.executable = executable;
-    return conditional;
+    if (!document[data.type]) {
+        document[data.type] = eval('new ' + 'Conditional' + data.type + '();');
+    }
+    return $.extend(document[data.type], {
+        jsonData : data,
+        executable : executable
+    });
+
 };
+
 // ReSharper restore UnusedParameter
 
 //#endregion
@@ -35,7 +40,7 @@ ConditionalBase.prototype =
         },
         // ReSharper disable UnusedParameter
         isInternalSatisfied : function(data) {
-        // ReSharper restore UnusedParameter            
+            // ReSharper restore UnusedParameter            
         },
         tryGetVal : function(variable) {
             return this.executable.tryGetVal(variable);
@@ -92,7 +97,6 @@ ConditionalEval.prototype.isInternalSatisfied = function(data) {
 // ReSharper restore UnusedParameter
 
 //#endregion
-
 
 //#region class ConditionalIs extend from ConditionalBase
 

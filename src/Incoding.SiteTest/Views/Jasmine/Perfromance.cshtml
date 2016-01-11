@@ -1,4 +1,4 @@
-﻿    @using Incoding.Extensions
+﻿    @using Incoding.Block.Logging    @using Incoding.Extensions
 @using Incoding.SiteTest
 @model JasmineIndexContainer
            
@@ -76,11 +76,43 @@
 </head>
 
 <body>
+    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertWithProperty" />
 <div id="simpleIML">
     @for (int i = 0; i < 1000; i++)
     {
         @(Html.When(JqueryBind.Click)
               .OnSuccess(dsl => dsl.Window.Alert("Test"))
+              .AsHtmlAttributes()
+              .ToDiv())
+    }
+</div>
+<div id="clickIML">
+    @for (int i = 0; i < 1000; i++)
+    {
+        @(Html.When(JqueryBind.Click)
+              .OnSuccess(dsl => dsl.Self().JQuery.Attr.AddClass(B.Btn))
+              .AsHtmlAttributes()
+              .ToDiv())
+    }
+</div>
+<div id="complexIML">
+    @for (int i = 0; i < 1000; i++)
+    {
+        @(Html.When(JqueryBind.Click)
+              .OnSuccess(dsl =>
+                         {
+                             dsl.Window.Alert("Test");
+                             dsl.Window.Console.Log(LogType.Debug, "test");
+                         })
+              .When(JqueryBind.InitIncoding)
+              .PreventDefault()
+              .OnSuccess(dsl =>
+                         {
+                             dsl.WithClass("test").Trigger.Incoding();
+                             dsl.WithId("aga").JQuery.Attr.AddClass("asd");
+                             dsl.WithClass(B.Disabled).JQuery.Attr.Remove(HtmlAttribute.Accept);
+
+                         })
               .AsHtmlAttributes()
               .ToDiv())
     }

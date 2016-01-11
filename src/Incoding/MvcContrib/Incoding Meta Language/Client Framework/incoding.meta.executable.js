@@ -12,19 +12,19 @@ ExecutableFactory.Create = function(type, data, self) {
     if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
-    var executable = $.extend({}, document[type]);
-    executable.jsonData = data;
-    executable.onBind = data.onBind;
-    executable.self = self;
-    executable.timeOut = data.timeOut;
-    executable.interval = data.interval;
-    executable.intervalId = data.intervalId;
-    executable.ands = data.ands;
-    executable.getTarget = function() {
-        return eval(data.target);
-    };
+    return $.extend(document[type], {
+        jsonData : data,
+        onBind : data.onBind,
+        self : self,
+        timeOut : data.timeOut,
+        interval : data.interval,
+        intervalId : data.intervalId,
+        ands : data.ands,
+        getTarget : function() {
+            return eval(data.target);
+        }
+    });
 
-    return executable;
 };
 
 // ReSharper restore UnusedParameter
@@ -92,23 +92,22 @@ ExecutableBase.prototype = {
 
         var res = false;
 
-        $(current.ands).each(function() {
-
+        for (var i = 0; i < current.ands.length; i++) {
             var hasAny = false;
 
-            $(this).each(function() {
-
-                hasAny = ConditionalFactory.Create(this, current).isSatisfied(current.result);
+            for (var j = 0; j < current.ands[i].length; j++) {
+                hasAny = ConditionalFactory.Create(current.ands[i][j], current).isSatisfied(current.result);
                 if (!hasAny) {
-                    return false;
+                    break;
                 }
-            });
+            }
 
             if (hasAny) {
                 res = true;
-                return false;
+                break;
             }
-        });
+
+        }
 
         return res;
     },

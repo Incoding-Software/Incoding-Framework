@@ -198,7 +198,7 @@ namespace Incoding.MvcContrib
         Text_left = 68719476736 * 8,
 
         [Description("text-right")]
-        Text_right = 68719476736 * 8,
+        Text_right = 68719476736 * 16,
 
         [Description("text-justify")]
         Text_justify = 68719476736 * 32,
