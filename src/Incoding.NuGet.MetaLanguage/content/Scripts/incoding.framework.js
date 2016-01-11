@@ -41,6 +41,10 @@ IncSpecialBinds.IncAjaxSuccess = 'incajaxsuccess';
 
 IncSpecialBinds.IncInsert = 'incinsert';
 
+IncSpecialBinds.IncGlobalError = 'incglobalerror';
+
+IncSpecialBinds.IncError = 'incerror';
+
 IncSpecialBinds.DocumentBinds = [
     IncSpecialBinds.IncChangeUrl,
     IncSpecialBinds.IncAjaxBefore,
@@ -499,9 +503,23 @@ ExecutableHelper.IsNullOrEmpty = function (value) {
     return !hasOwnProperty;
 };
 
-ExecutableHelper.RedirectTo = function (destentationUrl) {
-    var decodeUri = decodeURIComponent(destentationUrl);
-    var decodeHash = decodeURIComponent(window.location.hash);
+ExecutableHelper.RedirectTo = function(destentationUrl) {
+    // decode url issue for special characters like % or /
+    // fixed like here: https://github.com/medialize/URI.js/commit/fd8ee89a024698986ebef57393fcedbe22631616
+    var decodeUri;
+    try {
+        decodeUri = decodeURIComponent(destentationUrl);
+    }
+    catch (ex) {
+        decodeUri = destentationUrl;
+    }
+    var decodeHash;
+    try {
+        decodeHash = decodeURIComponent(window.location.hash);
+    }
+    catch (ex) {
+        decodeHash = window.location.hash;
+    }
 
     var isSame = decodeUri.contains('#') && decodeHash.replace("#", "") == decodeUri.split('#')[1];
     if (isSame) {
@@ -1228,58 +1246,39 @@ function IncodingMetaElement(element) {
 
     var keyIncodingRunner = 'incoding-runner';
 
-    var tryGetData = function(item, key) {
-
-        var tempData = $(item).attr(key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        tempData = $(item).prop(key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        tempData = $.data(item, key);
-        if (!ExecutableHelper.IsNullOrEmpty(tempData)) {
-            return tempData;
-        }
-
-        return $(item).data(key);
-
-    };
-
     this.element = element;
-    this.runner = tryGetData(element, keyIncodingRunner);
-    this.executables = $.parseJSON(tryGetData(element, 'incoding'));
+    this.attr = $(element).attr('incoding');
+    this.runner = $.data(element, keyIncodingRunner);
+    this.getExecutables = function() {
+        return JSON.parse(this.attr);
+    };
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
+        $.each(IncSpecialBinds.DocumentBinds, function() {
+            if (!eventName.contains(this)) {
+                return true;
+            }
 
-        if (IncSpecialBinds.DocumentBinds.contains(eventName)) {
-            $.each(IncSpecialBinds.DocumentBinds, function() {
-                eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-                $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
-                    new IncodingMetaElement(currentElement)
-                        .invoke(e, result);
-                    return false;
-                });
+            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
+            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+                new IncodingMetaElement(currentElement)
+                    .invoke(e, result);
+                return false;
             });
-        }
+        });
 
-        if (eventName === '') {
+        if (eventName === "") {
             return;
         }
 
         $(this.element).bind(eventName.toString(), function(e, result) {
 
-            new IncodingMetaElement(this)
-                .invoke(e, result);
-
             var strStatus = status.toString();
 
             if (strStatus === '4' || eventName === IncSpecialBinds.Incoding) {
-                return false;
+                e.stopPropagation(); // if native js trigger
+                e.preventDefault(); // if native js trigger                
             }
 
             if (strStatus === '2') {
@@ -1289,7 +1288,10 @@ function IncodingMetaElement(element) {
                 e.stopPropagation();
             }
 
-            return true;
+            new IncodingMetaElement(this)
+                .invoke(e, result);
+
+            return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
         });
     };
     this.invoke = function(e, result) {
@@ -1322,7 +1324,7 @@ IncodingRunner.prototype = {
 
         var current = this;
 
-        var filterExecutableByEvent = function (executable) {            
+        var filterExecutableByEvent = function(executable) {
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
                 executable.event = event;
@@ -1335,7 +1337,7 @@ IncodingRunner.prototype = {
                 this.execute();
             });
         }
-        catch(ex) {
+        catch (ex) {
             if (ex instanceof IncClientException) {
                 $($.grep(this.breakes, filterExecutableByEvent)).each(function() {
                     this.execute(ex);
@@ -1418,7 +1420,7 @@ function IncodingResult(result) {
             }
             return res;
         }
-        catch(e) {
+        catch (e) {
             console.log('fail parse result:{0}'.f(json));
             console.log('with exception:{0}'.f(e));
             return '';
@@ -1456,14 +1458,14 @@ function IncodingEngine() {
         var incSelector = '[incoding]';
         var defferedInit = [];
         $(incSelector, context)
-            .add(context)
+            .add($(context).is(incSelector) ? context : '')
             .each(function() {
                 var incodingMetaElement = new IncodingMetaElement(this);
 
                 var runner = new IncodingRunner();
                 var wasAddBinds = [];
 
-                $(incodingMetaElement.executables).each(function() {
+                $(incodingMetaElement.getExecutables()).each(function() {
 
                     var executableInstance = ExecutableFactory.Create(this.type, this.data, incodingMetaElement.element);
                     runner.Registry(this.type, this.data.onStatus, executableInstance);
@@ -1532,11 +1534,10 @@ function ExecutableFactory() {
 
 ExecutableFactory.Create = function(type, data, self) {
 
-    var cacheExecutable = document[type];
-    if (!cacheExecutable) {
+    if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
-    var executable = $.extend({}, cacheExecutable);
+    var executable = $.extend({}, document[type]);
     executable.jsonData = data;
     executable.onBind = data.onBind;
     executable.self = self;
@@ -1688,6 +1689,8 @@ $.extend(ExecutableActionBase.prototype, {
                 }
 
                 console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
+                $(document).trigger(jQuery.Event(IncSpecialBinds.IncGlobalError));
+                $(this.self).trigger(jQuery.Event(IncSpecialBinds.IncError));
                 if (navigator.Ie8) {
                     return false; //stop execute
                 }
