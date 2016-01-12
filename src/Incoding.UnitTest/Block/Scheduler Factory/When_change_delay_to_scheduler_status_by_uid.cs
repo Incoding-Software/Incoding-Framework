@@ -30,7 +30,7 @@
                                                  };
                                   mockCommand = MockCommand<ChangeDelayToSchedulerStatusByUIDCommand>
                                           .When(command)
-                                          .StubQuery(whereSpecification: new DelayToSchedulerByUIDWhereSpec(command.UID), 
+                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByUID(command.UID), 
                                                      entities: entities)
                                           .StubPush(new ChangeDelayToSchedulerStatusCommand() { Id = entities[0].Id, Status = command.Status })
                                           .StubPush(new ChangeDelayToSchedulerStatusCommand() { Id = entities[1].Id, Status = command.Status });

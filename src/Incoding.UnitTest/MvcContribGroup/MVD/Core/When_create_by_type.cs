@@ -22,7 +22,7 @@
                                   //.StubQuery<CreateByTypeQuery.FindTypeByName, Type>(r => r.Tuning(s=>s.), typeof(UniqueNameClass));
                               };
 
-        Because of = () => mockQuery.Original.Execute();
+        Because of = () => mockQuery.Execute();
 
         It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
 

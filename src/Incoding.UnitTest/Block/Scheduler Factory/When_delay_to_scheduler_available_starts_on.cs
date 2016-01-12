@@ -11,7 +11,7 @@
 
     #endregion
 
-    [Subject(typeof(DelayToSchedulerAvailableStartsOnWhereSpec))]
+    [Subject(typeof(DelayToScheduler.Where.AvailableStartsOn))]
     public class When_delay_to_scheduler_available_starts_on
     {
         Establish establish = () =>
@@ -34,7 +34,7 @@
         Because of = () =>
                      {
                          filterCollection = fakeCollection
-                                 .Where(new DelayToSchedulerAvailableStartsOnWhereSpec(currentDate).IsSatisfiedBy())
+                                 .Where(new DelayToScheduler.Where.AvailableStartsOn(currentDate).IsSatisfiedBy())
                                  .ToList();
                      };
 

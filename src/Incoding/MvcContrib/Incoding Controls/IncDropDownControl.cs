@@ -147,6 +147,11 @@ namespace Incoding.MvcContrib
                 return new IncSelectOptional(s);
             }
 
+            public static implicit operator IncSelectOptional(string[] s)
+            {
+                return new IncSelectOptional(s.Select(r => new KeyValueVm(r)));
+            }
+
             public static implicit operator IncSelectOptional(KeyValueVm s)
             {
                 return new IncSelectOptional(s);

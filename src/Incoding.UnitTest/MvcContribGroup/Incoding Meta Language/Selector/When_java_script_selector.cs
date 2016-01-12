@@ -34,7 +34,7 @@
 
         It should_be_call_with_selector = () => Selector.JS.Call("Method", Selector.JS.Call("FormatPhone", Selector.Result.For<HealthcareSystemProviderDetailsVm>(r => r.AdrVal1)))
                                                         .ToString()
-                                                        .ShouldEqual("||javascript*Method(5,'aws')||");
+                                                        .ShouldEqual("||javascript*Method(||javascript*FormatPhone)||");
 
         It should_be_confirm = () => Selector.JS.Confirm("My message '")
                                              .ToString()

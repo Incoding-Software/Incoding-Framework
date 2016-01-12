@@ -2,24 +2,15 @@
 {
     #region << Using >>
 
-    using System.Linq;
     using Incoding.CQRS;
 
     #endregion
 
     public class ChangeDelayToSchedulerStatusByUIDCommand : CommandBase
     {
-        #region Properties
-
-        public string UID { get; set; }
-
-        public DelayOfStatus Status { get; set; }
-
-        #endregion
-
         protected override void Execute()
         {
-            foreach (var delay in Repository.Query(whereSpecification: new DelayToSchedulerByUIDWhereSpec(UID)))
+            foreach (var delay in Repository.Query(whereSpecification: new DelayToScheduler.Where.ByUID(UID)))
             {
                 Dispatcher.Push(new ChangeDelayToSchedulerStatusCommand
                                 {
@@ -28,5 +19,13 @@
                                 });
             }
         }
+
+        #region Properties
+
+        public string UID { get; set; }
+
+        public DelayOfStatus Status { get; set; }
+
+        #endregion
     }
 }

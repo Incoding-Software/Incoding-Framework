@@ -16,17 +16,17 @@
     [Subject(typeof(EntityFrameworkUnitOfWork))]
     public class When_entity_framework_unit_of_work
     {
-        #region Establish value
+        It should_be_dispose = () => Run((work, context) =>
+                                         {
+                                             work.Dispose();
+                                             context.Verify(r => r.Dispose(), Times.Once());
+                                         });
 
-        static void Run(Action<EntityFrameworkUnitOfWork, Mock<DbContext>> action, bool isOpen = true)
-        {
-            var dbContext = Pleasure.Mock<DbContext>();
-            var unitOfWork = new EntityFrameworkUnitOfWork(dbContext.Object, IsolationLevel.ReadCommitted, true);
-
-            action(unitOfWork, dbContext);
-        }
-
-        #endregion
+        It should_be_dispose_without_open = () => Run((work, context) =>
+                                                      {
+                                                          work.Dispose();
+                                                          context.Verify(r => r.Dispose(), Times.Never());
+                                                      }, isOpen: false);
 
         It should_be_flush = () => Run((work, context) =>
                                        {
@@ -40,16 +40,17 @@
                                                         context.Verify(r => r.SaveChanges(), Times.Never());
                                                     }, isOpen: false);
 
-        It should_be_dispose = () => Run((work, context) =>
-                                         {
-                                             work.Dispose();
-                                             context.Verify(r => r.Dispose(), Times.Once());
-                                         });
+        #region Establish value
 
-        It should_be_dispose_without_open = () => Run((work, context) =>
-                                                      {
-                                                          work.Dispose();
-                                                          context.Verify(r => r.Dispose(), Times.Never());
-                                                      }, isOpen: false);
+        static void Run(Action<EntityFrameworkUnitOfWork, Mock<DbContext>> action, bool isOpen = true)
+        {
+            var isolationLevel = IsolationLevel.ReadCommitted;
+            var dbContext = Pleasure.Mock<DbContext>();
+            var unitOfWork = new EntityFrameworkUnitOfWork(dbContext.Object, isolationLevel, true);
+
+            action(unitOfWork, dbContext);
+        }
+
+        #endregion
     }
 }

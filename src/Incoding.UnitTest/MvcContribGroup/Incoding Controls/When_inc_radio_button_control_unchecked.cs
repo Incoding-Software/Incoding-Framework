@@ -13,10 +13,13 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .RadioButton(boxControl => { boxControl.Value = "Male"; });
+                                     .RadioButton(boxControl =>
+                                                  {
+                                                      boxControl.Value = "Male";
+                                                  });
                          };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<label class=\"btn btn-default\" for=\"Prop\"><input id=\"Prop\" name=\"Prop\" type=\"radio\" value=\"Male\" />Male</label>");
+                                          .ShouldEqual("<div class=\"radio\"><label><input id=\"Prop\" name=\"Prop\" type=\"radio\" value=\"Male\" /><i></i><span>Male</span></label></div>");
     }
 }

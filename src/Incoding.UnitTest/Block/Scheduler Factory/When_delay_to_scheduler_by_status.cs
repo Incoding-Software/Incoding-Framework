@@ -12,7 +12,7 @@
 
     #endregion
 
-    [Subject(typeof(DelayToSchedulerByStatusWhere))]
+    [Subject(typeof(DelayToScheduler.Where.ByStatus))]
     public class When_delay_to_scheduler_by_status
     {
         #region Establish value
@@ -28,14 +28,14 @@
                                       Func<DelayOfStatus, DelayToScheduler> createEntity = (status) => Pleasure.MockAsObject<DelayToScheduler>(mock => mock.SetupGet(r => r.Status).Returns(status));
 
                                       fakeCollection = Pleasure.ToQueryable(createEntity(DelayOfStatus.New), 
-                                                                            createEntity(DelayOfStatus.New.Inverse<DelayOfStatus>()), 
-                                                                            createEntity(DelayOfStatus.New.Inverse<DelayOfStatus>()));
+                                                                            createEntity(DelayOfStatus.New.Inverse()), 
+                                                                            createEntity(DelayOfStatus.New.Inverse()));
                                   };
 
         Because of = () =>
                          {
                              filterCollection = fakeCollection
-                                     .Where(new DelayToSchedulerByStatusWhere(DelayOfStatus.New).IsSatisfiedBy())
+                                     .Where(new DelayToScheduler.Where.ByStatus(DelayOfStatus.New).IsSatisfiedBy())
                                      .ToList();
                          };
 

@@ -2,27 +2,8 @@
 {
     using System;
     using System.Linq.Expressions;
+    using JetBrains.Annotations;
 
-    public class DelayToSchedulerByUIDWhereSpec : Specification<DelayToScheduler>
-    {
-        #region Fields
-
-        readonly string uid;
-
-        #endregion
-
-        #region Constructors
-
-        public DelayToSchedulerByUIDWhereSpec(string uid)
-        {
-            this.uid = uid;
-        }
-
-        #endregion
-
-        public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
-        {
-            return scheduler => scheduler.UID == this.uid;
-        }
-    }
+    [Obsolete("Use DelayToScheduler.Where.ByUID", true), UsedImplicitly]
+    public class DelayToSchedulerByUIDWhereSpec { }
 }

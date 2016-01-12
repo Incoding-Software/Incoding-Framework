@@ -10,6 +10,7 @@ namespace Incoding.MvcContrib
     using Incoding.Maybe;
 
     #endregion
+
     public enum ModeOfRadio
     {
         Normal = 0,
@@ -17,10 +18,8 @@ namespace Incoding.MvcContrib
         Inline = 1
     }
 
-
     public class IncRadioButtonControl<TModel, TProperty> : IncControlBase
     {
-
         #region Constructors
 
         public IncRadioButtonControl(HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
@@ -33,13 +32,15 @@ namespace Incoding.MvcContrib
         #endregion
 
         public override MvcHtmlString ToHtmlString()
-        {            
-            string value = Value.With(r=>r.ToString());
-            Guard.NotNullOrWhiteSpace("'value'", value);
+        {
+            string value = Value.With(r => r.ToString());
+            Guard.NotNullOrWhiteSpace("value", value, errorMessage: "Please set Value like are setting.Value = something");
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
             div.AddCssClass(Mode == ModeOfRadio.Normal ? B.Radio.AsClass() : B.Radio_inline.AsClass());
-            div.AddCssClass(GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(), string.Empty).ToString());
+            var parentClass = GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(), string.Empty).ToString();
+            if (!string.IsNullOrEmpty(parentClass))
+                div.AddCssClass(parentClass);
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name ?? value;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());

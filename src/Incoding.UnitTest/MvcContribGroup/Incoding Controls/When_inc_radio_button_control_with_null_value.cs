@@ -26,6 +26,6 @@
                                                                        .ToHtmlString());
                          };
 
-        It should_be_render = () => exception.Message.ShouldContain("Argument Value can't be null");
+        It should_be_render = () => exception.Message.ShouldContain("Please set Value like are setting.Value = something");
     }
 }

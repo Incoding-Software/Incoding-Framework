@@ -22,9 +22,9 @@
                                   IoCFactory.Instance.Initialize(init => init.WithProvider(iocProvider.Object));
                               };
 
-        Because of = () => incValidationFactory.GetValidator<FakeValidation>();
+        Because of = () => incValidationFactory.GetValidator(typeof(FakeValidation));
 
-        It should_be_resolve = () => iocProvider.Verify(r => r.GetAll<IValidator>(typeof(AbstractValidator<FakeValidation>)));
+        It should_be_resolve = () => iocProvider.Verify(r => r.TryGet<IValidator>(typeof(AbstractValidator<FakeValidation>)));
 
         #region Fake classes
 

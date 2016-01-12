@@ -20,9 +20,9 @@
                               {
                                   var query = Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery>();
                                   fakeCommand = Pleasure.Generator.Invent<FakeCommand>();
-                                  Action<IInventFactoryDsl<DelayToScheduler>> action = dsl => dsl
-                                                                                                      .Tuning(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
-                                                                                                      .Tuning(r => r.Command, fakeCommand.ToJsonString());
+                                  Action<IInventFactoryDsl<DelayToScheduler>> action = dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
+                                                                                                 .GenerateTo(r => r.Option)
+                                                                                                 .Tuning(r => r.Command, fakeCommand.ToJsonString());
                                   successEntities = new[]
                                                     {
                                                             Pleasure.Generator.Invent(action),
@@ -35,25 +35,28 @@
 
                                   mockQuery = MockQuery<GetExpectedDelayToSchedulerQuery, List<GetExpectedDelayToSchedulerQuery.Response>>
                                           .When(query)
-                                          .StubQuery(whereSpecification: new DelayToSchedulerByStatusWhere(DelayOfStatus.New)
-                                                             .And(new DelayToSchedulerAsyncWhere(query.Async))
-                                                             .And(new DelayToSchedulerAvailableStartsOnWhereSpec(query.Date)),
+                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByStatus(DelayOfStatus.New)
+                                                             .And(new DelayToScheduler.Where.ByAsync(query.Async))
+                                                             .And(new DelayToScheduler.Where.AvailableStartsOn(query.Date)),
+                                                     orderSpecification: new DelayToScheduler.Sort.Default(),
                                                      paginatedSpecification: new PaginatedSpecification(1, query.FetchSize),
                                                      entities: successEntities)
-                                          .StubQuery(whereSpecification: new DelayToSchedulerByStatusWhere(DelayOfStatus.Error)
-                                                             .And(new DelayToSchedulerAsyncWhere(query.Async))
-                                                             .And(new DelayToSchedulerAvailableStartsOnWhereSpec(query.Date)),
-                                                     paginatedSpecification: new PaginatedSpecification(1, 10),
+                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByStatus(DelayOfStatus.Error)
+                                                             .And(new DelayToScheduler.Where.ByAsync(query.Async))
+                                                             .And(new DelayToScheduler.Where.AvailableStartsOn(query.Date)),
+                                                     orderSpecification: new DelayToScheduler.Sort.Default(),
+                                                     paginatedSpecification: new PaginatedSpecification(1, 3),
                                                      entities: errorEntities);
                               };
 
-        Because of = () => mockQuery.Original.Execute();
+        Because of = () => mockQuery.Execute();
 
         It should_be_result = () => mockQuery.ShouldBeIsResult(list =>
                                                                {
                                                                    var all = new List<DelayToScheduler>(successEntities);
                                                                    all.AddRange(errorEntities);
-                                                                   list.ShouldEqualWeakEach(all, (dsl, i) => dsl.ForwardToValue(r => r.Instance, fakeCommand));
+                                                                   list.ShouldEqualWeakEach(all, (dsl, i) => dsl.ForwardToValue(r => r.TimeOut, all[i].Option.TimeOut)
+                                                                                                                .ForwardToValue(r => r.Instance, fakeCommand));
                                                                });
 
         #region Fake classes

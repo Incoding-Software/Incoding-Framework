@@ -22,8 +22,7 @@
                                                 .GetData()
                                                 .ShouldEqualConditionalIs(left: "||javascript*confirm('Message')||",
                                                                           right: "||value*True||",
-                                                                          method: "equal");  
-  
+                                                                          method: "equal");
 
         It should_be_is_confirm_false = () => new ConditionalIs(() => !Selector.JS.Confirm("Message"), true)
                                                       .GetData()
@@ -203,17 +202,17 @@
                                                                                        right: "$('#id')",
                                                                                        method: "iscontains");
 
+        It should_javascript_hash_is_empty = () => new ConditionalIs(() => Selector.JS.Location.Hash.IsEmpty(), true)
+                                                           .GetData()
+                                                           .ShouldEqualConditionalIs(left: "||javascript*window.location.hash||",
+                                                                                     right: "",
+                                                                                     method: "isempty");
+
         It should_not_is_equal = () => new ConditionalIs(() => Selector.Jquery.Id("id") != true, true)
                                                .GetData()
                                                .ShouldEqualConditionalIs(left: "$('#id')",
                                                                          right: "||value*True||",
                                                                          method: "notequal");
-
-        It should_javascript_hash_is_empty = () => new ConditionalIs(() => Selector.JS.Location.Hash.IsEmpty(), true)
-                                               .GetData()
-                                               .ShouldEqualConditionalIs(left: "",
-                                                                         right: "||javascript*window.location.hash||",
-                                                                         method: "isempty");
 
         #region Fake classes
 

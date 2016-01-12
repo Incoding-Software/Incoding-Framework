@@ -2,19 +2,10 @@
 {
     using System;
     using System.Linq.Expressions;
+    using JetBrains.Annotations;
 
-    public class DelayToSchedulerAsyncWhere : Specification<DelayToScheduler>
+    [Obsolete("Use DelayToScheduler.Where.ByAsync", true), UsedImplicitly]
+    public class DelayToSchedulerAsyncWhere 
     {
-        private readonly bool @async;
-
-        public DelayToSchedulerAsyncWhere(bool @async)
-        {
-            this.async = async;
-        }
-
-        public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
-        {
-            return scheduler => scheduler.Option.Async == this.async;
-        }
     }
 }

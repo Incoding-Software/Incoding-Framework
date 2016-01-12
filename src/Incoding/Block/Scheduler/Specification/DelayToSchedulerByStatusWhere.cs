@@ -1,28 +1,12 @@
 ﻿namespace Incoding.Block
 {
+    #region << Using >>
+
     using System;
-    using System.Linq.Expressions;
+    using JetBrains.Annotations;
 
-    public class DelayToSchedulerByStatusWhere : Specification<DelayToScheduler>
-    {
-        #region Fields
+    #endregion
 
-        readonly DelayOfStatus status;
-
-        #endregion
-
-        #region Constructors
-
-        public DelayToSchedulerByStatusWhere(DelayOfStatus status)
-        {
-            this.status = status;
-        }
-
-        #endregion
-
-        public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
-        {
-            return scheduler => scheduler.Status == this.status;
-        }
-    }
+    [Obsolete("Use DelayToScheduler.Where.ByStatus", true), UsedImplicitly]
+    public class DelayToSchedulerByStatusWhere { }
 }

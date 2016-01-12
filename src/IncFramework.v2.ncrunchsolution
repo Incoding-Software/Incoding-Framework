@@ -3,12 +3,12 @@
   <InferProjectReferencesUsingAssemblyNames>false</InferProjectReferencesUsingAssemblyNames>
   <AllowParallelTestExecution>false</AllowParallelTestExecution>
   <AllowTestsToRunInParallelWithThemselves>true</AllowTestsToRunInParallelWithThemselves>
-  <FrameworkUtilisationTypeForNUnit>UseDynamicAnalysis</FrameworkUtilisationTypeForNUnit>
-  <FrameworkUtilisationTypeForGallio>UseStaticAnalysis</FrameworkUtilisationTypeForGallio>
+  <FrameworkUtilisationTypeForNUnit>Disabled</FrameworkUtilisationTypeForNUnit>
+  <FrameworkUtilisationTypeForGallio>Disabled</FrameworkUtilisationTypeForGallio>
   <FrameworkUtilisationTypeForMSpec>UseStaticAnalysis</FrameworkUtilisationTypeForMSpec>
-  <FrameworkUtilisationTypeForMSTest>UseStaticAnalysis</FrameworkUtilisationTypeForMSTest>
-  <FrameworkUtilisationTypeForXUnit2>UseDynamicAnalysis</FrameworkUtilisationTypeForXUnit2>
-  <NCrunchCacheStoragePath />
+  <FrameworkUtilisationTypeForMSTest>Disabled</FrameworkUtilisationTypeForMSTest>
+  <FrameworkUtilisationTypeForXUnit2>Disabled</FrameworkUtilisationTypeForXUnit2>
+  <NCrunchCacheStoragePath></NCrunchCacheStoragePath>
   <EngineModes>Run all tests automatically:BFRydWU=;Run all tests manually:BUZhbHNl;Run impacted tests automatically, others manually (experimental!):CklzSW1wYWN0ZWQ=;Run pinned tests automatically, others manually:CElzUGlubmVk</EngineModes>
   <MetricsExclusionList>
 Incoding.SiteTest\Incoding.SiteTest.csproj

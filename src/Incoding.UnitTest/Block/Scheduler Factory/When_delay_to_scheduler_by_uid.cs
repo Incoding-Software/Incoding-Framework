@@ -11,7 +11,7 @@
 
     #endregion
 
-    [Subject(typeof(DelayToSchedulerByUIDWhereSpec))]
+    [Subject(typeof(DelayToScheduler.Where.ByUID))]
     public class When_delay_to_scheduler_by_uid
     {
         #region Establish value
@@ -33,7 +33,7 @@
         Because of = () =>
                          {
                              filterCollection = fakeCollection
-                                     .Where(new DelayToSchedulerByUIDWhereSpec(Pleasure.Generator.TheSameString()).IsSatisfiedBy())
+                                     .Where(new DelayToScheduler.Where.ByUID(Pleasure.Generator.TheSameString()).IsSatisfiedBy())
                                      .ToList();
                          };
 

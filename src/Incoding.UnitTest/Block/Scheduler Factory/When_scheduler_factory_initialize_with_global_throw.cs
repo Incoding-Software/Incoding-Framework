@@ -15,16 +15,6 @@
     [Subject(typeof(StartSchedulerCommand))]
     public class When_scheduler_factory_initialize_with_global_throw
     {
-        #region Establish value
-
-        static Mock<ILogger> logger;
-
-        static Exception exception;
-
-        static MockCommand<StartSchedulerCommand> mockMessage;
-
-        #endregion
-
         Establish establish = () =>
                               {
                                   var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.Conditional, () => { throw new ArgumentException(); }));
@@ -41,9 +31,19 @@
                          Pleasure.Sleep1000Milliseconds();
                      };
 
+        It should_be_log_once = () => logger.Verify(r => r.Log(Pleasure.MockIt.IsStrong(new LogMessage(string.Empty, new ArgumentException(), null), dsl => dsl.ForwardToAction(message => message.Exception, message => message.Exception.ShouldNotBeNull())
+                                                                                                                                                               .ForwardToAction(message => message.Message, message => message.Message.ShouldNotBeEmpty()))), Times.Exactly(2));
+
         It should_not_be_exception = () => exception.ShouldBeNull();
 
-        It should_be_log_once = () => logger.Verify(r => r.Log(Pleasure.MockIt.IsStrong(new LogMessage(string.Empty, new ArgumentException(), null), dsl => dsl.ForwardToAction(message => message.Exception, message => message.Exception.ShouldNotBeNull())
-                                                                                                                                                               .ForwardToAction(message => message.Message, message => message.Message.ShouldNotBeEmpty()))), Times.Once());
+        #region Establish value
+
+        static Mock<ILogger> logger;
+
+        static Exception exception;
+
+        static MockCommand<StartSchedulerCommand> mockMessage;
+
+        #endregion
     }
 }

@@ -17,10 +17,10 @@
         protected override List<Response> ExecuteResult()
         {
             var all = new List<DelayToScheduler>();
-            Func<DelayOfStatus, int, IQueryable<DelayToScheduler>> getByType = (type, size) => Repository.Query(whereSpecification: (new DelayToSchedulerByStatusWhere(type))
-                                                                                                                        .And(new DelayToSchedulerAsyncWhere(Async))
-                                                                                                                        .And(new DelayToSchedulerAvailableStartsOnWhereSpec(Date)),
-                                                                                                                orderSpecification: new DelayToSchedulerSort(),
+            Func<DelayOfStatus, int, IQueryable<DelayToScheduler>> getByType = (type, size) => Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(type)
+                                                                                                                        .And(new DelayToScheduler.Where.ByAsync(Async))
+                                                                                                                        .And(new DelayToScheduler.Where.AvailableStartsOn(Date)),
+                                                                                                                orderSpecification: new DelayToScheduler.Sort.Default(),
                                                                                                                 paginatedSpecification: new PaginatedSpecification(1, size));
             all.AddRange(getByType(DelayOfStatus.New, FetchSize));
             all.AddRange(getByType(DelayOfStatus.Error, 3));
@@ -36,7 +36,7 @@
 
         #region Nested classes
 
-        public class Response
+        public class Response 
         {
             #region Properties
 
