@@ -46,6 +46,12 @@
                                                .ToString()
                                                .ShouldEqual("$(this.self).hasClass('class')");
 
+        It should_be_has_class_b = () => Selector.Jquery
+                                               .Self()
+                                               .HasClass(B.Active)
+                                               .ToString()
+                                               .ShouldEqual("$(this.self).hasClass('active')");
+
         It should_be_has_class_multiple = () => Selector.Jquery
                                                         .Self()
                                                         .HasClass("class class2")

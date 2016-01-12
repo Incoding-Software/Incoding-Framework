@@ -60,6 +60,14 @@
         }
 
         /// <summary>
+        ///     Get the determine whether any of the matched elements are assigned the given class.
+        /// </summary>
+        public static JquerySelectorExtend HasClass(this JquerySelectorExtend selector, B @class)
+        {
+            return selector.Method("hasClass", Selector.Jquery.Class(@class).ToSelector().Replace(".", string.Empty));
+        }
+
+        /// <summary>
         ///     Get the current computed height for the first element in the set of matched elements
         /// </summary>
         public static JquerySelectorExtend Height(this JquerySelectorExtend selector)

@@ -1535,8 +1535,9 @@ describe('Incoding', function() {
                     expect(IncSpecialBinds.DocumentBinds.contains(IncSpecialBinds.IncAjaxError)).toBeTruthy();
                     expect(IncSpecialBinds.DocumentBinds.contains(IncSpecialBinds.IncAjaxSuccess)).toBeTruthy();
                     expect(IncSpecialBinds.DocumentBinds.contains(IncSpecialBinds.IncInsert)).toBeTruthy();
+                    expect(IncSpecialBinds.DocumentBinds.contains(IncSpecialBinds.IncGlobalError)).toBeTruthy();
 
-                    expect(IncSpecialBinds.DocumentBinds.length).toEqual(6);
+                    expect(IncSpecialBinds.DocumentBinds.length).toEqual(7);
 
                 });
             });
@@ -3901,13 +3902,13 @@ describe('Incoding', function() {
                 it('Should be insert after', function() {
                     insert.jsonData = $.parseJSON($('#ExecutableInsertAfter').val());
                     insert.internalExecute();
-                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.next());
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.nextAll());
                 });
 
                 it('Should be insert before', function() {
                     insert.jsonData = $.parseJSON($('#ExecutableInsertBefore').val());
                     insert.internalExecute();
-                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.prev());
+                    expect(IncodingEngine.Current.parse).toHaveBeenCalledWith(div.prevAll());
                 });
 
             });
@@ -4108,6 +4109,21 @@ describe('Incoding', function() {
                     $(input).addClass(inputErrorClass);
 
                     validationRefresh.result = [];
+                    validationRefresh.internalExecute();
+
+                    expect(input).not.toHaveClass(inputErrorClass);
+                    expect(span).not.toHaveClass(messageErrorClass);
+                    expect(span).toHaveClass(messageValidClass);
+                    expect(span).toHaveHtml("");
+
+                });
+
+                it('Should be is wrong result (not model state)', function () {
+
+                    $(span).addClass(messageErrorClass).html('message');
+                    $(input).addClass(inputErrorClass);
+
+                    validationRefresh.result = {name:'',value:''};
                     validationRefresh.internalExecute();
 
                     expect(input).not.toHaveClass(inputErrorClass);

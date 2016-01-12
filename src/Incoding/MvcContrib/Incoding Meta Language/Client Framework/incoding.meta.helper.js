@@ -51,6 +51,7 @@ IncSpecialBinds.DocumentBinds = [
     IncSpecialBinds.IncAjaxError,
     IncSpecialBinds.IncAjaxComplete,
     IncSpecialBinds.IncAjaxSuccess,
+    IncSpecialBinds.IncGlobalError,
     IncSpecialBinds.IncInsert
 ];
 

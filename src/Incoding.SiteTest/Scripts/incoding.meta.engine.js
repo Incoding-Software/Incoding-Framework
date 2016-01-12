@@ -15,24 +15,24 @@ function IncodingMetaElement(element) {
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
-        $.each(IncSpecialBinds.DocumentBinds, function() {
-            if (!eventName.contains(this)) {
-                return true;
+        for (var i = 0; i < IncSpecialBinds.DocumentBinds.length; i++) {
+            var docBind = IncSpecialBinds.DocumentBinds[i];
+            if (!eventName.contains(docBind)) {
+                continue;
             }
-
-            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+            eventName = eventName.replaceAll(docBind, ''); //remove document bind from element bind           
+            $(document).bind(docBind.toString(), function(e, result) { //docBind.toString() fixed for ie <10
                 new IncodingMetaElement(currentElement)
                     .invoke(e, result);
                 return false;
             });
-        });
+        }
 
         if (eventName === "") {
             return;
         }
 
-        $(this.element).bind(eventName.toString(), function(e, result) {
+        $(currentElement).bind(eventName.toString(), function (e, result) {
 
             var strStatus = status.toString();
 
@@ -54,6 +54,7 @@ function IncodingMetaElement(element) {
             return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
         });
     };
+
     this.invoke = function(e, result) {
         if (!ExecutableHelper.IsNullOrEmpty(this.runner)) {
             this.runner.DoIt(e, result);

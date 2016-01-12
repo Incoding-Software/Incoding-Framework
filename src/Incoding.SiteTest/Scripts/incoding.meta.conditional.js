@@ -10,7 +10,7 @@ ConditionalFactory.Create = function(data, executable) {
     if (!document[data.type]) {
         document[data.type] = eval('new ' + 'Conditional' + data.type + '();');
     }
-    return $.extend(document[data.type], {
+    return $.extend(false, document[data.type], {
         jsonData : data,
         executable : executable
     });
