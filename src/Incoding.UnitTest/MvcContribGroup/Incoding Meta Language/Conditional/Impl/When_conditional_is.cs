@@ -205,7 +205,7 @@
         It should_javascript_hash_is_empty = () => new ConditionalIs(() => Selector.JS.Location.Hash.IsEmpty(), true)
                                                            .GetData()
                                                            .ShouldEqualConditionalIs(left: "||javascript*window.location.hash||",
-                                                                                     right: "",
+                                                                                     right: "||value*||",
                                                                                      method: "isempty");
 
         It should_not_is_equal = () => new ConditionalIs(() => Selector.Jquery.Id("id") != true, true)

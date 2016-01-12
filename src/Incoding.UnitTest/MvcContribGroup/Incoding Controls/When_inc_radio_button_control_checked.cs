@@ -19,6 +19,6 @@
                          };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<label class=\"btn btn-default\" for=\"Prop\"><input checked=\"checked\" id=\"Prop\" name=\"Prop\" type=\"radio\" value=\"Male\" />Male</label>");
+                                          .ShouldEqual("<div class=\"radio\"><label><input checked=\"checked\" id=\"Prop\" name=\"Prop\" type=\"radio\" value=\"Male\" /><i></i><span>Male</span></label></div>");
     }
 }

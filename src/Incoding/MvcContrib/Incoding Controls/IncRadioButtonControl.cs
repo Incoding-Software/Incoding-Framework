@@ -11,13 +11,6 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public enum ModeOfRadio
-    {
-        Normal = 0,
-
-        Inline = 1
-    }
-
     public class IncRadioButtonControl<TModel, TProperty> : IncControlBase
     {
         #region Constructors

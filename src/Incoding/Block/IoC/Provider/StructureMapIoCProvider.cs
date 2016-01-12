@@ -69,7 +69,7 @@ namespace Incoding.Block.IoC
 
         public TInstance TryGet<TInstance>(Type type) where TInstance : class
         {
-            return (TInstance)this.container.TryGetInstance(type);
+            return this.container.TryGetInstance(type) as TInstance;
         }
 
         public TInstance TryGetByNamed<TInstance>(object named) where TInstance : class

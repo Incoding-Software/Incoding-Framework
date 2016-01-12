@@ -365,11 +365,14 @@
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
+    <Compile Include="MvcContribGroup\Class1.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push__multiple_error_result.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_extensions.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_to_key_values.cs" />
     <Compile Include="MvcContribGroup\Extensions\When_html_extensions.cs" />
+    <Compile Include="MvcContribGroup\When_inc_html_string_cast.cs" />
+    <Compile Include="MvcContribGroup\When_inc_select_list_cast.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_attr_attributes.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_set_attributes.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_with_on.cs" />
@@ -380,6 +383,7 @@
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_file_control_inc_483.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_help_block_control_without_message.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v2.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_input_as_static.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_override_default.cs" />
@@ -793,7 +797,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

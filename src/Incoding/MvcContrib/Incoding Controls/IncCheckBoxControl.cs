@@ -12,14 +12,6 @@ namespace Incoding.MvcContrib
 
     #endregion
 
-    public enum ModeOfCheckbox
-    {
-        Normal = 0,
-
-        Inline = 1
-    }
-
-
     public class IncCheckBoxControl<TModel, TProperty> : IncControlBase
     {
 

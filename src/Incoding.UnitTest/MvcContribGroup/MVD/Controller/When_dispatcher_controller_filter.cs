@@ -24,7 +24,7 @@
 
         It should_be_init = () =>
                             {
-                                types.Count.ShouldEqual(28);
+                                types.Count.ShouldEqual(27);
                                 types.First().ShouldEqual(typeof(EB61C30C_4F25_4CDA_8625_8E3BBA8D4521));
                             };
 
