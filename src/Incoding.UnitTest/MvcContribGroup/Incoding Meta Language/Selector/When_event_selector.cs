@@ -10,15 +10,13 @@
     [Subject(typeof(EventSelector))]
     public class When_event_selector
     {
-        
         It should_be_meta_key = () => Selector.Event.MetaKey
                                               .ToString()
                                               .ShouldEqual("||javascript*this.event.metaKey||");
 
-        It should_be_multiple_t_data = () => Selector.Event
-                                                     .Data<FakeEvent>(@event => @event.Inner.Name)
+        It should_be_multiple_t_data = () => Selector.Event.Data.For<FakeEvent>(@event => @event.Inner.Name)
                                                      .ToString()
-                                                     .ShouldEqual("||javascript*this.event.Inner.Name||");
+                                                     .ShouldEqual("||resultOfevent*Inner.Name||");
 
         It should_be_page_x = () => Selector.Event
                                             .PageX
@@ -40,10 +38,9 @@
                                               .ToString()
                                               .ShouldEqual("||javascript*this.event.screenY||");
 
-        It should_be_t_data = () => Selector.Event
-                                            .Data<FakeEvent>(@event => @event.Name)
+        It should_be_t_data = () => Selector.Event.Data.For<FakeEvent>(@event => @event.Name)
                                             .ToString()
-                                            .ShouldEqual("||javascript*this.event.Name||");
+                                            .ShouldEqual("||resultOfevent*Name||");
 
         It should_be_type = () => Selector.Event.Type
                                           .ToString()

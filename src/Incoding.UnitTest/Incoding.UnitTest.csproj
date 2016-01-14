@@ -365,7 +365,7 @@
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
-    <Compile Include="MvcContribGroup\Class1.cs" />
+    <Compile Include="MvcContribGroup\When_inc_optional.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push__multiple_error_result.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_extensions.cs" />

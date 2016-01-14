@@ -56,7 +56,7 @@
 
         public static EventSelector Event { get { return new EventSelector(); } }
 
-        public static ResultSelector Result { get { return new ResultSelector(); } }
+        public static ResultSelector Result { get { return new ResultSelector(ResultSelector.TypeOfResult,string.Empty); } }
 
         #endregion
 

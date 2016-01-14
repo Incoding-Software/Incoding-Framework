@@ -12,6 +12,24 @@ namespace Incoding.MvcContrib
 
     public class IncSelectList
     {
+        #region Properties
+
+        public IncOptional Optional { get; set; }
+
+        #endregion
+
+        public static implicit operator SelectList(IncSelectList s)
+        {
+            List<KeyValueVm> optValues = s.Optional;
+            for (int i = 0; i < optValues.Count; i++)
+                s.keyValueVms.Insert(i, optValues[i]);
+            return new SelectList(s.keyValueVms, "Value", "Text");
+        }
+
+        public static implicit operator string(IncSelectList s)
+        {
+            return s.url;
+        }
 
         public static implicit operator IncSelectList(List<KeyValueVm> s)
         {
@@ -62,7 +80,7 @@ namespace Incoding.MvcContrib
 
             public static implicit operator List<KeyValueVm>(IncOptional s)
             {
-                return s.values;
+                return s.values ?? new List<KeyValueVm>();
             }
 
             public static implicit operator IncOptional(List<KeyValueVm> s)
@@ -99,33 +117,21 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        #region Properties
-
-        public SelectList AsSelectList
-        {
-            get
-            {
-                List<KeyValueVm> optValues = Optional;
-                for (int i = 0; i < optValues.Count; i++)
-                    this.keyValueVms.Insert(i, optValues[i]);
-                return new SelectList(this.keyValueVms, "Value", "Text");
-            }
-        }
-
-        public string Url { get { return this.url; } }
-
-        public IncOptional Optional { get; set; }
-
-        #endregion
-
         #region Constructors
 
+        public IncSelectList()
+        {
+            Optional = new IncOptional();
+        }
+
         public IncSelectList(IEnumerable<KeyValueVm> keyValueVms)
+                : this()
         {
             this.keyValueVms = keyValueVms.ToList();
         }
 
         public IncSelectList(SelectList asSelectList)
+                : this()
         {
             this.keyValueVms = new List<KeyValueVm>();
             foreach (var item in asSelectList.Items)
@@ -137,6 +143,7 @@ namespace Incoding.MvcContrib
         }
 
         public IncSelectList(string asSelectList)
+                : this()
         {
             this.url = asSelectList;
         }

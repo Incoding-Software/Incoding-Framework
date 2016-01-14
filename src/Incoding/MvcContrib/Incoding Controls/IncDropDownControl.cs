@@ -30,7 +30,7 @@ namespace Incoding.MvcContrib
 
         public override MvcHtmlString ToHtmlString()
         {
-            var currentUrl = Url ?? Data.Url;
+            var currentUrl = Url ?? Data;
             bool isAjax = !string.IsNullOrWhiteSpace(currentUrl);
 
             var meta = isAjax ? this.htmlHelper.When(InitBind).Ajax(currentUrl)
@@ -80,7 +80,7 @@ namespace Incoding.MvcContrib
             if (!isAjax && Data.Optional == null)
                 Data.Optional = Optional;
 
-            return htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : Data.AsSelectList, this.attributes);
+            return htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : (SelectList)Data, this.attributes);
         }
 
         #region Fields

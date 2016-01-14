@@ -2,9 +2,7 @@
 {
     #region << Using >>
 
-    using System;
-    using System.Linq.Expressions;
-    using Incoding.Extensions;
+    
 
     #endregion
 
@@ -61,21 +59,7 @@
         /// </summary>
         public Selector ScreenY { get { return Get("screenY"); } }
 
-        /// <summary>
-        ///     An optional object of data passed to an event method when the current executing handler is bound.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="prop"></param>
-        /// <returns></returns>
-        public Selector Data<T>(Expression<Func<T, object>> prop)
-        {
-            return Get(prop.GetMemberName());
-        }
-
-        public Selector Data(string prop)
-        {
-            return Get(prop);
-        }
+        public ResultSelector Data { get { return new ResultSelector(ResultSelector.TypeOfEvent,string.Empty); } }
 
         #endregion
     }

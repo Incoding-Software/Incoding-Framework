@@ -10,13 +10,19 @@
 
     public class ResultSelector : Selector
     {
+        internal const string TypeOfResult = "result";
+
+        internal const string TypeOfEvent = "resultOfevent";
+
+        private readonly string currentType;
+
         #region Constructors
 
-        internal ResultSelector()
-                : this(string.Empty) { }
-
-        internal ResultSelector(string prop)
-                : base("||result*{0}||".F(prop)) { }
+        internal ResultSelector(string type, string prop)
+                : base("||{0}*{1}||".F(type, prop))
+        {
+            this.currentType = type;
+        }
 
         #endregion
 
@@ -33,13 +39,13 @@
                 {
                     var left = (MemberExpression)body.Arguments[0];
                     var right = (LambdaExpression)body.Arguments[1];
-                    return new ResultSelector("{0}.{1}({2})".F(left.Member.Name, body.Method.Name, ((MemberExpression)right.Body).Member.Name));
+                    return new ResultSelector(this.currentType, "{0}.{1}({2})".F(left.Member.Name, body.Method.Name, ((MemberExpression)right.Body).Member.Name));
                 }
                 bool isIndex0 = body.Method.Name.IsAnyEqualsIgnoreCase("First", "FirstOrDefault");
                 if (isIndex0)
                 {
                     var left = (MemberExpression)body.Arguments[0];
-                    return new ResultSelector("{0}[0]".F(left.Member.Name));
+                    return new ResultSelector(this.currentType, "{0}[0]".F(left.Member.Name));
                 }
 
                 bool isByIndex = body.Method.Name.IsAnyEqualsIgnoreCase("ElementAt", "ElementAtOrDefault");
@@ -47,7 +53,7 @@
                 {
                     var left = (MemberExpression)body.Arguments[0];
                     var right = (ConstantExpression)body.Arguments[1];
-                    return new ResultSelector("{0}[{1}]".F(left.Member.Name, right.Value));
+                    return new ResultSelector(this.currentType, "{0}[{1}]".F(left.Member.Name, right.Value));
                 }
             }
             if (property.Body.NodeType == ExpressionType.Convert)
@@ -62,17 +68,17 @@
                         var left = (MemberExpression)body.Arguments[0];
                         var right = new ConditionalIs(((LambdaExpression)body.Arguments[1]).Body, false, true);
                         dynamic data = right.GetData();
-                        return new ResultSelector(string.Format("{0}.Any({1} {2} {3} {4})", left.Member.Name, data.left, data.method, data.right, data.inverse));
+                        return new ResultSelector(this.currentType, string.Format("{0}.Any({1} {2} {3} {4})", left.Member.Name, data.left, data.method, data.right, data.inverse));
                     }
                 }
             }
 
-            return new ResultSelector(property.GetMemberName());
+            return new ResultSelector(this.currentType, property.GetMemberName());
         }
 
         public ResultSelector For(string property)
         {
-            return new ResultSelector(property);
+            return new ResultSelector(this.currentType, property);
         }
 
         #endregion

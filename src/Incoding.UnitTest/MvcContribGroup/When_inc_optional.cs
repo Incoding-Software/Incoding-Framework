@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using System.Collections.Generic;
     using System.Linq;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
@@ -16,28 +17,28 @@
                                             {
                                                 var value = Pleasure.Generator.Invent<KeyValueVm>();
                                                 IncSelectList.IncOptional optional = value;
-                                                optional.ShouldEqualWeak(new[] { value });
+                                                ((List<KeyValueVm>)optional).ShouldEqualWeak(new[] { value });
                                             };
 
         It should_be_cast_to_key_value_vms = () =>
                                              {
                                                  var valueVms = Pleasure.Generator.Invent<KeyValueVm[]>();
                                                  IncSelectList.IncOptional optional = valueVms;
-                                                 optional.ShouldEqualWeak(valueVms);
+                                                 ((List<KeyValueVm>)optional).ShouldEqualWeak(valueVms);
                                              };
 
         It should_be_cast_to_string = () =>
                                       {
                                           var value = Pleasure.Generator.String();
                                           IncSelectList.IncOptional optional = value;
-                                          optional.ShouldEqualWeak(new[] { new KeyValueVm(value) });
+                                          ((List<KeyValueVm>)optional).ShouldEqualWeak(new[] { new KeyValueVm(value) });
                                       };
 
         It should_be_cast_to_strings = () =>
                                        {
                                            var value = Pleasure.Generator.Invent<string[]>();
                                            IncSelectList.IncOptional optional = value;
-                                           optional.ShouldEqualWeak(value.Select(r => new KeyValueVm(r)));
+                                           ((List<KeyValueVm>)optional).ShouldEqualWeak(value.Select(r => new KeyValueVm(r)));
                                        };
     }
 }
