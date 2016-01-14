@@ -17,7 +17,7 @@
         protected override List<Response> ExecuteResult()
         {
             var all = new List<DelayToScheduler>();
-            Func<DelayOfStatus, int, IQueryable<DelayToScheduler>> getByType = (type, size) => Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(type)
+            Func<DelayOfStatus, int, IQueryable<DelayToScheduler>> getByType = (status, size) => Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(status)
                                                                                                                         .And(new DelayToScheduler.Where.ByAsync(Async))
                                                                                                                         .And(new DelayToScheduler.Where.AvailableStartsOn(Date)),
                                                                                                                 orderSpecification: new DelayToScheduler.Sort.Default(),

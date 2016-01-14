@@ -47,6 +47,8 @@ ipch/
 # Visual Studio profiler
 *.psess
 *.vsp
+*.nupkg.bak
+*.nupkg
 
 # Guidance Automation Toolkit
 *.gpState

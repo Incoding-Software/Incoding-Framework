@@ -21,8 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.MetaLanguage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.MSpecContrib", "Incoding.NuGet.MSpecContrib\Incoding.NuGet.MSpecContrib.csproj", "{1E580FAC-0390-4E02-884E-52BB32D94858}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Incoding.NuGet.Endpoint", "Incoding.NuGet.Endpoint\Incoding.NuGet.Endpoint.csproj", "{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,12 +67,6 @@ Global
 		{1E580FAC-0390-4E02-884E-52BB32D94858}.Publish|Any CPU.ActiveCfg = Release|Any CPU
 		{1E580FAC-0390-4E02-884E-52BB32D94858}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{1E580FAC-0390-4E02-884E-52BB32D94858}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Publish|Any CPU.ActiveCfg = Release|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Publish|Any CPU.Build.0 = Release|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,15 +78,14 @@ Global
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
 		{B517BA49-7E72-4E3B-AFD2-F80D445A6581} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
 		{1E580FAC-0390-4E02-884E-52BB32D94858} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
-		{43CAFEEC-9EDC-42A9-ADD7-75E293B2CCDC} = {6C2AC764-1F9A-4B40-8FEE-BCFAD6E245E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UpdateAssemblyVersion = False
-		BuildVersion_UpdateFileVersion = False
-		BuildVersion_BuildAction = ReBuild
-		BuildVersion_IncrementBeforeBuild = True
-		BuildVersion_DetectChanges = True
 		BuildVersion_BuildVersioningStyle = None.None.None.None
+		BuildVersion_DetectChanges = True
+		BuildVersion_IncrementBeforeBuild = True
+		BuildVersion_BuildAction = ReBuild
+		BuildVersion_UpdateFileVersion = False
+		BuildVersion_UpdateAssemblyVersion = False
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\IncFramework.ndproj"
