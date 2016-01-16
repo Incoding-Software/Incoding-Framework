@@ -49,7 +49,7 @@
                                                                             });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeByNameCommand).Name); };
+        Because of = () => { result = controller.Push(incTypes: typeof(FakeByNameCommand).Name); };
 
         It should_be_push = () => dispatcher.ShouldBePush(command);
 

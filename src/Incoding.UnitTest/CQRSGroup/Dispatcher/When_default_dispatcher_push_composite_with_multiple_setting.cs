@@ -16,20 +16,6 @@
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push_composite_with_multiple_setting : Context_default_dispatcher
     {
-        #region Establish value
-
-        static CommandComposite composite;
-
-        static Mock<IUnitOfWorkFactory> specialFactory;
-
-        static Mock<IUnitOfWork> specialUnit;
-
-        static CommandWithRepository commandDef;
-
-        static CommandWithRepository commandSpecial;
-
-        #endregion
-
         Establish establish = () =>
                               {
                                   commandDef = Pleasure.Generator.Invent<CommandWithRepository>();
@@ -51,22 +37,16 @@
                                                commandComposite.Quote(commandSpecial);
                                            });
 
-        It should_be_get_repository = () =>
-                                      {
-                                          unitOfWork.Verify(r => r.GetRepository(), Times.Once());
-                                          specialUnit.Verify(r => r.GetRepository(), Times.Exactly(2));
-                                      };
-        
-        It should_be_factory_create = () =>
-                                      {
-                                          unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, true, Pleasure.MockIt.IsNull<string>()), Times.Once());
-                                          specialFactory.Verify(r => r.Create(commandSpecial.Setting.IsolationLevel.GetValueOrDefault(), true, commandSpecial.Setting.Connection), Times.Once());
-                                      };
-
         It should_be_def_disposable = () =>
                                       {
                                           unitOfWork.Verify(r => r.Dispose(), Times.Once());
                                           specialUnit.Verify(r => r.Dispose(), Times.Once());
+                                      };
+
+        It should_be_factory_create = () =>
+                                      {
+                                          unitOfWorkFactory.Verify(r => r.Create(IsolationLevel.ReadCommitted, true, Pleasure.MockIt.IsNull<string>()), Times.Once());
+                                          specialFactory.Verify(r => r.Create(commandSpecial.Setting.IsolationLevel.GetValueOrDefault(), true, commandSpecial.Setting.Connection), Times.Once());
                                       };
 
         It should_be_flush = () =>
@@ -75,14 +55,26 @@
                                  specialUnit.Verify(r => r.Flush(), Times.AtLeast(2));
                              };
 
+        It should_be_get_repository = () =>
+                                      {
+                                          unitOfWork.Verify(r => r.GetRepository(), Times.Once());
+                                          specialUnit.Verify(r => r.GetRepository(), Times.Exactly(2));
+                                      };
+
         It should_be_special_disposable = () => specialUnit.Verify(r => r.Dispose(), Times.Once());
 
-        It should_be_publish_after_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterExecuteEvent>()));
+        #region Establish value
 
-        It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
+        static CommandComposite composite;
 
-        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()));
+        static Mock<IUnitOfWorkFactory> specialFactory;
 
-        It should_not_be_publish_after_fail_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()), Times.Never());
+        static Mock<IUnitOfWork> specialUnit;
+
+        static CommandWithRepository commandDef;
+
+        static CommandWithRepository commandSpecial;
+
+        #endregion
     }
 }

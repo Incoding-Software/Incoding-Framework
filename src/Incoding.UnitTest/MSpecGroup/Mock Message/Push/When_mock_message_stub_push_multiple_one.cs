@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.MSpecGroup
     #endregion
 
     [Subject(typeof(MockMessage<,>))]
-    public class When_mock_message_stub_push_multiple
+    public class When_mock_message_stub_push_multiple_one
     {
         #region Fake classes
 

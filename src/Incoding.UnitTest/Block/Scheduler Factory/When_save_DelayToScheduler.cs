@@ -15,17 +15,17 @@
     [Subject(typeof(DelayToScheduler)), Isolated]
     public class When_save_DelayToScheduler : SpecWithPersistenceSpecification<DelayToScheduler>
     {
+        It should_be_ef = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildEFSessionFactory(new IncDbContext("IncRealEFSchedulerDb", typeof(DelayToScheduler).Assembly), true)
+                                                                                              .Create(IsolationLevel.ReadUncommitted, true, null).GetRepository())
+                                        .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
+
         It should_be_nhibernate = () => new PersistenceSpecification<DelayToScheduler>()
                                                 .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
 
-        It should_be_ef = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildEFSessionFactory(new IncDbContext("IncRealEFSchedulerDb", typeof(DelayToScheduler).Assembly))
-                .Create(IsolationLevel.ReadUncommitted, true, null).GetRepository())
-                                        .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
-
         It should_be_raven_db = () => new PersistenceSpecification<DelayToScheduler>(PleasureForData.BuildRavenDbRepository(new DocumentStore
                                                                                                                             {
-                                                                                                                                    Url = "http://localhost:8090/", 
-                                                                                                                                    DefaultDatabase = "IncTest", 
+                                                                                                                                    Url = "http://localhost:8090/",
+                                                                                                                                    DefaultDatabase = "IncTest",
                                                                                                                             }))
                                               .VerifyMappingAndSchema(specification => specification.IgnoreBecauseCalculate(r => r.Instance));
     }

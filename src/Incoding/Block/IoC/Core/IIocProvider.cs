@@ -16,6 +16,7 @@ namespace Incoding.Block.IoC
 
         void Forward<TNew>([NotNull] TNew newInstance) where TNew : class;
 
+        [Obsolete("Please use TryGet because performance issues")]
         TInstance Get<TInstance>([NotNull] Type type) where TInstance : class;
 
         IEnumerable<TInstance> GetAll<TInstance>([NotNull] Type typeInstance);

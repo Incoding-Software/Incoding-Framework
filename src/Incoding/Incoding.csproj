@@ -328,11 +328,6 @@
     <Compile Include="CQRS\DefaultDispatcher.cs" />
     <Compile Include="CQRS\Core\QueryBase.cs" />
     <Compile Include="CQRS\DispatcherExtensions.cs" />
-    <Compile Include="CQRS\Events\OnAfterExecuteEvent.cs" />
-    <Compile Include="CQRS\Events\OnAfterErrorExecuteEvent.cs" />
-    <Compile Include="CQRS\Events\OnBeforeExecuteEvent.cs" />
-    <Compile Include="CQRS\Events\DispatcherEventBase.cs" />
-    <Compile Include="CQRS\Events\OnCompleteExecuteEvent.cs" />
     <Compile Include="CQRS\Common\Specifications\EntityContainIdSpec.cs" />
     <Compile Include="CQRS\Common\Specifications\EntityByIdSpec.cs" />
     <Compile Include="CQRS\ISetUp.cs" />
@@ -391,11 +386,6 @@
     <Compile Include="DryIoc\AsyncExecutionFlowScopeContext.cs" />
     <Compile Include="DryIoc\Container.cs" />
     <Compile Include="DryIoc\FactoryCompiler.cs" />
-    <Compile Include="EventBroker\Core\IEvent.cs" />
-    <Compile Include="EventBroker\Core\IEventBroker.cs" />
-    <Compile Include="EventBroker\Core\IEventSubscriber.cs" />
-    <Compile Include="EventBroker\DefaultEventBroker.cs" />
-    <Compile Include="EventBroker\HandlerAsyncAttribute.cs" />
     <Compile Include="Extensions\AnonymousHelper.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -670,7 +660,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

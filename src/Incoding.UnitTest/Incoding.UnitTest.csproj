@@ -267,7 +267,6 @@
     <Compile Include="CQRSGroup\Message\When_command_composite_quote_not_reference.cs" />
     <Compile Include="CQRSGroup\Message\When_message_base_on_execute.cs" />
     <Compile Include="CQRSGroup\Message\When_message_base_query.cs" />
-    <Compile Include="CQRSGroup\Message\When_message_base_event_broker.cs" />
     <Compile Include="CQRSGroup\Message\When_message_base_repository_once.cs" />
     <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_status.cs" />
@@ -305,7 +304,6 @@
     <Compile Include="DataGroup\Provider\Repository DB\When_nhibernate_repository.cs" />
     <Compile Include="DataGroup\Provider\Repository DB\When_rave_db_repository.cs" />
     <Compile Include="DataGroup\Provider\Behavior_unit_of_work_factory.cs" />
-    <Compile Include="EventBroker\When_default_event_broker_publish_event_with_handler_throw_exception.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_merger.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_.cs" />
     <Compile Include="ExtensionsGroup\When_fetch_specification_extensions.cs" />
@@ -340,6 +338,7 @@
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_identity_query.cs" />
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_stub_similar_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_async.cs" />
+    <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_multiple_unique.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\Behavior_mock_message_stub_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query_async.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\Query\When_mock_message_stub_same_query.cs" />
@@ -360,7 +359,7 @@
     <Compile Include="DataGroup\Provider\Persistence Specification\When_persistence_specification_with_instance.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_load_by_id.cs" />
     <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push.cs" />
-    <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_multiple.cs" />
+    <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_multiple_one.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
@@ -459,9 +458,6 @@
     <Compile Include="ExtensionsGroup\Maybe\Context_maybe.cs" />
     <Compile Include="ExtensionsGroup\Maybe\When_maybe_enumerable.cs" />
     <Compile Include="ExtensionsGroup\Maybe\When_maybe_object.cs" />
-    <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_ninject.cs" />
-    <Compile Include="EventBroker\Publish\When_default_event_broker_publish_event_with_structure_map.cs" />
-    <Compile Include="EventBroker\When_default_event_broker_publish_with_async_handler.cs" />
     <Compile Include="KnowleadgeGroup\When_understand_select_with_empty_collection.cs" />
     <Compile Include="KnowleadgeGroup\When_understand_behavior_read_only_field_value_type.cs" />
     <Compile Include="KnowleadgeGroup\When_understand_different_bit_and_bool_operator.cs" />
@@ -623,7 +619,6 @@
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_source.cs" />
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_empty_source.cs" />
     <Compile Include="DataGroup\CollectionAsStringGroup\When_collection_as_string_parse_source_without_split_char.cs" />
-    <Compile Include="EventBroker\Publish\Behaviors_default_event_broker_publish_event.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\Ajax\When_inc_controller_base_try_push_success_with_ajax_with_custom.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_error_result_with_custom.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push_success.cs" />
@@ -702,10 +697,6 @@
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_view.cs" />
     <Compile Include="MSpecGroup\Mock Controller\When_mock_controller_with_inc_view_without_model.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\Query\When_mock_message_double_stub_query.cs" />
-    <Compile Include="MSpecGroup\Mock Message\Event\Context_mock_message_event_broker.cs" />
-    <Compile Include="MSpecGroup\Mock Message\Event\When_mock_message_event_broker_strong.cs" />
-    <Compile Include="MSpecGroup\Mock Message\Event\When_mock_message_event_broker_by_type.cs" />
-    <Compile Include="MSpecGroup\Mock Message\Event\When_mock_message_event_broker_without_stub.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_get_by_id.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\Query\When_mock_message_stub_not_empty_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_paginated.cs" />
@@ -797,7 +788,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

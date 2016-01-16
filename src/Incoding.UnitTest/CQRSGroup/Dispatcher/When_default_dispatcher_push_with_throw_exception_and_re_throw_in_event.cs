@@ -3,12 +3,8 @@ namespace Incoding.UnitTest
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
-    using Incoding.EventBroker;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Moq;
@@ -19,28 +15,25 @@ namespace Incoding.UnitTest
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_push_with_throw_exception_and_re_throw_in_event
     {
+        Establish establish = () =>
+                              {
+                                  message = Pleasure.Mock<CommandBase>(mock =>
+                                                                       {
+                                                                           mock.Setup(r => r.OnExecute(Pleasure.MockIt.IsAny<IDispatcher>(), Pleasure.MockIt.IsAny<Lazy<IUnitOfWork>>())).Throws<MyException>();
+                                                                           mock.Setup(r => r.Setting).ReturnsInvent();
+                                                                       });
+
+                                  dispatcher = new DefaultDispatcher();
+                              };
+
+        Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
+
+        It should_be_re_throw = () => exception.ShouldBeAssignableTo<MyException>();
+
         #region Fake classes
 
         [Serializable]
         class MyException : Exception { }
-
-        class DispatcherSubscriber : IEventSubscriber<OnAfterErrorExecuteEvent>
-        {
-            #region IEventSubscriber<OnAfterErrorExecuteEvent> Members
-
-            public void Subscribe(OnAfterErrorExecuteEvent @event)
-            {
-                throw @event.Exception;
-            }
-
-            #endregion
-
-            #region Disposable
-
-            public void Dispose() { }
-
-            #endregion
-        }
 
         #endregion
 
@@ -53,30 +46,5 @@ namespace Incoding.UnitTest
         static DefaultDispatcher dispatcher;
 
         #endregion
-
-        Establish establish = () =>
-                                  {
-                                      IoCFactory.Instance.Initialize(init => init.WithProvider(Pleasure.MockAsObject<IIoCProvider>(mock =>
-                                                                                                                                       {
-                                                                                                                                           
-                                                                                                                                           mock.Setup(r => r.Get<object>(typeof(DispatcherSubscriber))).Returns(new DispatcherSubscriber());
-                                                                                                                                           mock.Setup(r => r.TryGet<IEventBroker>()).Returns(new DefaultEventBroker());
-                                                                                                                                           mock.Setup(r => r.GetAll<object>(typeof(IEventSubscriber<>).MakeGenericType(new[] { typeof(OnAfterErrorExecuteEvent) }))).Returns(new List<object> { new DispatcherSubscriber() });
-                                                                                                                                       })));
-
-                                      message = Pleasure.Mock<CommandBase>(mock =>
-                                                                           {
-                                                                               mock.Setup(r => r.OnExecute(Pleasure.MockIt.IsAny<IDispatcher>(), Pleasure.MockIt.IsAny<Lazy<IUnitOfWork>>())).Throws<MyException>();
-                                                                               mock.Setup(r=>r.Setting).ReturnsInvent();
-                                                                           });
-
-                                      dispatcher = new DefaultDispatcher();
-                                  };
-
-        Because of = () => { exception = Catch.Exception(() => dispatcher.Push(message.Object)); };
-
-        It should_be_re_throw = () => exception.ShouldBeAssignableTo<MyException>();
-
-
     }
 }
