@@ -53,7 +53,7 @@
             var currentUiCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = currentUiCulture;
             Thread.CurrentThread.CurrentCulture = currentUiCulture;
-            PleasureForData.StartNhibernate(() => NhibernateFluent());
+            PleasureForData.StartNhibernate(NhibernateFluent);
         }
 
         public void OnAssemblyComplete() { }

@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
+    using System;
     using System.Web.Mvc;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
@@ -23,7 +24,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         Establish establish = () =>
                                   {
-                                      Establish();
+                                      Establish(new Type[0]);
 
                                       view = Pleasure.Mock<IView>();
                                       viewEngines = Pleasure.Mock<IViewEngine>();

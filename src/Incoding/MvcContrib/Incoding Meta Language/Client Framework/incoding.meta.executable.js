@@ -2,7 +2,7 @@
 
 //#region class ExecutableFactory
 
-function ExecutableFactory() {
+function ExecutableFactory() {    
 }
 
 // ReSharper disable UnusedParameter
@@ -227,9 +227,9 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
 
     var current = this;
 
-    var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
-    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(ajaxOptions.url);
+    var ajaxOptions = $.extend(true, { data: [] }, current.jsonData.ajax);
     var url = ajaxOptions.url;
+    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(url);
     if (!isEmptyUrl) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
@@ -295,7 +295,7 @@ ExecutableSubmitAction.prototype.internalExecute = function(state) {
         }
     }, this.jsonData.options);
 
-    var url = this.jsonData.options.url;
+    var url = this.jsonData.options.url || form.attr('action');
     if (!ExecutableHelper.IsNullOrEmpty(url)) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
@@ -378,18 +378,19 @@ ExecutableInsert.prototype.internalExecute = function() {
             $(current.target).html(insertContent.toString());
             break;
         default:
-            eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
-
-    }
+    eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
-        target = current.target.nextAll();
+        IncodingEngine.Current.parse(current.target.nextAll());
     }
-    if (current.jsonData.insertType.toLowerCase() === 'before') {
-        target = current.target.prevAll();
+    else if (current.jsonData.insertType.toLowerCase() === 'before') {
+        IncodingEngine.Current.parse(current.target.prevAll());
     }
-    IncodingEngine.Current.parse(target);
+    else {
+        IncodingEngine.Current.parse(current.target);
+    }
+
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
 };
 

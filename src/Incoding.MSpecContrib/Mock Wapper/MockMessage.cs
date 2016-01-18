@@ -4,10 +4,11 @@ namespace Incoding.MSpecContrib
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
-    using Incoding.EventBroker;
+    
     using Incoding.Extensions;
     using Machine.Specifications;
     using Moq;
@@ -28,20 +29,6 @@ namespace Incoding.MSpecContrib
 
     public abstract class MockMessage<TMessage, TResult> where TMessage : IMessage
     {
-        #region Fields
-
-        protected readonly Mock<IDispatcher> dispatcher;
-
-        readonly Dictionary<Type, List<CommandBase>> stubs = new Dictionary<Type, List<CommandBase>>();
-
-        readonly Dictionary<Type, int> stubsOfSuccess = new Dictionary<Type, int>();
-
-        readonly Mock<IRepository> repository;
-
-        readonly Mock<IEventBroker> eventBroker;
-
-        #endregion
-
         #region Constructors
 
         protected MockMessage(TMessage instanceMessage)
@@ -52,11 +39,10 @@ namespace Incoding.MSpecContrib
 
             var unitOfWork = Pleasure.MockStrictAsObject<IUnitOfWork>(mock => mock.Setup(x => x.GetRepository()).Returns(repository.Object));
             IoCFactory.Instance.StubTryResolve(unitOfWork);
-
-            eventBroker = Pleasure.MockStrict<IEventBroker>();
-            IoCFactory.Instance.StubTryResolve(eventBroker.Object);
+            
 
             dispatcher = Pleasure.MockStrict<IDispatcher>();
+            dispatcher.Setup(r => r.Push(Pleasure.MockIt.Is<CommandComposite>(composite => composite.Parts.Any(message => this.predcatesStubs.Any(func => func(message))).ShouldBeTrue())));
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
         }
 
@@ -69,13 +55,26 @@ namespace Incoding.MSpecContrib
 
         #endregion
 
+        #region Fields
+
+        protected readonly Mock<IDispatcher> dispatcher;
+
+        readonly Dictionary<Type, List<CommandBase>> stubs = new Dictionary<Type, List<CommandBase>>();
+
+        readonly Dictionary<Type, int> stubsOfSuccess = new Dictionary<Type, int>();
+
+        readonly Mock<IRepository> repository;
+        
+        private readonly List<Func<IMessage, bool>> predcatesStubs = new List<Func<IMessage, bool>>();
+
+        #endregion
+
         #region Api Methods
 
         public void Execute()
         {
             Original.Execute();
-            ShouldBePushed();
-            eventBroker.VerifyAll();
+            ShouldBePushed();            
             repository.VerifyAll();
         }
 
@@ -102,29 +101,30 @@ namespace Incoding.MSpecContrib
             value.Add(command);
             if (!stubs.ContainsKey(type))
                 stubs.Add(type, value);
-            dispatcher.StubPush<TCommand>(arg =>
-                                          {
-                                              bool isAny = false;
-                                              foreach (var pair in stubs[type])
-                                              {
-                                                  try
-                                                  {
-                                                      arg.ShouldEqualWeak(pair as TCommand, dsl);
-                                                      isAny = true;
-                                                      if (stubsOfSuccess.ContainsKey(type))
-                                                          stubsOfSuccess[type]++;
-                                                      else
-                                                          stubsOfSuccess.Add(type, 1);
-                                                      break;
-                                                  }
-                                                  catch (InternalSpecificationException ex)
-                                                  {
-                                                      Console.WriteLine(ex);
-                                                  }
-                                              }
+            predcatesStubs.Add(s =>
+                               {
+                                   bool isAny = false;
+                                   foreach (var pair in this.stubs[type])
+                                   {
+                                       try
+                                       {
+                                           var sAsT = s as TCommand;
+                                           sAsT.ShouldEqualWeak(pair as TCommand, dsl);
+                                           isAny = true;
+                                           if (this.stubsOfSuccess.ContainsKey(type))
+                                               this.stubsOfSuccess[type]++;
+                                           else
+                                               this.stubsOfSuccess.Add(type, 1);
+                                           break;
+                                       }
+                                       catch (InternalSpecificationException ex)
+                                       {
+                                           Console.WriteLine(ex);
+                                       }
+                                   }
 
-                                              isAny.ShouldBeTrue();
-                                          });
+                                   return isAny;
+                               });
             return this;
         }
 
@@ -254,28 +254,6 @@ namespace Incoding.MSpecContrib
 
         #endregion
 
-        #region Event broker
-
-        [Obsolete("Please use StubPush")]
-        public MockMessage<TMessage, TResult> StubPublish<TEvent>(TEvent expectedEvent) where TEvent : class, IEvent
-        {
-            return StubPublish<TEvent>(@event => @event.ShouldEqualWeak(expectedEvent));
-        }
-
-        [Obsolete("Please use StubPush")]
-        public MockMessage<TMessage, TResult> StubPublish<TEvent>() where TEvent : class, IEvent
-        {
-            return StubPublish<TEvent>(@event => @event.ShouldNotBeNull());
-        }
-
-        [Obsolete("Please use StubPush")]
-        public MockMessage<TMessage, TResult> StubPublish<TEvent>(Action<TEvent> action) where TEvent : class, IEvent
-        {
-            eventBroker.Setup(r => r.Publish(Pleasure.MockIt.Is(action)));
-            return this;
-        }
-
-        #endregion
 
         #region Stubs
 

@@ -45,17 +45,10 @@ namespace Incoding.UnitTest
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose(), Times.Once());
 
         It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Once());
-
-        It should_be_publish_after_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterExecuteEvent>()));
-
-        It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
-
-        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()));
-
+        
         It should_be_read_uncommitted = () => unitOfWorkFactory.Verify(r => r.Create(setting.IsolationLevel.GetValueOrDefault(), false, setting.Connection));
 
         It should_be_result = () => result.ShouldBeTheSameString();
-
-        It should_not_be_publish_after_fail_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()), Times.Never());
+        
     }
 }

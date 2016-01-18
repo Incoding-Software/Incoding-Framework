@@ -8,6 +8,7 @@ namespace Incoding.UnitTest.Block
     using Incoding.Extensions;
     using Incoding.Utilities;
     using Machine.Specifications;
+    using Ninject;
     using Ninject.Extensions.Conventions;
     using Ninject.Modules;
 
@@ -16,7 +17,7 @@ namespace Incoding.UnitTest.Block
     [Subject(typeof(NinjectIoCProvider))]
     public class When_ninject_created_by_modules : Context_IoC_Provider
     {
-        Establish establish = () => { ioCProvider = new NinjectIoCProvider(new CustomInstrumentationModule(), new CustomLoggerModule(), new CustomEmailSenderModule()); };
+        Establish establish = () => { ioCProvider = new NinjectIoCProvider(new StandardKernel(new CustomEmailSenderModule(), new CustomInstrumentationModule(), new CustomLoggerModule())); };
 
         Behaves_like<Behaviors_disposable_ioc_provider> verify_disposable;
 

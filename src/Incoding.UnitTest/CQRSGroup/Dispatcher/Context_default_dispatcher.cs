@@ -7,7 +7,7 @@
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Data;
-    using Incoding.EventBroker;
+    
     using Incoding.MSpecContrib;
     using Moq;
 
@@ -90,9 +90,7 @@
         protected static Mock<IUnitOfWork> unitOfWork;
 
         protected static DefaultDispatcher dispatcher;
-
-        protected static Mock<IEventBroker> eventBroker;
-
+        
         protected static Mock<IUnitOfWorkFactory> unitOfWorkFactory;
 
         #endregion
@@ -108,9 +106,7 @@
                                                                             unitOfWorkFactoryMock.Setup(r => r.Create(IsolationLevel.ReadUncommitted, false, Pleasure.MockIt.IsNull<string>())).Returns(unitOfWork.Object);
                                                                         });
             IoCFactory.Instance.StubTryResolve(unitOfWorkFactory.Object);
-
-            eventBroker = Pleasure.Mock<IEventBroker>();
-            IoCFactory.Instance.StubTryResolve(eventBroker.Object);
+           
 
             dispatcher = new DefaultDispatcher();
         }

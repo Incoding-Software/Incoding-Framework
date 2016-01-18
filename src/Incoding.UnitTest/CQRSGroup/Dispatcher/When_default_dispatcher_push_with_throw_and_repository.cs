@@ -31,11 +31,6 @@ namespace Incoding.UnitTest
         It should_be_not_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Never());
 
         It should_be_dispose = () => unitOfWork.Verify(r => r.Dispose(), Times.Once());
-
-        It should_be_publish_before_execute = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnBeforeExecuteEvent>()));
-
-        It should_be_publish_after_fail = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnAfterErrorExecuteEvent>()));
-
-        It should_be_publish_complete = () => eventBroker.Verify(r => r.Publish(Pleasure.MockIt.IsAny<OnCompleteExecuteEvent>()));
+        
     }
 }

@@ -13,7 +13,7 @@
     using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Data;
-    using Incoding.EventBroker;
+    
     using Incoding.Extensions;
     using Incoding.MvcContrib;
     using NHibernate.Context;

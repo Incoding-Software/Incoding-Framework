@@ -6,8 +6,7 @@
     using System.Runtime.Serialization;
     using System.Threading.Tasks;
     using Incoding.Block.IoC;
-    using Incoding.Data;
-    using Incoding.EventBroker;
+    using Incoding.Data;    
     using Incoding.Maybe;
     using Incoding.Quality;
     using Newtonsoft.Json;
@@ -19,9 +18,7 @@
         #region Fields
 
         Lazy<IRepository> lazyRepository;
-
-        Lazy<IEventBroker> lazyEventBroker;
-
+        
         Lazy<MessageDispatcher> messageDispatcher;
 
         #endregion
@@ -34,9 +31,7 @@
         [IgnoreCompare("System"), JsonIgnore]
         protected MessageDispatcher Dispatcher { get { return messageDispatcher.Value; } }
 
-        [IgnoreCompare("System"), Obsolete("Please use Dispatcher.Push or Dispatcher.Query instead events"), JsonIgnore]
-        protected IEventBroker EventBroker { get { return lazyEventBroker.Value; } }
-
+        
         #endregion
 
         #region IMessage<TResult> Members
@@ -50,8 +45,7 @@
         public virtual void OnExecute(IDispatcher current, Lazy<IUnitOfWork> unitOfWork)
         {
             Result = null;
-            lazyRepository = new Lazy<IRepository>(() => unitOfWork.Value.GetRepository());
-            lazyEventBroker = new Lazy<IEventBroker>(() => IoCFactory.Instance.TryResolve<IEventBroker>());
+            lazyRepository = new Lazy<IRepository>(() => unitOfWork.Value.GetRepository());            
             messageDispatcher = new Lazy<MessageDispatcher>(() => new MessageDispatcher(current, Setting));
             Execute();
         }

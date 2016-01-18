@@ -9,7 +9,7 @@ namespace Incoding.CQRS
     using System.Threading;
     using Incoding.Block.IoC;
     using Incoding.Data;
-    using Incoding.EventBroker;
+    
     using Incoding.Maybe;
 
     #endregion
@@ -27,8 +27,7 @@ namespace Incoding.CQRS
         public void Push(CommandComposite composite)
         {
             bool isOuterCycle = !unitOfWorkCollection.Any();
-            var eventBroker = IoCFactory.Instance.TryResolve<IEventBroker>() ?? new DefaultEventBroker();
-
+            
             foreach (var groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
             {
                 bool isFlush = groupMessage.Any(r => r is CommandBase);
@@ -36,23 +35,19 @@ namespace Incoding.CQRS
                 {
                     bool isThrow = false;
                     try
-                    {
-                        eventBroker.Publish(new OnBeforeExecuteEvent(part));
+                    {                        
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         part.OnExecute(this, unitOfWork);
                         if (unitOfWork.IsValueCreated)
-                            unitOfWork.Value.Flush();
-                        eventBroker.Publish(new OnAfterExecuteEvent(part));
+                            unitOfWork.Value.Flush();                        
                     }
                     catch (Exception exception)
                     {
-                        isThrow = true;
-                        eventBroker.Publish(new OnAfterErrorExecuteEvent(part, exception));
+                        isThrow = true;                        
                         throw;
                     }
                     finally
-                    {
-                        eventBroker.Publish(new OnCompleteExecuteEvent(part));
+                    {                        
                         if (isThrow && isOuterCycle)
                             unitOfWorkCollection.Dispose();
                     }

@@ -173,6 +173,7 @@ $.fn.extend({
     isFormElement: function () {
         return $(this).is('select,textarea,input');
     },
+
 });
 
 $.extend({

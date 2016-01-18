@@ -38,9 +38,6 @@ namespace Incoding.Block.IoC
             this.kernel = kernel;
         }
 
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Dispose this.kernel")]
-        public NinjectIoCProvider(params INinjectModule[] ninjectModules)
-                : this(new StandardKernel(ninjectModules)) { }
 
         #endregion
 

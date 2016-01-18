@@ -6,6 +6,6 @@ namespace Incoding.Block
     {
         public bool Async { get; set; }
 
-        public int? TimeOut { get; set; }
+        public int TimeOut { get; set; }
     }
 }

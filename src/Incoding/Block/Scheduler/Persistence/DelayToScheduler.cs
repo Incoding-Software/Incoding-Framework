@@ -33,7 +33,7 @@
             public OptionOfDelay()
             {
                 Async = false;
-                TimeOut = 5;
+                TimeOut = 5.Seconds().Milliseconds;
             }
 
             public bool Async { get; set; }
