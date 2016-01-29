@@ -19,7 +19,7 @@
         Establish establish = () =>
                                   {
                                       control = new IncDropDownControl<FakeModel, string>(mockHtmlHelper.Original, model => model.Prop);
-                                      control.Url = "Url";
+                                      control.Data = "Url";
                                   };
 
         Because of = () => { result = control.ToHtmlString(); };

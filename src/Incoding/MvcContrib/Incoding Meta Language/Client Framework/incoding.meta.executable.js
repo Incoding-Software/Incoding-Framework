@@ -2,7 +2,7 @@
 
 //#region class ExecutableFactory
 
-function ExecutableFactory() {    
+function ExecutableFactory() {
 }
 
 // ReSharper disable UnusedParameter
@@ -21,7 +21,7 @@ ExecutableFactory.Create = function(type, data, self) {
         intervalId : data.intervalId,
         ands : data.ands,
         getTarget : function() {
-            return eval(data.target);
+            return data.target === "$(this.self)" ? self : eval(data.target);
         }
     });
 
@@ -227,7 +227,7 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
 
     var current = this;
 
-    var ajaxOptions = $.extend(true, { data: [] }, current.jsonData.ajax);
+    var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
     var url = ajaxOptions.url;
     var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(url);
     if (!isEmptyUrl) {
@@ -375,11 +375,11 @@ ExecutableInsert.prototype.internalExecute = function() {
 
     switch (current.jsonData.insertType) {
         case 'html':
-            $(current.target).html(insertContent.toString());
+            current.target.html(insertContent.toString());
             break;
         default:
-    eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
-
+            eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+    }
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
         IncodingEngine.Current.parse(current.target.nextAll());
@@ -390,8 +390,8 @@ ExecutableInsert.prototype.internalExecute = function() {
     else {
         IncodingEngine.Current.parse(current.target);
     }
-
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
+
 };
 
 ExecutableInsert.Template = new IncHandlerbarsTemplate();
@@ -703,18 +703,13 @@ ExecutableBind.prototype.internalExecute = function() {
 
 //#region class ExcutableJquery extend from ExecutableBase
 
-incodingExtend(ExcutableJquery, ExecutableBase);
+incodingExtend(ExecutableJquery, ExecutableBase);
 
-function ExcutableJquery() {
+function ExecutableJquery() {
 }
 
-ExcutableJquery.prototype.internalExecute = function() {
-    switch (this.jsonData.method) {
-        case 1:
-            $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
-        default:
-            throw 'Not found method {0}'.f(this.jsonData.method);
-    }
+ExecutableJquery.prototype.internalExecute = function() {
+
 };
 
 //#endregion

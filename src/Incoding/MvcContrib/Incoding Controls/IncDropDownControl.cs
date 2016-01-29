@@ -22,15 +22,14 @@ namespace Incoding.MvcContrib
             this.property = property;
             Data = new SelectList(new string[0]);
             Template = IncodingHtmlHelper.DropDownTemplateId;
-            InitBind = JqueryBind.InitIncoding;
-            Optional = new IncSelectList.IncOptional();
+            InitBind = JqueryBind.InitIncoding;            
         }
 
         #endregion
 
         public override MvcHtmlString ToHtmlString()
         {
-            var currentUrl = Url ?? Data;
+            string currentUrl = Data;
             bool isAjax = !string.IsNullOrWhiteSpace(currentUrl);
 
             var meta = isAjax ? this.htmlHelper.When(InitBind).Ajax(currentUrl)
@@ -39,9 +38,8 @@ namespace Incoding.MvcContrib
                                         {
                                             if (isAjax)
                                             {
-                                                dsl.Self().JQuery.Dom.Empty();
-                                                List<KeyValueVm> vms = Optional ?? Data.Optional;
-                                                foreach (var vm in vms)
+                                                dsl.Self().JQuery.Dom.Empty();                                                 
+                                                foreach (var vm in (List<KeyValueVm>)Data.Optional)
                                                 {
                                                     var option = new TagBuilder(HtmlTag.Option.ToStringLower());
                                                     option.SetInnerText(vm.Text);
@@ -76,11 +74,8 @@ namespace Incoding.MvcContrib
                                             OnEvent.Do(action => action(dsl));
                                         })
                              .AsHtmlAttributes(this.attributes);
-
-            if (!isAjax && Data.Optional == null)
-                Data.Optional = Optional;
-
-            return htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : (SelectList)Data, this.attributes);
+            
+            return this.htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : (SelectList)Data, this.attributes);
         }
 
         #region Fields
@@ -99,15 +94,9 @@ namespace Incoding.MvcContrib
 
         public JqueryAjaxOptions Options { get { return this.options; } set { this.options = value; } }
 
-        [Obsolete("Please use Data instead of Url", false)]
-        public string Url { get; set; }
-
         public IncSelectList Data { get; set; }
 
         public Selector Template { get; set; }
-
-        [Obsolete("Please use Data.Optional", false)]
-        public IncSelectList.IncOptional Optional { get; set; }
 
         #endregion
     }

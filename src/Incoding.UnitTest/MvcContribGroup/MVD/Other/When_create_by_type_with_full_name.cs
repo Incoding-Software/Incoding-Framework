@@ -11,9 +11,15 @@
 
     #endregion
 
-    [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_by_full_name : Context_dispatcher_controller
+    [Subject(typeof(CreateByTypeQuery))]
+    public class When_create_by_type_with_full_name : Context_dispatcher_controller
     {
+        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeByFullNameCommand).FullName)); };
+
+        It should_be_push = () => dispatcher.ShouldBePush(new FakeByFullNameCommand());
+
+        It should_be_result = () => result.ShouldBeIncodingSuccess<int>(i => i.ShouldEqual(5));
+
         #region Fake classes
 
         public class FakeByFullNameCommand : CommandBase
@@ -37,13 +43,5 @@
         }
 
         #endregion
-
-        Establish establish = () => Establish(types: new[] { typeof(FakeByFullNameCommand) });
-
-        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeByFullNameCommand).FullName)); };
-
-        It should_be_push = () => dispatcher.ShouldBePush(new FakeByFullNameCommand());
-
-        It should_be_result = () => result.ShouldBeIncodingSuccess<int>(i => i.ShouldEqual(5));
     }
 }

@@ -3613,11 +3613,11 @@ describe('Incoding', function() {
                     spyOnEvent(document, IncSpecialBinds.IncAjaxError);
                     spyOnEvent(document, IncSpecialBinds.IncAjaxComplete);
                     action.jsonData = $.parseJSON($('#ExecutableSubmitAction').val());
-                    runs(function() {
+                    runs(function () {                        
                         action.internalExecute(state);
                     });
 
-                    waits(500);
+                    waits(3000);
 
                     runs(function() {
                         expect(IncSpecialBinds.IncAjaxError).toHaveBeenTriggeredOn(document);

@@ -14,7 +14,7 @@
     #endregion
 
     [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_generic : Context_dispatcher_controller
+    public class When_create_by_type_with_generic : Context_dispatcher_controller
     {
         #region Fake classes
 
@@ -31,7 +31,7 @@
 
         #endregion
 
-        Establish establish = () => Establish(types: new[] { typeof(FakeGenericByNameCommand<IncEntityBase>) });
+        
 
         Because of = () => { result = controller.Push("{0}|{1}".F(HttpUtility.UrlEncode(typeof(FakeGenericByNameCommand<>).Name), typeof(IncEntityBase).Name)); };
 

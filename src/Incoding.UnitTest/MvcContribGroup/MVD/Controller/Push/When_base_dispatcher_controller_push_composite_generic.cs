@@ -14,7 +14,13 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_push_composite_generic : Context_dispatcher_controller
     {
-        Establish establish = () => Establish(types: new[] { typeof(FakePush1Command<string>), typeof(FakePush2Command<string>) });
+        Establish establish = () =>
+                              {
+                                  var fakePush1 = Pleasure.Generator.Invent<FakePush1Command<string>>();
+                                  var fakePush2 = Pleasure.Generator.Invent<FakePush1Command<int>>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakePush1Command<string>).Name)), (object)fakePush1);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakePush2Command<int>).Name)), (object)fakePush2);
+                              };
 
         Because of = () =>
                      {

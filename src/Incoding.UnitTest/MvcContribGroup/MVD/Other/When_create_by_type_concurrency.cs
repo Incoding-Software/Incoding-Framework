@@ -11,8 +11,8 @@
 
     #endregion
 
-    [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_concurrency : Context_dispatcher_controller
+    [Subject(typeof(CreateByTypeQuery))]
+    public class When_create_by_type_concurrency : Context_dispatcher_controller
     {
         #region Fake classes
 
@@ -35,7 +35,7 @@
 
         #endregion
 
-        Establish establish = () => Establish(types: new[] { typeof(ConcurrentCommand) });
+        Establish establish = () => {};
 
         Because of = () => { exception = Catch.Exception(() => Pleasure.MultiThread.Do(() => controller.Push(HttpUtility.UrlEncode(typeof(ConcurrentCommand).Name)), 100)); };
 

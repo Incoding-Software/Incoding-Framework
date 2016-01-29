@@ -11,9 +11,15 @@
 
     #endregion
 
-    [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_inner_class_by_full_name : Context_dispatcher_controller
+    [Subject(typeof(CreateByTypeQuery))]
+    public class When_create_by_type_with_inner_class_by_full_name : Context_dispatcher_controller
     {
+        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeInnerByFullNameCommand.InnerByFullName).FullName)); };
+
+        It should_be_push = () => dispatcher.ShouldBePush(new FakeInnerByFullNameCommand.InnerByFullName());
+
+        It should_be_result = () => result.ShouldBeIncodingSuccess();
+
         #region Fake classes
 
         public class FakeInnerByFullNameCommand
@@ -32,13 +38,5 @@
         }
 
         #endregion
-
-        Establish establish = () => Establish(types: new[] { typeof(FakeInnerByFullNameCommand.InnerByFullName) });
-
-        Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeInnerByFullNameCommand.InnerByFullName).FullName)); };
-
-        It should_be_push = () => dispatcher.ShouldBePush(new FakeInnerByFullNameCommand.InnerByFullName());
-
-        It should_be_result = () => result.ShouldBeIncodingSuccess();
     }
 }

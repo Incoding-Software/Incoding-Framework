@@ -3,10 +3,8 @@
     #region << Using >>
 
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Web.Mvc;
-    using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
@@ -17,6 +15,22 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_render_with_query_as_model : Context_dispatcher_controller_render
     {
+        Establish establish = () =>
+                              {
+                                  var query = Pleasure.Generator.Invent<FakeRenderQuery>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)query);
+                                  dispatcher.StubQuery(query, new FakeAppModel());
+                              };
+
+        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName, true); };
+
+        It should_be_render = () =>
+                              {
+                                  Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeRenderQuery>();
+                                  view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
+                                  viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
+                              };
+
         #region Fake classes
 
         public class FakeAppModel { }
@@ -33,20 +47,5 @@
         }
 
         #endregion
-
-        Establish establish = () =>
-                                  {
-                                      Establish(types: new[] { typeof(FakeRenderQuery) });
-                                      dispatcher.StubQuery(new FakeRenderQuery(), new FakeAppModel());
-                                  };
-
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName,  true); };
-
-        It should_be_render = () =>
-                                  {
-                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeRenderQuery>();
-                                      view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
-                                      viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
-                                  };
     }
 }

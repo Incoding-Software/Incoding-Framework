@@ -14,23 +14,18 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_render_with_model : Context_dispatcher_controller_render
     {
-        #region Fake classes
-
-        public class FakeRenderModelByName { }
-
-        #endregion
-
         Because of = () =>
-                         {
-                             Establish(types: new[] { typeof(FakeRenderModelByName) });
-                             result = controller.Render("View", typeof(FakeRenderModelByName).Name, true);
-                         };
+                     {
+                         var res = Pleasure.Generator.Invent<FakeModel>();
+                         dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
+                         result = controller.Render("View", typeof(FakeModel).Name, true);
+                     };
 
         It should_be_render = () =>
-                                  {
-                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeRenderModelByName>();
-                                      view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
-                                      viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
-                                  };
+                              {
+                                  Action<ViewContext> verify = s => s.ViewData.Model.ShouldBeAssignableTo<FakeModel>();
+                                  view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
+                                  viewEngines.Verify(r => r.FindPartialView(Pleasure.MockIt.IsAny<ControllerContext>(), "View", Pleasure.MockIt.IsAny<bool>()));
+                              };
     }
 }

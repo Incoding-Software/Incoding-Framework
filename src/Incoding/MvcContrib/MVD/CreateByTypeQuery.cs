@@ -11,75 +11,13 @@
     using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.Maybe;
+    using Incoding.Quality;
 
     #endregion
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-        #region Properties
-
-        public HttpRequestBase Request { get; set; }
-
-        public string Type { get; set; }
-
-        public bool IsGroup { get; set; }
-
-        public bool IsModel { get; set; }
-
-        #endregion
-
-        #region Nested classes
-
-        public class FindTypeByName : QueryBase<Type>
-        {
-            #region Static Fields
-
-            internal static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
-
-            #endregion
-
-            #region Fields
-
-            readonly string type;
-
-            readonly bool isGeneric;
-
-            #endregion
-
-            #region Constructors
-
-            public FindTypeByName(string type, bool isGeneric)
-            {
-                this.type = type;
-                this.isGeneric = isGeneric;
-            }
-
-            #endregion
-
-            protected override Type ExecuteResult()
-            {
-                string name = HttpUtility.UrlDecode(type).With(s => s.Replace(" ", "+"));
-                return cache.GetOrAdd(name, s =>
-                                            {
-                                                var allSatisfied = AppDomain.CurrentDomain.GetAssemblies()
-                                                                            .Select(r => r.GetLoadableTypes())
-                                                                            .SelectMany(r => r)
-                                                                            .Where(r => r.Name.IsAnyEqualsIgnoreCase(s) ||
-                                                                                        r.FullName.IsAnyEqualsIgnoreCase(s))
-                                                                            .ToList();
-
-                                                string prefix = isGeneric ? " generic" : string.Empty;
-                                                if (allSatisfied.Count == 0)
-                                                    throw new IncMvdException("Not found any{0} type {1}".F(prefix, s));
-
-                                                if (allSatisfied.Count > 1)
-                                                    throw new IncMvdException("Ambiguous{0} type {1}".F(prefix, s));
-                                                return allSatisfied.First();
-                                            });
-            }
-        }
-
-        #endregion
+        private HttpRequestBase request;
 
         protected override object ExecuteResult()
         {
@@ -117,11 +55,77 @@
 
             new DefaultModelBinder().BindModel(new ControllerContext(), new ModelBindingContext()
                                                                         {
-                                                                                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType), 
-                                                                                ModelState = new ModelStateDictionary(), 
+                                                                                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
+                                                                                ModelState = new ModelStateDictionary(),
                                                                                 ValueProvider = formAndQuery
                                                                         });
             return instance;
         }
+
+        #region Nested classes
+
+        public class FindTypeByName : QueryBase<Type>
+        {
+            #region Static Fields
+
+            internal static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
+
+            #endregion
+
+            #region Constructors
+
+            public FindTypeByName(string type, bool isGeneric)
+            {
+                this.type = type;
+                this.isGeneric = isGeneric;
+            }
+
+            #endregion
+
+            protected override Type ExecuteResult()
+            {
+                string name = HttpUtility.UrlDecode(type).With(s => s.Replace(" ", "+"));
+                return cache.GetOrAdd(name, s =>
+                                            {
+                                                var allSatisfied = AppDomain.CurrentDomain.GetAssemblies()
+                                                                            .Select(r => r.GetLoadableTypes())
+                                                                            .SelectMany(r => r)
+                                                                            .Where(r => r.Name.IsAnyEqualsIgnoreCase(s) ||
+                                                                                        r.FullName.IsAnyEqualsIgnoreCase(s))
+                                                                            .ToList();
+
+                                                string prefix = isGeneric ? " generic" : string.Empty;
+                                                if (allSatisfied.Count == 0)
+                                                    throw new IncMvdException("Not found any{0} type {1}".F(prefix, s));
+
+                                                if (allSatisfied.Count > 1)
+                                                    throw new IncMvdException("Ambiguous{0} type {1}".F(prefix, s));
+                                                return allSatisfied.First();
+                                            });
+            }
+
+            #region Fields
+
+            readonly string type;
+
+            readonly bool isGeneric;
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Properties
+
+        [IgnoreCompare("Auto"), IgnoreInvent("Auto")]
+        public HttpRequestBase Request { get { return this.request ?? new HttpRequestWrapper(HttpContext.Current.Request); } set { this.request = value; } }
+
+        public string Type { get; set; }
+
+        public bool IsGroup { get; set; }
+
+        public bool IsModel { get; set; }
+
+        #endregion
     }
 }

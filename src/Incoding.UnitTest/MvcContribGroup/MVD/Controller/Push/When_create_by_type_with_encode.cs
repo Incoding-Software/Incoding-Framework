@@ -3,7 +3,6 @@
     #region << Using >>
 
     using System;
-    using System.Collections.Specialized;
     using System.Web;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
@@ -13,19 +12,11 @@
     #endregion
 
     [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_with_encode : Context_dispatcher_controller
+    public class When_create_by_type_with_encode : Context_dispatcher_controller
     {
         static FakeByNameWithEncodeCommand command;
 
-        Establish establish = () =>
-                              {
-                                  command = Pleasure.Generator.Invent<FakeByNameWithEncodeCommand>();
-                                  Establish(types: new[] { command.GetType() });
-                                  requestBase.SetupGet(r => r.Form).Returns(new NameValueCollection()
-                                                                            {
-                                                                                    { "Name", command.Name },
-                                                                            });
-                              };
+        Establish establish = () => { command = Pleasure.Generator.Invent<FakeByNameWithEncodeCommand>(); };
 
         Because of = () => { result = controller.Push(HttpUtility.UrlEncode(typeof(FakeByNameWithEncodeCommand).Name)); };
 

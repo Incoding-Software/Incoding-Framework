@@ -19,7 +19,8 @@
 
         Establish establish = () =>
                               {
-                                  Establish(types: new[] { typeof(ShareQuery) });
+                                  var res = Pleasure.Generator.Invent<ShareQuery>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)res);
                                   controller.ModelState.AddModelError("Fake", "Error");
                               };
 

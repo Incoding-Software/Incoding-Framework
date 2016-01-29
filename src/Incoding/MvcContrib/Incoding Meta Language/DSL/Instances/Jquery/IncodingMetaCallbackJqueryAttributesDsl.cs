@@ -287,7 +287,7 @@
         [ContractAnnotation("class:null =>true")]
         public IExecutableSetting AddClass([HtmlAttributeValue("class")] string @class)
         {
-            return new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { @class });
+            return this.plugInDsl.Registry(new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { @class }));
         }
 
         /// <summary>
@@ -298,7 +298,7 @@
         [ContractAnnotation("class:null =>true")]
         public IExecutableSetting AddClass(Selector selector)
         {
-            return new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { selector });
+            return this.plugInDsl.Registry(new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { selector }));
         }
 
         /// <summary>

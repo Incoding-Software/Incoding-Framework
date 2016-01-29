@@ -17,14 +17,14 @@
         Establish establish = () =>
                               {
                                   typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, new List<Type>());
-                                  controller = new FakeDispatcher(typeof(FakeDispatcher).Assembly, type => false);
+                                  controller = new FakeDispatcher(typeof(FakeDispatcher).Assembly, type => type == typeof(EB61C30C_4F25_4CDA_8625_8E3BBA8D4521));
                               };
 
         Because of = () => { types = typeof(DispatcherControllerBase).GetField("types", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null) as List<Type>; };
 
         It should_be_init = () =>
                             {
-                                types.Count.ShouldEqual(27);
+                                types.Count.ShouldEqual(28);
                                 types.First().ShouldEqual(typeof(EB61C30C_4F25_4CDA_8625_8E3BBA8D4521));
                             };
 

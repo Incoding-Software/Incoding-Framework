@@ -14,33 +14,20 @@ namespace Incoding.UnitTest.MvcContribGroup
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_push_model_state : Context_dispatcher_controller
     {
-        #region Fake classes
-
-        public class FakeModelStateCommand : CommandBase
-        {
-            ////ncrunch: no coverage start
-            protected override void Execute()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        #endregion
-
         #region Establish value
 
-        static FakeModelStateCommand command;
+        static FakeCommand command;
 
         #endregion
 
         Establish establish = () =>
                               {
-                                  command = Pleasure.Generator.Invent<FakeModelStateCommand>();
-                                  Establish(types: new[] { command.GetType() });
+                                  command = Pleasure.Generator.Invent<FakeCommand>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).Name)), (object)command);
                                   controller.ModelState.AddModelError("Fake", "Error");
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeModelStateCommand).Name); };
+        Because of = () => { result = controller.Push(typeof(FakeCommand).Name); };
 
         It should_be_push = () => dispatcher.ShouldBePush(command, callCount: 0);
 

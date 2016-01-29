@@ -4,10 +4,8 @@
 
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using Incoding.Block;
     using Incoding.CQRS;
-    using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
 
@@ -16,11 +14,45 @@
     [Subject(typeof(StartSchedulerCommand))]
     public class When_scheduler_factory_initialize_success
     {
+        Cleanup cleanup = () => isStart = false;
+
+        Establish establish = () =>
+                              {
+                                  instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
+                                  instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
+                                  response = new List<GetExpectedDelayToSchedulerQuery.Response>()
+                                             {
+                                                     Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery.Response>(dsl => dsl.Tuning(r => r.Instance, instance1)),
+                                                     Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery.Response>(dsl => dsl.Tuning(r => r.Instance, instance2))
+                                             };
+
+                                  var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.Conditional, () => isStart)
+                                                                                                           .GenerateTo(r => r.Setting));
+
+                                  var getExpectedDelayToSchedulerQuery = Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery>(dsl => dsl.Tuning(r => r.FetchSize, command.FetchSize));
+                                  mockMessage = MockCommand<StartSchedulerCommand>
+                                          .When(command)
+                                          .StubQuery(getExpectedDelayToSchedulerQuery, dsl => dsl.ForwardToAction(r => r.Date, query => query.Date.ShouldBeDate(DateTime.UtcNow)), response, command.Setting)
+                                          .StubPush(instance1)
+                                          .StubPush(instance2)
+                                          .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[0].Id)
+                                                                                                   .Tuning(r => r.Description, null)
+                                                                                                   .Tuning(r => r.Status, DelayOfStatus.InProgress))
+                                          .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[1].Id)
+                                                                                                   .Tuning(r => r.Description, null)
+                                                                                                   .Tuning(r => r.Status, DelayOfStatus.InProgress));
+                              };
+
+        Because of = () => { mockMessage.Execute(); };
+
+        It should_be_pushed = () => { mockMessage.ShouldBePushed(); };
+
         #region Fake classes
 
         public class FakeCommand : CommandBase
         {
             // ReSharper disable UnusedMember.Global
+
             #region Properties
 
             public string Prop { get; set; }
@@ -51,42 +83,5 @@
         static Exception exception;
 
         #endregion
-
-        Cleanup cleanup = () => isStart = false;
-
-        Establish establish = () =>
-                              {
-                                  instance1 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
-                                  instance2 = Pleasure.Generator.Invent<FakeCommand>(dsl => dsl.GenerateTo(r => r.Setting));
-                                  response = new List<GetExpectedDelayToSchedulerQuery.Response>()
-                                             {
-                                                     Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery.Response>(dsl => dsl.Tuning(r => r.Instance, instance1)), 
-                                                     Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery.Response>(dsl => dsl.Tuning(r => r.Instance, instance2))
-                                             };
-
-                                  var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.Conditional, () => isStart)
-                                                                                                           .GenerateTo(r => r.Setting));
-
-                                  var getExpectedDelayToSchedulerQuery = Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery>(dsl => dsl.Tuning(r => r.FetchSize, command.FetchSize));
-                                  mockMessage = MockCommand<StartSchedulerCommand>
-                                          .When(command)
-                                          .StubQuery(getExpectedDelayToSchedulerQuery, dsl => dsl.ForwardToAction(r => r.Date, query => query.Date.ShouldBeDate(DateTime.UtcNow)), response, command.Setting)
-                                          .StubPush(instance1)
-                                          .StubPush(instance2)
-                                          .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[0].Id)
-                                                                                                   .Tuning(r => r.Description, null)
-                                                                                                   .Tuning(r => r.Status, DelayOfStatus.InProgress))
-                                          .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[1].Id)
-                                                                                                   .Tuning(r => r.Description, null)
-                                                                                                   .Tuning(r => r.Status, DelayOfStatus.InProgress));
-                              };
-
-        Because of = () =>
-                     {
-                         exception = Catch.Exception(() => mockMessage.Execute());
-                         Thread.Sleep(2.Seconds());
-                     };
-
-        It should_be_verify = () => exception.ShouldBeNull();
     }
-}  
+}

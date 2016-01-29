@@ -9,7 +9,7 @@
     #endregion
 
     [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_wrong_instance : Context_dispatcher_controller
+    public class When_create_by_type_with_wrong_instance : Context_dispatcher_controller
     {
         #region Establish value
 
@@ -17,8 +17,7 @@
 
         #endregion
 
-        Establish establish = () => Establish(types: new[] { typeof(string) });
-
+        
         Because of = () => { exception = Catch.Exception(() => controller.Push("bad")); };
 
         It should_be_exception = () => exception.Message.ShouldEqual("Not found any type bad");

@@ -15,7 +15,7 @@
         Establish establish = () =>
                                   {
                                       control = new IncDropDownControl<FakeModel, string>(mockHtmlHelper.Original, model => model.Prop);
-                                      control.Url = "Url";
+                                      control.Data = "Url";
                                       control.Options.Cache = true;
                                   };
 

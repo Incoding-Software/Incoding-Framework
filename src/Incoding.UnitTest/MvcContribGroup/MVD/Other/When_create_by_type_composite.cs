@@ -12,8 +12,8 @@
 
     #endregion
 
-    [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_push_composite_by_name : Context_dispatcher_controller
+    [Subject(typeof(CreateByTypeQuery))]
+    public class When_create_by_type_composite: Context_dispatcher_controller
     {
         #region Fake classes
 
@@ -41,8 +41,7 @@
 
         #endregion
 
-        Establish establish = () => Establish(types: new[] { typeof(FakePushComposite1ByNameCommand), typeof(FakePushComposite2ByNameCommand) });
-
+        
         Because of = () =>
                      {
                          result = controller.Push("{0}&{1}".F(typeof(FakePushComposite1ByNameCommand).Name,
