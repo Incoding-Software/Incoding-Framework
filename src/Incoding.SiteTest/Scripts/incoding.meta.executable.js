@@ -44,7 +44,6 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -118,7 +117,6 @@ ExecutableBase.prototype = {
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
         ExecutableHelper.Instance.result = this.result;
-        ExecutableHelper.Instance.resultOfEvent = this.resultOfEvent;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -375,7 +373,14 @@ ExecutableInsert.prototype.internalExecute = function() {
         }
     }
 
+    switch (current.jsonData.insertType) {
+        case 'html':
+            $(current.target).html(insertContent.toString());
+            break;
+        default:
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+
+    var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
         IncodingEngine.Current.parse(current.target.nextAll());
     }
@@ -407,7 +412,8 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-    this.target.trigger(this.jsonData.trigger, [eventData]);
+    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
+
 };
 
 //#endregion
@@ -498,7 +504,6 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
 };
 
 //#endregion
-
 
 //#region class ExecutableEval extend from ExecutableBase
 
@@ -695,5 +700,21 @@ ExecutableBind.prototype.internalExecute = function() {
 };
 
 //#endregion
+
+//#region class ExcutableJquery extend from ExecutableBase
+
+incodingExtend(ExcutableJquery, ExecutableBase);
+
+function ExcutableJquery() {
+}
+
+ExcutableJquery.prototype.internalExecute = function() {
+    switch (this.jsonData.method) {
+        case 1:
+            $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+        default:
+            throw 'Not found method {0}'.f(this.jsonData.method);
+    }
+};
 
 //#endregion

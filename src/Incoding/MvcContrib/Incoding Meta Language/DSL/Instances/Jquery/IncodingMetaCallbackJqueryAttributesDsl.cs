@@ -4,7 +4,6 @@
 
     using System;
     using System.Collections;
-    using System.Linq;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using JetBrains.Annotations;
@@ -141,7 +140,7 @@
         /// <summary>
         ///     Remove an attribute from each element in the set of matched elements.
         /// </summary>
-        /// <param name="key">Html attributes</param>        
+        /// <param name="key">Html attributes</param>
         public IExecutableSetting Remove(HtmlAttribute key)
         {
             return Remove(key.ToJqueryString());
@@ -288,7 +287,18 @@
         [ContractAnnotation("class:null =>true")]
         public IExecutableSetting AddClass([HtmlAttributeValue("class")] string @class)
         {
-            return plugInDsl.Core().JQuery.Call("addClass", @class);
+            return new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { @class });
+        }
+
+        /// <summary>
+        ///     Adds the specified <c>class</c> to each of the set of matched elements
+        /// </summary>
+        /// <param name="selector">
+        /// </param>
+        [ContractAnnotation("class:null =>true")]
+        public IExecutableSetting AddClass(Selector selector)
+        {
+            return new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { selector });
         }
 
         /// <summary>

@@ -51,6 +51,7 @@ IncSpecialBinds.DocumentBinds = [
     IncSpecialBinds.IncAjaxError,
     IncSpecialBinds.IncAjaxComplete,
     IncSpecialBinds.IncAjaxSuccess,
+    IncSpecialBinds.IncGlobalError,
     IncSpecialBinds.IncInsert
 ];
 
@@ -1255,24 +1256,24 @@ function IncodingMetaElement(element) {
     this.bind = function(eventName, status) {
 
         var currentElement = this.element;
-        $.each(IncSpecialBinds.DocumentBinds, function() {
-            if (!eventName.contains(this)) {
-                return true;
+        for (var i = 0; i < IncSpecialBinds.DocumentBinds.length; i++) {
+            var docBind = IncSpecialBinds.DocumentBinds[i];
+            if (!eventName.contains(docBind)) {
+                continue;
             }
-
-            eventName = eventName.replaceAll(this, ''); //remove document bind from element bind           
-            $(document).bind(this.toString(), function(e, result) { //this.toString() fixed for ie <10
+            eventName = eventName.replaceAll(docBind, ''); //remove document bind from element bind           
+            $(document).bind(docBind.toString(), function(e, result) { //docBind.toString() fixed for ie <10
                 new IncodingMetaElement(currentElement)
                     .invoke(e, result);
                 return false;
             });
-        });
+        }
 
         if (eventName === "") {
             return;
         }
 
-        $(this.element).bind(eventName.toString(), function(e, result) {
+        $(currentElement).bind(eventName.toString(), function (e, result) {
 
             var strStatus = status.toString();
 
@@ -1294,6 +1295,7 @@ function IncodingMetaElement(element) {
             return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
         });
     };
+
     this.invoke = function(e, result) {
         if (!ExecutableHelper.IsNullOrEmpty(this.runner)) {
             this.runner.DoIt(e, result);
@@ -1537,19 +1539,19 @@ ExecutableFactory.Create = function(type, data, self) {
     if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
-    var executable = $.extend({}, document[type]);
-    executable.jsonData = data;
-    executable.onBind = data.onBind;
-    executable.self = self;
-    executable.timeOut = data.timeOut;
-    executable.interval = data.interval;
-    executable.intervalId = data.intervalId;
-    executable.ands = data.ands;
-    executable.getTarget = function() {
-        return eval(data.target);
-    };
+    return $.extend(false, document[type], {
+        jsonData : data,
+        onBind : data.onBind,
+        self : self,
+        timeOut : data.timeOut,
+        interval : data.interval,
+        intervalId : data.intervalId,
+        ands : data.ands,
+        getTarget : function() {
+            return eval(data.target);
+        }
+    });
 
-    return executable;
 };
 
 // ReSharper restore UnusedParameter
@@ -1617,23 +1619,22 @@ ExecutableBase.prototype = {
 
         var res = false;
 
-        $(current.ands).each(function() {
-
+        for (var i = 0; i < current.ands.length; i++) {
             var hasAny = false;
 
-            $(this).each(function() {
-
-                hasAny = ConditionalFactory.Create(this, current).isSatisfied(current.result);
+            for (var j = 0; j < current.ands[i].length; j++) {
+                hasAny = ConditionalFactory.Create(current.ands[i][j], current).isSatisfied(current.result);
                 if (!hasAny) {
-                    return false;
+                    break;
                 }
-            });
+            }
 
             if (hasAny) {
                 res = true;
-                return false;
+                break;
             }
-        });
+
+        }
 
         return res;
     },
@@ -1677,10 +1678,10 @@ $.extend(ExecutableActionBase.prototype, {
         }
 
         var hasBreak = false;
-        var executeState = function() {
+        var executeState = function(executable) {
             try {
-                this.result = resultData;
-                this.execute();
+                executable.result = resultData;
+                executable.execute();
             }
             catch (e) {
                 if (e instanceof IncClientException) {
@@ -1690,18 +1691,25 @@ $.extend(ExecutableActionBase.prototype, {
 
                 console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncGlobalError));
-                $(this.self).trigger(jQuery.Event(IncSpecialBinds.IncError));
+                $(executable.self).trigger(jQuery.Event(IncSpecialBinds.IncError));
                 if (navigator.Ie8) {
                     return false; //stop execute
                 }
                 throw e;
             }
         };
+        var mainStates = result.success ? state.success : state.error;
+        for (var i = 0; i < mainStates.length; i++) {
+            executeState(mainStates[i]);
+        }
 
-        $(result.success ? state.success : state.error).each(executeState);
-        $(state.complete).each(executeState);
+        for (var j = 0; j < state.complete.length; j++) {
+            executeState(state.complete[j]);
+        }
         if (hasBreak) {
-            $(state.breakes).each(executeState);
+            for (var k = 0; k < state.breakes.length; k++) {
+                executeState(state.breakes[k]);
+            }
         }
     }
 });
@@ -1896,10 +1904,10 @@ ExecutableInsert.prototype.internalExecute = function() {
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
-        target = $(current.target).nextAll();
+        target = current.target.nextAll();
     }
     if (current.jsonData.insertType.toLowerCase() === 'before') {
-        target = $(current.target).prevAll();
+        target = current.target.prevAll();
     }
     IncodingEngine.Current.parse(target);
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
@@ -1923,7 +1931,7 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-    $(this.target).trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
+    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success: true, data: eventData, redirectTo: '' }));
 
 };
 
@@ -1938,7 +1946,7 @@ function ExecutableValidationParse() {
 
 ExecutableValidationParse.prototype.internalExecute = function() {
 
-    var form = $(this.target).is('form') ? this.target : $(this.target).closest('form').first();
+    var form = this.target.is('form') ? this.target : this.target.closest('form').first();
     $(form).removeData('validator').removeData('unobtrusiveValidation');
     $.validator.unobtrusive.parse(form);
 
@@ -1960,25 +1968,31 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
-ExecutableValidationRefresh.prototype.internalExecute = function () {
+ExecutableValidationRefresh.prototype.internalExecute = function() {
 
-    var current = this;
     var inputErrorClass = 'input-validation-error';
     var messageErrorClass = 'field-validation-error';
     var messageValidClass = 'field-validation-valid';
     var attrSpan = 'data-valmsg-for';
-    var result = ExecutableHelper.IsNullOrEmpty(current.result) ? [] : current.result;
-    $(result).each(function () {
+    var result = ExecutableHelper.IsNullOrEmpty(this.result) ? [] : this.result;
+    var isWasRefresh = false;
+    for (var i = 0; i < result.length; i++) {
+        var item = result[i];
+        if (!item.hasOwnProperty('name') ||
+            !item.hasOwnProperty('isValid') ||
+            !item.hasOwnProperty('errorMessage')) {
+            isWasRefresh = false;
+            break;
+        }
 
-        var name = this.name.toString();
-        var input = $('[name]', current.target).filter(function () {
-            return $(this).attr('name').toLowerCase() == name.toLowerCase();
+        var input = $('[name]', this.target).filter(function() {
+            return $(this).attr('name').toLowerCase() == item.name.toString().toLowerCase();
         });
-        var span = $('[{0}]'.f(attrSpan), current.target).filter(function () {
-            return $(this).attr(attrSpan).toLowerCase() == name.toLowerCase();
+        var span = $('[{0}]'.f(attrSpan), this.target).filter(function() {
+            return $(this).attr(attrSpan).toLowerCase() == item.name.toString().toLowerCase();
         });
 
-        if (ExecutableHelper.ToBool(this.isValid)) {
+        if (ExecutableHelper.ToBool(item.isValid)) {
             $(input).removeClass(inputErrorClass);
             $(span).removeClass(messageErrorClass)
                 .addClass(messageValidClass)
@@ -1986,25 +2000,24 @@ ExecutableValidationRefresh.prototype.internalExecute = function () {
         }
         else {
             $(input).addClass(inputErrorClass);
-            $(span)
-                .removeClass(messageValidClass)
+            $(span).removeClass(messageValidClass)
                 .addClass(messageErrorClass)
                 .html($('<span/>')
-                    .attr({ for: name, generated: true })
-                    .html(this.errorMessage));
+                    .attr({ for : item.name, generated : true })
+                    .html(item.errorMessage));
         }
-
-    });
-
-    if ($(result).length === 0) {
-        $(current.target).find('.' + inputErrorClass).removeClass(inputErrorClass);
-        $('[{0}]'.f(attrSpan), current.target).removeClass(messageErrorClass)
-            .addClass(messageValidClass)
-            .empty();
-        $(current.target).find('.' + messageErrorClass).addClass(messageValidClass).removeClass(messageErrorClass).empty();
+        isWasRefresh = true;
     }
 
-    $($(current.target).is('form') ? current.target : $('form', this.target))
+    if (!isWasRefresh) {
+        this.target.find('.' + inputErrorClass).removeClass(inputErrorClass);
+        $('[{0}]'.f(attrSpan), this.target).removeClass(messageErrorClass)
+            .addClass(messageValidClass)
+            .empty();
+        this.target.find('.' + messageErrorClass).addClass(messageValidClass).removeClass(messageErrorClass).empty();
+    }
+
+    (this.target.is('form') ? this.target : $('form', this.target))
         .validate()
         .focusInvalid();
 };
@@ -2165,7 +2178,7 @@ function ExecutableForm() {
 }
 
 ExecutableForm.prototype.internalExecute = function() {
-    var form = $(this.target).is('form') ? this.target : $(this.target).closest('form').first();
+    var form = this.target.is('form') ? this.target : this.target.closest('form').first();
 
     var method = this.jsonData.method;
     switch (method) {
@@ -2191,16 +2204,16 @@ ExecutableBind.prototype.internalExecute = function() {
     var type = this.jsonData.type;
     switch (type) {
         case 'attach':
-            $(this.target).removeData('incoding-runner');
-            $(this.target).attr('incoding', this.jsonData.meta);
+            this.target.removeData('incoding-runner')
+                .attr('incoding', this.jsonData.meta);
             IncodingEngine.Current.parse(this.target);
             break;
         case 'detach':
             if (ExecutableHelper.IsNullOrEmpty(this.jsonData.bind)) {
-                $(this.target).unbind();
+                this.target.unbind();
             }
             else {
-                $(this.target).unbind(this.jsonData.bind);
+                this.target.unbind(this.jsonData.bind);
             }
             break;
     }
@@ -2217,11 +2230,16 @@ function ConditionalFactory() {
 
 // ReSharper disable UnusedParameter
 ConditionalFactory.Create = function(data, executable) {
-    var conditional = eval('new ' + 'Conditional' + data.type + '();');
-    conditional.jsonData = data;
-    conditional.executable = executable;
-    return conditional;
+    if (!document[data.type]) {
+        document[data.type] = eval('new ' + 'Conditional' + data.type + '();');
+    }
+    return $.extend(false, document[data.type], {
+        jsonData : data,
+        executable : executable
+    });
+
 };
+
 // ReSharper restore UnusedParameter
 
 //#endregion
@@ -2245,7 +2263,7 @@ ConditionalBase.prototype =
         },
         // ReSharper disable UnusedParameter
         isInternalSatisfied : function(data) {
-        // ReSharper restore UnusedParameter            
+            // ReSharper restore UnusedParameter            
         },
         tryGetVal : function(variable) {
             return this.executable.tryGetVal(variable);
@@ -2302,7 +2320,6 @@ ConditionalEval.prototype.isInternalSatisfied = function(data) {
 // ReSharper restore UnusedParameter
 
 //#endregion
-
 
 //#region class ConditionalIs extend from ConditionalBase
 

@@ -297,7 +297,6 @@
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerAsyncWhere.cs" />
     <Compile Include="Block\Scheduler\Query\GetRecurrencyDateQuery.cs" />
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByUIDWhereSpec.cs" />
-    <Compile Include="Block\Scheduler\InitScheduler.cs" />
     <Compile Include="Block\Scheduler\Specification\DelayToSchedulerLessStartsOnWhereSpec.cs" />
     <Compile Include="Block\Scheduler\StartSchedulerCommand.cs" />
     <Compile Include="ContractAbbreviateAttribute.cs" />
@@ -424,6 +423,7 @@
     <Compile Include="MvcContrib\HtmlHelper\BootstrapOfVersion.cs" />
     <Compile Include="MvcContrib\Incoding Controls\IncDivControl.cs" />
     <Compile Include="MvcContrib\Incoding Controls\IncStaticControl.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableJquery.cs" />
     <Compile Include="MvcContrib\Primitive\IncHtmlString.cs" />
     <Compile Include="MvcContrib\Primitive\IncSelectList.cs" />
     <Compile Include="MvcContrib\Primitive\ModeOfCheckbox.cs" />
@@ -660,7 +660,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

@@ -5,7 +5,7 @@
     using Incoding.CQRS;
     using Incoding.Extensions;
 
-    [OptionOfDelay(Async = false)]
+    [OptionOfDelay(Async = true,TimeOut = 10000)]
     public class AddAsSyncProductCommand : CommandBase
     {
         #region Properties
