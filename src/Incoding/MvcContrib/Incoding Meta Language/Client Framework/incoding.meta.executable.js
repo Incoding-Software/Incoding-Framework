@@ -706,12 +706,12 @@ ExecutableBind.prototype.internalExecute = function() {
 
 //#region class ExcutableJquery extend from ExecutableBase
 
-incodingExtend(ExcutableJquery, ExecutableBase);
+incodingExtend(ExecutableJquery, ExecutableBase);
 
-function ExcutableJquery() {
+function ExecutableJquery() {
 }
 
-ExcutableJquery.prototype.internalExecute = function() {
+ExecutableJquery.prototype.internalExecute = function () {
     switch (this.jsonData.method) {
         case 1:
             $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
