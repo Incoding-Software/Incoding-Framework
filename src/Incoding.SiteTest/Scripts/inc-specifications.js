@@ -1338,13 +1338,13 @@ describe('Incoding', function() {
                 });
 
                 it('Should be data', function () {
-                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' }
+                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' };
                     var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Event_Data').val());
                     expect(res).toEqual(ExecutableHelper.Instance.resultOfEvent);
                 });
 
                 it('Should be data for', function () {
-                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' }
+                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' };
                     var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Event_Data').val());
                     expect(res).toEqual(ExecutableHelper.Instance.resultOfEvent);
                 });
@@ -3712,6 +3712,24 @@ describe('Incoding', function() {
         });
 
         describe('Executables', function() {
+
+            describe('When ExecutableJQuery', function() {
+
+                var executable;
+
+                beforeEach(function() {
+                    executable = new ExecutableJquery();
+                    executable.self = instanceSandBox;
+                    executable.target = instanceSandBox;
+                });
+
+                it('Should be addClass', function() {
+                    executable.jsonData = $.parseJSON($('#ExecutableJquery_AddClass').val());
+                    executable.internalExecute();
+                    $(instanceSandBox).hasClass('545BE33E-3A4E-4600-9CA9-2959FFB9DBCA');
+                });
+
+            });
 
             describe('When ExecutableInsert', function() {
 

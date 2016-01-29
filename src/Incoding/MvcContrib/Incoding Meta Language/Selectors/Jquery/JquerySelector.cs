@@ -237,7 +237,7 @@
         /// </summary>
         public JquerySelectorExtend Class(B @class)
         {
-            AlsoSelector("." + @class.ToLocalization().Replace(" ", " ."));
+            AlsoSelector("." + @class.ToLocalization().Replace(" ", "."));
             return new JquerySelectorExtend(selector);
         }
 

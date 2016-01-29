@@ -76,7 +76,17 @@
 </head>
 
 <body>
-    <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertWithProperty" />
+<input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertWithProperty"/>
+
+    @for (int i = 0; i < 1000; i++)
+    {
+        @(Html.When(JqueryBind.InitIncoding)
+              .OnSuccess(dsl => dsl.Self().JQuery.Attr.AddClass(B.Btn))
+              .AsHtmlAttributes()
+              .ToDiv())
+    }
+
+
 <div id="simpleIML">
     @for (int i = 0; i < 1000; i++)
     {

@@ -714,7 +714,7 @@ function ExecutableJquery() {
 ExecutableJquery.prototype.internalExecute = function () {
     switch (this.jsonData.method) {
         case 1:
-            $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            this.target.addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
             break;
         default:
             throw 'Not found method {0}'.f(this.jsonData.method);

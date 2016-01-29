@@ -11,9 +11,9 @@ namespace Incoding.MvcContrib
 
     public static class BExtensions
     {
-
         #region Factory constructors
 
+        [Obsolete("Please use ToLocalization instead of AsClass")]
         public static string AsClass(this B b)
         {
             return b.ToLocalization();
