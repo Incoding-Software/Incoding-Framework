@@ -201,33 +201,30 @@ namespace Incoding.UnitTest.MvcContribGroup
         It should_be_add_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do().Direct()
                                                .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass("class"))
-                                               .GetExecutable<ExecutableEvalMethod>()
+                                               .GetExecutable<ExecutableJquery>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                 {
-                                                                        { "method", "addClass" }, 
-                                                                        { "context", "$(this.target)" }, 
+                                                                        { "method", 1 },
                                                                         { "args", new[] { "class" } }
                                                                 });
 
         It should_be_add_class_by_bootstrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                             .Do().Direct()
                                                             .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass(B.Active))
-                                                            .GetExecutable<ExecutableEvalMethod>()
+                                                            .GetExecutable<ExecutableJquery>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                              {
-                                                                                     { "method", "addClass" }, 
-                                                                                     { "context", "$(this.target)" }, 
+                                                                                     { "method", 1 },
                                                                                      { "args", new[] { "active" } }
                                                                              });
 
         It should_be_add_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                                      .Do().Direct()
                                                                      .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass(B.Active | B.Disabled))
-                                                                     .GetExecutable<ExecutableEvalMethod>()
+                                                                     .GetExecutable<ExecutableJquery>()
                                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                                       {
-                                                                                              { "method", "addClass" }, 
-                                                                                              { "context", "$(this.target)" }, 
+                                                                                              { "method", 1 },
                                                                                               { "args", new[] { "active disabled" } }
                                                                                       });
 

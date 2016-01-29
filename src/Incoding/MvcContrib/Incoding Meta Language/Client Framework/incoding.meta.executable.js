@@ -380,7 +380,8 @@ ExecutableInsert.prototype.internalExecute = function() {
             $(current.target).html(insertContent.toString());
             break;
         default:
-    eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+            eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+    }
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
@@ -414,12 +415,8 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-<<<<<<< .merge_file_a14996
-    this.target.trigger(this.jsonData.trigger, [eventData]);
-=======
-    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
 
->>>>>>> .merge_file_a19840
+    this.target.trigger(this.jsonData.trigger, [eventData]);
 };
 
 //#endregion
@@ -718,6 +715,7 @@ ExcutableJquery.prototype.internalExecute = function() {
     switch (this.jsonData.method) {
         case 1:
             $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            break;
         default:
             throw 'Not found method {0}'.f(this.jsonData.method);
     }

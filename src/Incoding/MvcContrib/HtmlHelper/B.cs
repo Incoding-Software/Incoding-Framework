@@ -11,21 +11,12 @@ namespace Incoding.MvcContrib
 
     public static class BExtensions
     {
-        #region Static Fields
-
-       internal static readonly B[] all = Enum.GetValues(typeof(B))
-                                      .Cast<B>()
-                                      .ToArray();
-
-        #endregion
 
         #region Factory constructors
 
         public static string AsClass(this B b)
         {
-            return all.Where(r => b.HasFlag(r))
-                      .Select(r => r.ToLocalization())
-                      .AsString(" ");
+            return b.ToLocalization();
         }
 
         #endregion

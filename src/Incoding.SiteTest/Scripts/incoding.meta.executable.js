@@ -44,6 +44,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
+    this.resultOfEvent = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -117,6 +118,7 @@ ExecutableBase.prototype = {
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
         ExecutableHelper.Instance.result = this.result;
+        ExecutableHelper.Instance.resultOfEvent = this.resultOfEvent;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -378,7 +380,8 @@ ExecutableInsert.prototype.internalExecute = function() {
             $(current.target).html(insertContent.toString());
             break;
         default:
-    eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+            eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
+    }
 
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
@@ -412,8 +415,8 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success : true, data : eventData, redirectTo : '' }));
 
+    this.target.trigger(this.jsonData.trigger, [eventData]);
 };
 
 //#endregion
@@ -712,6 +715,7 @@ ExcutableJquery.prototype.internalExecute = function() {
     switch (this.jsonData.method) {
         case 1:
             $(this.target).addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            break;
         default:
             throw 'Not found method {0}'.f(this.jsonData.method);
     }
