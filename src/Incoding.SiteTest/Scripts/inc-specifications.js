@@ -1111,10 +1111,7 @@ describe('Incoding', function() {
                             success : runner.success,
                             error : runner.error,
                             complete : runner.complete,
-                            breakes : runner.breakes,
-
-                            eventResult : IncodingResult.Empty,
-                            event : event
+                            breakes : runner.breakes,                                                        
                         });
 
                         expect(runner.breakes[0].execute).not.toHaveBeenCalled();
@@ -1152,9 +1149,7 @@ describe('Incoding', function() {
                             success : [],
                             error : [],
                             complete : [],
-                            breakes : [],
-                            eventResult : IncodingResult.Empty,
-                            event : event
+                            breakes : [],                            
                         });
                     });
 
@@ -1175,9 +1170,7 @@ describe('Incoding', function() {
                             success: [multipleAction],
                             error: [multipleAction],
                             complete: [multipleAction],
-                            breakes: [multipleAction],
-                            eventResult : IncodingResult.Empty,
-                            event: otherEvent
+                            breakes: [multipleAction],                            
                         });
                     });
 
@@ -1196,17 +1189,13 @@ describe('Incoding', function() {
                             success : [singleExeuctable],
                             error : [],
                             complete : [],
-                            breakes : [],
-                            eventResult : IncodingResult.Empty,
-                            event : event
+                            breakes : [],                            
                         });
                         expect(mutlipleAction.execute).toHaveBeenCalledWith({
                             success : [multipleExeuctable],
                             error : [],
                             complete : [],
-                            breakes : [],
-                            eventResult : IncodingResult.Empty,
-                            event : event
+                            breakes : [],                            
                         });
 
                     });
@@ -1346,6 +1335,18 @@ describe('Incoding', function() {
                 it('Should be meta key', function() {
                     var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Event_MetaKey').val());
                     expect(res).toEqual(originalEvent.metaKey);
+                });
+
+                it('Should be data', function () {
+                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' }
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Event_Data').val());
+                    expect(res).toEqual(ExecutableHelper.Instance.resultOfEvent);
+                });
+
+                it('Should be data for', function () {
+                    ExecutableHelper.Instance.resultOfEvent = { Text: 'message' }
+                    var res = ExecutableHelper.Instance.TryGetVal($('#Selector_Event_Data').val());
+                    expect(res).toEqual(ExecutableHelper.Instance.resultOfEvent);
                 });
             });
 
@@ -3050,6 +3051,21 @@ describe('Incoding', function() {
                     executable = new ExecutableBase();
                     executable.self = instanceSandBox;
                     executable.target = target;
+                    executable.event = 'event';
+                    executable.result = 'result';
+                    executable.resultOfEvent = 'resultOfEvent';
+                });
+
+                it('Should be set defaults', function () {
+                    
+                    var res = executable.tryGetVal('1');
+
+                    expect(ExecutableHelper.Instance.self).toEqual(executable.self);
+                    expect(ExecutableHelper.Instance.target).toEqual(executable.target);
+                    expect(ExecutableHelper.Instance.event).toEqual(executable.event);
+                    expect(ExecutableHelper.Instance.result).toEqual(executable.result);
+                    expect(ExecutableHelper.Instance.resultOfEvent).toEqual(executable.resultOfEvent);
+                    expect(ExecutableHelper.Instance.TryGetVal).toHaveBeenCalledWith('1');
                 });
 
                 it('Should be variable as value', function() {
@@ -3930,56 +3946,56 @@ describe('Incoding', function() {
                 it('Should be trigger with data as undefined', function() {
                     trigger.result = undefined;
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : undefined, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, undefined);
                 });
 
                 it('Should be trigger with data as object', function () {
                     trigger.result = { is : true };
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : { is : true }, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, { is: true });
                 });
 
                 it('Should be trigger with data as string', function () {
                     trigger.result = 'content';
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 'content', redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, 'content');
                 });
 
                 it('Should be trigger with data as int', function () {
                     trigger.result = 5;
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox,  5);
                 });
 
                 it('Should be trigger with data as int object', function () {
                     trigger.result = Number(5);
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : 5, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, 5);
                 });
 
                 it('Should be trigger with data as bool', function () {
                     trigger.result = true;
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, true);
                 });
 
                 it('Should be trigger with data as bool object', function () {
                     trigger.result = Boolean(true);
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, true);
                 });
 
                 it('Should be trigger data as  array', function () {
                     trigger.result = [5, 6];
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : [5, 6], redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, [5, 6]);
                 });
 
                 it('Should be trigger data as  date time', function() {
                     var currentTime = new Date().now;
                     trigger.result = currentTime;
                     trigger.internalExecute();
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : currentTime, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, currentTime);
                 });
 
                 it('Should be trigger with property data', function() {
@@ -3987,7 +4003,7 @@ describe('Incoding', function() {
                     trigger.result = { is: true };
                     trigger.internalExecute();
 
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : true, redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, true);
                 });
 
                 it('Should be trigger with property empty data', function() {
@@ -3995,7 +4011,7 @@ describe('Incoding', function() {
                     trigger.result = {};
                     trigger.internalExecute();
 
-                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, new IncodingResult({ success : true, data : '', redirectTo : '' }));
+                    expect(trigger.jsonData.trigger).toHaveBeenTriggeredOn(instanceSandBox, '');
                 });
 
             });
@@ -4678,7 +4694,7 @@ describe('Incoding', function() {
                     conditional.executable = executable;
                 });
 
-                it('Should be tryGetVal exectuable', function() {
+                it('Should be tryGetVal', function () {
                     var tryGetVal = conditional.tryGetVal('aws');
 
                     expect(tryGetVal).toEqual('value');

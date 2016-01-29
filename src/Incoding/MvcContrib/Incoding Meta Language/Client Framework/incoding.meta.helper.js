@@ -246,6 +246,7 @@ function ExecutableHelper() {
     this.target = '';
     this.event = '';
     this.result = '';
+    this.resultOfEvent = '';
 
     this.TryGetVal = function (selector) {
 
@@ -325,9 +326,9 @@ function ExecutableHelper() {
             else if (isType('javascript')) {
                 res = eval(valueSelector);
             }
-            else if (isType('result')) {
-                res = getResult(valueSelector, this.result);
-            }
+            else if (isType('result') || isType('resultOfevent')) {
+                res = getResult(valueSelector, isType('result') ? this.result : this.resultOfEvent);
+            }            
         }
 
         return ExecutableHelper.IsNullOrEmpty(res) ? '' : res;

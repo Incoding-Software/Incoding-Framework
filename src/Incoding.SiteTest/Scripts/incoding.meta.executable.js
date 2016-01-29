@@ -44,6 +44,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
+    this.resultOfEvent = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -117,6 +118,7 @@ ExecutableBase.prototype = {
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
         ExecutableHelper.Instance.result = this.result;
+        ExecutableHelper.Instance.resultOfEvent = this.resultOfEvent;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -405,8 +407,7 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success: true, data: eventData, redirectTo: '' }));
-
+    this.target.trigger(this.jsonData.trigger, [eventData]);
 };
 
 //#endregion
