@@ -3,6 +3,7 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -11,6 +12,9 @@ namespace Incoding.Extensions
 
     public static class EnumExtensions
     {
+
+        static readonly ConcurrentDictionary<string,string> cachedEnumToString = new ConcurrentDictionary<string, string>();
+
         #region Factory constructors
 
         public static IEnumerable<T> ToArrayEnum<T>(this Type value)
@@ -25,39 +29,42 @@ namespace Incoding.Extensions
 
         public static string ToJqueryString(this Enum value)
         {
-            return value
-                    .ToLocalization().Replace(",", string.Empty)
-                    .ToLowerInvariant();
+            return value.ToLocalization().Replace(",", string.Empty).ToLowerInvariant();
         }
 
         public static string ToLocalization(this Enum value)
         {
-            var enumType = value.GetType();
-
-            Func<Enum, string> getDescription = (current) =>
+            var type = value.GetType();
+            var key = "{0}{1}".F(type.FullName, value.ToString("D"));
+            return cachedEnumToString.GetOrAdd(key, i =>
                                                     {
-                                                        var memberEnum = enumType.GetMember(current.ToString());
-                                                        if (memberEnum.Length == 0)
-                                                            return string.Empty;
+                                                        var enumType = type;
 
-                                                        var description = memberEnum[0].FirstOrDefaultAttribute<DescriptionAttribute>();
-                                                        return description != null
-                                                                       ? description.Description
-                                                                       : current.ToString();
-                                                    };
+                                                        Func<Enum, string> getDescription = (current) =>
+                                                                                            {
+                                                                                                var memberEnum = enumType.GetMember(current.ToString());
+                                                                                                if (memberEnum.Length == 0)
+                                                                                                    return string.Empty;
 
-            if (enumType.HasAttribute<FlagsAttribute>())
-            {
-                var all = Enum.GetValues(enumType)
-                              .Cast<Enum>()
-                              .Where(value.HasFlag)
-                              .Select(getDescription)
-                              .ToList();
+                                                                                                var description = memberEnum[0].FirstOrDefaultAttribute<DescriptionAttribute>();
+                                                                                                return description != null
+                                                                                                               ? description.Description
+                                                                                                               : current.ToString();
+                                                                                            };
 
-                return string.Join(" ", all);
-            }
+                                                        if (enumType.HasAttribute<FlagsAttribute>())
+                                                        {
+                                                            var all = Enum.GetValues(enumType)
+                                                                          .Cast<Enum>()
+                                                                          .Where(value.HasFlag)
+                                                                          .Select(getDescription)
+                                                                          .ToList();
 
-            return getDescription(value);
+                                                            return string.Join(" ", all);
+                                                        }
+
+                                                        return getDescription(value);
+                                                    });
         }
 
         public static string ToStringInt(this Enum value)

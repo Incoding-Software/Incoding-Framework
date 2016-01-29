@@ -142,6 +142,9 @@
 <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "arg1", "arg2", "arg3" }, string.Empty).ToJsonString())" id="ExecutableEvalMethod"/>
 <input type="hidden" value="@(new ExecutableEvalMethod("testEvalMethod", new[] { "new title", }, string.Empty).ToJsonString())" id="ExecutableEvalMethodWithContext"/>
 
+<input type="hidden" value="@(new ExecutableJquery(ExecutableJquery.Method.AddClass, new [] {"545BE33E-3A4E-4600-9CA9-2959FFB9DBCA"}).ToJsonString())" id="ExecutableJquery_AddClass"/>
+
+
 <input type="hidden" value="@(new ExecutableTrigger("invoke", string.Empty).ToJsonString())" id="ExecutableTrigger"/>
 <input type="hidden" value="@(new ExecutableTrigger("invoke", "is").ToJsonString())" id="ExecutableTriggerWithProperty"/>
 
@@ -203,6 +206,8 @@
 <input type="hidden" value="@Selector.Event.PageY" id="Selector_Event_PageY"/>
 <input type="hidden" value="@Selector.Event.MetaKey" id="Selector_Event_MetaKey"/>
 <input type="hidden" value="@Selector.Event.Which" id="Selector_Event_Which"/>
+<input type="hidden" value="@Selector.Event.Data" id="Selector_Event_Data" />
+<input type="hidden" value="@(@Selector.Event.Data.For("Text"))" id="Selector_Event_Data_For_Property" />
 
 
 <input type="hidden" value="@(Selector.Result)" id="Selector_Result_For"/>

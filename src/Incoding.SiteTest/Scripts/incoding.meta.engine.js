@@ -88,7 +88,8 @@ IncodingRunner.prototype = {
         var filterExecutableByEvent = function(executable) {
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
-                executable.event = event;
+                executable.event = event;                
+                executable.resultOfEvent = result;                
             }
             return isHas;
         };
@@ -121,9 +122,7 @@ IncodingRunner.prototype = {
                 success : $.grep(current.success, filterExecutableByAction),
                 error : $.grep(current.error, filterExecutableByAction),
                 complete : $.grep(current.complete, filterExecutableByAction),
-                breakes : $.grep(current.breakes, filterExecutableByAction),
-                eventResult : result,
-                event : event
+                breakes : $.grep(current.breakes, filterExecutableByAction),                               
             });
         });
     },

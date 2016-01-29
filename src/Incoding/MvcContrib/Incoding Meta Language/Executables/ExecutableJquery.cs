@@ -11,7 +11,7 @@
     {
         public enum Method
         {
-            AddClass =1
+            AddClass = 1
         }
 
         public ExecutableJquery(Method method, object[] args)

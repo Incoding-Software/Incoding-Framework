@@ -1,0 +1,11 @@
+﻿
+@(Html.When(JqueryBind.Click)
+      .Direct("Test")
+      .OnSuccess(dsl => dsl.WithId("Test").Trigger.Change())
+      .AsHtmlAttributes()
+      .ToButton("Send"))
+
+@(Html.When(JqueryBind.Change)
+      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Event.Data).Html())
+      .AsHtmlAttributes(new { id = "Test" })
+      .ToDiv())

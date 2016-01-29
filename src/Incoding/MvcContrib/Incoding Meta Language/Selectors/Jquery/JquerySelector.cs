@@ -237,10 +237,7 @@
         /// </summary>
         public JquerySelectorExtend Class(B @class)
         {
-            BExtensions.all
-                       .Where(r => @class.HasFlag(r))
-                       .ForEach(bootstrap => AlsoSelector("." + Escaping(bootstrap.ToLocalization().Trim().ToLower())));
-
+            AlsoSelector("." + @class.ToLocalization().Replace(" ", "."));
             return new JquerySelectorExtend(selector);
         }
 

@@ -30,15 +30,6 @@
     </script>
 </head>
 <body>
-@(Html.When(JqueryBind.Click)
-      .Direct("Test")
-      .OnSuccess(dsl => dsl.WithId("Test").Trigger.Incoding())
-      .AsHtmlAttributes()
-      .ToDiv())
-
-@(Html.When(JqueryBind.Change)
-      .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(Selector.Event.Data).Html())
-      .AsHtmlAttributes(new { id = "test" })
-      .ToDiv())
+@(Selector.Jquery.Self().Closest(B.Active).ToString())
 </body>
 </html>
