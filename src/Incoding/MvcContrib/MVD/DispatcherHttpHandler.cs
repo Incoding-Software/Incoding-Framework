@@ -18,7 +18,7 @@
     public class DispatcherHttpHandler : IHttpHandler
     {
         public static T CreateController<T>(RouteData routeData = null)
-            where T : Controller, new()
+                where T : Controller, new()
         {
             // create a disconnected controller instance
             T controller = new T();
@@ -26,19 +26,20 @@
             // get context wrapper from HttpContext if available
             HttpContextBase wrapper = null;
             if (HttpContext.Current != null)
-                wrapper = new HttpContextWrapper(System.Web.HttpContext.Current);
+                wrapper = new HttpContextWrapper(HttpContext.Current);
             else
-                throw new InvalidOperationException(
-                    "Can't create Controller Context if no active HttpContext instance is available.");
+                throw new InvalidOperationException("Can't create Controller Context if no active HttpContext instance is available.");
 
             if (routeData == null)
                 routeData = new RouteData();
 
             // add the controller routing if not existing
             if (!routeData.Values.ContainsKey("controller") && !routeData.Values.ContainsKey("Controller"))
+            {
                 routeData.Values.Add("controller", controller.GetType().Name
-                                                            .ToLower()
-                                                            .Replace("controller", ""));
+                                                             .ToLower()
+                                                             .Replace("controller", ""));
+            }
 
             controller.ControllerContext = new ControllerContext(wrapper, routeData, controller);
             return controller;
@@ -59,11 +60,7 @@
             switch (verb)
             {
                 case Verb.Query:
-                    var instanceForQuery = dispatcher.Query(new CreateByTypeQuery()
-                                                            {
-                                                                    Request = new HttpRequestWrapper(context.Request), 
-                                                                    Type = incTypes
-                                                            });
+                    var instanceForQuery = dispatcher.Query(new CreateByTypeQuery() { Type = incTypes });
 
                     var result = dispatcher.GetType()
                                            .GetMethod("Query")
@@ -78,9 +75,8 @@
                     {
                         var instanceForRender = dispatcher.Query(new CreateByTypeQuery()
                                                                  {
-                                                                         IsModel = incIsModel, 
-                                                                         Type = incTypes, 
-                                                                         Request = new HttpRequestWrapper(context.Request)
+                                                                         IsModel = incIsModel,
+                                                                         Type = incTypes,                                                                         
                                                                  });
                         var baseType = instanceForRender.GetType().BaseType;
 
@@ -116,9 +112,9 @@
 
         public enum Verb
         {
-            Query, 
+            Query,
 
-            Render, 
+            Render,
 
             Push
         }

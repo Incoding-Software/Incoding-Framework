@@ -12,7 +12,7 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
-        [DebuggerStepThrough]
+        
         public static RouteValueDictionary ToDictionary(object anonymous)
         {
             if (anonymous == null)

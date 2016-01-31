@@ -207,10 +207,30 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\blanket.jasmine.adapter.js" />
+    <Content Include="Scripts\blanket.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\dot.js" />
     <Content Include="Scripts\dust-full-0.3.0.js" />
+    <Content Include="Scripts\handlebars.js" />
+    <Content Include="Scripts\inc-performance.js" />
+    <Content Include="Scripts\inc-specifications.js" />
+    <Content Include="Scripts\incoding.core.js" />
+    <Content Include="Scripts\incoding.core.js" />
+    <Content Include="Scripts\incoding.framework.js" />
+    <Content Include="Scripts\incoding.framework.js" />
+    <Content Include="Scripts\incoding.meta.conditional.js" />
+    <Content Include="Scripts\incoding.meta.conditional.js" />
+    <Content Include="Scripts\incoding.meta.engine.js" />
+    <Content Include="Scripts\incoding.meta.engine.js" />
+    <Content Include="Scripts\incoding.meta.executable.js" />
+    <Content Include="Scripts\incoding.meta.executable.js" />
+    <Content Include="Scripts\incoding.meta.helper.js" />
+    <Content Include="Scripts\incoding.meta.helper.js" />
+    <Content Include="Scripts\incoding.meta.trace.js" />
+    <Content Include="Scripts\incoding.meta.trace.js" />
+    <Content Include="Scripts\incoding.url.js" />
     <Compile Include="VM\JasmineIndexContainer.cs" />
     <Compile Include="VM\LabsIndexContainer.cs" />
   </ItemGroup>
@@ -236,30 +256,6 @@
     <Content Include="Content\img\ui-icons_f6cf3b_256x240.png" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\blanket.jasmine.adapter.js" />
-    <Content Include="Scripts\blanket.min.js" />
-    <Content Include="Scripts\handlebars.js" />
-    <Content Include="Scripts\inc-performance.js" />
-    <Content Include="Scripts\incoding.core.js" />
-    <Content Include="Scripts\incoding.meta.conditional.js" />
-    <Content Include="Scripts\incoding.meta.engine.js" />
-    <Content Include="Scripts\incoding.meta.executable.js" />
-    <Content Include="Scripts\incoding.meta.helper.js" />
-    <Content Include="Scripts\incoding.meta.trace.js" />
-    <Content Include="Scripts\incoding.url.js" />
-    <Content Include="Scripts\jquery-1.7.2.min.js" />
-    <Content Include="Scripts\jquery-1.7.min.js" />
-    <Content Include="Scripts\jquery-1.8.0.min.js" />
-    <Content Include="Scripts\jquery-1.8.1.min.js" />
-    <Content Include="Scripts\jquery-1.8.2.min.js" />
-    <Content Include="Scripts\jquery-1.8.3.min.js" />
-    <Content Include="Scripts\jquery-1.9.0.min.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
-    <Content Include="Scripts\JSON2.js" />
-    <Content Include="Scripts\jasmine-html.js" />
-    <Content Include="Scripts\jasmine-jquery.js" />
-    <Content Include="Scripts\jasmine.js" />
-    <Content Include="Scripts\jquery.mockjax.js" />
     <Content Include="db.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -273,20 +269,32 @@
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="DispatcherHttpHandler.ashx" />
+    <Content Include="Scripts\incoding.url.js" />
+    <Content Include="Scripts\jasmine-html.js" />
+    <Content Include="Scripts\jasmine-jquery.js" />
+    <Content Include="Scripts\jasmine.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js" />
+    <Content Include="Scripts\jquery-1.7.min.js" />
+    <Content Include="Scripts\jquery-1.8.0.min.js" />
+    <Content Include="Scripts\jquery-1.8.1.min.js" />
+    <Content Include="Scripts\jquery-1.8.2.min.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <None Include="Scripts\jquery-2.0.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.0.js" />
     <Content Include="Scripts\jquery-2.0.0.min.js" />
-    <Content Include="Scripts\jquery-2.0.0.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.form.min.js" />
+    <Content Include="Scripts\jquery.history.js" />
+    <Content Include="Scripts\jquery.mockjax.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\JSON2.js" />
     <Content Include="Scripts\mustache.js" />
-    <Content Include="Scripts\jquery.history.js" />
-    <Content Include="Scripts\inc-specifications.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Web.config" />
@@ -348,6 +356,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\Folder.pubxml" />
     <Content Include="Views\Jasmine\Index.cshtml" />
+    <Content Include="Scripts\jquery-2.0.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Incoding\Incoding.csproj">

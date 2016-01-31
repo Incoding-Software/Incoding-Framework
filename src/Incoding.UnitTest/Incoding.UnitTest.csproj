@@ -364,6 +364,10 @@
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name_with_encode.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_with_inner_class_by_full_name.cs" />
     <Compile Include="MvcContribGroup\When_inc_optional.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push__multiple_error_result.cs" />
@@ -512,13 +516,12 @@
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_success_razor_text.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\Exceptions\AmbiguousType.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Context_dispatcher_controller.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_concurrency.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_push_performance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_composite.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_concurrency.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_performance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_composite.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_as_array.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_generic.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_only_validate.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_create_by_type_with_encode.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_model_state.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_only_validate_error.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_only_validate_success.cs" />
@@ -527,11 +530,9 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Render\Context_dispatcher_controller_render.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_clear_model_state.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_typical_model.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_create_by_type_ambiguous_instance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_with_full_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_find_by_type_ambiguous_instance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_with_generic.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type_with_inner_class_by_full_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_with_generic.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_to_file.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_with_validate.cs" />
@@ -540,11 +541,11 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_without_ajax.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_query.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_create_by_type_with_wrong_instance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_find_by_type_with_wrong_instance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_query_as_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_filter.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_duplicate.cs" />
-    <Compile Include="MvcContribGroup\MVD\Other\When_create_by_type.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type.cs" />
     <Compile Include="MvcContribGroup\MVD\Url Dispatcher\When_url_dispatcher_verify_schema.cs" />
     <Compile Include="MvcContribGroup\MVD\Url Dispatcher\When_url_dispatcher.cs" />
     <Compile Include="MvcContribGroup\Template\When_template_factory.cs" />
@@ -774,7 +775,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

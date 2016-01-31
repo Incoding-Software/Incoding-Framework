@@ -50,8 +50,7 @@
                                                                                                                                r.TheCallingAssembly();
                                                                                                                                r.WithDefaultConventions();
 
-                                                                                                                               r.ConnectImplementationsToTypesClosing(typeof(AbstractValidator<>));
-                                                                                                                               r.ConnectImplementationsToTypesClosing(typeof(IEventSubscriber<>));
+                                                                                                                               r.ConnectImplementationsToTypesClosing(typeof(AbstractValidator<>));                                                                                                                               
                                                                                                                                r.AddAllTypesOf<ISetUp>();
                                                                                                                            });
                                                                                                      })));

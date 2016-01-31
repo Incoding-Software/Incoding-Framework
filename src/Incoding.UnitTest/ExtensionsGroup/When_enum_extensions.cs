@@ -52,7 +52,7 @@
 
         It should_be_to_pefromance = () => Pleasure.Do(i => (FlagFakeEnum.Value2 | FlagFakeEnum.Value3)
                                                                     .ToLocalization(), 100000)
-                                                   .ShouldBeLessThan(150);
+                                                   .ShouldBeLessThan(110);
 
         It should_be_to_string_int = () => FakeEnum.Value2
                                                    .ToStringInt()

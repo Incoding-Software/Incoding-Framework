@@ -86,19 +86,14 @@
 
         public virtual ActionResult Query(string incType, bool? incValidate, bool? incOnlyValidate = false)
         {
-            var query = dispatcher.Query(new CreateByTypeQuery() {Type = incType});
+            var query = dispatcher.Query(new CreateByTypeQuery() { Type = incType, ControllerContext = this.ControllerContext, ModelState = ModelState });
             if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
                 return IncodingResult.Success();
 
             if ((incValidate.GetValueOrDefault() || incOnlyValidate.GetValueOrDefault()) && !ModelState.IsValid)
                 return IncodingResult.Error(ModelState);
 
-            var result = dispatcher.GetType()
-                                   .GetMethod("Query")
-                                   .MakeGenericMethod(query.GetType().BaseType.With(r => r.GetGenericArguments()[0]))
-                                   .Invoke(dispatcher, new[] { query, null });
-
-            return IncJson(result);
+            return IncJson(dispatcher.Query(new ExecuteQuery() { Instance = query }));
         }
 
         public virtual ActionResult Render(string incView, string incType, bool? incIsModel)
@@ -106,19 +101,15 @@
             object model = null;
             if (!string.IsNullOrWhiteSpace(incType))
             {
-                var query = dispatcher.Query(new CreateByTypeQuery()
-                                             {
-                                                     Type = incType,
-                                                     IsModel = incIsModel.GetValueOrDefault()
-                                             });
-                var baseType = query.GetType().BaseType;
+                var instance = dispatcher.Query(new CreateByTypeQuery()
+                                                {
+                                                        Type = incType,
+                                                        IsModel = incIsModel.GetValueOrDefault()
+                                                });
 
-                model = baseType.Name.EqualsWithInvariant("QueryBase`1") && !incIsModel.GetValueOrDefault(false)
-                                ? dispatcher.GetType()
-                                            .GetMethod("Query")
-                                            .MakeGenericMethod(baseType.GetGenericArguments()[0])
-                                            .Invoke(dispatcher, new[] { query, null })
-                                : query;
+                model = incIsModel.GetValueOrDefault(false)
+                                ? instance
+                                : dispatcher.Query(new ExecuteQuery() { Instance = instance });
             }
 
             ModelState.Clear();
@@ -142,9 +133,11 @@
                                    ? ((IEnumerable<CommandBase>)dispatcher.Query(new CreateByTypeQuery()
                                                                                  {
                                                                                          Type = splitByType[0],
+                                                                                         ControllerContext = this.ControllerContext,
+                                                                                         ModelState = ModelState,
                                                                                          IsGroup = true
                                                                                  })).ToList()
-                                   : splitByType.Select(r => (CommandBase)dispatcher.Query(new CreateByTypeQuery() { Type = splitByType[0] })).ToList();
+                                   : splitByType.Select(r => (CommandBase)dispatcher.Query(new CreateByTypeQuery() { Type = r, ControllerContext = this.ControllerContext, ModelState = ModelState })).ToList();
 
             if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
                 return IncodingResult.Success();
@@ -163,11 +156,7 @@
         public virtual ActionResult QueryToFile(string incType, string incContentType, string incFileDownloadName)
         {
             Response.AddHeader("X-Download-Options", "Open");
-            var query = dispatcher.Query(new CreateByTypeQuery() { Type = incType });
-            var result = dispatcher.GetType()
-                                   .GetMethod("Query")
-                                   .MakeGenericMethod(query.GetType().BaseType.With(r => r.GetGenericArguments()[0]))
-                                   .Invoke(dispatcher, new[] { query, null });
+            var result = dispatcher.Query(new ExecuteQuery() { Instance = dispatcher.Query(new CreateByTypeQuery() { Type = incType, ControllerContext = ControllerContext, ModelState = ModelState }) });
             return File((byte[])result, string.IsNullOrWhiteSpace(incContentType) ? "img" : incContentType, incFileDownloadName.Recovery(string.Empty));
         }
 

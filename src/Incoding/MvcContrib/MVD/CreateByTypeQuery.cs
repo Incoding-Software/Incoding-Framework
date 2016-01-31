@@ -3,32 +3,33 @@
     #region << Using >>
 
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
     using Incoding.Extensions;
-    using Incoding.Maybe;
-    using Incoding.Quality;
 
     #endregion
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-        private HttpRequestBase request;
+        public ControllerContext ControllerContext { get; set; }
 
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             string genericType = byPair.ElementAtOrDefault(1);
 
-            var inst = Dispatcher.Query(new FindTypeByName(byPair[0], !string.IsNullOrWhiteSpace(genericType)));
+            var inst = Dispatcher.Query(new FindTypeByName()
+                                        {
+                                                Type = byPair[0],
+                                        });
+            var formCollection = Dispatcher.Query(new GetFormCollectionsQuery());
             var instanceType = IsGroup ? typeof(List<>).MakeGenericType(inst) : inst;
             if (instanceType.IsTypicalType() && IsModel)
             {
-                string str = Request.Params["incValue"];
+                string str = formCollection["incValue"];
                 if (instanceType == typeof(string))
                     return str;
                 if (instanceType == typeof(bool))
@@ -40,25 +41,25 @@
                 if (instanceType.IsEnum)
                     return Enum.Parse(instanceType, str);
             }
-
-            if (!string.IsNullOrWhiteSpace(genericType))
+            else if (!string.IsNullOrWhiteSpace(genericType))
             {
                 instanceType = instanceType.MakeGenericType(genericType.Split(UrlDispatcher.separatorByGeneric.ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                                                                       .Select(name => Dispatcher.Query(new FindTypeByName(name, true)))
+                                                                       .Select(name => Dispatcher.Query(new FindTypeByName()
+                                                                                                        {
+                                                                                                                Type = name,
+                                                                                                        }))
                                                                        .ToArray());
             }
 
             var instance = Activator.CreateInstance(instanceType);
 
-            var formAndQuery = new FormCollection(Request.Form);
-            formAndQuery.Add(Request.QueryString);
-
-            new DefaultModelBinder().BindModel(new ControllerContext(), new ModelBindingContext()
-                                                                        {
-                                                                                ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
-                                                                                ModelState = new ModelStateDictionary(),
-                                                                                ValueProvider = formAndQuery
-                                                                        });
+            new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
+                                                                                             {
+                                                                                                     ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
+                                                                                                     ModelState = ModelState ?? new ModelStateDictionary(),
+                                                                                                     PropertyFilter = propertyName => true,
+                                                                                                     ValueProvider = formCollection
+                                                                                             });
             return instance;
         }
 
@@ -68,63 +69,59 @@
         {
             #region Static Fields
 
-            internal static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
+            static readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
 
             #endregion
 
-            #region Constructors
+            #region Fields
 
-            public FindTypeByName(string type, bool isGeneric)
-            {
-                this.type = type;
-                this.isGeneric = isGeneric;
-            }
+            public string Type { get; set; }
 
             #endregion
 
             protected override Type ExecuteResult()
             {
-                string name = HttpUtility.UrlDecode(type).With(s => s.Replace(" ", "+"));
-                return cache.GetOrAdd(name, s =>
+                string name = HttpUtility.UrlDecode(Type).Replace(" ", "+");
+                return cache.GetOrAdd(name, () =>
                                             {
                                                 var allSatisfied = AppDomain.CurrentDomain.GetAssemblies()
                                                                             .Select(r => r.GetLoadableTypes())
                                                                             .SelectMany(r => r)
-                                                                            .Where(r => r.Name.IsAnyEqualsIgnoreCase(s) ||
-                                                                                        r.FullName.IsAnyEqualsIgnoreCase(s))
-                                                                            .ToList();
+                                                                            .Where(type => type.Name.IsAnyEqualsIgnoreCase(name) || type.FullName.IsAnyEqualsIgnoreCase(name));
 
-                                                string prefix = isGeneric ? " generic" : string.Empty;
-                                                if (allSatisfied.Count == 0)
-                                                    throw new IncMvdException("Not found any{0} type {1}".F(prefix, s));
+                                                if (!allSatisfied.Any())
+                                                    throw new IncMvdException("Not found any type {0}".F(name));
 
-                                                if (allSatisfied.Count > 1)
-                                                    throw new IncMvdException("Ambiguous{0} type {1}".F(prefix, s));
-                                                return allSatisfied.First();
+                                                if (allSatisfied.Count() > 1)
+                                                    throw new IncMvdException("Ambiguous type {0}".F(name));
+
+                                                return allSatisfied.Single();
                                             });
             }
-
-            #region Fields
-
-            readonly string type;
-
-            readonly bool isGeneric;
-
-            #endregion
         }
 
         #endregion
 
-        #region Properties
+        public class GetFormCollectionsQuery : QueryBase<FormCollection>
+        {
+            protected override FormCollection ExecuteResult()
+            {
+                var request = HttpContext.Current.Request;
+                var formAndQuery = new FormCollection(request.Form);
+                formAndQuery.Add(request.QueryString);
+                return formAndQuery;
+            }
+        }
 
-        [IgnoreCompare("Auto"), IgnoreInvent("Auto")]
-        public HttpRequestBase Request { get { return this.request ?? new HttpRequestWrapper(HttpContext.Current.Request); } set { this.request = value; } }
+        #region Properties
 
         public string Type { get; set; }
 
         public bool IsGroup { get; set; }
 
         public bool IsModel { get; set; }
+
+        public ModelStateDictionary ModelState { get; set; }
 
         #endregion
     }

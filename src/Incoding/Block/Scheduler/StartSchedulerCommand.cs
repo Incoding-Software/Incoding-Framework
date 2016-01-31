@@ -19,7 +19,7 @@
         {
             Conditional = () => true;
             FetchSize = 10;
-            Interval = new TimeSpan(0, 0, 0, 0, 10);
+            Interval = new TimeSpan(0, 0, 0, 1, 0);
             TaskCreationOptions = TaskCreationOptions.LongRunning;
         }
 
@@ -46,32 +46,30 @@
                                                        dispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
 
                                                        var task = Task.Factory.StartNew(() =>
-                                                                             {
-                                                                                 var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
-                                                                                 try
-                                                                                 {
-                                                                                     Stopwatch sw = new Stopwatch();
-                                                                                     sw.Start();
-                                                                                     newDispatcher.Push(closureResponse.Instance);
-                                                                                     sw.Stop();
-                                                                                     var description = sw.Elapsed.TotalSeconds > closureResponse.TimeOut ? "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut) : null;
-                                                                                     newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
-                                                                                 }
-                                                                                 catch (Exception ex)
-                                                                                 {
-                                                                                     newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand
-                                                                                                        {
-                                                                                                                Id = closureResponse.Id,
-                                                                                                                Status = DelayOfStatus.Error,
-                                                                                                                Description = ex.ToString()
-                                                                                                        });
-                                                                                 }
-                                                                             }, TaskCreationOptions.LongRunning);
-                                                       
+                                                                                        {
+                                                                                            var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
+                                                                                            try
+                                                                                            {
+                                                                                                Stopwatch sw = new Stopwatch();
+                                                                                                sw.Start();
+                                                                                                newDispatcher.Push(closureResponse.Instance);
+                                                                                                sw.Stop();
+                                                                                                var description = sw.Elapsed.TotalSeconds > closureResponse.TimeOut ? "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut) : null;
+                                                                                                newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
+                                                                                            }
+                                                                                            catch (Exception ex)
+                                                                                            {
+                                                                                                newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand
+                                                                                                                   {
+                                                                                                                           Id = closureResponse.Id,
+                                                                                                                           Status = DelayOfStatus.Error,
+                                                                                                                           Description = ex.ToString()
+                                                                                                                   });
+                                                                                            }
+                                                                                        }, TaskCreationOptions.LongRunning);
+
                                                        if (!isAsync)
-                                                       {
                                                            task.Wait(response.TimeOut);
-                                                       }
                                                    }
                                                    Thread.Sleep(Interval);
                                                }

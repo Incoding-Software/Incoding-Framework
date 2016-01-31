@@ -46,7 +46,7 @@ namespace Incoding.MSpecContrib
 
         #region ICompareFactoryDsl<TActual,TExpected> Members
 
-        [DebuggerStepThrough]
+        
         public ICompareFactoryDsl<TActual, TExpected> Forward<TValue>(Expression<Func<TActual, TValue>> actualProp, Expression<Func<TExpected, TValue>> expectedProp)
         {
             Guard.NotNull("actualProp", actualProp);
@@ -115,7 +115,7 @@ namespace Incoding.MSpecContrib
             return Ignore(actualIgnore, "Root");
         }
 
-        [DebuggerStepThrough]
+        
         public ICompareFactoryDsl<TActual, TExpected> Ignore(string actualIgnore, string reason)
         {
             Guard.NotNull("actualIgnore", actualIgnore);

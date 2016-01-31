@@ -10,8 +10,8 @@
 
     #endregion
 
-    [Subject(typeof(CreateByTypeQuery))]
-    public class When_create_by_type_ambiguous_instance
+    [Subject(typeof(CreateByTypeQuery.FindTypeByName))]
+    public class When_find_by_type_ambiguous_instance
     {
         #region Establish value
 
@@ -19,12 +19,12 @@
 
         #endregion
 
-        private static MockMessage<CreateByTypeQuery, object> mockQuery;
+        private static MockMessage<CreateByTypeQuery.FindTypeByName, object> mockQuery;
 
         Establish establish = () =>
                               {
-                                  var query = Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(AmbiguousType).Name));
-                                  mockQuery = MockQuery<CreateByTypeQuery, object>
+                                  var query = Pleasure.Generator.Invent<CreateByTypeQuery.FindTypeByName>(dsl => dsl.Tuning(r => r.Type, typeof(AmbiguousType).Name));
+                                  mockQuery = MockQuery<CreateByTypeQuery.FindTypeByName, object>
                                           .When(query);
                               };
 

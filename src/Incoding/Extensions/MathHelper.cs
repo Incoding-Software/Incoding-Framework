@@ -10,7 +10,7 @@ namespace Incoding.Extensions
     {
         #region Factory constructors
 
-        [DebuggerStepThrough]
+        
         public static decimal Percentage(decimal all, decimal fact)
         {
             if (all == 0)

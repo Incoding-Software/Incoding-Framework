@@ -1,4 +1,5 @@
-﻿@model Incoding.SiteTest.AddProductCommand
+﻿@using Incoding.SiteTest
+@model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,6 +31,11 @@
     </script>
 </head>
 <body>
-@(Selector.Jquery.Self().Closest(B.Active).ToString())
+@(Html.When(JqueryBind.Click)
+      .Ajax(new AddProductCommand() )
+      .OnSuccess(dsl => dsl.Window.Alert("Done"))
+      .OnError(dsl => dsl.Window.Alert("Validation"))
+      .AsHtmlAttributes()
+      .ToButton("Test"))
 </body>
 </html>
