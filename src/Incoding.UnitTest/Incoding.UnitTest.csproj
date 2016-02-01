@@ -541,7 +541,6 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_without_ajax.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_query.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_find_by_type_with_wrong_instance.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_with_query_as_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_filter.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\When_dispatcher_controller_duplicate.cs" />
@@ -775,7 +774,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
