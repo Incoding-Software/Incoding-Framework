@@ -246,6 +246,7 @@ function ExecutableHelper() {
     this.target = '';
     this.event = '';
     this.result = '';
+    this.resultOfEvent = '';
 
     this.TryGetVal = function (selector) {
 
@@ -325,9 +326,9 @@ function ExecutableHelper() {
             else if (isType('javascript')) {
                 res = eval(valueSelector);
             }
-            else if (isType('result')) {
-                res = getResult(valueSelector, this.result);
-            }
+            else if (isType('result') || isType('resultOfevent')) {
+                res = getResult(valueSelector, isType('result') ? this.result : this.resultOfEvent);
+            }            
         }
 
         return ExecutableHelper.IsNullOrEmpty(res) ? '' : res;
@@ -1117,6 +1118,7 @@ $.fn.extend({
     isFormElement: function () {
         return $(this).is('select,textarea,input');
     },
+
 });
 
 $.extend({
@@ -1329,7 +1331,8 @@ IncodingRunner.prototype = {
         var filterExecutableByEvent = function(executable) {
             var isHas = $.trim(executable.onBind).split(' ').contains(event.type);
             if (isHas) {
-                executable.event = event;
+                executable.event = event;                
+                executable.resultOfEvent = result;                
             }
             return isHas;
         };
@@ -1362,9 +1365,7 @@ IncodingRunner.prototype = {
                 success : $.grep(current.success, filterExecutableByAction),
                 error : $.grep(current.error, filterExecutableByAction),
                 complete : $.grep(current.complete, filterExecutableByAction),
-                breakes : $.grep(current.breakes, filterExecutableByAction),
-                eventResult : result,
-                event : event
+                breakes : $.grep(current.breakes, filterExecutableByAction),                               
             });
         });
     },
@@ -1548,7 +1549,7 @@ ExecutableFactory.Create = function(type, data, self) {
         intervalId : data.intervalId,
         ands : data.ands,
         getTarget : function() {
-            return eval(data.target);
+            return data.target === "$(this.self)" ? self : eval(data.target);
         }
     });
 
@@ -1571,6 +1572,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
+    this.resultOfEvent = '';
     this.getTarget = function() {
         return this.self;
     };
@@ -1644,6 +1646,7 @@ ExecutableBase.prototype = {
         ExecutableHelper.Instance.target = this.target;
         ExecutableHelper.Instance.event = this.event;
         ExecutableHelper.Instance.result = this.result;
+        ExecutableHelper.Instance.resultOfEvent = this.resultOfEvent;
         return ExecutableHelper.Instance.TryGetVal(variable);
     }
 };
@@ -1755,8 +1758,8 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
     var current = this;
 
     var ajaxOptions = $.extend(true, { data : [] }, current.jsonData.ajax);
-    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(ajaxOptions.url);
     var url = ajaxOptions.url;
+    var isEmptyUrl = ExecutableHelper.IsNullOrEmpty(url);
     if (!isEmptyUrl) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
@@ -1822,7 +1825,7 @@ ExecutableSubmitAction.prototype.internalExecute = function(state) {
         }
     }, this.jsonData.options);
 
-    var url = this.jsonData.options.url;
+    var url = this.jsonData.options.url || form.attr('action');
     if (!ExecutableHelper.IsNullOrEmpty(url)) {
         var queryFromString = $.url(url).param();
         $.eachProperties(queryFromString, function() {
@@ -1900,17 +1903,25 @@ ExecutableInsert.prototype.internalExecute = function() {
         }
     }
 
+    switch (current.jsonData.insertType) {
+        case 'html':
+            current.target.html(insertContent.toString());
+            break;
+        default:
     eval("$(current.target).{0}(insertContent.toString())".f(current.jsonData.insertType));
-
+    }
     var target = current.target;
     if (current.jsonData.insertType.toLowerCase() === 'after') {
-        target = current.target.nextAll();
+        IncodingEngine.Current.parse(current.target.nextAll());
     }
-    if (current.jsonData.insertType.toLowerCase() === 'before') {
-        target = current.target.prevAll();
+    else if (current.jsonData.insertType.toLowerCase() === 'before') {
+        IncodingEngine.Current.parse(current.target.prevAll());
     }
-    IncodingEngine.Current.parse(target);
+    else {
+        IncodingEngine.Current.parse(current.target);
+    }
     $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
+
 };
 
 ExecutableInsert.Template = new IncHandlerbarsTemplate();
@@ -1931,8 +1942,8 @@ ExecutableTrigger.prototype.internalExecute = function() {
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
         ? this.result
         : this.result.hasOwnProperty(this.jsonData.property) ? this.result[this.jsonData.property] : '';
-    this.target.trigger(this.jsonData.trigger, new IncodingResult({ success: true, data: eventData, redirectTo: '' }));
 
+    this.target.trigger(this.jsonData.trigger, [eventData]);
 };
 
 //#endregion
@@ -2023,7 +2034,6 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
 };
 
 //#endregion
-
 
 //#region class ExecutableEval extend from ExecutableBase
 
@@ -2220,6 +2230,23 @@ ExecutableBind.prototype.internalExecute = function() {
 };
 
 //#endregion
+
+//#region class ExcutableJquery extend from ExecutableBase
+
+incodingExtend(ExecutableJquery, ExecutableBase);
+
+function ExecutableJquery() {
+}
+
+ExecutableJquery.prototype.internalExecute = function () {
+    switch (this.jsonData.method) {
+        case 1:
+            this.target.addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            break;
+        default:
+            throw 'Not found method {0}'.f(this.jsonData.method);
+    }
+};
 
 //#endregion﻿"use strict";
 

@@ -122,3 +122,4 @@ artifacts
 *.pdb
 *.dll
 *.cache
+*.config

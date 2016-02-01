@@ -304,6 +304,7 @@
     <Compile Include="DataGroup\Provider\Repository DB\When_nhibernate_repository.cs" />
     <Compile Include="DataGroup\Provider\Repository DB\When_rave_db_repository.cs" />
     <Compile Include="DataGroup\Provider\Behavior_unit_of_work_factory.cs" />
+    <Compile Include="ExtensionsGroup\Dictionary\When_add_or_get_async.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_merger.cs" />
     <Compile Include="ExtensionsGroup\Enumerable\When_enumerable_extensions_page_.cs" />
     <Compile Include="ExtensionsGroup\When_fetch_specification_extensions.cs" />
@@ -364,7 +365,9 @@
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_execute_query_with_inheritance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name_with_encode.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_with_inner_class_by_full_name.cs" />

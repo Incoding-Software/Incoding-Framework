@@ -2,22 +2,34 @@
 {
     #region << Using >>
 
+    using System;
     using System.Reflection;
     using Incoding.CQRS;
-    using Incoding.Maybe;
+    using Incoding.Extensions;
 
     #endregion
 
     public class ExecuteQuery : QueryBase<object>
     {
-        private static readonly MethodInfo query = typeof(IDispatcher).GetType().GetMethod("Query");
+        static readonly MethodInfo query = typeof(DefaultDispatcher).GetMethod("Query");
 
         public object Instance { get; set; }
 
         protected override object ExecuteResult()
         {
-            return query.MakeGenericMethod(Instance.GetType().BaseType.With(r => r.GetGenericArguments()[0]))
-                        .Invoke(Dispatcher, new[] { Instance, null });
+            Type baseType = Instance.GetType().BaseType;
+            while (baseType != typeof(object))
+            {
+                if (baseType.Name.StartsWith("QueryBase"))
+                {
+                    return query
+                            .MakeGenericMethod(baseType.GenericTypeArguments[0])
+                            .Invoke(new DefaultDispatcher(), new[] { Instance, null });
+                }
+                baseType = baseType.BaseType;
+            }
+
+            throw new ArgumentOutOfRangeException("Type", "Can't find type of result for {0}".F(Instance.GetType().FullName));
         }
     }
 }
