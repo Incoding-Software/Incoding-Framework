@@ -59,7 +59,7 @@
                                     Option = new DelayToScheduler.OptionOfDelay()
                                              {
                                                      Async = option.Async,
-                                                     TimeOut = option.TimeOut
+                                                     TimeOut = option.TimeOutOfMillisecond
                                              }
                             });
         }

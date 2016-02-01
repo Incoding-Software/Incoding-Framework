@@ -47,8 +47,8 @@
             {
                 public override Action<AdHocOrderSpecification<DelayToScheduler>> SortedBy()
                 {
-                    return specification => specification.OrderByDescending(r => r.Priority)
-                                                         .OrderByDescending(r => r.StartsOn);
+                    return specification => specification.OrderByDescending(r => r.StartsOn)
+                                                         .OrderByDescending(r => r.Priority);
                 }
             }
         }

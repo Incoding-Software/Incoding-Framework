@@ -1,11 +1,15 @@
 ﻿namespace Incoding.SiteTest
 {
+    #region << Using >>
+
     using System.Threading;
     using Incoding.Block;
     using Incoding.CQRS;
     using Incoding.Extensions;
 
-    [OptionOfDelay(Async = true,TimeOut = 10000)]
+    #endregion
+
+    [OptionOfDelay(Async = true, TimeOutOfMillisecond = 3000)]
     public class AddAsSyncProductCommand : CommandBase
     {
         #region Properties

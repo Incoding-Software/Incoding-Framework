@@ -28,10 +28,6 @@
                                                             Pleasure.Generator.Invent(action),
                                                             Pleasure.Generator.Invent(action),
                                                     };
-                                  errorEntities = new[]
-                                                  {
-                                                          Pleasure.Generator.Invent(action),
-                                                  };
 
                                   mockQuery = MockQuery<GetExpectedDelayToSchedulerQuery, List<GetExpectedDelayToSchedulerQuery.Response>>
                                           .When(query)
@@ -40,24 +36,13 @@
                                                              .And(new DelayToScheduler.Where.AvailableStartsOn(query.Date)),
                                                      orderSpecification: new DelayToScheduler.Sort.Default(),
                                                      paginatedSpecification: new PaginatedSpecification(1, query.FetchSize),
-                                                     entities: successEntities)
-                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByStatus(DelayOfStatus.Error)
-                                                             .And(new DelayToScheduler.Where.ByAsync(query.Async))
-                                                             .And(new DelayToScheduler.Where.AvailableStartsOn(query.Date)),
-                                                     orderSpecification: new DelayToScheduler.Sort.Default(),
-                                                     paginatedSpecification: new PaginatedSpecification(1, 3),
-                                                     entities: errorEntities);
+                                                     entities: successEntities);
                               };
 
         Because of = () => mockQuery.Execute();
 
-        It should_be_result = () => mockQuery.ShouldBeIsResult(list =>
-                                                               {
-                                                                   var all = new List<DelayToScheduler>(successEntities);
-                                                                   all.AddRange(errorEntities);
-                                                                   list.ShouldEqualWeakEach(all, (dsl, i) => dsl.ForwardToValue(r => r.TimeOut, all[i].Option.TimeOut)
-                                                                                                                .ForwardToValue(r => r.Instance, fakeCommand));
-                                                               });
+        It should_be_result = () => mockQuery.ShouldBeIsResult(list => list.ShouldEqualWeakEach(successEntities, (dsl, i) => dsl.ForwardToValue(r => r.TimeOut, successEntities[i].Option.TimeOut)
+                                                                                                                                .ForwardToValue(r => r.Instance, fakeCommand)));
 
         #region Fake classes
 
@@ -76,8 +61,6 @@
         static MockMessage<GetExpectedDelayToSchedulerQuery, List<GetExpectedDelayToSchedulerQuery.Response>> mockQuery;
 
         static DelayToScheduler[] successEntities;
-
-        static DelayToScheduler[] errorEntities;
 
         static FakeCommand fakeCommand;
 

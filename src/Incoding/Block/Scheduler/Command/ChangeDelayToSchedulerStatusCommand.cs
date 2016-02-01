@@ -8,16 +8,6 @@
 
     public class ChangeDelayToSchedulerStatusCommand : CommandBase
     {
-        #region Properties
-
-        public string Id { get; set; }
-
-        public DelayOfStatus Status { get; set; }
-
-        public string Description { get; set; }
-
-        #endregion
-
         protected override void Execute()
         {
             var delay = Repository.GetById<DelayToScheduler>(Id);
@@ -33,15 +23,15 @@
                 delay.Recurrence.NowDate = delay.StartsOn; // calculate next start depending on previously calculated start (to run every day at exactly same time for example)
                 Dispatcher.Push(new AddDelayToSchedulerCommand(delay)
                                 {
-                                   Recurrency = new GetRecurrencyDateQuery
-                                    {
-                                        EndDate = delay.Recurrence.EndDate,
-                                        RepeatCount = delay.Recurrence.RepeatCount - 1,
-                                        RepeatDays = delay.Recurrence.RepeatDays,
-                                        RepeatInterval = delay.Recurrence.RepeatInterval,
-                                        StartDate = nextStartsOn.Value,
-                                        Type = delay.Recurrence.Type
-                                    },
+                                        Recurrency = new GetRecurrencyDateQuery
+                                                     {
+                                                             EndDate = delay.Recurrence.EndDate,
+                                                             RepeatCount = delay.Recurrence.RepeatCount - 1,
+                                                             RepeatDays = delay.Recurrence.RepeatDays,
+                                                             RepeatInterval = delay.Recurrence.RepeatInterval,
+                                                             StartDate = nextStartsOn.Value,
+                                                             Type = delay.Recurrence.Type
+                                                     },
                                 });
             }
             if (Status == DelayOfStatus.Error)
@@ -52,5 +42,15 @@
                                 });
             }
         }
+
+        #region Properties
+
+        public string Id { get; set; }
+
+        public DelayOfStatus Status { get; set; }
+
+        public string Description { get; set; }
+
+        #endregion
     }
 }
