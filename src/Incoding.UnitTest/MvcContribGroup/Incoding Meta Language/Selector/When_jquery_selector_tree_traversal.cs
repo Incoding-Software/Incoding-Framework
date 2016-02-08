@@ -85,6 +85,11 @@
                                           .Find(selector => selector.Tag(HtmlTag.Area)).ToString()
                                           .ShouldEqual("$(this.self).find('area')");
 
+        It should_be_find_by_b = () => Selector.Jquery
+                                               .Self()
+                                               .Find(B.Active).ToString()
+                                               .ShouldEqual("$(this.self).find('.active')");
+
         It should_be_find_by_expression = () => Selector.Jquery
                                                         .Self()
                                                         .Find(JqueryExpression.Checked).ToString()

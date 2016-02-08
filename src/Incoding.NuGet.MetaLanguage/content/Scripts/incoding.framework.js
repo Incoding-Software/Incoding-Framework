@@ -1584,7 +1584,7 @@ ExecutableBase.prototype = {
     execute : function(state) {
 
         var current = this;
-        current.target = current.getTarget();
+        current.target = $(current.getTarget());
 
         if (!current.isValid()) {
             return;
@@ -2284,7 +2284,7 @@ ConditionalBase.prototype =
     {
         isSatisfied : function(data) {
             this.self = this.executable.self;
-            this.target = this.executable.getTarget();
+            this.target = this.executable.target;
             var isSatisfied = this.isInternalSatisfied(data);
             return ExecutableHelper.ToBool(this.jsonData.inverse) ? !isSatisfied : isSatisfied;
         },

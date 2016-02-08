@@ -231,6 +231,18 @@
         ///     Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
         /// </summary>
         /// <param name="original"></param>
+        /// <param name="B">
+        ///     Bootstrapp class
+        /// </param>
+        public static JquerySelectorExtend Find(this JquerySelectorExtend original, B b)
+        {
+            return original.Find(selector => selector.Class(b));
+        }
+
+        /// <summary>
+        ///     Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
+        /// </summary>
+        /// <param name="original"></param>
         /// <param name="expression">
         ///     Jquery expression
         /// </param>
