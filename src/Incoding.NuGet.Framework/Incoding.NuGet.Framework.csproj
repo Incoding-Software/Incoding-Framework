@@ -109,7 +109,6 @@
     <Content Include="lib\net40\Incoding.dll" />
     <Content Include="lib\net40\Incoding.pdb" />
     <Content Include="lib\net45\Incoding.dll" />
-    <Content Include="lib\net45\Incoding.pdb" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
