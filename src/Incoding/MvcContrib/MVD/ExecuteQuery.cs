@@ -3,7 +3,6 @@
     #region << Using >>
 
     using System;
-    using System.Reflection;
     using Incoding.CQRS;
     using Incoding.Extensions;
 
@@ -11,20 +10,20 @@
 
     public class ExecuteQuery : QueryBase<object>
     {
-        static readonly MethodInfo query = typeof(DefaultDispatcher).GetMethod("Query");
-
         public object Instance { get; set; }
 
         protected override object ExecuteResult()
         {
+            Guard.NotNull("Instance", "Instance query can't be null");
             Type baseType = Instance.GetType().BaseType;
             while (baseType != typeof(object))
             {
                 if (baseType.Name.StartsWith("QueryBase"))
                 {
-                    return query
-                            .MakeGenericMethod(baseType.GenericTypeArguments[0])
-                            .Invoke(new DefaultDispatcher(), new[] { Instance, null });
+                    var defaultDispatcher = new DefaultDispatcher();
+                    return defaultDispatcher.GetType().GetMethod("Query")
+                                            .MakeGenericMethod(baseType.GenericTypeArguments[0])
+                                            .Invoke(defaultDispatcher, new[] { Instance, null });
                 }
                 baseType = baseType.BaseType;
             }

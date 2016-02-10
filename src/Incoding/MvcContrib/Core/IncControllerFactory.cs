@@ -24,7 +24,7 @@ namespace Incoding.MvcContrib
 
         ////ncrunch: no coverage start
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
-        {
+        {            
             if (controllerType == null)
             {
                 var originalNamespace = requestContext.RouteData.DataTokens["Namespaces"];

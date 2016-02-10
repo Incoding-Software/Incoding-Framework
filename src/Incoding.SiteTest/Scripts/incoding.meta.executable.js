@@ -56,7 +56,7 @@ ExecutableBase.prototype = {
     execute : function(state) {
 
         var current = this;
-        current.target = current.getTarget();
+        current.target = $(current.getTarget());
 
         if (!current.isValid()) {
             return;

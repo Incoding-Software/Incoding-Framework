@@ -31,11 +31,10 @@
     </script>
 </head>
 <body>
-@(Html.When(JqueryBind.Click)
-      .Ajax(new AddProductCommand() )
-      .OnSuccess(dsl => dsl.Window.Alert("Done"))
-      .OnError(dsl => dsl.Window.Alert("Validation"))
+@(Html.When(JqueryBind.InitIncoding)      
+      .Ajax(new GetProductQuery())
+      .OnSuccess(dsl => dsl.Window.Alert("Test"))
       .AsHtmlAttributes()
-      .ToButton("Test"))
+      .ToDiv())
 </body>
 </html>
