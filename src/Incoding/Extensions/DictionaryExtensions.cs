@@ -4,25 +4,22 @@ namespace Incoding.Extensions
 
     using System;
     using System.Collections.Generic;
-    using JetBrains.Annotations;
 
     #endregion
 
     public static class DictionaryExtensions
     {
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, [NotNull] TKey key, [NotNull] Func<TValue> evaluated)
+        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TValue> evaluated)
         {
             if (source.ContainsKey(key))
                 return source[key];
-
-            lock (source)
+            lock (key.ToString())
             {
-                var value = evaluated();
                 if (!source.ContainsKey(key))
-                    source.Add(key, value);
-
-                return value;
+                    source.Add(key, evaluated());
             }
+
+            return source[key];
         }
 
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)

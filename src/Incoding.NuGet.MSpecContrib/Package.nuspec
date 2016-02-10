@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MSpecContrib</id>
-    <version>1.4.0.149-beta</version>
+    <version>1.4.0.152-beta</version>
     <title>Incoding tests helpers</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -42,12 +42,14 @@
           <dependency id="Newtonsoft.Json" version="7.0.0.0" />          
         </group>
     </dependencies>
-    <references></references>
+    <references>
+      <reference file="incoding.dll" />
+      <reference file="Incoding.MSpecContrib.dll" />
+    </references>
     <tags>unit test,mspec,incoding,rapid testing</tags>
   </metadata>
   <files>
-    <file src="lib\" target="lib" />
-    <file src="tools\" target="tools" />
-    <file src="content\" target="content" />    
+    <file src="content\**\*.*" />
+    <file src="lib\net45\*.*" target="lib" />
   </files>
 </package>

@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>Incoding.Framework</id>
-    <version>1.4.0.149-beta</version>
+    <version>1.4.0.152-beta</version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -40,13 +40,14 @@
       </group>
     </dependencies>
     <references>
-      <reference file="incoding.dll" />
+      <group targetFramework="net45">
+        <reference file="Incoding.dll" />
+      </group>
     </references>
     <tags>incoding, web framework, framework,cqrs, repository</tags>
   </metadata>
   <files>
-    <file src="tools\" target="tools" />
-    <file src="content\" target="content" />
-    <file src="lib\" target="lib" />
+    <file src="lib\net45\*.*" target="lib" />
+    <file src="content\**\*.*" />
   </files>
 </package>
