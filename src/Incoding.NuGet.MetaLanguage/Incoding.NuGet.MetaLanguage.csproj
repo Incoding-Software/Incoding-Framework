@@ -71,9 +71,9 @@
   <ItemGroup>
     <Content Include="content\Scripts\incoding.framework.js" />
     <Content Include="content\Scripts\jquery.history.js" />
-    <Content Include="lib\net40\Incoding.dll" />
-    <Content Include="lib\net40\Incoding.pdb" />
+    <Content Include="lib\Incoding.dll" />
     <Content Include="lib\net45\Incoding.dll" />
+    <Content Include="lib\net45\Incoding.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
