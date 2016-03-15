@@ -5,6 +5,7 @@ namespace Incoding.MvcContrib
     using System;
     using System.Text;
     using System.Web.Mvc;
+    using Incoding.Extensions;
     using Incoding.Maybe;
 
     #endregion
@@ -45,11 +46,11 @@ namespace Incoding.MvcContrib
             bool isStatic = Input.GetType().Name.Contains("IncStaticControl");
 
             
-            AddClass(isV3orMore ? B.Form_group.AsClass() : "control-group");
+            AddClass(isV3orMore ? B.Form_group.ToLocalization() : "control-group");
 
             Label.AddClass(B.Control_label);
             if (isV3orMore && isForDefClass(Label))
-                Label.AddClass(IncodingHtmlHelper.Def_Label_Class.AsClass());
+                Label.AddClass(IncodingHtmlHelper.Def_Label_Class.ToLocalization());
 
             if(!isV3orMore)
                 Control.AddClass("controls");
@@ -57,7 +58,7 @@ namespace Incoding.MvcContrib
             if (string.IsNullOrWhiteSpace(Control.GetAttr(HtmlAttribute.Class)))
             {
                 Control.AddClass(isV3orMore
-                                         ? IncodingHtmlHelper.Def_Control_Class.AsClass()
+                                         ? IncodingHtmlHelper.Def_Control_Class.ToLocalization()
                                          : isStatic ? string.Empty : "control-group");
             }
 
@@ -66,7 +67,7 @@ namespace Incoding.MvcContrib
             stringBuilder.Append(Label.ToHtmlString());
 
             if (isV3orMore)
-                Input.AddClass(isStatic ? B.Form_static_control.AsClass() : B.Form_control.AsClass());
+                Input.AddClass(isStatic ? B.Form_static_control.ToLocalization() : B.Form_control.ToLocalization());
             Control.Content = Input.ToHtmlString();
 
             stringBuilder.Append(Control.ToHtmlString());

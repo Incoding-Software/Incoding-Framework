@@ -36,7 +36,7 @@
                                           .StubPush(instance1)
                                           .StubPush(instance2)
                                           .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[0].Id)
-                                                                                                   .Tuning(r => r.Description, null)
+                                                                                                   .Tuning(r => r.Description, null)                                                                                                   
                                                                                                    .Tuning(r => r.Status, DelayOfStatus.InProgress))
                                           .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, response[1].Id)
                                                                                                    .Tuning(r => r.Description, null)

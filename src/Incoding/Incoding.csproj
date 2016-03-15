@@ -155,6 +155,10 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DryIoc, Version=2.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DryIoc.dll.2.2.2\lib\net45\DryIoc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
@@ -331,60 +335,57 @@
     <Compile Include="CQRS\Common\Specifications\EntityByIdSpec.cs" />
     <Compile Include="CQRS\ISetUp.cs" />
     <Compile Include="Block\Scheduler\Query\GetExpectedDelayToSchedulerQuery.cs" />
-    <Compile Include="DryIoc\Data\Core\IUnitOfWorkFactory.cs" />
-    <Compile Include="DryIoc\Data\Core\QueryableExtensions.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\AdHocFetchEFSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\AdHocFetchNhibernateSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\AdHocFetchSpecificationBase.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\AndFetchSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\AdHocFetchRavenDbSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Order\AdHocOrderSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Fetch\FetchSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Order\OrderSpecification.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\Order\OrderType.cs" />
-    <Compile Include="DryIoc\Data\Core\Specifications\PaginatedSpecification.cs" />
-    <Compile Include="DryIoc\Data\IncPaginatedResult.cs" />
-    <Compile Include="DryIoc\Data\IncEntityBase.cs" />
-    <Compile Include="DryIoc\Data\Core\IUnitOfWork.cs" />
-    <Compile Include="DryIoc\Data\Core\IManagerDataBase.cs" />
-    <Compile Include="DryIoc\Data\Core\IRepository.cs" />
-    <Compile Include="DryIoc\Data\Core\IEntity.cs" />
-    <Compile Include="DryIoc\Data\CollectionAsString.cs" />
-    <Compile Include="DryIoc\Data\DictionaryAsString.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\ContextExtensions.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\EFClassMap.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\EntityFrameworkSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\EntityFrameworkRepository.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\EntityFrameworkUnitOfWork.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\EntityFrameworkUnitOfWorkFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\IEFClassMap.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\IEntityFrameworkSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\EF\IncDbContext.cs" />
-    <Compile Include="DryIoc\Data\Core\UnitOfWorkBase.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\MongoDatabaseDisposable.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\MongoDbUnitOfWorkFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\IMongoDbSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\MongoDbRepository.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\MongoDbSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\MongoDb\MongoDbUnitOfWork.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\HqGenerator\GuidStringGenerator.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\INhibernateSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateManagerDataBase.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateEntityMap.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateRepository.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateUnitOfWork.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\NhibernateUnitOfWorkFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\NHibernate\SqlFunctions.cs" />
-    <Compile Include="DryIoc\Data\Provider\RavenDb\IRavenDbSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Core\ISessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\RavenDb\RavenDbRepository.cs" />
-    <Compile Include="DryIoc\Data\Provider\RavenDb\RavenDbSessionFactory.cs" />
-    <Compile Include="DryIoc\Data\Provider\RavenDb\RavenDbUnitOfWork.cs" />
-    <Compile Include="DryIoc\Data\Provider\RavenDb\RavenDbUnitOfWorkFactory.cs" />
-    <Compile Include="DryIoc\AsyncExecutionFlowScopeContext.cs" />
-    <Compile Include="DryIoc\Container.cs" />
-    <Compile Include="DryIoc\FactoryCompiler.cs" />
+    <Compile Include="Data\CollectionAsString.cs" />
+    <Compile Include="Data\Core\IEntity.cs" />
+    <Compile Include="Data\Core\IManagerDataBase.cs" />
+    <Compile Include="Data\Core\IRepository.cs" />
+    <Compile Include="Data\Core\ISessionFactory.cs" />
+    <Compile Include="Data\Core\IUnitOfWork.cs" />
+    <Compile Include="Data\Core\IUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Core\QueryableExtensions.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchEFSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchNhibernateSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchRavenDbSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AdHocFetchSpecificationBase.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\AndFetchSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Fetch\FetchSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Order\AdHocOrderSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Order\OrderSpecification.cs" />
+    <Compile Include="Data\Core\Specifications\Order\OrderType.cs" />
+    <Compile Include="Data\Core\Specifications\PaginatedSpecification.cs" />
+    <Compile Include="Data\Core\UnitOfWorkBase.cs" />
+    <Compile Include="Data\DictionaryAsString.cs" />
+    <Compile Include="Data\IncEntityBase.cs" />
+    <Compile Include="Data\IncPaginatedResult.cs" />
+    <Compile Include="Data\Provider\EF\ContextExtensions.cs" />
+    <Compile Include="Data\Provider\EF\EFClassMap.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkRepository.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkSessionFactory.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkUnitOfWork.cs" />
+    <Compile Include="Data\Provider\EF\EntityFrameworkUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\EF\IEFClassMap.cs" />
+    <Compile Include="Data\Provider\EF\IEntityFrameworkSessionFactory.cs" />
+    <Compile Include="Data\Provider\EF\IncDbContext.cs" />
+    <Compile Include="Data\Provider\MongoDb\IMongoDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDatabaseDisposable.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbRepository.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbUnitOfWork.cs" />
+    <Compile Include="Data\Provider\MongoDb\MongoDbUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\NHibernate\HqGenerator\GuidStringGenerator.cs" />
+    <Compile Include="Data\Provider\NHibernate\INhibernateSessionFactory.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateEntityMap.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateManagerDataBase.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateRepository.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateSessionFactory.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateUnitOfWork.cs" />
+    <Compile Include="Data\Provider\NHibernate\NhibernateUnitOfWorkFactory.cs" />
+    <Compile Include="Data\Provider\NHibernate\SqlFunctions.cs" />
+    <Compile Include="Data\Provider\RavenDb\IRavenDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbRepository.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbSessionFactory.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWork.cs" />
+    <Compile Include="Data\Provider\RavenDb\RavenDbUnitOfWorkFactory.cs" />
     <Compile Include="Extensions\AnonymousHelper.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
@@ -661,7 +662,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

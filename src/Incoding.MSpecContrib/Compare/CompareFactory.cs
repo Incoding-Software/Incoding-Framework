@@ -368,19 +368,23 @@ namespace Incoding.MSpecContrib
                 if (ReferenceEquals(actual, expected))
                     return;
 
+                ////ncrunch: no coverage start
                 if (maxRecursionDeep <= 0)
                 {
                     if (!ignoreRecursionError)
                         FixedDifferent("Stack Overflow is coming... Recursion detected. Check deep of recursion.");
                     return;
                 }
+                ////ncrunch: no coverage end
                 actual.ShouldEqualWeak(expected, dsl =>
                 {
                     if (actualType.BaseType.FullName.Contains("Incoding.Specification"))
                         dsl.IncludeAllFields();
                     dsl.SetMaxRecursionDeep(maxRecursionDeep - 1);
+                    ////ncrunch: no coverage start
                     if (ignoreRecursionError)
                         dsl.IgnoreRecursionError();
+                    ////ncrunch: no coverage end
                 });
             }
             catch (InternalSpecificationException ex)

@@ -2952,7 +2952,7 @@ describe('Incoding', function() {
                     executable.execute(expectedState);
 
                     expect(callExecute).toBeTruthy();
-                    expect(executable.target).toEqual(5);
+                    expect(executable.target).toEqual($(5));
                 });
 
                 it('Should be execute broken valid', function() {
@@ -2966,8 +2966,7 @@ describe('Incoding', function() {
 
                     executable.execute(expectedState);
 
-                    expect(callExecute).toBeFalsy();
-                    expect(executable.target).toEqual(5);
+                    expect(callExecute).toBeFalsy();                    
                 });
 
                 it('Should be execute time out', function() {

@@ -170,7 +170,7 @@ namespace Incoding.MvcContrib
 
         public void AddClass(B @class)
         {
-            AddClass(@class.AsClass());
+            AddClass(@class.ToLocalization());
         }
 
         public void AddClass(string @class)

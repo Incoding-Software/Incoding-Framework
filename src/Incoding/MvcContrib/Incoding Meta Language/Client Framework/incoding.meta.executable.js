@@ -34,6 +34,7 @@ ExecutableFactory.Create = function(type, data, self) {
 //#region class ExecutableBase
 
 function ExecutableBase() {
+    this.name = '';
     this.jsonData = '';
     this.onBind = '';
     this.self = '';
@@ -44,7 +45,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
+    this.resultOfEvent = '';    
     this.getTarget = function() {
         return this.self;
     };
@@ -56,6 +57,10 @@ ExecutableBase.prototype = {
     execute : function(state) {
 
         var current = this;
+        if (current.logger) {
+            current.timeOfStartExecution = Date.now() / 1000;
+        }
+
         current.target = $(current.getTarget());
 
         if (!current.isValid()) {
@@ -79,6 +84,11 @@ ExecutableBase.prototype = {
         }
 
         current.internalExecute(state);
+
+        if (current.logger) {
+            current.timeOfEndExecution = Date.now() / 1000;
+            current.logger.log(current, state);
+        }
     },
     internalExecute : function(state) {
     },
@@ -198,6 +208,7 @@ incodingExtend(ExecutableDirectAction, ExecutableActionBase);
 function ExecutableDirectAction() {
 }
 
+ExecutableDirectAction.prototype.name = "Direct";
 ExecutableDirectAction.prototype.internalExecute = function(state) {
     var result = ExecutableHelper.IsNullOrEmpty(this.jsonData.result) ? IncodingResult.Empty : new IncodingResult(this.jsonData.result);
     this.complete(result, state);
@@ -212,6 +223,7 @@ incodingExtend(ExecutableEventAction, ExecutableActionBase);
 function ExecutableEventAction() {
 }
 
+ExecutableEventAction.prototype.name = "Event";
 ExecutableEventAction.prototype.internalExecute = function(state) {
     this.complete(state.eventResult, state);
 };
@@ -225,6 +237,7 @@ incodingExtend(ExecutableAjaxAction, ExecutableActionBase);
 function ExecutableAjaxAction() {
 }
 
+ExecutableAjaxAction.prototype.name = "Ajax";
 ExecutableAjaxAction.prototype.internalExecute = function(state) {
 
     var current = this;
@@ -268,6 +281,7 @@ incodingExtend(ExecutableSubmitAction, ExecutableActionBase);
 function ExecutableSubmitAction() {
 }
 
+ExecutableSubmitAction.prototype.name = "Submit";
 ExecutableSubmitAction.prototype.internalExecute = function(state) {
 
     var current = this;
@@ -325,6 +339,7 @@ function ExecutableInsert() {
 
 // ReSharper disable UnusedLocals
 // ReSharper disable AssignedValueIsNeverUsed
+ExecutableInsert.prototype.name = "Insert";
 ExecutableInsert.prototype.internalExecute = function() {
 
     var current = this;
@@ -409,6 +424,7 @@ incodingExtend(ExecutableTrigger, ExecutableBase);
 function ExecutableTrigger() {
 }
 
+ExecutableTrigger.prototype.name = 'Trigger';
 ExecutableTrigger.prototype.internalExecute = function() {
 
     var eventData = ExecutableHelper.IsNullOrEmpty(this.jsonData.property)
@@ -427,6 +443,7 @@ incodingExtend(ExecutableValidationParse, ExecutableBase);
 function ExecutableValidationParse() {
 }
 
+ExecutableValidationParse.prototype.name = "Validation parse";
 ExecutableValidationParse.prototype.internalExecute = function() {
 
     var form = this.target.is('form') ? this.target : this.target.closest('form').first();
@@ -451,6 +468,7 @@ incodingExtend(ExecutableValidationRefresh, ExecutableBase);
 function ExecutableValidationRefresh() {
 }
 
+ExecutableValidationRefresh.prototype.name = "Validation Refresh";
 ExecutableValidationRefresh.prototype.internalExecute = function() {
 
     var inputErrorClass = 'input-validation-error';
@@ -514,6 +532,7 @@ incodingExtend(ExecutableEval, ExecutableBase);
 function ExecutableEval() {
 }
 
+ExecutableEval.prototype.name = "Eval";
 ExecutableEval.prototype.internalExecute = function() {
     eval(this.jsonData.code);
 };
@@ -527,6 +546,7 @@ incodingExtend(ExecutableEvalMethod, ExecutableBase);
 function ExecutableEvalMethod() {
 }
 
+ExecutableEvalMethod.prototype.name = "Eval Method";
 ExecutableEvalMethod.prototype.internalExecute = function() {
 
     var length = this.jsonData.args.length;
@@ -552,6 +572,7 @@ incodingExtend(ExecutableBreak, ExecutableBase);
 function ExecutableBreak() {
 }
 
+ExecutableBreak.prototype.name = "Break";
 ExecutableBreak.prototype.internalExecute = function() {
     throw new IncClientException();
 };
@@ -565,6 +586,7 @@ incodingExtend(ExecutableStoreInsert, ExecutableBase);
 function ExecutableStoreInsert() {
 }
 
+ExecutableStoreInsert.prototype.name = "Store Insert";
 ExecutableStoreInsert.prototype.internalExecute = function() {
 
     var url = $.url(document.location.href);
@@ -599,6 +621,7 @@ incodingExtend(ExecutableStoreFetch, ExecutableBase);
 function ExecutableStoreFetch() {
 }
 
+ExecutableStoreFetch.prototype.name = "Store fetch";
 ExecutableStoreFetch.prototype.internalExecute = function() {
 
     var prefix = this.jsonData.prefix + "__";
@@ -625,6 +648,7 @@ incodingExtend(ExecutableStoreManipulate, ExecutableBase);
 function ExecutableStoreManipulate() {
 }
 
+ExecutableStoreManipulate.prototype.name = "Store Manipulate";
 ExecutableStoreManipulate.prototype.internalExecute = function() {
     var current = this;
     switch (current.jsonData.type) {
@@ -659,6 +683,7 @@ incodingExtend(ExecutableForm, ExecutableBase);
 function ExecutableForm() {
 }
 
+ExecutableForm.prototype.name = "Form";
 ExecutableForm.prototype.internalExecute = function() {
     var form = this.target.is('form') ? this.target : this.target.closest('form').first();
 
@@ -682,6 +707,7 @@ incodingExtend(ExecutableBind, ExecutableBase);
 function ExecutableBind() {
 }
 
+ExecutableBind.prototype.name = "Bind";
 ExecutableBind.prototype.internalExecute = function() {
     var type = this.jsonData.type;
     switch (type) {
@@ -710,6 +736,7 @@ incodingExtend(ExecutableJquery, ExecutableBase);
 function ExecutableJquery() {
 }
 
+ExecutableJquery.prototype.name = "Jquery";
 ExecutableJquery.prototype.internalExecute = function () {
     switch (this.jsonData.method) {
         case 1:

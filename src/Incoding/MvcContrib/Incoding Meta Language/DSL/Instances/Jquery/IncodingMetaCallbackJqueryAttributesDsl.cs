@@ -290,16 +290,6 @@
             return this.plugInDsl.Registry(new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { @class }));
         }
 
-        /// <summary>
-        ///     Adds the specified <c>class</c> to each of the set of matched elements
-        /// </summary>
-        /// <param name="selector">
-        /// </param>
-        [ContractAnnotation("class:null =>true")]
-        public IExecutableSetting AddClass(Selector selector)
-        {
-            return this.plugInDsl.Registry(new ExecutableJquery(ExecutableJquery.Method.AddClass, new[] { selector }));
-        }
 
         /// <summary>
         ///     Adds the specified <c>class</c> to each of the set of matched elements

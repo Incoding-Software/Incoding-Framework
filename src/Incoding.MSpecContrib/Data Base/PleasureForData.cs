@@ -49,6 +49,7 @@ namespace Incoding.MSpecContrib
             ////ncrunch: no coverage end      
         }
 
+        
         public static IRepository BuildMongoDbRepository(string url, bool reload = true)
         {
             var mongoUrl = new MongoUrl(url);

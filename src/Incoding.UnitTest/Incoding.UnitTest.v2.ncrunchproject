@@ -303,6 +303,18 @@
     <NamedTestSelector>
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_model_state.should_be_data</TestName>
     </NamedTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Incoding.UnitTest.When_mongo_db_session_factory_open</FixtureName>
+    </FixtureTestSelector>
+    <FixtureTestSelector>
+      <FixtureName>Incoding.UnitTest.When_mongo_db_session_factory_open_without_connection</FixtureName>
+    </FixtureTestSelector>
+    <NamedTestSelector>
+      <TestName>Incoding.UnitTest.MvcContribGroup.When_jquery_selector_issue.should_be_self_with_has_attribute</TestName>
+    </NamedTestSelector>
+    <NamedTestSelector>
+      <TestName>Incoding.UnitTest.MvcContribGroup.When_incoding_selector.should_be_ajax_get</TestName>
+    </NamedTestSelector>
   </IgnoredTests>
   <AdditionalFilesToInclude>db.config</AdditionalFilesToInclude>
   <HiddenWarnings>CopyReferencedAssembliesToWorkspaceIsOn</HiddenWarnings>
