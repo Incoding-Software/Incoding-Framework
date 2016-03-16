@@ -1,11 +1,25 @@
 "use strict";
 
-function toBePerformance(option) {
-    var start = Math.floor(Date.now() / 1000);
+function toBeRun(option) {
+    var start = Date.now() / 1000;
     option.run();
-    var stop = Math.floor(Date.now() / 1000);
+    var stop = Date.now() / 1000;
     var time = stop - start;
-    expect(time <= option.lessThanOrEqual).toBeTruthy();
+    expect(time).toBeLessThan(option.lessThanOrEqual);
+}
+
+function toBeRace(loss, win) {
+    var start, stop;
+    start = Date.now() / 1000;
+    loss();
+    stop = Date.now() / 1000;
+    var lossTime = stop - start;
+
+    start = Date.now() / 1000;
+    win();
+    stop = Date.now() / 1000;
+    var winTime = stop - start;
+    expect(lossTime).toBeGreaterThan(winTime);
 }
 
 describe('Performance', function() {
@@ -18,8 +32,25 @@ describe('Performance', function() {
             result = '';
         });
 
+        it('Should be race Document.AddClass vs Jquery.AddClass', function() {
+            var uniqueId = Date.now() / 1000;
+            $('<div>').attr({ id : uniqueId }).appendTo('body');
+            toBeRace(function() {
+                    for (var i = 0; i < 1000; i++) {
+                        $('#' + uniqueId).addClass('active');
+                    }
+                },
+                function() {
+                    for (var i = 0; i < 1000; i++) {
+                        document.getElementById(uniqueId).class = 'active';
+                    }
+                }
+            );
+        });  
+
+
         it('Should be parse simple 1000 elements', function() {
-            toBePerformance({
+            toBeRun({
                 run : function() {
                     new IncodingEngine().parse($('#simpleIML'));
                 },
@@ -28,7 +59,7 @@ describe('Performance', function() {
         });
 
         it('Should be parse complex 1000 elements', function() {
-            toBePerformance({
+            toBeRun({
                 run : function() {
                     new IncodingEngine().parse($('#complexIML'));
                 },
@@ -37,7 +68,7 @@ describe('Performance', function() {
         });
 
         it('Should be executable eval', function() {
-            toBePerformance({
+            toBeRun({
                 run : function() {
                     for (var i = 0; i < 1000; i++) {
                         var executableEval = new ExecutableEval();
@@ -52,18 +83,18 @@ describe('Performance', function() {
                 },
                 lessThanOrEqual : 1
             });
-
         });
 
+
+
         it('Should be executable insert', function() {
-            toBePerformance({
+            toBeRun({
                 run : function() {
+                    var container = $('<div>').hide().appendTo('body');
                     for (var i = 0; i < 1000; i++) {
                         var insert = new ExecutableInsert();
                         insert.jsonData = $.parseJSON($('#ExecutableInsertWithProperty').val());
-                        insert.getTarget = function() {
-                            return $('body');
-                        };
+                        insert.target = container;
                         insert.result = { prop1 : 1, Prop2 : 2 };
                         insert.internalExecute();
                     }

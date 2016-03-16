@@ -35,7 +35,7 @@ namespace Incoding.MvcContrib
                 isChecked = result;
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
-            div.AddCssClass(Mode == ModeOfCheckbox.Normal ? B.Checkbox.AsClass() : B.Checkbox_inline.AsClass());
+            div.AddCssClass(Mode == ModeOfCheckbox.Normal ? B.Checkbox.ToLocalization() : B.Checkbox_inline.ToLocalization());
             div.AddCssClass(GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(),string.Empty).ToString());
 
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());

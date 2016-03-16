@@ -21,9 +21,8 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         #region Attributes
 
-        It should_be_set_attr = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                              .Direct()
-                                              .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetAttr(HtmlAttribute.Href, value))
+        It should_be_set_attr = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                              
+                                              .OnSuccess(dsl => dsl.Self().JQuery.Attr.SetAttr(HtmlAttribute.Href, value))
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                {
@@ -32,9 +31,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                        { "context", "$(this.target)" }
                                                                });
 
-        It should_be_set_attr_without_value = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                            .Direct()
-                                                            .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetAttr(HtmlAttribute.Href))
+        It should_be_set_attr_without_value = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                            
+                                                            .OnSuccess(dsl => dsl.Self().JQuery.Attr.SetAttr(HtmlAttribute.Href))
                                                             .GetExecutable<ExecutableEvalMethod>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                              {
@@ -43,9 +41,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                      { "context", "$(this.target)" }
                                                                              });
 
-        It should_be_remove_attr = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Direct()
-                                                 .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.Remove(HtmlAttribute.Href | HtmlAttribute.Accept))
+        It should_be_remove_attr = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                 
+                                                 .OnSuccess(dsl => dsl.Self().JQuery.Attr.Remove(HtmlAttribute.Href | HtmlAttribute.Accept))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -55,9 +52,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                   });
 
 
-        It should_be_remove_single = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Direct()
-                                                 .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.Remove(HtmlAttribute.Disabled))
+        It should_be_remove_single = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                 
+                                                 .OnSuccess(dsl => dsl.Self().JQuery.Attr.Remove(HtmlAttribute.Disabled))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -66,9 +62,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                           { "context", "$(this.target)" }
                                                                   });
 
-        It should_be_remove_prop = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Do().Direct()
-                                                 .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.RemoveProp(HtmlAttribute.Href))
+        It should_be_remove_prop = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                 
+                                                 .OnSuccess(dsl => dsl.Self().JQuery.Attr.RemoveProp(HtmlAttribute.Href))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -78,8 +73,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                   });
 
         It should_be_set_prop = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                              .Do().Direct()
-                                              .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetProp(HtmlAttribute.Href, value))
+                                              
+                                              .OnSuccess(dsl => dsl.Self().JQuery.Attr.SetProp(HtmlAttribute.Href, value))
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                {
@@ -89,8 +84,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                });
 
         It should_be_set_prop_without_value = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                            .Do().Direct()
-                                                            .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetProp(HtmlAttribute.Href))
+                                                            
+                                                            .OnSuccess(dsl => dsl.Self().JQuery.Attr.SetProp(HtmlAttribute.Href))
                                                             .GetExecutable<ExecutableEvalMethod>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                              {
@@ -100,8 +95,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                              });
 
         It should_be_set_prop_with_empty_value = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                               .Do().Direct()
-                                                               .OnSuccess(dsl => dsl.Self().Core().JQuery.Attributes.SetProp(HtmlAttribute.Href, string.Empty))
+                                                               
+                                                               .OnSuccess(dsl => dsl.Self().JQuery.Attr.SetProp(HtmlAttribute.Href, string.Empty))
                                                                .GetExecutable<ExecutableEvalMethod>()
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                 {
@@ -111,8 +106,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                 });
 
         It should_be_remove_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  .Do().Direct()
-                                                  .OnSuccess(r => r.Self().Core().JQuery.Attributes.RemoveClass("class"))
+                                                  
+                                                  .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass("class"))
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {
@@ -122,8 +117,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                    });
 
         It should_be_remove_class_by_bootstrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                               .Do().Direct()
-                                                               .OnSuccess(r => r.Self().Core().JQuery.Attributes.RemoveClass(B.Active))
+                                                               
+                                                               .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass(B.Active))
                                                                .GetExecutable<ExecutableEvalMethod>()
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                 {
@@ -133,8 +128,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                 });
 
         It should_be_remove_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                        .Do().Direct()
-                                                                        .OnSuccess(r => r.Self().Core().JQuery.Attributes.RemoveClass(B.Active | B.Disabled))
+                                                                        
+                                                                        .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass(B.Active | B.Disabled))
                                                                         .GetExecutable<ExecutableEvalMethod>()
                                                                         .ShouldEqualData(new Dictionary<string, object>
                                                                                          {
@@ -144,8 +139,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                          });
 
         It should_be_toggle_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  .Do().Direct()
-                                                  .OnSuccess(r => r.Self().Core().JQuery.Attributes.ToggleClass("class"))
+                                                  
+                                                  .OnSuccess(r => r.Self().JQuery.Attr.ToggleClass("class"))
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {
@@ -154,9 +149,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                            { "context", "$(this.target)" }
                                                                    });
 
-        It should_be_toggle_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                        .Do().Direct()
-                                                                        .OnSuccess(r => r.Self().Core().JQuery.Attributes.ToggleClass(B.Active | B.Disabled))
+        It should_be_toggle_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                                        
+                                                                        .OnSuccess(r => r.Self().JQuery.Attr.ToggleClass(B.Active | B.Disabled))
                                                                         .GetExecutable<ExecutableEvalMethod>()
                                                                         .ShouldEqualData(new Dictionary<string, object>
                                                                                          {
@@ -165,9 +159,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                                  { "args", new[] { "active disabled" } }
                                                                                          });
 
-        It should_be_toggle_disabled = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                     .Do().Direct()
-                                                     .OnSuccess(r => r.Self().Core().JQuery.Attributes.ToggleDisabled())
+        It should_be_toggle_disabled = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                     
+                                                     .OnSuccess(r => r.Self().JQuery.Attr.ToggleDisabled())
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                       {
@@ -177,8 +170,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                       });
 
         It should_be_toggle_readonly = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                     .Do().Direct()
-                                                     .OnSuccess(r => r.Self().Core().JQuery.Attributes.ToggleReadonly())
+                                                     
+                                                     .OnSuccess(r => r.Self().JQuery.Attr.ToggleReadonly())
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                       {
@@ -187,9 +180,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                               { "context", "$(this.target)" }
                                                                       });
 
-        It should_be_toggle_checked = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                    .Do().Direct()
-                                                    .OnSuccess(r => r.Self().Core().JQuery.Attributes.ToggleChecked())
+        It should_be_toggle_checked = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                    
+                                                    .OnSuccess(r => r.Self().JQuery.Attr.ToggleChecked())
                                                     .GetExecutable<ExecutableEvalMethod>()
                                                     .ShouldEqualData(new Dictionary<string, object>
                                                                      {
@@ -198,9 +190,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                              { "context", "$(this.target)" }
                                                                      });
 
-        It should_be_add_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                               .Do().Direct()
-                                               .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass("class"))
+        It should_be_add_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                               
+                                               .OnSuccess(r => r.Self().JQuery.Attr.AddClass("class"))
                                                .GetExecutable<ExecutableJquery>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                 {
@@ -208,9 +199,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                         { "args", new[] { "class" } }
                                                                 });
 
-        It should_be_add_class_by_bootstrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                            .Do().Direct()
-                                                            .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass(B.Active))
+        It should_be_add_class_by_bootstrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                            
+                                                            .OnSuccess(r => r.Self().JQuery.Attr.AddClass(B.Active))
                                                             .GetExecutable<ExecutableJquery>()
                                                             .ShouldEqualData(new Dictionary<string, object>
                                                                              {
@@ -218,9 +208,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                      { "args", new[] { "active" } }
                                                                              });
 
-        It should_be_add_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                     .Do().Direct()
-                                                                     .OnSuccess(r => r.Self().Core().JQuery.Attributes.AddClass(B.Active | B.Disabled))
+        It should_be_add_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                                     
+                                                                     .OnSuccess(r => r.Self().JQuery.Attr.AddClass(B.Active | B.Disabled))
                                                                      .GetExecutable<ExecutableJquery>()
                                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                                       {
@@ -229,8 +218,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                       });
 
         It should_be_val_string = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                .Do().Direct()
-                                                .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val("aws"))
+                                                
+                                                .OnSuccess(r => r.Self().JQuery.Attr.Val("aws"))
                                                 .GetExecutable<ExecutableEval>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                  {
@@ -238,8 +227,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                  });
 
         It should_be_val_null = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                              .Do().Direct()
-                                              .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val(null))
+                                              
+                                              .OnSuccess(r => r.Self().JQuery.Attr.Val(null))
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                {
@@ -249,8 +238,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                });
 
         It should_be_val_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  .Do().Direct()
-                                                  .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val(Selector.Jquery.Class("class")))
+                                                  
+                                                  .OnSuccess(r => r.Self().JQuery.Attr.Val(Selector.Jquery.Class("class")))
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {
@@ -260,8 +249,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                    });
 
         It should_be_val_selector_by_func = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                          .Do().Direct()
-                                                          .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val(selector => selector.Class("class")))
+                                                          
+                                                          .OnSuccess(r => r.Self().JQuery.Attr.Val(selector => selector.Class("class")))
                                                           .GetExecutable<ExecutableEvalMethod>()
                                                           .ShouldEqualData(new Dictionary<string, object>
                                                                            {
@@ -271,8 +260,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                            });
 
         It should_be_val_array = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                               .Do().Direct()
-                                               .OnSuccess(r => r.Self().Core().JQuery.Attributes.Val(Pleasure.ToArray("aws", "aws1")))
+                                               
+                                               .OnSuccess(r => r.Self().JQuery.Attr.Val(Pleasure.ToArray("aws", "aws1")))
                                                .GetExecutable<ExecutableEval>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                 {
@@ -284,8 +273,8 @@ namespace Incoding.UnitTest.MvcContribGroup
         #region Css
 
         It should_be_css_set = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                             .Do().Direct()
-                                             .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Set(CssStyling.FontFamily, value))
+                                             
+                                             .OnSuccess(dsl => dsl.Self().JQuery.Css.Set(CssStyling.FontFamily, value))
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                               {
@@ -295,8 +284,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                               });
 
         It should_be_css_set_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                   .Do().Direct()
-                                                   .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Set(CssStyling.Width, string.Empty))
+                                                   
+                                                   .OnSuccess(dsl => dsl.Self().JQuery.Css.Set(CssStyling.Width, string.Empty))
                                                    .GetExecutable<ExecutableEvalMethod>()
                                                    .ShouldEqualData(new Dictionary<string, object>
                                                                     {
@@ -306,8 +295,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                     });
 
         It should_be_display = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                             .Do().Direct()
-                                             .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Display(Display.TableCaption))
+                                             
+                                             .OnSuccess(dsl => dsl.Self().JQuery.Css.Display(Display.TableCaption))
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                               {
@@ -317,8 +306,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                               });
 
         It should_be_height = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            .Do().Direct()
-                                            .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Height(10))
+                                            
+                                            .OnSuccess(dsl => dsl.Self().JQuery.Css.Height(10))
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -328,8 +317,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_scroll_left = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Do().Direct()
-                                                 .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.ScrollLeft(25))
+                                                 
+                                                 .OnSuccess(dsl => dsl.Self().JQuery.Css.ScrollLeft(25))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -339,8 +328,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                   });
 
         It should_be_scroll_top = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                .Do().Direct()
-                                                .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.ScrollTop(25))
+                                                
+                                                .OnSuccess(dsl => dsl.Self().JQuery.Css.ScrollTop(25))
                                                 .GetExecutable<ExecutableEvalMethod>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                  {
@@ -350,8 +339,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                  });
 
         It should_be_width = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                           .Do().Direct()
-                                           .OnSuccess(dsl => dsl.Self().Core().JQuery.Css.Width(25))
+                                           
+                                           .OnSuccess(dsl => dsl.Self().JQuery.Css.Width(25))
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                             {
@@ -365,8 +354,8 @@ namespace Incoding.UnitTest.MvcContribGroup
         #region Func
 
         It should_be_increment_with_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                             .Do().Direct()
-                                                             .OnSuccess(r => r.Self().Core().Func.IncrementVal(Selector.Jquery.Self()))
+                                                             
+                                                             .OnSuccess(r => r.Self().Func.IncrementVal(Selector.Jquery.Self()))
                                                              .GetExecutable<ExecutableEvalMethod>()
                                                              .ShouldEqualData(new Dictionary<string, object>
                                                                               {
@@ -376,8 +365,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                               });
 
         It should_be_increment = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                               .Do().Direct()
-                                               .OnSuccess(r => r.Self().Core().Func.IncrementVal())
+                                               
+                                               .OnSuccess(r => r.Self().Func.IncrementVal())
                                                .GetExecutable<ExecutableEvalMethod>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                 {
@@ -387,8 +376,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                 });
 
         It should_be_decrement = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                               .Do().Direct()
-                                               .OnSuccess(r => r.Self().Core().Func.DecrementVal())
+                                               
+                                               .OnSuccess(r => r.Self().Func.DecrementVal())
                                                .GetExecutable<ExecutableEvalMethod>()
                                                .ShouldEqualData(new Dictionary<string, object>
                                                                 {
@@ -398,8 +387,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                 });
 
         It should_be_jquery_plug_in = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                    .Do().Direct()
-                                                    .OnSuccess(r => r.Self().Core().JQuery.PlugIn("MyPlugIn", new { position = "left", width = 15 }))
+                                                    
+                                                    .OnSuccess(r => r.Self().JQuery.PlugIn("MyPlugIn", new { position = "left", width = 15 }))
                                                     .GetExecutable<ExecutableEval>()
                                                     .ShouldEqualData(new Dictionary<string, object>
                                                                      {
@@ -407,8 +396,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                      });
 
         It should_be_jquery_call = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Do().Direct()
-                                                 .OnSuccess(r => r.Self().Core().JQuery.Call("Call", "15"))
+                                                 
+                                                 .OnSuccess(r => r.Self().JQuery.Call("Call", "15"))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -422,8 +411,8 @@ namespace Incoding.UnitTest.MvcContribGroup
         #region Manipilation
 
         It should_be_remove = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            .Do().Direct()
-                                            .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Remove())
+                                            
+                                            .OnSuccess(r => r.Self().JQuery.Manipulation.Remove())
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -433,8 +422,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                           .Do().Direct()
-                                           .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Empty())
+                                           
+                                           .OnSuccess(r => r.Self().JQuery.Manipulation.Empty())
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                             {
@@ -444,8 +433,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                             });
 
         It should_be_detach = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            .Do().Direct()
-                                            .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Detach())
+                                            
+                                            .OnSuccess(r => r.Self().JQuery.Manipulation.Detach())
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -455,8 +444,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_wrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                          .Do().Direct()
-                                          .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Wrap(o => new HelperResult(writer => writer.WriteLine("<div>"))))
+                                          
+                                          .OnSuccess(r => r.Self().JQuery.Manipulation.Wrap(o => new HelperResult(writer => writer.WriteLine("<div>"))))
                                           .GetExecutable<ExecutableEvalMethod>()
                                           .ShouldEqualData(new Dictionary<string, object>
                                                            {
@@ -466,8 +455,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                            });
 
         It should_be_wrap_all = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                              .Do().Direct()
-                                              .OnSuccess(r => r.Self().Core().JQuery.Manipulation.WrapAll(o => new HelperResult(writer => writer.WriteLine("<div>"))))
+                                              
+                                              .OnSuccess(r => r.Self().JQuery.Manipulation.WrapAll(o => new HelperResult(writer => writer.WriteLine("<div>"))))
                                               .GetExecutable<ExecutableEvalMethod>()
                                               .ShouldEqualData(new Dictionary<string, object>
                                                                {
@@ -477,8 +466,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                });
 
         It should_be_text_empty = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                .Do().Direct()
-                                                .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Text(string.Empty))
+                                                
+                                                .OnSuccess(r => r.Self().JQuery.Manipulation.Text(string.Empty))
                                                 .GetExecutable<ExecutableEvalMethod>()
                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                  {
@@ -488,8 +477,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                  });
 
         It should_be_text = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                          .Do().Direct()
-                                          .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Text(o => new HelperResult(writer => writer.WriteLine("<div>"))))
+                                          
+                                          .OnSuccess(r => r.Self().JQuery.Manipulation.Text(o => new HelperResult(writer => writer.WriteLine("<div>"))))
                                           .GetExecutable<ExecutableEvalMethod>()
                                           .ShouldEqualData(new Dictionary<string, object>
                                                            {
@@ -499,8 +488,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                            });
 
         It should_be_append = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            .Do().Direct()
-                                            .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Append(o => new HelperResult(writer => writer.WriteLine("<div>"))))
+                                            
+                                            .OnSuccess(r => r.Self().JQuery.Manipulation.Append(o => new HelperResult(writer => writer.WriteLine("<div>"))))
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -510,8 +499,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_append_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                     .Do().Direct()
-                                                     .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Append(Selector.JS.Location.Href))
+                                                     
+                                                     .OnSuccess(r => r.Self().JQuery.Manipulation.Append(Selector.JS.Location.Href))
                                                      .GetExecutable<ExecutableEvalMethod>()
                                                      .ShouldEqualData(new Dictionary<string, object>
                                                                       {
@@ -521,8 +510,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                       });
 
         It should_be_prepend = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                             .Do().Direct()
-                                             .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Prepend(o => new HelperResult(writer => writer.Write("<div>"))))
+                                             
+                                             .OnSuccess(r => r.Self().JQuery.Manipulation.Prepend(o => new HelperResult(writer => writer.Write("<div>"))))
                                              .GetExecutable<ExecutableEvalMethod>()
                                              .ShouldEqualData(new Dictionary<string, object>
                                                               {
@@ -532,8 +521,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                               });
 
         It should_be_after = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                           .Do().Direct()
-                                           .OnSuccess(r => r.Self().Core().JQuery.Manipulation.After(o => new HelperResult(writer => writer.Write("<div>"))))
+                                           
+                                           .OnSuccess(r => r.Self().JQuery.Manipulation.After(o => new HelperResult(writer => writer.Write("<div>"))))
                                            .GetExecutable<ExecutableEvalMethod>()
                                            .ShouldEqualData(new Dictionary<string, object>
                                                             {
@@ -543,8 +532,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                             });
 
         It should_be_before = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            .Do().Direct()
-                                            .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Before(o => new HelperResult(writer => writer.Write("<div>"))))
+                                            
+                                            .OnSuccess(r => r.Self().JQuery.Manipulation.Before(o => new HelperResult(writer => writer.Write("<div>"))))
                                             .GetExecutable<ExecutableEvalMethod>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -554,8 +543,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_html_string = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 .Do().Direct()
-                                                 .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Html(o => new HelperResult(writer => writer.Write("<div>"))))
+                                                 
+                                                 .OnSuccess(r => r.Self().JQuery.Manipulation.Html(o => new HelperResult(writer => writer.Write("<div>"))))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -565,8 +554,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                   });
 
         It should_be_html_jquery_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                          .Do().Direct()
-                                                          .OnSuccess(r => r.Self().Core().JQuery.Manipulation.Html(Selector.Jquery.Id("id")))
+                                                          
+                                                          .OnSuccess(r => r.Self().JQuery.Manipulation.Html(Selector.Jquery.Id("id")))
                                                           .GetExecutable<ExecutableEvalMethod>()
                                                           .ShouldEqualData(new Dictionary<string, object>
                                                                            {
@@ -576,8 +565,8 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                            });
 
         It should_be_replace_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  .Do().Direct()
-                                                  .OnSuccess(r => r.Self().Core().JQuery.Manipulation.ReplaceWith(o => new HelperResult(writer => writer.Write("<div>"))))
+                                                  
+                                                  .OnSuccess(r => r.Self().JQuery.Manipulation.ReplaceWith(o => new HelperResult(writer => writer.Write("<div>"))))
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {

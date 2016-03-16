@@ -1,4 +1,4 @@
-﻿/*"use strict";
+﻿"use strict";
 
 function LoggerBase() {
     this.getStatus = function(status) {
@@ -10,36 +10,34 @@ function LoggerBase() {
             4 : 'Complete',
             5 : 'Breakes',
         }[status];
-
+    };
+    this.special= function(executable, state) {        
+    };
+    this.log = function(executable, state) {
+        console.group("%s by status %s", executable.name,this.getStatus(executable.jsonData.onStatus));
+        console.log("Target: %O", executable.target);
+        console.log("Self: %O", executable.self);
+        console.log('Time of execution: %O', executable.timeOfEndExecution - executable.timeOfStartExecution);
+        this.special(executable, state);
+        console.groupEnd();
     };
 }
 
+
+ExecutableBase.prototype.logger = new LoggerBase();
+
 ExecutableTrigger.prototype.logger = $.extend(new LoggerBase(), {
-    to : function(executable, data) {
-        console.group("Trigger %s", this.getStatus(executable.jsonData.onStatus));
-        console.log("Target:%O", executable.target);
-        console.log('Invoke:%s', executable.jsonData.trigger);
-        console.log('Data:%O', data);
-    },
-    laterOn : function() {
-        console.groupEnd();
+    special : function(executable, data) {        
+        console.log('Invoke to: %s', executable.jsonData.trigger);        
     }
 });
-
-IncodingRunner.prototype.logger = {
-    to : function(e, result) {
-        console.group("%O even %s", e.srcElement, e.type);
-    },
-
-    toException : function(e) {
-        console.error(e);
-    },
-
-    toAction : function() {
-        console.group('Action');
-    },
-
-    laterOn : function() {
-        console.groupEnd();
+ExecutableEval.prototype.logger = $.extend(new LoggerBase(), {
+    special : function(executable, data) {        
+        console.log('Code: %s', executable.jsonData.code);        
     }
-};*/
+});
+ExecutableJquery.prototype.logger = $.extend(new LoggerBase(), {
+    special : function(executable, data) {        
+        console.log('Method: %s', executable.jsonData.method);
+    }
+});

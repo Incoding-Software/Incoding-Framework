@@ -30,7 +30,7 @@ namespace Incoding.MvcContrib
             Guard.NotNullOrWhiteSpace("value", value, errorMessage: "Please set Value like are setting.Value = something");
 
             var div = new TagBuilder(HtmlTag.Div.ToStringLower());
-            div.AddCssClass(Mode == ModeOfRadio.Normal ? B.Radio.AsClass() : B.Radio_inline.AsClass());
+            div.AddCssClass(Mode == ModeOfRadio.Normal ? B.Radio.ToLocalization() : B.Radio_inline.ToLocalization());
             var parentClass = GetAttributes().GetOrDefault(HtmlAttribute.Class.ToStringLower(), string.Empty).ToString();
             if (!string.IsNullOrEmpty(parentClass))
                 div.AddCssClass(parentClass);
