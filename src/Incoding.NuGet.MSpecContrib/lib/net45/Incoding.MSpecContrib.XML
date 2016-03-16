@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Incoding.MSpecContrib</name>
+    </assembly>
+    <members>
+        <member name="T:Incoding.MSpecContrib.MockController`1">
+            <summary>
+                Wrapping MVC Controller and Mock everything inside
+            </summary>
+            <typeparam name="TController">MVC Controller</typeparam>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.#ctor(`0,Moq.Mock{Incoding.CQRS.IDispatcher})">
+            <summary>
+            </summary>
+            <param name="controller">original controller</param>
+            <param name="dispatcher">mock of IDispatcher</param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.When(System.Object[])">
+            <summary>
+                Static method to construct MockController object
+            </summary>
+            <param name="ctorArgs">original controller constructor parameters</param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.DisableAjax">
+            <summary>
+                Disabling Ajax (no headers setup)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubRequestUrl(System.Uri)">
+            <summary>
+                Mocking Request.Url calls
+            </summary>
+            <param name="requestUri">url</param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.SetupHttpContext(System.Action{Moq.Mock{System.Web.HttpContextBase}})">
+            <summary>
+                Configuring HttpContextBase outside
+            </summary>
+            <param name="action"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubUrlAction(System.String)">
+            <summary>
+                Mock Url.Action calls
+            </summary>
+            <param name="expectedRoute">expected route url</param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubUrlAction(System.Action{System.String},System.String)">
+            <summary>
+                Mock Url.Action calls
+            </summary>
+            <param name="verifyRoutes">action to verify route url</param>
+            <param name="expectedRoute">expected route url</param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubQuery``2(``0,``1,Incoding.CQRS.MessageExecuteSetting)">
+            <summary>
+                Mock calls to QueryBase derived classes and return own data
+            </summary>
+            <typeparam name="TQuery"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="query"></param>
+            <param name="result"></param>
+            <param name="executeSetting"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubPrincipal(System.Security.Principal.IPrincipal)">
+            <summary>
+                Mock HttpContext.User object
+            </summary>
+            <param name="principal"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubQueryString(System.Object)">
+            <summary>
+                Mock HttpContext.QueryString object
+            </summary>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubPushAsThrow``1(``0,System.Exception,Incoding.CQRS.MessageExecuteSetting)">
+            <summary>
+                Throw an exception for Dispatcher.Push call
+            </summary>
+            <typeparam name="TCommand"></typeparam>
+            <param name="command"></param>
+            <param name="exception"></param>
+            <param name="executeSetting"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.StubQueryAsThrow``2(``0,System.Exception)">
+            <summary>
+                Throw an exception for Dispatcher.Query call
+            </summary>
+            <typeparam name="TQuery"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="query"></param>
+            <param name="exception"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldBeRenderView(System.String)">
+            <summary>
+                Assert View is rendered
+            </summary>
+            <param name="viewName"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldBeRenderModel(System.Object,System.String)">
+            <summary>
+                Assert Model on View is rendered
+            </summary>
+            <param name="model"></param>
+            <param name="viewName"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldBeRenderModel``1(System.Action{``0},System.String)">
+            <summary>
+                Assert Model on View is rendered with action verify
+            </summary>
+            <typeparam name="TModel"></typeparam>
+            <param name="action"></param>
+            <param name="viewName"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldBePush``1(``0,Incoding.CQRS.MessageExecuteSetting,System.Int32)">
+            <summary>
+                Mock Dispatcher.Push call
+            </summary>
+            <typeparam name="TCommand"></typeparam>
+            <param name="command"></param>
+            <param name="executeSetting"></param>
+            <param name="callCount"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldNotBePush``1(``0)">
+            <summary>
+                Assert Dispatcher.Push wasn't called
+            </summary>
+            <typeparam name="TCommand"></typeparam>
+            <param name="command"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.ShouldBePush``1(System.Action{``0},System.Int32)">
+            <summary>
+                Assert Dispatcher.Push call with action verifier
+            </summary>
+            <typeparam name="TCommand"></typeparam>
+            <param name="action"></param>
+            <param name="callCount"></param>
+        </member>
+        <member name="M:Incoding.MSpecContrib.MockController`1.BrokenModelState">
+            <summary>
+                Generate invalid ModelState with ModelError
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>Incoding.Framework</id>
-    <version>1.4.0.152-beta</version>
+    <version>1.4.2.0-beta</version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -48,6 +48,7 @@
   </metadata>
   <files>
     <file src="lib\net45\*.*" target="lib" />
-    <file src="content\**\*.*" />
+    <file src="content\**" target="content"/>
+    <file src="tools\" target="tools" />
   </files>
 </package>
