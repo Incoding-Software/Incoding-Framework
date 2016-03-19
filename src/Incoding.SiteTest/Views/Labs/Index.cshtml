@@ -1,5 +1,5 @@
 ﻿@using Incoding.SiteTest
-@model Incoding.SiteTest.AddProductCommand
+@model AddProductCommand
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,9 +32,13 @@
 </head>
 <body>
 @(Html.When(JqueryBind.InitIncoding)      
-      .Ajax(new GetProductQuery())
-      .OnSuccess(dsl => dsl.Window.Alert("Test"))
-      .AsHtmlAttributes()
-      .ToDiv())
+      .OnSuccess(dsl => dsl.Self().Trigger.Invoke(JqueryBind.None).TimeOut(1000))
+      .When(JqueryBind.None)
+      .Ajax(Url.Action("GetVal", new { orginal = "12" }))
+      .OnSuccess(dsl => dsl.Self().JQuery.Attr.RemoveClass("hide").If(() => Selector.Result == "1212"))
+      .AsHtmlAttributes(new { @class = "label label-important notice-top hide" })
+      .ToTag(HtmlTag.Span, @<text>
+                               Test
+                            </text>))
 </body>
 </html>

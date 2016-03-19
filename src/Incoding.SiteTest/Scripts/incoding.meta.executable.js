@@ -15,13 +15,13 @@ ExecutableFactory.Create = function(type, data, self) {
     return $.extend(false, document[type], {
         jsonData : data,
         onBind : data.onBind,
-        self : self,
+        self: $(self),
         timeOut : data.timeOut,
         interval : data.interval,
         intervalId : data.intervalId,
         ands : data.ands,
         getTarget : function() {
-            return data.target === "$(this.self)" ? self : eval(data.target);
+            return data.target === "$(this.self)" ? this.self : eval(data.target);
         }
     });
 
@@ -54,11 +54,11 @@ function ExecutableBase() {
 
 ExecutableBase.prototype = {
     // ReSharper disable UnusedParameter
-    execute : function(state) {
+    execute: function (state) {
 
         var current = this;
         if (current.logger) {
-            current.timeOfStartExecution = Date.now() / 1000;
+            current.logger.start(current, state);
         }
 
         current.target = $(current.getTarget());
@@ -68,7 +68,7 @@ ExecutableBase.prototype = {
         }
 
         if (current.timeOut > 0) {
-            window.setTimeout(function() {
+            window.setTimeout(function () {
                 current.target = current.getTarget();
                 current.internalExecute(state);
             }, current.timeOut);
@@ -76,7 +76,7 @@ ExecutableBase.prototype = {
         }
 
         if (current.interval > 0) {
-            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function() {
+            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function () {
                 current.target = current.getTarget();
                 current.internalExecute(state);
             }, current.interval);
@@ -86,8 +86,7 @@ ExecutableBase.prototype = {
         current.internalExecute(state);
 
         if (current.logger) {
-            current.timeOfEndExecution = Date.now() / 1000;
-            current.logger.log(current, state);
+            current.logger.end();
         }
     },
     internalExecute : function(state) {

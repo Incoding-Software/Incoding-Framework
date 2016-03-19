@@ -15,13 +15,13 @@ ExecutableFactory.Create = function(type, data, self) {
     return $.extend(false, document[type], {
         jsonData : data,
         onBind : data.onBind,
-        self : self,
+        self: $(self),
         timeOut : data.timeOut,
         interval : data.interval,
         intervalId : data.intervalId,
         ands : data.ands,
         getTarget : function() {
-            return data.target === "$(this.self)" ? self : eval(data.target);
+            return data.target === "$(this.self)" ? this.self : eval(data.target);
         }
     });
 
@@ -54,41 +54,38 @@ function ExecutableBase() {
 
 ExecutableBase.prototype = {
     // ReSharper disable UnusedParameter
-    execute : function(state) {
+    execute: function (state) {
 
         var current = this;
-        if (current.logger) {
-            current.timeOfStartExecution = Date.now() / 1000;
-        }
+        var mainLogger = current.getLogger();
+        mainLogger.start(current, state);
 
         current.target = $(current.getTarget());
-
         if (!current.isValid()) {
+            mainLogger.end();
             return;
         }
 
+        var delayExecute = function () {
+            var delayLogger = current.getLogger();
+            delayLogger.start(current, state);
+            current.target = current.getTarget();
+            current.internalExecute(state);
+            delayLogger.end();
+        };
         if (current.timeOut > 0) {
-            window.setTimeout(function() {
-                current.target = current.getTarget();
-                current.internalExecute(state);
-            }, current.timeOut);
+            window.setTimeout(delayExecute, current.timeOut);
+            mainLogger.end();
             return;
         }
-
         if (current.interval > 0) {
-            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function() {
-                current.target = current.getTarget();
-                current.internalExecute(state);
-            }, current.interval);
+            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(delayExecute, current.interval);
+            mainLogger.end();
             return;
         }
 
         current.internalExecute(state);
-
-        if (current.logger) {
-            current.timeOfEndExecution = Date.now() / 1000;
-            current.logger.log(current, state);
-        }
+        mainLogger.end();
     },
     internalExecute : function(state) {
     },

@@ -1,43 +1,59 @@
 ﻿"use strict";
 
+persistence.store.websql.config(persistence, 'profiler', 'A database description', 5 * 1024 * 1024);
+persistence.schemaSync();
+var ExecutableOfCall = persistence.define('ExecutableOfCall', {
+    name: "TEXT",
+    data: "JSON",
+    timeOfExecution: "REAL"
+});
+var Executable = persistence.define('Executable', {
+    name: "TEXT"
+});
+ExecutableOfCall.hasOne('executable', Executable);
+
 function LoggerBase() {
-    this.getStatus = function(status) {
+
+    this.timeOfStartExecution = 0;
+    this.executable = '';
+    this.state = '';
+    this.getStatus = function (status) {
 
         return {
-            1 : 'Before',
-            2 : 'Success',
-            3 : 'Error',
-            4 : 'Complete',
-            5 : 'Breakes',
+            1: 'Before',
+            2: 'Success',
+            3: 'Error',
+            4: 'Complete',
+            5: 'Breakes',
         }[status];
     };
-    this.special= function(executable, state) {        
+    this.end = function () {
+        var timeOfExecution = Date.now() / 1000 - this.timeOfStartExecution;
+
+        var executableOfCall = new ExecutableOfCall({ executable: this.executable.name, timeOfExecution: timeOfExecution, });
+        persistence.add(executableOfCall);
+        persistence.flush();
+        //console.group();
+
+        //console.log("{0} by status {1}".f(this.executable.name, this.getStatus(this.executable.jsonData.onStatus)));
+        //console.log("Target: %", this.executable.target);
+        //console.log("Self: %", this.executable.self);
+        //console.log('Time of execution: {0}'.f(timeOfExecution));
+        //var json = this.executable.jsonData;
+        //$.eachProperties(this.executable.jsonData, function () {
+        //    console.log("{0}: {1}".f(this, json[this]));
+        //});
+
+        //console.groupEnd();        
     };
-    this.log = function(executable, state) {
-        console.group("%s by status %s", executable.name,this.getStatus(executable.jsonData.onStatus));
-        console.log("Target: %O", executable.target);
-        console.log("Self: %O", executable.self);
-        console.log('Time of execution: %O', executable.timeOfEndExecution - executable.timeOfStartExecution);
-        this.special(executable, state);
-        console.groupEnd();
+
+    this.start = function (executable, state) {
+        this.executable = executable;
+        this.state = state;
+        this.timeOfStartExecution = Date.now() / 1000;
     };
 }
 
-
-ExecutableBase.prototype.logger = new LoggerBase();
-
-ExecutableTrigger.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Invoke to: %s', executable.jsonData.trigger);        
-    }
-});
-ExecutableEval.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Code: %s', executable.jsonData.code);        
-    }
-});
-ExecutableJquery.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Method: %s', executable.jsonData.method);
-    }
-});
+ExecutableBase.prototype.getLogger = function () {
+    return new LoggerBase();
+};

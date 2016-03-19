@@ -1,43 +1,65 @@
 ﻿"use strict";
 
 function LoggerBase() {
-    this.getStatus = function(status) {
+
+    this.timeOfStartExecution = 0;
+    this.executable = '';
+    this.state = '';
+    this.getStatus = function (status) {
 
         return {
-            1 : 'Before',
-            2 : 'Success',
-            3 : 'Error',
-            4 : 'Complete',
-            5 : 'Breakes',
+            1: 'Before',
+            2: 'Success',
+            3: 'Error',
+            4: 'Complete',
+            5: 'Breakes',
         }[status];
     };
-    this.special= function(executable, state) {        
+    this.special = function () {
     };
-    this.log = function(executable, state) {
-        console.group("%s by status %s", executable.name,this.getStatus(executable.jsonData.onStatus));
-        console.log("Target: %O", executable.target);
-        console.log("Self: %O", executable.self);
-        console.log('Time of execution: %O', executable.timeOfEndExecution - executable.timeOfStartExecution);
-        this.special(executable, state);
+    this.end = function () {
+        var timeOfEndExecution = Date.now() / 1000;
+        console.group();
+        console.log("{0} by status {1}".f(this.executable.name, this.getStatus(this.executable.jsonData.onStatus)));
+        console.log("Target: %", this.executable.target);
+        console.log("Self: %", this.executable.self);
+        console.log('Time of execution: {0}'.f(timeOfEndExecution - this.timeOfStartExecution));
+        this.special();
         console.groupEnd();
     };
+
+    this.start = function (executable, state) {
+        this.executable = executable;
+        this.state = state;
+        this.timeOfStartExecution = Date.now() / 1000;
+    }
+
+
 }
 
 
 ExecutableBase.prototype.logger = new LoggerBase();
 
 ExecutableTrigger.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Invoke to: %s', executable.jsonData.trigger);        
+    special: function () {
+        console.log('Invoke to: {0}'.f(this.executable.jsonData.trigger));
     }
 });
 ExecutableEval.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Code: %s', executable.jsonData.code);        
+    special: function () {
+        console.log('Code: {0}'.f(this.executable.jsonData.code));
+    }
+});
+ExecutableInsert.prototype.logger = $.extend(new LoggerBase(), {
+    special: function () {
+        console.log('Property: {0}'.f(this.executable.jsonData.property));
+        console.log('Prepare: {0}'.f(this.executable.jsonData.prepare));
+        console.log('Template: {0}'.f(this.executable.jsonData.template));
+        console.log('Type: {0}'.f(this.executable.jsonData.insertType));
     }
 });
 ExecutableJquery.prototype.logger = $.extend(new LoggerBase(), {
-    special : function(executable, data) {        
-        console.log('Method: %s', executable.jsonData.method);
+    special: function () {
+        console.log('Method: {0}'.f(this.executable.jsonData.method));
     }
 });
