@@ -346,6 +346,7 @@
     <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_multiple_unique.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\Behavior_mock_message_stub_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query_async.cs" />
+    <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query_new.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\Query\When_mock_message_stub_same_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_save_id_in_entity.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_save_action_entity.cs" />
@@ -781,7 +782,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

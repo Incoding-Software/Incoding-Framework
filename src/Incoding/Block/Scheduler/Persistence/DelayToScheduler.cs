@@ -7,6 +7,7 @@
     using System.Data.Entity;
     using System.Data.Entity.ModelConfiguration;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Linq.Expressions;
     using Incoding.CQRS;
     using Incoding.Data;
@@ -47,7 +48,8 @@
             {
                 public override Action<AdHocOrderSpecification<DelayToScheduler>> SortedBy()
                 {
-                    return specification => specification.OrderByDescending(r => r.StartsOn)
+                    return specification => specification.OrderByDescending(r=>r.Status)
+                    .OrderByDescending(r => r.StartsOn)
                                                          .OrderByDescending(r => r.Priority);
                 }
             }
@@ -113,13 +115,16 @@
             {
                 #region Fields
 
-                readonly DelayOfStatus status;
+                readonly DelayOfStatus[] status;
 
                 #endregion
 
                 #region Constructors
 
                 public ByStatus(DelayOfStatus status)
+                        : this(new[] { status }) { }
+
+                public ByStatus(DelayOfStatus[] status)
                 {
                     this.status = status;
                 }
@@ -128,7 +133,7 @@
 
                 public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
                 {
-                    return scheduler => scheduler.Status == this.status;
+                    return scheduler => status.Contains(scheduler.Status);
                 }
             }
         }

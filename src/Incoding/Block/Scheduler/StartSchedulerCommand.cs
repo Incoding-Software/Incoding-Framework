@@ -6,7 +6,6 @@
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
-    using Incoding.Block.IoC;
     using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Extensions;
@@ -33,38 +32,36 @@
                                            {
                                                while (Conditional())
                                                {
-                                                   var dispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
-                                                   foreach (var response in dispatcher.Query(new GetExpectedDelayToSchedulerQuery
-                                                                                             {
-                                                                                                     FetchSize = FetchSize,
-                                                                                                     Date = DateTime.UtcNow,
-                                                                                                     Async = isAsync
-                                                                                             }))
+                                                   foreach (var response in Dispatcher.New().Query(new GetExpectedDelayToSchedulerQuery
+                                                                                                   {
+                                                                                                           FetchSize = FetchSize,
+                                                                                                           Date = DateTime.UtcNow,
+                                                                                                           Async = isAsync
+                                                                                                   }))
                                                    {
                                                        var closureResponse = response;
 
-                                                       dispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
+                                                       Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
 
                                                        var task = Task.Factory.StartNew(() =>
                                                                                         {
-                                                                                            var newDispatcher = IoCFactory.Instance.TryResolve<IDispatcher>();
                                                                                             try
                                                                                             {
                                                                                                 Stopwatch sw = new Stopwatch();
                                                                                                 sw.Start();
-                                                                                                newDispatcher.Push(closureResponse.Instance);
+                                                                                                Dispatcher.New().Push(closureResponse.Instance);
                                                                                                 sw.Stop();
                                                                                                 var description = sw.Elapsed.TotalSeconds > closureResponse.TimeOut ? "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut) : null;
-                                                                                                newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
+                                                                                                Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
                                                                                             }
                                                                                             catch (Exception ex)
                                                                                             {
-                                                                                                newDispatcher.Push(new ChangeDelayToSchedulerStatusCommand
-                                                                                                                   {
-                                                                                                                           Id = closureResponse.Id,
-                                                                                                                           Status = DelayOfStatus.Error,
-                                                                                                                           Description = ex.ToString()
-                                                                                                                   });
+                                                                                                Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
+                                                                                                                      {
+                                                                                                                              Id = closureResponse.Id,
+                                                                                                                              Status = DelayOfStatus.Error,
+                                                                                                                              Description = ex.ToString()
+                                                                                                                      });
                                                                                             }
                                                                                         }, TaskCreationOptions.LongRunning);
 
