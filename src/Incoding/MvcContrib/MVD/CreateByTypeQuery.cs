@@ -87,7 +87,8 @@
                                                 var allSatisfied = AppDomain.CurrentDomain.GetAssemblies()
                                                                             .Select(r => r.GetLoadableTypes())
                                                                             .SelectMany(r => r)
-                                                                            .Where(type => type.Name.IsAnyEqualsIgnoreCase(name) || type.FullName.IsAnyEqualsIgnoreCase(name));
+                                                                            .Where(r => !r.IsAbstract && r.IsClass)
+                                                                            .Where(type => type.Name.EqualsWithInvariant(name) || type.FullName.EqualsWithInvariant(name));
 
                                                 if (!allSatisfied.Any())
                                                     throw new IncMvdException("Not found any type {0}".F(name));
