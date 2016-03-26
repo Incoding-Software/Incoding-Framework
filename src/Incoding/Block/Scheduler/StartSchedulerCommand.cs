@@ -20,12 +20,15 @@
             FetchSize = 10;
             Interval = new TimeSpan(0, 0, 0, 1, 0);
             TaskCreationOptions = TaskCreationOptions.LongRunning;
+            DelayToStart = new TimeSpan(0, 0, 0, 0, 0);
         }
 
         protected override void Execute()
         {
             Action<bool> execute = (isAsync) =>
                                    {
+                                       Thread.Sleep(DelayToStart);
+                                       var isFirstTime = true;
                                        while (true)
                                        {
                                            try
@@ -36,7 +39,8 @@
                                                                                                    {
                                                                                                            FetchSize = FetchSize,
                                                                                                            Date = DateTime.UtcNow,
-                                                                                                           Async = isAsync
+                                                                                                           Async = isAsync,
+                                                                                                           IncludeInProgress = isFirstTime
                                                                                                    }))
                                                    {
                                                        var closureResponse = response;
@@ -51,11 +55,19 @@
                                                                                                 sw.Start();
                                                                                                 Dispatcher.New().Push(closureResponse.Instance);
                                                                                                 sw.Stop();
-                                                                                                var description = sw.Elapsed.TotalSeconds > closureResponse.TimeOut ? "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut) : null;
-                                                                                                Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.Success, Description = description });
+
+                                                                                                Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
+                                                                                                                      {
+                                                                                                                              Id = closureResponse.Id,
+                                                                                                                              Status = DelayOfStatus.Success,
+                                                                                                                              Description = "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut)
+                                                                                                                      });
                                                                                             }
                                                                                             catch (Exception ex)
                                                                                             {
+                                                                                                if (!string.IsNullOrWhiteSpace(Log_Debug))
+                                                                                                    LoggingFactory.Instance.LogException(Log_Debug, ex);
+
                                                                                                 Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
                                                                                                                       {
                                                                                                                               Id = closureResponse.Id,
@@ -68,6 +80,7 @@
                                                        if (!isAsync)
                                                            task.Wait(response.TimeOut);
                                                    }
+                                                   isFirstTime = false;
                                                    Thread.Sleep(Interval);
                                                }
                                            }
@@ -82,11 +95,14 @@
                                            Thread.Sleep(5.Seconds());
                                        }
                                    };
+
             Task.Factory.StartNew(() => execute(true), TaskCreationOptions);
             Task.Factory.StartNew(() => execute(false), TaskCreationOptions);
         }
 
         #region Properties
+
+        public TimeSpan DelayToStart { get; set; }
 
         public string Log_Debug { get; set; }
 

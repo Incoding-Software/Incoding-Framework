@@ -34,13 +34,6 @@
                                                      },
                                 });
             }
-            if (Status == DelayOfStatus.Error)
-            {
-                Dispatcher.Push(new AddDelayToSchedulerCommand(delay)
-                                {
-                                        Recurrency = delay.Recurrence
-                                });
-            }
         }
 
         #region Properties

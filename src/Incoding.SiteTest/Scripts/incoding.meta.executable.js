@@ -57,37 +57,35 @@ ExecutableBase.prototype = {
     execute: function (state) {
 
         var current = this;
-        if (current.logger) {
-            current.logger.start(current, state);
-        }
+        var mainLogger = current.getLogger();
+        mainLogger.start(current, state);
 
         current.target = $(current.getTarget());
-
         if (!current.isValid()) {
+            mainLogger.end();
             return;
         }
 
+        var delayExecute = function () {
+            var delayLogger = current.getLogger();
+            delayLogger.start(current, state);
+            current.target = current.getTarget();
+            current.internalExecute(state);
+            delayLogger.end();
+        };
         if (current.timeOut > 0) {
-            window.setTimeout(function () {
-                current.target = current.getTarget();
-                current.internalExecute(state);
-            }, current.timeOut);
+            window.setTimeout(delayExecute, current.timeOut);
+            mainLogger.end();
             return;
         }
-
         if (current.interval > 0) {
-            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(function () {
-                current.target = current.getTarget();
-                current.internalExecute(state);
-            }, current.interval);
+            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(delayExecute, current.interval);
+            mainLogger.end();
             return;
         }
 
         current.internalExecute(state);
-
-        if (current.logger) {
-            current.logger.end();
-        }
+        mainLogger.end();
     },
     internalExecute : function(state) {
     },

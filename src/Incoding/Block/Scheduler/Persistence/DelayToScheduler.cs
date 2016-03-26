@@ -48,9 +48,9 @@
             {
                 public override Action<AdHocOrderSpecification<DelayToScheduler>> SortedBy()
                 {
-                    return specification => specification.OrderByDescending(r=>r.Status)
-                    .OrderByDescending(r => r.StartsOn)
-                                                         .OrderByDescending(r => r.Priority);
+                    return specification => specification.OrderBy(r => r.Status)
+                                                         .OrderBy(r => r.Priority)
+                                                         .OrderByDescending(r => r.StartsOn);
                 }
             }
         }
@@ -119,6 +119,11 @@
 
                 #endregion
 
+                public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
+                {
+                    return scheduler => status.Contains(scheduler.Status);
+                }
+
                 #region Constructors
 
                 public ByStatus(DelayOfStatus status)
@@ -130,11 +135,6 @@
                 }
 
                 #endregion
-
-                public override Expression<Func<DelayToScheduler, bool>> IsSatisfiedBy()
-                {
-                    return scheduler => status.Contains(scheduler.Status);
-                }
             }
         }
 

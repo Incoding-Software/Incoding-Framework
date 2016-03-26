@@ -14,13 +14,20 @@
 
     public class GetExpectedDelayToSchedulerQuery : QueryBase<List<GetExpectedDelayToSchedulerQuery.Response>>
     {
+        public bool IncludeInProgress { get; set; }
+
         protected override List<Response> ExecuteResult()
         {
-            return Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(new[] { DelayOfStatus.New, DelayOfStatus.Error, })
+            var delayOfStatuses = new[] { DelayOfStatus.New, DelayOfStatus.Error, }.ToList();
+            if (IncludeInProgress)
+                delayOfStatuses.Add(DelayOfStatus.InProgress);
+
+            return Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(delayOfStatuses.ToArray())
                                             .And(new DelayToScheduler.Where.ByAsync(Async))
                                             .And(new DelayToScheduler.Where.AvailableStartsOn(Date)),
                                     orderSpecification: new DelayToScheduler.Sort.Default(),
-                                    paginatedSpecification: new PaginatedSpecification(1, FetchSize)).ToList()
+                                    paginatedSpecification: new PaginatedSpecification(1, FetchSize))
+                             .ToList()
                              .Select(scheduler => new Response()
                                                   {
                                                           Id = scheduler.Id,
