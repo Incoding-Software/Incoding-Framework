@@ -15,14 +15,12 @@ ExecutableFactory.Create = function(type, data, self) {
     return $.extend(false, document[type], {
         jsonData : data,
         onBind : data.onBind,
-        self: $(self),
+        self : $(self),
         timeOut : data.timeOut,
         interval : data.interval,
         intervalId : data.intervalId,
-        ands : data.ands,
-        getTarget : function() {
-            return data.target === "$(this.self)" ? this.self : eval(data.target);
-        }
+        ands: data.ands,
+        target: data.target
     });
 
 };
@@ -45,9 +43,15 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';    
+    this.resultOfEvent = '';
     this.getTarget = function() {
-        return this.self;
+
+        if (this.target instanceof jQuery) {
+            return this.target;
+        }
+
+        this.target = this.target === "$(this.self)" ? $(this.self) : $(eval(this.target));
+        return this.target;
     };
 
 }
@@ -57,35 +61,26 @@ ExecutableBase.prototype = {
     execute: function (state) {
 
         var current = this;
-        var mainLogger = current.getLogger();
-        mainLogger.start(current, state);
-
-        current.target = $(current.getTarget());
-        if (!current.isValid()) {
-            mainLogger.end();
+        
+        
+        if (!current.isValid()) {   
             return;
         }
 
-        var delayExecute = function () {
-            var delayLogger = current.getLogger();
-            delayLogger.start(current, state);
+        var delayExecute = function () {     
             current.target = current.getTarget();
-            current.internalExecute(state);
-            delayLogger.end();
+            current.internalExecute(state);        
         };
         if (current.timeOut > 0) {
-            window.setTimeout(delayExecute, current.timeOut);
-            mainLogger.end();
+            window.setTimeout(delayExecute, current.timeOut);            
             return;
         }
         if (current.interval > 0) {
-            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(delayExecute, current.interval);
-            mainLogger.end();
+            ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(delayExecute, current.interval);            
             return;
         }
 
-        current.internalExecute(state);
-        mainLogger.end();
+        current.internalExecute(state);        
     },
     internalExecute : function(state) {
     },
