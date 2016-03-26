@@ -50,7 +50,7 @@
 
         It should_be_pushed = () => { mockMessage.ShouldBePushed(); };
 
-        #region Fake classes
+        #region Fake classesS
 
         public class FakeCommand : CommandBase
         {
