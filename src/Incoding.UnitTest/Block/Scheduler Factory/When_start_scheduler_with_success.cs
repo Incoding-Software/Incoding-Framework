@@ -12,7 +12,7 @@
     #endregion
 
     [Subject(typeof(StartSchedulerCommand))]
-    public class When_start_scheduler_command_success
+    public class When_start_scheduler_with_success
     {
         
 

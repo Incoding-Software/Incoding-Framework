@@ -14,7 +14,7 @@
     #endregion
 
     [Subject(typeof(StartSchedulerCommand))]
-    public class When_scheduler_factory_initialize_error
+    public class When_start_scheduler_with_error
     {
         #region Fake classes
 

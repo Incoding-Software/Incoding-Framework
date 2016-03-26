@@ -20,14 +20,16 @@
             FetchSize = 10;
             Interval = new TimeSpan(0, 0, 0, 1, 0);
             TaskCreationOptions = TaskCreationOptions.LongRunning;
-            DelayToStart = new TimeSpan(0, 0, 0, 0, 0);
+            DelayToStart = null;
         }
 
         protected override void Execute()
         {
             Action<bool> execute = (isAsync) =>
                                    {
-                                       Thread.Sleep(DelayToStart);
+                                       if (DelayToStart.HasValue)
+                                           Thread.Sleep(DelayToStart.Value);
+
                                        var isFirstTime = true;
                                        while (true)
                                        {
@@ -102,7 +104,7 @@
 
         #region Properties
 
-        public TimeSpan DelayToStart { get; set; }
+        public TimeSpan? DelayToStart { get; set; }
 
         public string Log_Debug { get; set; }
 
