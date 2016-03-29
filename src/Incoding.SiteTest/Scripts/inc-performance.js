@@ -46,6 +46,20 @@ describe('Performance', function() {
                     }
                 }
             );
+        });
+
+        it('Should be getTarget', function() {
+            var executable = new ExecutableBase();
+            executable.target = "$('#simpleIML')";
+            executable.self = $('#simpleIML');
+            toBeRun({
+                run : function() {
+                    for (var i = 0; i < 1000000; i++) {
+                        executable.getTarget();
+                    }
+                },
+                lessThanOrEqual : 1
+            });
         });  
 
 

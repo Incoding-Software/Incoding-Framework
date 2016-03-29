@@ -14,23 +14,27 @@
 
     public class GetExpectedDelayToSchedulerQuery : QueryBase<List<GetExpectedDelayToSchedulerQuery.Response>>
     {
+        public bool IncludeInProgress { get; set; }
+
         protected override List<Response> ExecuteResult()
         {
-            var all = new List<DelayToScheduler>();
-            Func<DelayOfStatus, int, IQueryable<DelayToScheduler>> getByType = (status, size) => Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(status)
-                                                                                                                          .And(new DelayToScheduler.Where.ByAsync(Async))
-                                                                                                                          .And(new DelayToScheduler.Where.AvailableStartsOn(Date)),
-                                                                                                                  orderSpecification: new DelayToScheduler.Sort.Default(),
-                                                                                                                  paginatedSpecification: new PaginatedSpecification(1, size));
-            all.AddRange(getByType(DelayOfStatus.New, FetchSize));
-            return all.ToList()
-                      .Select(scheduler => new Response()
-                                           {
-                                                   Id = scheduler.Id,
-                                                   Instance = scheduler.Instance,
-                                                   TimeOut = scheduler.Option.With(r => r.TimeOut)
-                                           })
-                      .ToList();
+            var delayOfStatuses = new[] { DelayOfStatus.New, DelayOfStatus.Error, }.ToList();
+            if (IncludeInProgress)
+                delayOfStatuses.Add(DelayOfStatus.InProgress);
+
+            return Repository.Query(whereSpecification: new DelayToScheduler.Where.ByStatus(delayOfStatuses.ToArray())
+                                            .And(new DelayToScheduler.Where.ByAsync(Async))
+                                            .And(new DelayToScheduler.Where.AvailableStartsOn(Date)),
+                                    orderSpecification: new DelayToScheduler.Sort.Default(),
+                                    paginatedSpecification: new PaginatedSpecification(1, FetchSize))
+                             .ToList()
+                             .Select(scheduler => new Response()
+                                                  {
+                                                          Id = scheduler.Id,
+                                                          Instance = scheduler.Instance,
+                                                          TimeOut = scheduler.Option.With(r => r.TimeOut)
+                                                  })
+                             .ToList();
         }
 
         #region Nested classes

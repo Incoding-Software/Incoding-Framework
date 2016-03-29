@@ -50,7 +50,7 @@
                                                                          .ToLocalization()
                                                                          .ShouldEqual("Value2");
 
-        It should_be_to_pefromance = () => Pleasure.Do(i => (FlagFakeEnum.Value2 | FlagFakeEnum.Value3)
+        It should_be_to_localization_as_pefromance = () => Pleasure.Do(i => (FlagFakeEnum.Value2 | FlagFakeEnum.Value3)
                                                                     .ToLocalization(), 100000)
                                                    .ShouldBeLessThan(140);
 

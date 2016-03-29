@@ -18,7 +18,7 @@
     {
         Establish establish = () =>
                               {
-                                  var query = Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery>();
+                                  var query = Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery>(dsl => dsl.Tuning(r => r.IncludeInProgress, true));
                                   fakeCommand = Pleasure.Generator.Invent<FakeCommand>();
                                   Action<IInventFactoryDsl<DelayToScheduler>> action = dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
                                                                                                  .GenerateTo(r => r.Option)
@@ -31,7 +31,7 @@
 
                                   mockQuery = MockQuery<GetExpectedDelayToSchedulerQuery, List<GetExpectedDelayToSchedulerQuery.Response>>
                                           .When(query)
-                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByStatus(DelayOfStatus.New)
+                                          .StubQuery(whereSpecification: new DelayToScheduler.Where.ByStatus(new[] { DelayOfStatus.New, DelayOfStatus.Error, DelayOfStatus.InProgress })
                                                              .And(new DelayToScheduler.Where.ByAsync(query.Async))
                                                              .And(new DelayToScheduler.Where.AvailableStartsOn(query.Date)),
                                                      orderSpecification: new DelayToScheduler.Sort.Default(),

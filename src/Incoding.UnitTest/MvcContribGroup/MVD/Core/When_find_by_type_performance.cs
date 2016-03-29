@@ -36,7 +36,7 @@
                                                 message.Execute();
                                                 message.ShouldBeIsResult(typeof(When_find_by_type_performanceCommand));
                                             }, 1000)
-                                        .ShouldBeLessThan(600);
+                                        .ShouldBeLessThan(500);
                             };
 
         It should_be_name_with_preload = () =>

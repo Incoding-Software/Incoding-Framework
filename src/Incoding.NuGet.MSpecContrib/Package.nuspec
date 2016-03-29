@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MSpecContrib</id>
-    <version>1.4.2.0-beta</version>
+    <version>1.4.0.161-beta</version>
     <title>Incoding tests helpers</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -49,7 +49,8 @@
     <tags>unit test,mspec,incoding,rapid testing</tags>
   </metadata>
   <files>
-    <file src="content\**\*.*" />
+    <file src="content\**" target="content"/>
+    <file src="tools\" target="tools" />
     <file src="lib\net45\*.*" target="lib" />
   </files>
 </package>

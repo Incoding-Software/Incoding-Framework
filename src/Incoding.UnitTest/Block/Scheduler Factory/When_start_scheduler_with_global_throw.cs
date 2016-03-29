@@ -13,11 +13,12 @@
     #endregion
 
     [Subject(typeof(StartSchedulerCommand))]
-    public class When_scheduler_factory_initialize_with_global_throw
+    public class When_start_scheduler_with_global_throw
     {
         Establish establish = () =>
                               {
-                                  var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.Conditional, () => { throw new ArgumentException(); }));
+                                  var command = Pleasure.Generator.Invent<StartSchedulerCommand>(dsl => dsl.Tuning(r => r.DelayToStart, null)
+                                                                                                           .Tuning(r => r.Conditional, () => { throw new ArgumentException(); }));
                                   logger = Pleasure.Mock<ILogger>();
                                   LoggingFactory.Instance.Initialize(logging => logging.WithPolicy(policy => policy.For(command.Log_Debug).Use(logger.Object)));
 

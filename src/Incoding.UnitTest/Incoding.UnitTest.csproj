@@ -247,13 +247,13 @@
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_available_starts_on.cs" />
     <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status_by_uid.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_uid.cs" />
-    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_with_global_throw.cs" />
+    <Compile Include="Block\Scheduler Factory\When_start_scheduler_with_global_throw.cs" />
     <Compile Include="Block\Scheduler Factory\When_get_all_delay_to_scheduler.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_sceduler_get_instance.cs" />
     <Compile Include="Block\Scheduler Factory\When_save_DelayToScheduler.cs" />
     <Compile Include="Block\Scheduler Factory\When_message_execute_setting_serialize_to_json.cs" />
-    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_error.cs" />
-    <Compile Include="Block\Scheduler Factory\When_scheduler_factory_initialize_success.cs" />
+    <Compile Include="Block\Scheduler Factory\When_start_scheduler_with_error.cs" />
+    <Compile Include="Block\Scheduler Factory\When_start_scheduler_with_success.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Common\Response\When_inc_bool_response.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_command_without_repository.cs" />
@@ -272,7 +272,7 @@
     <Compile Include="CQRSGroup\Message\When_message_base_on_execute.cs" />
     <Compile Include="CQRSGroup\Message\When_message_base_query.cs" />
     <Compile Include="CQRSGroup\Message\When_message_base_repository_once.cs" />
-    <Compile Include="Block\Scheduler Factory\When_change_delay_to_scheduler_status.cs" />
+    <Compile Include="Block\Scheduler Factory\When_change_delay_to_schedule_to_success.cs" />
     <Compile Include="Block\Scheduler Factory\When_delay_to_scheduler_by_status.cs" />
     <Compile Include="Block\Scheduler Factory\When_add_delay_to_scheduler.cs" />
     <Compile Include="DataGroup\DictionaryAsStringGroup\When_dictionary_as_string_join_hard_value.cs" />
@@ -346,6 +346,7 @@
     <Compile Include="MSpecGroup\Mock Message\Push\When_mock_message_stub_push_multiple_unique.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\Behavior_mock_message_stub_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query_async.cs" />
+    <Compile Include="MSpecGroup\Mock Message\Query\When_mock_message_stub_query_new.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\Query\When_mock_message_stub_same_query.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_save_id_in_entity.cs" />
     <Compile Include="MSpecGroup\Mock Message\Repository\When_mock_message_stub_save_action_entity.cs" />

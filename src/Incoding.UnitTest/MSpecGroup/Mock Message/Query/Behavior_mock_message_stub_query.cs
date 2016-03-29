@@ -22,7 +22,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                         .When(input)
                                         .StubQuery(Pleasure.Generator.Invent<FakeQuery>(dsl => dsl.Tuning(r => r.Id, input.Id)),
                                                    Pleasure.Generator.TheSameString());
-                                mockMessage.Original.Execute();
+                                mockMessage.Execute();
                                 mockMessage.ShouldBeIsResult(Pleasure.Generator.TheSameString());
                             };
 
@@ -32,7 +32,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                           var mockMessage = MockCommand<TMessage2>
                                                   .When(input)
                                                   .StubQuery<FakeQueryWithoutProperties, string>(Pleasure.Generator.TheSameString());
-                                          mockMessage.Original.Execute();
+                                          mockMessage.Execute();
                                           mockMessage.ShouldBeIsResult(Pleasure.Generator.TheSameString());
                                       };
 
@@ -43,7 +43,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                                       .When(input)
                                                       .StubQuery<FakeQuery, string>(dsl => dsl.Tuning(r => r.Id, input.Id),
                                                                                     Pleasure.Generator.TheSameString());
-                                              mockMessage.Original.Execute();
+                                              mockMessage.Execute();
                                               mockMessage.ShouldBeIsResult(Pleasure.Generator.TheSameString());
                                           };
 
@@ -53,7 +53,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                         var mockMessage = MockCommand<TMessage2>
                                                 .When(input)
                                                 .StubQueryAsNull<FakeQueryWithoutProperties, string>();
-                                        mockMessage.Original.Execute();
+                                        mockMessage.Execute();
                                         mockMessage.ShouldBeIsResult(o => o.ShouldBeNull());
                                     };
 
@@ -64,7 +64,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                                    .When(input)
                                                    .StubQuery<FakeQuery, string>(dsl => dsl.Tuning(r => r.Id, "1"), "The")
                                                    .StubQuery<FakeQuery, string>(dsl => dsl.Tuning(r => r.Id, "2"), "SameString");
-                                           mockMessage.Original.Execute();
+                                           mockMessage.Execute();
                                            mockMessage.ShouldBeIsResult(o => o.ShouldEqual(Pleasure.Generator.TheSameString()));
                                        };
 
