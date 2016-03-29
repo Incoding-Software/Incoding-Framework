@@ -45,14 +45,23 @@ function ExecutableBase() {
     this.result = '';
     this.resultOfEvent = '';
     this.getTarget = function() {
+
         if (this.target instanceof jQuery) {
             this.target.splice(0, this.target.length);
             this.target.push.apply(this.target, this.target);
             return this.target;
         }
 
-        this.target = this.target === "$(this.self)" ? $(this.self) : $(eval(this.target));
-        return this.target;
+        if (this.target === "$(this.self)") {
+            this.target = this.self;
+        }
+        else if (this.target.startsWith("||") && this.target.endWith("||")) {
+            var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
+            this.target = $(selector);
+        }
+        else {
+            this.target = eval(this.target);
+        }
     };
 
 }
@@ -62,7 +71,7 @@ ExecutableBase.prototype = {
     execute: function (state) {
 
         var current = this;
-        
+        current.target = current.getTarget();
         
         if (!current.isValid()) {   
             return;
@@ -732,10 +741,13 @@ function ExecutableJquery() {
 }
 
 ExecutableJquery.prototype.name = "Jquery";
-ExecutableJquery.prototype.internalExecute = function () {
+ExecutableJquery.prototype.internalExecute = function() {
     switch (this.jsonData.method) {
         case 1:
             this.target.addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            break;
+        case 2:
+            this.target.removeClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
             break;
         default:
             throw 'Not found method {0}'.f(this.jsonData.method);

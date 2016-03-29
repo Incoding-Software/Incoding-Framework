@@ -56,7 +56,7 @@
 
         public static EventSelector Event { get { return new EventSelector(); } }
 
-        public static ResultSelector Result { get { return new ResultSelector(ResultSelector.TypeOfResult,string.Empty); } }
+        public static ResultSelector Result { get { return new ResultSelector(ResultSelector.TypeOfResult, string.Empty); } }
 
         #endregion
 
@@ -79,16 +79,16 @@
         internal static string GetMethodSignature(string funcName, params object[] args)
         {
             string stringArgs = args.Aggregate(string.Empty, (res, orig) =>
-                                                                 {
-                                                                     if (orig is Selector)
-                                                                         res += "{0},".F((orig as Selector).ToString());
-                                                                     else if (orig is string)
-                                                                         res += "'{0}',".F(orig.ToString());
-                                                                     else
-                                                                         res += "{0},".F(orig.ToString());
+                                                             {
+                                                                 if (orig is Selector)
+                                                                     res += "{0},".F((orig as Selector).ToString());
+                                                                 else if (orig is string)
+                                                                     res += "'{0}',".F(orig.ToString());
+                                                                 else
+                                                                     res += "{0},".F(orig.ToString());
 
-                                                                     return res;
-                                                                 });
+                                                                 return res;
+                                                             });
 
             if (stringArgs.EndsWith(","))
                 stringArgs = stringArgs.Substring(0, stringArgs.Length - 1);
@@ -141,17 +141,32 @@
             }
 
             this.methods.DoEach(s =>
-                                    {
-                                        if (string.IsNullOrWhiteSpace(this.selector))
-                                            this.selector += s;
-                                        else
-                                            this.selector += "." + s;
-                                    });
+                                {
+                                    if (string.IsNullOrWhiteSpace(this.selector))
+                                        this.selector += s;
+                                    else
+                                        this.selector += "." + s;
+                                });
 
             if (this is IJavaScriptSelector)
                 return "||javascript*{0}||".F(this.selector);
 
             return this.selector;
+        }
+
+        public string ToJquerySelector()
+        {
+            if (string.IsNullOrWhiteSpace(this.selector) && !this.methods.Any())
+                return string.Empty;
+
+            bool isVariable = this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector();
+            if (isVariable)
+                return ToString();
+
+            if (!this.methods.Any())
+                return "||jquery*{0}||".F(this.selector);
+
+            return ToString();
         }
     }
 }

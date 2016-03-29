@@ -45,11 +45,11 @@
 
                                                               dsl.GetAll<ExecutableValidationRefresh>()
                                                                  .First()["target"]
-                                                                      .ShouldEqual("$('#Id')");
+                                                                      .ShouldEqual("||jquery*#Id||");
 
                                                               dsl.GetAll<ExecutableForm>()
                                                                  .First()["target"]
-                                                                      .ShouldEqual("$('.class')");
+                                                                      .ShouldEqual("||jquery*.class||");
                                                           });
 
         It should_be_reset_target_after_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
@@ -68,12 +68,10 @@
 
                                                                            dsl.GetAll<ExecutableValidationRefresh>()
                                                                               .First()["target"]
-                                                                                   .ShouldEqual("$('#Id')");
+                                                                                   .ShouldEqual("||jquery*#Id||");
                                                                        });
 
-        It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                   .Do()
-                                                   .Direct()
+        It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                   
                                                    .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr)))
                                                                         .With(r => r.Id("Next"))
                                                                         .Core().Form.Validation.Parse())
@@ -95,7 +93,7 @@
                                              .OnSuccess(dsl => dsl.WithId("id").Core().Form.Validation.Parse())
                                              .GetAll<ExecutableValidationParse>()
                                              .First()["target"]
-                                             .ShouldEqual("$('#id')");
+                                             .ShouldEqual("||jquery*#id||");
 
         It should_be_with_id_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                         .Do()
@@ -103,7 +101,7 @@
                                                         .OnSuccess(dsl => dsl.WithId<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
                                                         .GetAll<ExecutableValidationParse>()
                                                         .First()["target"]
-                                                        .ShouldEqual("$('#Value')");
+                                                        .ShouldEqual("||jquery*#Value||");
 
         It should_be_with_name = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do()
@@ -111,15 +109,13 @@
                                                .OnSuccess(dsl => dsl.WithName("Value").Core().Form.Validation.Parse())
                                                .GetAll<ExecutableValidationParse>()
                                                .First()["target"]
-                                               .ShouldEqual("$('[name=\"Value\"]')");
+                                               .ShouldEqual(@"||jquery*[name=""Value""]||");
 
-        It should_be_with_name_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                          .Do()
-                                                          .Direct()
+        It should_be_with_name_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                          
                                                           .OnSuccess(dsl => dsl.WithName<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
                                                           .GetAll<ExecutableValidationParse>()
                                                           .First()["target"]
-                                                          .ShouldEqual("$('[name=\"Value\"]')");
+                                                          .ShouldEqual(@"||jquery*[name=""Value""]||");
 
         It should_be_with_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                 .Do()
@@ -127,7 +123,7 @@
                                                 .OnSuccess(dsl => dsl.WithClass("red").Core().Form.Validation.Parse())
                                                 .GetAll<ExecutableValidationParse>()
                                                 .First()["target"]
-                                                .ShouldEqual("$('.red')");
+                                                .ShouldEqual("||jquery*.red||");
 
         It should_be_with_class_b = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   .Do()
@@ -135,7 +131,7 @@
                                                   .OnSuccess(dsl => dsl.WithClass(B.Active).Core().Form.Validation.Parse())
                                                   .GetAll<ExecutableValidationParse>()
                                                   .First()["target"]
-                                                  .ShouldEqual("$('.active')");
+                                                  .ShouldEqual("||jquery*.active||");
 
         It should_be_with_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do()

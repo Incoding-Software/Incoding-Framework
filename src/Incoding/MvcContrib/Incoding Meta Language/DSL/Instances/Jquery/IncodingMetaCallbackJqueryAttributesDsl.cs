@@ -103,7 +103,7 @@
         /// </param>
         public IExecutableSetting RemoveClass(string @class)
         {
-            return plugInDsl.Core().JQuery.Call("removeClass", @class);
+            return this.plugInDsl.Registry(new ExecutableJquery(ExecutableJquery.Method.RemoveClass, new[] { @class }));            
         }
 
         /// <summary>

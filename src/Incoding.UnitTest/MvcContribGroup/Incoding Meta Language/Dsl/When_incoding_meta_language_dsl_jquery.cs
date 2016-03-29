@@ -106,38 +106,32 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                 });
 
         It should_be_remove_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  
                                                   .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass("class"))
-                                                  .GetExecutable<ExecutableEvalMethod>()
+                                                  .GetExecutable<ExecutableJquery>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {
-                                                                           { "method", "removeClass" }, 
-                                                                           { "args", new[] { "class" } }, 
-                                                                           { "context", "$(this.target)" }
+                                                                           { "method", 2 },
+                                                                           { "args", new[] { "class" } }
                                                                    });
 
         It should_be_remove_class_by_bootstrap = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                               
                                                                .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass(B.Active))
-                                                               .GetExecutable<ExecutableEvalMethod>()
+                                                               .GetExecutable<ExecutableJquery>()
                                                                .ShouldEqualData(new Dictionary<string, object>
                                                                                 {
-                                                                                        { "method", "removeClass" }, 
-                                                                                        { "context", "$(this.target)" }, 
+                                                                                        { "method", 2 },
                                                                                         { "args", new[] { "active" } }
                                                                                 });
 
         It should_be_remove_class_by_bootstrap_multiple = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                        
                                                                         .OnSuccess(r => r.Self().JQuery.Attr.RemoveClass(B.Active | B.Disabled))
-                                                                        .GetExecutable<ExecutableEvalMethod>()
+                                                                        .GetExecutable<ExecutableJquery>()
                                                                         .ShouldEqualData(new Dictionary<string, object>
                                                                                          {
-                                                                                                 { "method", "removeClass" }, 
-                                                                                                 { "context", "$(this.target)" }, 
+                                                                                                 { "method", 2 },
                                                                                                  { "args", new[] { "active disabled" } }
                                                                                          });
-
+                                                                     
         It should_be_toggle_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   
                                                   .OnSuccess(r => r.Self().JQuery.Attr.ToggleClass("class"))

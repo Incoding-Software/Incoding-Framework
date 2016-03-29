@@ -26,7 +26,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                  {
                                                          { "onBind", "click incoding" }, 
                                                          { "onStatus", 2 }, 
-                                                         { "target", "$('#id')" }, 
+                                                         { "target", "||jquery*#id||" }, 
                                                          { "onEventStatus", 1 }, 
                                                  };
 
@@ -51,7 +51,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                          { "trigger", "click" },                                                                         
                                                                          { "onBind", "click incoding" },
                                                                          { "onStatus", 2 },
-                                                                         { "target", "$('#FirstId')" },
+                                                                         { "target", "||jquery*#FirstId||" },
                                                                          { "onEventStatus", 1 },
                                                                  });
 
@@ -67,7 +67,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                          { "method", "reset" }, 
                                                                          { "onBind", "click incoding" }, 
                                                                          { "onStatus", 2 }, 
-                                                                         { "target", "$('#NextId')" }, 
+                                                                         { "target", "||jquery*#NextId||" }, 
                                                                          { "onEventStatus", 1 }, 
                                                                  });
     }
