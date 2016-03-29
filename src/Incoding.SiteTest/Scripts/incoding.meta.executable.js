@@ -45,8 +45,9 @@ function ExecutableBase() {
     this.result = '';
     this.resultOfEvent = '';
     this.getTarget = function() {
-
         if (this.target instanceof jQuery) {
+            this.target.splice(0, this.target.length);
+            this.target.push.apply(this.target, this.target);
             return this.target;
         }
 
