@@ -258,7 +258,9 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
         var fragmentParams = href.fparam();
         $.eachProperties(fragmentParams, function() {
             var name = this.replace(current.jsonData.prefix + '__', '');
-            ajaxOptions.data.push({ name : name, selector : fragmentParams[this] });
+            if (!ExecutableHelper.IsNullOrEmpty(name)) {
+                ajaxOptions.data.push({ name : name, selector : fragmentParams[this] });
+            }
         });
 
     }
