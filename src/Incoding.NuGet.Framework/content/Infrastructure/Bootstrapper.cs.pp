@@ -32,8 +32,7 @@
 
             IoCFactory.Instance.Initialize(init => init.WithProvider(new StructureMapIoCProvider(registry =>
                                                                                                      {
-                                                                                                         registry.For<IDispatcher>().Use<DefaultDispatcher>();
-                                                                                                         registry.For<IEventBroker>().Use<DefaultEventBroker>();
+                                                                                                         registry.For<IDispatcher>().Use<DefaultDispatcher>();                                                                                                         
                                                                                                          registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
 
                                                                                                          var configure = Fluently
