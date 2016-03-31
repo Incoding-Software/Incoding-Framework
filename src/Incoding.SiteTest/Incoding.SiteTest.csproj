@@ -346,6 +346,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Labs\Action_Event\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

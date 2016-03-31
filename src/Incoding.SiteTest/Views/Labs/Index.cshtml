@@ -25,20 +25,24 @@
     @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.engine.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.executable.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.conditional.js"))
-    @Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))
+    @*@Html.Incoding().Script(Url.Content("~/Scripts/incoding.meta.trace.js"))*@
     <script>
         TemplateFactory.Version = '@Guid.NewGuid().ToString()'
     </script>
 </head>
 <body>
-@(Html.When(JqueryBind.InitIncoding)      
-      .OnSuccess(dsl => dsl.Self().Trigger.Invoke(JqueryBind.None).TimeOut(1000))
-      .When(JqueryBind.None)
-      .Ajax(Url.Action("GetVal", new { orginal = "12" }))
-      .OnSuccess(dsl => dsl.Self().JQuery.Attr.RemoveClass("hide").If(() => Selector.Result == "1212"))
-      .AsHtmlAttributes(new { @class = "label label-important notice-top hide" })
-      .ToTag(HtmlTag.Span, @<text>
-                               Test
-                            </text>))
+
+@(Html.When(JqueryBind.Click)      
+      .Direct(new [] {new KeyValueVm(1),new KeyValueVm(2)})
+      .OnSuccess(dsl => dsl.WithId("Id").Trigger.None())
+      .AsHtmlAttributes()
+      .ToButton("Test"))
+
+@(Html.When(JqueryBind.None)
+      .Event()
+      .Where<KeyValueVm>(vm => vm.Value == "1")
+      .OnSuccess(dsl => dsl.Window.Alert("Test").If(() => !Selector.Result.IsEmpty()))
+      .AsHtmlAttributes(new {id = "Id" })
+      .ToDiv())
 </body>
 </html>

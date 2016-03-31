@@ -20,7 +20,31 @@ ExecutableFactory.Create = function(type, data, self) {
         interval : data.interval,
         intervalId : data.intervalId,
         ands: data.ands,
-        target: data.target
+        target: data.target,
+        getTarget: function () {
+
+            if (ExecutableHelper.IsNullOrEmpty(data.target))
+                return '';
+
+            if (this.target instanceof jQuery) {
+                this.target.splice(0, this.target.length);
+                this.target.push.apply(this.target, this.target);
+                return this.target;
+            }
+
+            if (data.target === "$(this.self)") {
+                this.target = this.self;
+            }
+            else if (data.target.startsWith("||") && data.target.endWith("||")) {
+                var selector = data.target.substring(2, data.target.length - 2).substring(data.target.indexOf('*') - 1, data.target.length);
+                this.target = $(selector);
+            }
+            else {
+                this.target = eval(data.target);
+            }
+
+            return this.target;
+        }
     });
 
 };
@@ -43,27 +67,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
-    this.getTarget = function() {
-
-        if (this.target instanceof jQuery) {
-            this.target.splice(0, this.target.length);
-            this.target.push.apply(this.target, this.target);
-            return this.target;
-        }
-
-        if (this.target === "$(this.self)") {
-            this.target = this.self;
-        }
-        else if (this.target.startsWith("||") && this.target.endWith("||")) {
-            var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
-            this.target = $(selector);
-        }
-        else {
-            this.target = eval(this.target);
-        }
-    };
-
+    this.resultOfEvent = '';    
 }
 
 ExecutableBase.prototype = {
@@ -150,7 +154,7 @@ function ExecutableActionBase() {
 
 $.extend(ExecutableActionBase.prototype, {
     complete : function(result, state) {
-
+        
         if (!ExecutableHelper.IsNullOrEmpty(result.redirectTo)) {
             ExecutableHelper.RedirectTo(result.redirectTo);
             return;
@@ -226,8 +230,8 @@ function ExecutableEventAction() {
 }
 
 ExecutableEventAction.prototype.name = "Event";
-ExecutableEventAction.prototype.internalExecute = function(state) {
-    this.complete(state.eventResult, state);
+ExecutableEventAction.prototype.internalExecute = function (state) {    
+    this.complete(IncodingResult.Success(this.resultOfEvent), state);
 };
 
 //#endregion

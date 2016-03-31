@@ -5,6 +5,8 @@ namespace Incoding.MvcContrib
     using System;
     using System.Linq.Expressions;
     using System.Web.Mvc;
+    using Incoding.Block.IoC;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MvcContrib.MVD;
 
@@ -21,6 +23,11 @@ namespace Incoding.MvcContrib
 
 
         #region Factory constructors
+
+        public static IDispatcher Dispatcher(this HtmlHelper htmlHelper)
+        {
+            return  IoCFactory.Instance.TryResolve<IDispatcher>();
+        }
 
         public static IncodingHtmlHelperFor<TModel, TProperty> For<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
         {
