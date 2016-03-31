@@ -51,17 +51,12 @@
                                                                        .ToArray());
             }
 
-            var instance = Activator.CreateInstance(instanceType);
-
-            new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
-                                                                                             {
-                                                                                                     ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
-                                                                                                     ModelState = ModelState ?? new ModelStateDictionary(),
-                                                                                                     PropertyFilter = propertyName => true,
-                                                                                                     ModelName = instanceType.Name,
-                                                                                                     ValueProvider = formCollection
-                                                                                             });
-            return instance;
+            return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
+                                                                                                    {
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
+                                                                                                            ModelState = ModelState ?? new ModelStateDictionary(),
+                                                                                                            ValueProvider = formCollection
+                                                                                                    });
         }
 
         #region Nested classes

@@ -57,6 +57,11 @@
     public class SignUpAdvertiserCommand : SignUpAccountCommand
     {
 
+        public class Tmpl
+        {
+            public string Id { get; set; }
+        }
+
         #region Properties
 
         public string ReEmail { get; set; }
