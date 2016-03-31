@@ -1,4 +1,5 @@
 ﻿@using Incoding.SiteTest
+@using Incoding.SiteTest.Domain
 @model AddProductCommand
 <!DOCTYPE html>
 <html>
@@ -31,18 +32,8 @@
     </script>
 </head>
 <body>
-
-@(Html.When(JqueryBind.Click)      
-      .Direct(new [] {new KeyValueVm(1),new KeyValueVm(2)})
-      .OnSuccess(dsl => dsl.WithId("Id").Trigger.None())
-      .AsHtmlAttributes()
-      .ToButton("Test"))
-
-@(Html.When(JqueryBind.None)
-      .Event()
-      .Where<KeyValueVm>(vm => vm.Value == "1")
-      .OnSuccess(dsl => dsl.Window.Alert("Test").If(() => !Selector.Result.IsEmpty()))
-      .AsHtmlAttributes(new {id = "Id" })
-      .ToDiv())
+<a href="@Url.Dispatcher().Model(new SignUpAdvertiserCommand()).AsView("~/Views/Labs/MVD/SignUpAdvertiser.cshtml")">
+    Test
+</a>
 </body>
 </html>

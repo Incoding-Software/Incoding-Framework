@@ -19,20 +19,18 @@ ExecutableFactory.Create = function(type, data, self) {
         timeOut : data.timeOut,
         interval : data.interval,
         intervalId : data.intervalId,
-        ands: data.ands,
-        target: data.target,
-        getTarget: function () {
+        ands : data.ands,
+        target : data.target,
+        getTarget : function() {
 
-            if (ExecutableHelper.IsNullOrEmpty(data.target))
+            if (ExecutableHelper.IsNullOrEmpty(data.target)) {
                 return '';
-
-            if (this.target instanceof jQuery) {
-                this.target.splice(0, this.target.length);
-                this.target.push.apply(this.target, this.target);
-                return this.target;
             }
 
-            if (data.target === "$(this.self)") {
+            if (this.target instanceof jQuery) {
+                this.target = $(this.target);
+            }
+            else if (data.target === "$(this.self)") {
                 this.target = this.self;
             }
             else if (data.target.startsWith("||") && data.target.endWith("||")) {

@@ -101,6 +101,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -193,6 +197,7 @@
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Domain\AddAsSyncProductCommand.cs" />
+    <Compile Include="Domain\Class1.cs" />
     <Compile Include="Domain\TestCommand.cs" />
     <Compile Include="Domain\AddProductCommand.cs" />
     <Compile Include="Domain\GetProductQuery.cs" />
@@ -343,6 +348,7 @@
     <Content Include="Views\Jasmine\Perfromance.cshtml" />
     <Content Include="Views\Labs\Inc Controls\drop_down_optional.cshtml" />
     <Content Include="Views\Labs\Event Selector\Event_Data.cshtml" />
+    <Content Include="Views\Labs\MVD\SignUpAdvertiser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

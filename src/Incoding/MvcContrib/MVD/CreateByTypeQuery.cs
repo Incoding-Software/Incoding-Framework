@@ -58,6 +58,7 @@
                                                                                                      ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => instance, instanceType),
                                                                                                      ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                      PropertyFilter = propertyName => true,
+                                                                                                     ModelName = instanceType.Name,
                                                                                                      ValueProvider = formCollection
                                                                                              });
             return instance;

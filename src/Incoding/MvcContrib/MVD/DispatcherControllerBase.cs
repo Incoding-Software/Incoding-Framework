@@ -104,6 +104,8 @@
                 var instance = dispatcher.Query(new CreateByTypeQuery()
                                                 {
                                                         Type = incType,
+                                                        ControllerContext = ControllerContext,
+                                                        ModelState = ModelState,
                                                         IsModel = incIsModel.GetValueOrDefault()
                                                 });
 

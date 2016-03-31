@@ -41,7 +41,7 @@ namespace Incoding.CQRS
                         if (unitOfWork.IsValueCreated)
                             unitOfWork.Value.Flush();                        
                     }
-                    catch (Exception exception)
+                    catch
                     {
                         isThrow = true;                        
                         throw;
