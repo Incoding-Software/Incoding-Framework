@@ -14,8 +14,7 @@
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-        public ControllerContext ControllerContext { get; set; }
-
+      
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -119,6 +118,9 @@
         public bool IsModel { get; set; }
 
         public ModelStateDictionary ModelState { get; set; }
+
+        public ControllerContext ControllerContext { get; set; }
+
 
         #endregion
     }
