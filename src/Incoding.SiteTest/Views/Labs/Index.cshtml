@@ -32,7 +32,7 @@
     </script>
 </head>
 <body>
-<a href="@Url.Dispatcher().Model(new SignUpAdvertiserCommand.Tmpl() {Id = "test"}).AsView("~/Views/Labs/MVD/SignUpAdvertiser.cshtml")">
+<a href="@Url.Dispatcher().Model(true).AsView("~/Views/Labs/MVD/SignUpAdvertiser.cshtml")">
     Test
 </a>
 </body>

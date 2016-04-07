@@ -8,6 +8,7 @@
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
+    using Incoding.Data;
     using Incoding.Extensions;
 
     #endregion
@@ -79,11 +80,13 @@
                 string name = HttpUtility.UrlDecode(Type).Replace(" ", "+");
                 return cache.GetOrAdd(name, () =>
                                             {
-                                                var allSatisfied = AppDomain.CurrentDomain.GetAssemblies()
-                                                                            .Select(r => r.GetLoadableTypes())
-                                                                            .SelectMany(r => r)
-                                                                            .Where(r => !r.IsAbstract && r.IsClass)
-                                                                            .Where(type => type.Name.EqualsWithInvariant(name) || type.FullName.EqualsWithInvariant(name));
+                                                var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+                                                                        .Select(r => r.GetLoadableTypes())
+                                                                        .SelectMany(r => r)
+                                                                        .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
+                                                                        .ToList();
+
+                                                var allSatisfied = allTypes.Where(type => type.Name.EqualsWithInvariant(name) || type.FullName.EqualsWithInvariant(name));
 
                                                 if (!allSatisfied.Any())
                                                     throw new IncMvdException("Not found any type {0}".F(name));

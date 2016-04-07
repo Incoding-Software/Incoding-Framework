@@ -374,9 +374,7 @@
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query_with_inheritance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name_with_encode.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_with_inner_class_by_full_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type.cs" />
     <Compile Include="MvcContribGroup\Template\Server Side\Class1.cs" />
     <Compile Include="MvcContribGroup\When_inc_optional.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
@@ -784,7 +782,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
