@@ -383,6 +383,7 @@
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_select_list_to_key_values.cs" />
     <Compile Include="MvcContribGroup\Extensions\When_html_extensions.cs" />
     <Compile Include="MvcContribGroup\When_inc_html_string_cast.cs" />
+    <Compile Include="MvcContribGroup\When_inc_select_list.cs" />
     <Compile Include="MvcContribGroup\When_inc_select_list_cast.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_attr_attributes.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_control_set_attributes.cs" />
@@ -432,14 +433,14 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_target.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options_data.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_data_selector.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_result_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_event_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_java_script_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_issue.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_location_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_geolocation_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_js_date_time_selector.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_add_method.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_method.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_equal.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector_value_extensions.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_selector_cast.cs" />
@@ -728,7 +729,7 @@
     <Compile Include="MvcContribGroup\Incoding Meta Language\Selector\When_jquery_selector.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\Incoding Meta Container\When_incoding_meta_container_add.cs" />
     <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_form_options.cs" />
-    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options_with_url.cs" />
+    <Compile Include="MvcContribGroup\Incoding Meta Language\JqueryOptions\When_jquery_ajax_options_with_data.cs" />
     <Compile Include="MvcContribGroup\When_web_enum_convert.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\FakeEnum.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\FakeItemCollection.cs" />
@@ -782,7 +783,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

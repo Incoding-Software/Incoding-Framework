@@ -56,5 +56,13 @@
                                                 IncSelectList list = select;
                                                 ((SelectList)list).Items.ShouldEqualWeak(strings.Select(r => new KeyValueVm(r)));
                                             };
+
+        It should_be_inc_select_list = () =>
+                                       {
+                                           var strings = Pleasure.Generator.Invent<string[]>();
+                                           var select = new SelectList(strings);
+                                           IncSelectList list = select;
+                                           ((SelectList)list).Items.ShouldEqualWeak(strings.Select(r => new KeyValueVm(r)));
+                                       };
     }
 }
