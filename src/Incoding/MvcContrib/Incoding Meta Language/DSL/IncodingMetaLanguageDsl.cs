@@ -120,6 +120,28 @@
             return meta.AsHtmlAttributes(htmlAttributes);
         }
 
+        public RouteValueDictionary AsHtmlAttributes(string id = "", string classes = "", bool disabled = false, bool readOnly = false,
+                                                     bool autocomplete = false, string placeholder = "", string title = "")
+        {
+            var routes = new RouteValueDictionary();
+            if (!string.IsNullOrWhiteSpace(id))
+                routes.Add(HtmlAttribute.Id.ToStringLower(), id);
+            if (!string.IsNullOrWhiteSpace(placeholder))
+                routes.Add(HtmlAttribute.Placeholder.ToStringLower(), placeholder);
+            if (!string.IsNullOrWhiteSpace(title))
+                routes.Add(HtmlAttribute.Placeholder.ToStringLower(), title);
+            if (!string.IsNullOrWhiteSpace(classes))
+                routes.Add(HtmlAttribute.Class.ToStringLower(), classes);
+            if (disabled)
+                routes.Add(HtmlAttribute.Disabled.ToStringLower(), HtmlAttribute.Disabled.ToStringLower());
+            if (readOnly)
+                routes.Add(HtmlAttribute.Readonly.ToStringLower(), HtmlAttribute.Readonly.ToStringLower());
+            if (autocomplete)
+                routes.Add(HtmlAttribute.AutoComplete.ToStringLower(), HtmlAttribute.AutoComplete.ToStringLower());
+
+            return meta.AsHtmlAttributes(routes);
+        }
+
         public string AsStringAttributes(object htmlAttributes = null)
         {
             return meta.AsHtmlAttributes(htmlAttributes).Aggregate(string.Empty, (s, pair) => s += " {0}=\"{1}\" ".F(pair.Key, HttpUtility.HtmlEncode(pair.Value)));

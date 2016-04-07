@@ -11,29 +11,43 @@
     [Subject(typeof(IncodingMetaLanguageDsl))]
     public class When_incoding_meta_language_as
     {
-        It should_be_as_html_attribute_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                                    .Do()
-                                                                                    .Direct()
-                                                                                    .OnComplete(r =>
-                                                                                                {                                                                                                        
-                                                                                                        r.Self().Core().Form.Validation.Parse();
-                                                                                                        r.WithId("Id").Core().Form.Validation.Parse();
-                                                                                                        r.WithClass("Test").Core().Form.Validation.Parse();
-                                                                                                    })
-                                                                                    .AsHtmlAttributes(new { @class = "myClass" })
-                                                                                    .ShouldNotBeNull(), 1000)
-                                                                   .ShouldBeLessThan(250);
-
         It should_be_as_html_attribute = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                        .Do().Direct()
                                                        .OnComplete(r => r.Self().Core().Form.Validation.Parse())
                                                        .AsHtmlAttributes(new { @class = "myClass" })
                                                        .Should(dictionary =>
-                                                                   {
-                                                                       dictionary.Count.ShouldEqual(2);
-                                                                       dictionary.ShouldBeKeyValue("class", "myClass");
-                                                                       dictionary.ContainsKey("incoding").ShouldBeTrue();
-                                                                   });
+                                                               {
+                                                                   dictionary.Count.ShouldEqual(2);
+                                                                   dictionary.ShouldBeKeyValue("class", "myClass");
+                                                                   dictionary.ContainsKey("incoding").ShouldBeTrue();
+                                                               });
+
+        It should_be_as_html_attribute_by_optional = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                   .AsHtmlAttributes(id: "id", classes: "myClass", readOnly: true, disabled: true, autocomplete: true, placeholder: "placeholder",title:"title")
+                                                                   .Should(dictionary =>
+                                                                           {
+                                                                               dictionary.Count.ShouldEqual(7);
+                                                                               dictionary.ShouldBeKeyValue("class", "myClass");
+                                                                               dictionary.ShouldBeKeyValue("id", "id");
+                                                                               dictionary.ShouldBeKeyValue("disabled", "disabled");
+                                                                               dictionary.ShouldBeKeyValue("readonly", "readonly");
+                                                                               dictionary.ShouldBeKeyValue("autocomplete", "autocomplete");
+                                                                               dictionary.ShouldBeKeyValue("placeholder", "placeholder");
+                                                                               dictionary.ShouldBeKeyValue("title", "title");
+                                                                           });
+
+        It should_be_as_html_attribute_performance = () => Pleasure.Do(i => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                                    .Do()
+                                                                                    .Direct()
+                                                                                    .OnComplete(r =>
+                                                                                                {
+                                                                                                    r.Self().Core().Form.Validation.Parse();
+                                                                                                    r.WithId("Id").Core().Form.Validation.Parse();
+                                                                                                    r.WithClass("Test").Core().Form.Validation.Parse();
+                                                                                                })
+                                                                                    .AsHtmlAttributes(new { @class = "myClass" })
+                                                                                    .ShouldNotBeNull(), 1000)
+                                                                   .ShouldBeLessThan(250);
 
         It should_be_as_string_attribute = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                          .Do()
