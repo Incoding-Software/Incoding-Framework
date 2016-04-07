@@ -197,12 +197,13 @@
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Domain\AddAsSyncProductCommand.cs" />
-    <Compile Include="Domain\Class1.cs" />
+    <Compile Include="Domain\SignUpAccountCommand.cs" />
+    <Compile Include="Domain\SignUpAdvertiserCommand.cs" />
     <Compile Include="Domain\TestCommand.cs" />
     <Compile Include="Domain\AddProductCommand.cs" />
     <Compile Include="Domain\GetProductQuery.cs" />
     <Compile Include="Domain\Product.cs" />
-    <Compile Include="Domain\Sample.cs" />
+    <Compile Include="Domain\SampleOfCQRS.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -370,12 +370,12 @@
     <Compile Include="MSpecGroup\PleasureGroup\Compare\When_compare_factory_with_duplication.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
+    <Compile Include="MvcContribGroup\Core\When_inc_validation_factory_get_validator_by_generic.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query_with_inheritance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_by_full_name_with_encode.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_with_inner_class_by_full_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type.cs" />
+    <Compile Include="MvcContribGroup\Template\Server Side\Class1.cs" />
     <Compile Include="MvcContribGroup\When_inc_optional.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
     <Compile Include="MvcContribGroup\Core\Inc Controller\NoAjax\When_inc_controller_base_try_push__multiple_error_result.cs" />
@@ -665,7 +665,7 @@
     <Compile Include="MvcContribGroup\HttpMemoryPostedFile\When_memory_posted_file_from_http_posted_file.cs" />
     <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_create_ctor.cs" />
     <Compile Include="MvcContribGroup\ViewModel\When_key_value_vm_equal.cs" />
-    <Compile Include="MvcContribGroup\Core\When_inc_validation_factory.cs" />
+    <Compile Include="MvcContribGroup\Core\When_inc_validation_factory_get_validator_by_type.cs" />
     <Compile Include="MvcContribGroup\Extensions\Select List Extensions\When_collection_to_select_list_with_all_parameter.cs" />
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_error.cs" />
     <Compile Include="MvcContribGroup\IncodingResult\When_incoding_result_with_redirect_to.cs" />

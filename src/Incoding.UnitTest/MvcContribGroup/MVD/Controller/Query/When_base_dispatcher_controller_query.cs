@@ -19,10 +19,14 @@
 
         Establish establish = () =>
                               {
-                                  var res = Pleasure.Generator.Invent<ShareQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)res);
+                                  var query = Pleasure.Generator.Invent<ShareQuery>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Tuning(r => r.IsGroup, false)
+                                                                                                              .Tuning(r => r.IsModel, false)
+                                                                                                              .Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)query);
                                   queryResult = Pleasure.Generator.String();
-                                  dispatcher.StubQuery(new ShareQuery(), queryResult);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)queryResult);
                               };
 
         Because of = () => { result = controller.Query(typeof(ShareQuery).Name, false); };

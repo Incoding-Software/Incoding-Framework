@@ -13,7 +13,7 @@
     #endregion
 
     [Subject(typeof(IncValidatorFactory))]
-    public class When_inc_validation_factory
+    public class When_inc_validation_factory_get_validator_by_type
     {
         Establish establish = () =>
                               {

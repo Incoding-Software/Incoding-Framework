@@ -1,5 +1,4 @@
-﻿@using Incoding.MvcContrib
-@using Incoding.SiteTest
+﻿@using Incoding.SiteTest
 @using Incoding.SiteTest.Domain
 @model AddProductCommand
 <!DOCTYPE html>
@@ -33,14 +32,8 @@
     </script>
 </head>
 <body>
-@Html.ForGroup(r => r.Name2).DropDown(control =>
-                                      {
-                                          control.Input.Data.Optional = "";
-                                          control.Input.Data = new List<KeyValueVm>()
-                                                               {
-                                                                       new KeyValueVm(1, "1"),
-                                                                       new KeyValueVm(2, "2"),
-                                                               }.ToOptGroup();
-                                      })
+<a href="@Url.Dispatcher().Model(true).AsView("~/Views/Labs/MVD/SignUpAdvertiser.cshtml")">
+    Test
+</a>
 </body>
 </html>

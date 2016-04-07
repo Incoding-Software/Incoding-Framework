@@ -44,6 +44,8 @@
                                               .Incoding()
                                               .ShouldNotBeNull();
 
+        It should_be_dispatcher = () => {  };
+
         It should_be_for = () => htmlHelper
                                          .Original
                                          .For(r => r.Prop)
