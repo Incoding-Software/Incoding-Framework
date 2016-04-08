@@ -16,13 +16,40 @@
     {
         #region Fake classes
 
+        public class AddOrEditProgramBrokerCommand
+        {
+            public int? Id { get; set; }
+
+            public int DealId { get; set; }
+
+            public int BrokerId { get; set; }
+
+            public string Individual { get; set; }
+
+            public bool IsDeleted { get; set; }
+
+            public class AddOrEditProgramBrokerAsArrayCommand
+            {
+                public AddOrEditProgramBrokerCommand[] ProgramBrokers { get; set; }
+
+                public int Index { get; set; }
+            }
+        }
+
         class FakeForm
         {
+            class FakeInner
+            {
+                public int Prop { get; set; }
+            }
+
             #region Properties
 
             public FakeInput Input { get; set; }
 
             public decimal Prop { get; set; }
+
+            public FakeInput[] Inner { get; set; }
 
             #endregion
 
@@ -127,6 +154,24 @@
                                                     .Selector()
                                                     .Name(r => r.Prop).ToString()
                                                     .ShouldEqual("$('[name=\"Prop\"]')");
+
+        It should_be_to_name_helper_array = () => MockHtmlHelper<FakeForm>
+                                                          .When()
+                                                          .Original
+                                                          .Selector()
+                                                          .Name(r => r.Inner[0].Long).ToString()
+                                                          .ShouldEqual("$('[name=\"Inner[0].Long\"]')");
+
+        It should_be_to_name_helper_array_in_nestead = () =>
+                                                       {
+                                                           var index = 6;
+                                                           MockHtmlHelper<AddOrEditProgramBrokerCommand.AddOrEditProgramBrokerAsArrayCommand>
+                                                                   .When()
+                                                                   .Original
+                                                                   .Selector()
+                                                                   .Name(s => s.ProgramBrokers[index].BrokerId).ToString()
+                                                                   .ShouldEqual("$('[name=\"ProgramBrokers[6].BrokerId\"]')");
+                                                       };
 
         It should_be_to_name_nullable_expression = () => Selector.Jquery
                                                                  .Name<FakeForm>(r => r.Input.HealthCareSystemId).ToString()
@@ -271,9 +316,9 @@
                                              .ShouldEqual("$('.class,.class2')");
 
         It should_be_multiple_class = () => Selector.Jquery
-                                             .Class("class").Filter(r=>r.Class("class2"))
-                                             .ToString()
-                                             .ShouldEqual("$('.class').filter('.class2')");
+                                                    .Class("class").Filter(r => r.Class("class2"))
+                                                    .ToString()
+                                                    .ShouldEqual("$('.class').filter('.class2')");
 
         It should_be_class_trim = () => Selector.Jquery
                                                 .Class("  class   ")
@@ -331,7 +376,7 @@
                                           .Also(r => r.Class("next"))
                                           .ToString()
                                           .ShouldEqual("$('.first.next')");
-  
+
         It should_be_complex = () => Selector.Jquery
                                              .Self()
                                              .Find(jquerySelector => jquerySelector.Tag(HtmlTag.Input).EqualsAttribute(HtmlAttribute.Type, "text"))

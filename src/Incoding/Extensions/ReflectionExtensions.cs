@@ -50,7 +50,7 @@ namespace Incoding.Extensions
 
         public static string GetMemberName(this LambdaExpression lambdaExpression)
         {
-            string result = ExpressionHelper.GetExpressionText(lambdaExpression);
+            string result = ExpressionHelper.GetExpressionText((LambdaExpression)lambdaExpression);
             if (!string.IsNullOrWhiteSpace(result))
                 return result;
 

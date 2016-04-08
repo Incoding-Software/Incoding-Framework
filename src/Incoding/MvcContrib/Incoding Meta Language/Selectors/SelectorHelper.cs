@@ -11,9 +11,9 @@ namespace Incoding.MvcContrib
     {
         #region Api Methods
 
-        public JquerySelectorExtend Name(Expression<Func<TModel, object>> property)
+        public JquerySelectorExtend Name<TProperty>(Expression<Func<TModel, TProperty>> property)
         {
-            return Selector.Jquery.Name(property);
+            return Selector.Jquery.Name<TModel,TProperty>(property);
         }
 
         public JquerySelectorExtend Id(Expression<Func<TModel, object>> property)

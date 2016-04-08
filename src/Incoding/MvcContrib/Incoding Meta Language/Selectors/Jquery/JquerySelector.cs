@@ -208,6 +208,15 @@
                                    .ToArray());
         }
 
+        /// <summary>
+        ///     Selects a single element with the given <paramref name="expressions" /> attribute.
+        /// </summary>
+        public JquerySelectorExtend Name<TModel, TProperty>(params Expression<Func<TModel, TProperty>>[] expressions)
+        {
+            return Name(expressions.Select(r => r.GetMemberName())
+                                   .ToArray());
+        }
+
         public JquerySelectorExtend Tag(HtmlTag tag)
         {
             AndSelector(tag.ToStringLower());
