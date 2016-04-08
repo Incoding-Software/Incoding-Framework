@@ -115,9 +115,14 @@
             return On(IncodingCallbackStatus.Success, action);
         }
 
-        public RouteValueDictionary AsHtmlAttributes(object htmlAttributes = null)
+        public RouteValueDictionary AsHtmlAttributes(object htmlAttributes)
         {
             return meta.AsHtmlAttributes(htmlAttributes);
+        }
+
+        public RouteValueDictionary AsHtmlAttributes()
+        {
+            return AsHtmlAttributes(null);
         }
 
         public RouteValueDictionary AsHtmlAttributes(string id = "", string classes = "", bool disabled = false, bool readOnly = false,
