@@ -26,7 +26,7 @@
                                                                    .AsHtmlAttributes(id: "id", classes: "myClass", readOnly: true, disabled: true, autocomplete: true, placeholder: "placeholder",title:"title")
                                                                    .Should(dictionary =>
                                                                            {
-                                                                               dictionary.Count.ShouldEqual(7);
+                                                                               dictionary.Count.ShouldEqual(8);
                                                                                dictionary.ShouldBeKeyValue("class", "myClass");
                                                                                dictionary.ShouldBeKeyValue("id", "id");
                                                                                dictionary.ShouldBeKeyValue("disabled", "disabled");
