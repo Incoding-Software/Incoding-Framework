@@ -129,7 +129,7 @@
             if (!string.IsNullOrWhiteSpace(placeholder))
                 routes.Add(HtmlAttribute.Placeholder.ToStringLower(), placeholder);
             if (!string.IsNullOrWhiteSpace(title))
-                routes.Add(HtmlAttribute.Placeholder.ToStringLower(), title);
+                routes.Add(HtmlAttribute.Title.ToStringLower(), title);
             if (!string.IsNullOrWhiteSpace(classes))
                 routes.Add(HtmlAttribute.Class.ToStringLower(), classes);
             if (disabled)
