@@ -491,6 +491,9 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
             isWasRefresh = false;
             break;
         }
+        if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.prefix)) {
+            item.name = "{0}.{1}".f(this.jsonData.prefix, item.name);
+        }
 
         var input = $('[name]', this.target).filter(function() {
             return $(this).attr('name').toLowerCase() == item.name.toString().toLowerCase();
