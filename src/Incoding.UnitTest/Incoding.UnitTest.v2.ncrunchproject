@@ -31,55 +31,7 @@
       <TestName>Incoding.UnitTest.Block.When_structure_map_create_by_in_line_initialize.Behaviors_disposable_ioc_provider:should_be_disposable_without_exception</TestName>
     </NamedTestSelector>
     <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_mongo_db_repository</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_rave_db_repository</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_raven_db_scenario</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.When_entity_framework_unit_of_work.should_be_dispose</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.When_save_DelayToScheduler.should_be_raven_db</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_entity_framework_unit_of_work</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_entity_framework_unit_of_work_factory</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.Block.When_dry_ioc_create_by_container</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.Block.When_ninject_created_by_modules</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.Block.When_simple_injector_ioc</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.Block.When_structure_map_create_by_class_registry</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.Block.When_structure_map_create_by_in_line_initialize</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MSpecGroup.When_persistence_specification_with_instance.should_be_mongo_db</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MSpecGroup.When_persistence_specification_with_instance.should_be_raven_db</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_composite_as_array</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_composite_by_name</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_composite_generic</FixtureName>
     </FixtureTestSelector>
     <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_generic</FixtureName>
@@ -97,49 +49,16 @@
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_inner_class_without_encode</FixtureName>
     </FixtureTestSelector>
     <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_only_validate</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_with_encode</FixtureName>
     </FixtureTestSelector>
     <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_multiple_generic</FixtureName>
     </FixtureTestSelector>
     <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_only_validate_success</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_by_full_name</FixtureName>
     </FixtureTestSelector>
     <NamedTestSelector>
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_by_full_name.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_with_empty_content_type</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_with_empty_content_type.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_with_empty_file_name</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_to_file_with_empty_file_name.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_model</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_model.should_be_render</TestName>
     </NamedTestSelector>
     <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_model_by_full_name</FixtureName>
@@ -157,39 +76,6 @@
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_model_generic.should_be_render</TestName>
     </NamedTestSelector>
     <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_query</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_query.should_be_render</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_query_as_model</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_with_query_as_model.should_be_render</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_without_ajax</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_without_ajax.should_be_content</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_render_without_ajax.should_be_render</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_typical_model</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_typical_model.should_be_enum</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_conditional_data</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_conditional_data.should_be_data_equal_to_enum</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_create_by_type_ambiguous_instance</FixtureName>
     </FixtureTestSelector>
     <NamedTestSelector>
@@ -201,48 +87,6 @@
     <NamedTestSelector>
       <TestName>Incoding.UnitTest.MvcContribGroup.When_create_by_type_with_empty_inc_types.should_be_exception</TestName>
     </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_dispatcher_controller_duplicate</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_dispatcher_controller_duplicate.should_be_duplicate</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_dispatcher_controller_filter</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_dispatcher_controller_filter.should_be_init</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_checkbox_control_checked</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control_with_on_change</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control_with_on_init</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control_with_url</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control_with_url_and_cache</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_drop_down_control_with_url_and_optional</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_horizontal_control_v3</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_horizontal_control_v3_input_as_static</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_inc_list_box_control</FixtureName>
-    </FixtureTestSelector>
     <NamedTestSelector>
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_by_full_name.should_be_result</TestName>
     </NamedTestSelector>
@@ -271,27 +115,6 @@
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_generic_by_full_name.should_be_result</TestName>
     </NamedTestSelector>
     <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_only_validate_error</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_only_validate_error.should_be_error</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_with_validate</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_with_validate.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_without_validate</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_query_without_validate.should_be_result</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_model_state.should_be_result</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
       <FixtureName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_performance</FixtureName>
     </FixtureTestSelector>
     <NamedTestSelector>
@@ -299,21 +122,6 @@
     </NamedTestSelector>
     <NamedTestSelector>
       <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_concurrency.should_be_without_exception</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_base_dispatcher_controller_push_model_state.should_be_data</TestName>
-    </NamedTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_mongo_db_session_factory_open</FixtureName>
-    </FixtureTestSelector>
-    <FixtureTestSelector>
-      <FixtureName>Incoding.UnitTest.When_mongo_db_session_factory_open_without_connection</FixtureName>
-    </FixtureTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_jquery_selector_issue.should_be_self_with_has_attribute</TestName>
-    </NamedTestSelector>
-    <NamedTestSelector>
-      <TestName>Incoding.UnitTest.MvcContribGroup.When_incoding_selector.should_be_ajax_get</TestName>
     </NamedTestSelector>
   </IgnoredTests>
   <AdditionalFilesToInclude>db.config</AdditionalFilesToInclude>
