@@ -19,24 +19,7 @@ namespace Incoding.MvcContrib
 
         #region Properties
 
-        public IncodingMetaCallbackValidationDsl Validation
-        {
-            get { return new IncodingMetaCallbackValidationDsl(this.plugIn); }
-        }
-
-        #endregion
-
-        #region Api Methods
-
-        public IExecutableSetting Reset()
-        {
-            return this.plugIn.Registry(new ExecutableForm("reset"));
-        }
-
-        public IExecutableSetting Clear()
-        {
-            return this.plugIn.Registry(new ExecutableForm("clear"));
-        }
+        public IncodingMetaCallbackValidationDsl Validation { get { return new IncodingMetaCallbackValidationDsl(this.plugIn); } }
 
         #endregion
 
@@ -66,12 +49,26 @@ namespace Incoding.MvcContrib
                 return this.plugIn.Registry(new ExecutableValidationParse());
             }
 
-            public IExecutableSetting Refresh()
+            public IExecutableSetting Refresh(string prefix = "")
             {
-                return this.plugIn.Registry(new ExecutableValidationRefresh());
+                return this.plugIn.Registry(new ExecutableValidationRefresh(prefix));
             }
 
             #endregion
+        }
+
+        #endregion
+
+        #region Api Methods
+
+        public IExecutableSetting Reset()
+        {
+            return this.plugIn.Registry(new ExecutableForm("reset"));
+        }
+
+        public IExecutableSetting Clear()
+        {
+            return this.plugIn.Registry(new ExecutableForm("clear"));
         }
 
         #endregion
