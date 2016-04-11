@@ -35,10 +35,10 @@ namespace Incoding.MvcContrib
             var meta = isAjax ? this.htmlHelper.When(InitBind).Ajax(currentUrl)
                                : this.htmlHelper.When(InitBind);
             attributes = meta.OnSuccess(dsl =>
-                                        {
+                                        {                                            
                                             if (isAjax)
                                             {
-                                                dsl.Self().JQuery.Dom.Empty();                                                 
+                                                dsl.Self().JQuery.Dom.Empty();
                                                 foreach (var vm in (List<KeyValueVm>)Data.Optional)
                                                 {
                                                     var option = new TagBuilder(HtmlTag.Option.ToStringLower());
@@ -48,6 +48,7 @@ namespace Incoding.MvcContrib
                                                 }
                                                 dsl.Self().Insert.WithTemplate(Template).Append();
                                             }
+                                            
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
                                             var isMultiple = this.attributes.ContainsKey(HtmlAttribute.Multiple.ToString());
@@ -74,7 +75,7 @@ namespace Incoding.MvcContrib
                                             OnEvent.Do(action => action(dsl));
                                         })
                              .AsHtmlAttributes(this.attributes);
-            
+
             return this.htmlHelper.DropDownListFor(this.property, isAjax ? new SelectList(new string[] { }) : (SelectList)Data, this.attributes);
         }
 

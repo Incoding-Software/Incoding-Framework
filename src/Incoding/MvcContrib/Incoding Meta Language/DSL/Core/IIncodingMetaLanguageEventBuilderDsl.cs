@@ -23,7 +23,12 @@ namespace Incoding.MvcContrib
 
         IIncodingMetaLanguageEventBuilderDsl OnBreak([NotNull] Action<IIncodingMetaLanguageCallbackBodyDsl> action);
 
-        RouteValueDictionary AsHtmlAttributes([CanBeNull] object htmlAttributes = null);
+        RouteValueDictionary AsHtmlAttributes([CanBeNull] object htmlAttributes);
+
+        RouteValueDictionary AsHtmlAttributes();
+
+        RouteValueDictionary AsHtmlAttributes(string id = "", string classes = "", bool disabled = false, bool readOnly = false,
+                                                     bool autocomplete = false, string placeholder = "", string title = "");
 
         [Obsolete("Please use using(ToBeginTag) instead of string", false)]
         string AsStringAttributes(object htmlAttributes = null);

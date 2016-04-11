@@ -20,6 +20,7 @@
                                                 ((List<KeyValueVm>)optional).ShouldEqualWeak(new[] { value });
                                             };
 
+
         It should_be_cast_to_key_value_vms = () =>
                                              {
                                                  var valueVms = Pleasure.Generator.Invent<KeyValueVm[]>();

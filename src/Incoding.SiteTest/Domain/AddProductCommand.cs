@@ -29,6 +29,7 @@
         #region Properties
 
         public string Name { get; set; }
+        public int Name2 { get; set; }
         public string NameAsNull { get; set; }
         public string FromPost { get; set; }
 
