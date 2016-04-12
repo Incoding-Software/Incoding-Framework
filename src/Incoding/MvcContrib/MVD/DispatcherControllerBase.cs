@@ -3,14 +3,12 @@
     #region << Using >>
 
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
-    using Incoding.Data;
     using Incoding.Extensions;
     using Incoding.Maybe;
 
@@ -28,10 +26,6 @@
 
         static readonly object lockObject = new object();
 
-        static readonly List<Type> types = new List<Type>();
-
-        static readonly ConcurrentDictionary<string, Type> cache = new ConcurrentDictionary<string, Type>();
-
         #endregion
 
         ////ncrunch: no coverage end
@@ -43,40 +37,23 @@
 
         public DispatcherControllerBase(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
         {
-            ////ncrunch: no coverage start
-            if (types.Any())
-                return;
             ////ncrunch: no coverage end
+
+            if (duplicates.Any())
+                return;
 
             lock (lockObject)
             {
-                ////ncrunch: no coverage start
-                if (types.Any())
+                if (duplicates.Any())
                     return;
-                ////ncrunch: no coverage end
 
-                var temp = assemblies
-                        .Select(s => s.GetLoadableTypes())
-                        .SelectMany(r => r);
+                var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+                                        .Select(r => r.GetLoadableTypes())
+                                        .SelectMany(r => r)
+                                        .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
+                                        .ToList();
 
-                if (filterTypes != null)
-                    temp = temp.Where(filterTypes);
-
-                types.AddRange(temp);
-
-                var defaultTypes = new[]
-                                   {
-                                           typeof(int), typeof(decimal), typeof(bool), typeof(byte),
-                                           typeof(char), typeof(decimal), typeof(double), typeof(float),
-                                           typeof(long), typeof(object), typeof(sbyte), typeof(short),
-                                           typeof(string), typeof(uint), typeof(ulong), typeof(ushort),
-                                           typeof(DateTime), typeof(TimeSpan), typeof(DeleteEntityByIdCommand), typeof(DeleteEntityByIdCommand<>),
-                                           typeof(GetEntitiesQuery<>), typeof(GetEntityByIdQuery<>), typeof(HasEntitiesQuery<>), typeof(KeyValueVm),
-                                           typeof(IncEntityBase), typeof(IncStructureResponse<>), typeof(OptGroupVm),
-                                           typeof(IncBoolResponse)
-                                   };
-                types.AddRange(defaultTypes.Where(r => !types.Contains(r)));
-                duplicates.AddRange(types.Where(r => types.Count(s => s.Name == r.Name) > 1));
+                duplicates.AddRange(allTypes.Where(r => allTypes.Count(s => s.Name == r.Name) > 1));
             }
         }
 
