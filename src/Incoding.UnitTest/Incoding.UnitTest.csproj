@@ -371,6 +371,7 @@
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_field.cs" />
     <Compile Include="MSpecGroup\PleasureGroup\Invent\When_invent_factory_object_with_wrap_field.cs" />
     <Compile Include="MvcContribGroup\Core\When_inc_validation_factory_get_validator_by_generic.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_checkbox.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_and_checkbox.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
@@ -784,7 +785,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

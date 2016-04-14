@@ -28,6 +28,7 @@
 
         It should_be_as_enum = () => { Run(typeof(Test), typeof(Test).FullName); };
 
+        
         static void Run(Type expected, string findName)
         {
             CreateByTypeQuery.FindTypeByName query = Pleasure.Generator.Invent<CreateByTypeQuery.FindTypeByName>(dsl => dsl.Tuning(r => r.Type, findName));
