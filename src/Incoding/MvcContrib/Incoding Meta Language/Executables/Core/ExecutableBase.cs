@@ -56,14 +56,25 @@ namespace Incoding.MvcContrib
         public IExecutableSetting Interval(double millisecond, out string intervalId)
         {
             intervalId = Guid.NewGuid().ToString().Replace("-", "_");
-            this.Set("interval", millisecond);
-            this.Set("intervalId", intervalId);
-            return this;
+            return Interval(millisecond, intervalId);
+
         }
 
         public IExecutableSetting Interval(TimeSpan millisecond, out string intervalId)
         {
             return Interval(millisecond.TotalMilliseconds, out intervalId);
+        }
+
+        public IExecutableSetting Interval(TimeSpan millisecond, string intervalId)
+        {
+            return Interval(millisecond.TotalMilliseconds, intervalId);
+        }
+
+        public IExecutableSetting Interval(double millisecond, string intervalId)
+        {
+            this.Set("interval", millisecond);
+            this.Set("intervalId", intervalId);
+            return this;
         }
 
         #endregion

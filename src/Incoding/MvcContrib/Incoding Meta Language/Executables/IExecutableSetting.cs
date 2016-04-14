@@ -18,8 +18,14 @@ namespace Incoding.MvcContrib
 
         IExecutableSetting TimeOut(TimeSpan time);
 
+        [Obsolete("Please use fixed intervalId")]
         IExecutableSetting Interval(double millisecond, out string intervalId);
 
+        [Obsolete("Please use fixed intervalId")]
         IExecutableSetting Interval(TimeSpan time, out string intervalId);
+
+        IExecutableSetting Interval(TimeSpan time, string intervalId);
+
+        IExecutableSetting Interval(double time, string intervalId);
     }
 }
