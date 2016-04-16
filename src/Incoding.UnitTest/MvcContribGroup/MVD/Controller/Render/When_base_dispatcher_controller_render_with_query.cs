@@ -17,12 +17,16 @@
     {
         Establish establish = () =>
                               {
-                                  var res = Pleasure.Generator.Invent<FakeRenderQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)res);
-                                  dispatcher.StubQuery(new FakeRenderQuery(), new FakeAppModel());
+                                  var res = Pleasure.Generator.Invent<FakeRenderQuery>();                                  
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Tuning(r => r.IsModel, false)
+                                                                                                              .Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)res);
+                                  dispatcher.StubQuery<ExecuteQuery, object>(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, res)), new FakeAppModel());
                               };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName, false); };
+        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).Name, false, false); };
 
         It should_be_render = () =>
                               {

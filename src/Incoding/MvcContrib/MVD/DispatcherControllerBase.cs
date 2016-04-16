@@ -73,7 +73,7 @@
             return IncJson(dispatcher.Query(new ExecuteQuery() { Instance = query }));
         }
 
-        public virtual ActionResult Render(string incView, string incType, bool? incIsModel)
+        public virtual ActionResult Render(string incView, string incType, bool? incIsModel, bool? incValidate)
         {
             object model = null;
             if (!string.IsNullOrWhiteSpace(incType))
@@ -85,6 +85,9 @@
                                                         ModelState = ModelState,
                                                         IsModel = incIsModel.GetValueOrDefault()
                                                 });
+
+                if (incValidate.GetValueOrDefault() && !ModelState.IsValid)
+                    return IncodingResult.Error(ModelState);
 
                 model = incIsModel.GetValueOrDefault(false)
                                 ? instance

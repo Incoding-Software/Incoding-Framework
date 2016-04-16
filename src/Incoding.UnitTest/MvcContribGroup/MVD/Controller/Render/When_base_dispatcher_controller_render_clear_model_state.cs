@@ -14,7 +14,7 @@ namespace Incoding.UnitTest.MvcContribGroup
         Because of = () =>
                          {
                              controller.ModelState.AddModelError(Pleasure.Generator.String(), Pleasure.Generator.String());
-                             result = controller.Render("View", string.Empty,false);
+                             result = controller.Render("View", string.Empty,false, false);
                          };
 
         It should_be_clear_model_state = () => controller.ModelState.ShouldBeEmpty();

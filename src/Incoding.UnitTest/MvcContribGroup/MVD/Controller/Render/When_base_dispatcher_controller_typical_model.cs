@@ -21,7 +21,7 @@
                                 requestBase.SetupGet(r => r.Params).Returns(new NameValueCollection() { { "incValue", value.ToString() } });
                                 dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(bool).Name)
                                                                                                             .Tuning(r => r.IsModel, true)), (object)value);
-                                controller.Render(partialViewName, typeof(bool).Name, true);
+                                controller.Render(partialViewName, typeof(bool).Name, true, false);
                                 Action<ViewContext> verify = s => s.ViewData.Model.ShouldEqual(value);
                                 view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                             };
@@ -32,7 +32,7 @@
                                      requestBase.SetupGet(r => r.Params).Returns(new NameValueCollection() { { "incValue", value.ToString() } });
                                      dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(DateTime).Name)
                                                                                                                  .Tuning(r => r.IsModel, true)), (object)value);
-                                     controller.Render(partialViewName, typeof(DateTime).Name, true);
+                                     controller.Render(partialViewName, typeof(DateTime).Name, true, false);
                                      Action<ViewContext> verify = s => s.ViewData.Model.ShouldEqual(value);
                                      view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                                  };
@@ -43,7 +43,7 @@
                                 requestBase.SetupGet(r => r.Params).Returns(new NameValueCollection() { { "incValue", value.ToString() } });
                                 dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeEnum).Name)
                                                                                                             .Tuning(r => r.IsModel, true)), (object)value);
-                                controller.Render(partialViewName, typeof(FakeEnum).FullName, true);
+                                controller.Render(partialViewName, typeof(FakeEnum).FullName, true, false);
                                 Action<ViewContext> verify = s => s.ViewData.Model.ShouldEqual(value);
                                 view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                             };
@@ -54,7 +54,7 @@
                                requestBase.SetupGet(r => r.Params).Returns(new NameValueCollection() { { "incValue", value.ToString() } });
                                dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(int).Name)
                                                                                                            .Tuning(r => r.IsModel, true)), (object)value);
-                               controller.Render(partialViewName, typeof(int).Name, true);
+                               controller.Render(partialViewName, typeof(int).Name, true, false);
                                Action<ViewContext> verify = s => s.ViewData.Model.ShouldEqual(value);
                                view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                            };
@@ -64,7 +64,7 @@
                                   requestBase.SetupGet(r => r.Params).Returns(new NameValueCollection() { { "incValue", Pleasure.Generator.TheSameString() } });
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(string).Name)
                                                                                                               .Tuning(r => r.IsModel, true)), (object)partialViewName);
-                                  controller.Render(partialViewName, typeof(string).Name, true);
+                                  controller.Render(partialViewName, typeof(string).Name, true, false);
                                   Action<ViewContext> verify = s => s.ViewData.Model.ShouldEqual(Pleasure.Generator.TheSameString());
                                   view.Verify(r => r.Render(Pleasure.MockIt.Is(verify), Pleasure.MockIt.IsAny<TextWriter>()));
                               };

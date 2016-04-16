@@ -18,7 +18,7 @@
                      {
                          var res = Pleasure.Generator.Invent<FakeModel>();
                          dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
-                         result = controller.Render("View", typeof(FakeModel).Name, true);
+                         result = controller.Render("View", typeof(FakeModel).Name, true, false);
                      };
 
         It should_be_render = () =>

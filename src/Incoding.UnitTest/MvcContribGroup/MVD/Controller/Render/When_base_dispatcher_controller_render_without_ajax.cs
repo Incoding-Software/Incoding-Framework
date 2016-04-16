@@ -21,7 +21,7 @@
                          var res = Pleasure.Generator.Invent<FakeModel>();
                          dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
                          requestBase = Pleasure.Mock<HttpRequestBase>(mock => { mock.SetupGet(r => r.Headers).Returns(new NameValueCollection()); });
-                         result = controller.Render("View", typeof(FakeModel).Name, null);
+                         result = controller.Render("View", typeof(FakeModel).Name, null,false);
                      };
 
         It should_be_content = () => result.ShouldBeAssignableTo<ContentResult>();

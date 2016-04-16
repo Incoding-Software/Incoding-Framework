@@ -14,7 +14,7 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_render : Context_dispatcher_controller_render
     {
-        Because of = () => { result = controller.Render("View", string.Empty, false); };
+        Because of = () => { result = controller.Render("View", string.Empty, false,false); };
 
         It should_be_render = () =>
                                   {
