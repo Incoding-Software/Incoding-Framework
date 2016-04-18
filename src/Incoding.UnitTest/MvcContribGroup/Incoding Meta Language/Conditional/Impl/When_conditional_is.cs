@@ -18,6 +18,18 @@
                                                                                 right: "$('#id')",
                                                                                 method: "equal");
 
+        It should_be_is_result_vs_jquery = () => new ConditionalIs(() => Selector.Result.For<KeyValueVm>(r => r.Value) != Selector.Jquery.Id("Test"), true)
+                                                      .GetData()
+                                                      .ShouldEqualConditionalIs(left: "$('#next')",
+                                                                                right: "$('#id')",
+                                                                                method: "equal");
+
+        It should_be_is_jquery_vs_result = () => new ConditionalIs(() =>  Selector.Jquery.Id("Test") != Selector.Result.For<KeyValueVm>(r => r.Value), true)
+                                                      .GetData()
+                                                      .ShouldEqualConditionalIs(left: "$('#next')",
+                                                                                right: "$('#id')",
+                                                                                method: "equal");
+
         It should_be_is_confirm = () => new ConditionalIs(() => Selector.JS.Confirm("Message"), true)
                                                 .GetData()
                                                 .ShouldEqualConditionalIs(left: "||javascript*confirm('Message')||",

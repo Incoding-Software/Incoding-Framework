@@ -54,6 +54,8 @@
         It should_not_be_selector_decimal = () => (Selector.Value(5) != new decimal(5)).ShouldBeFalse();
 
         It should_not_be_decimal_selector = () => (new decimal(5) != Selector.Value(5)).ShouldBeFalse();
+
+        
     }
 
     // ReSharper restore ConditionIsAlwaysTrueOrFalse

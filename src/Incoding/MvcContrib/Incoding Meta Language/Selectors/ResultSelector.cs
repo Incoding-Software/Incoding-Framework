@@ -10,6 +10,26 @@
 
     public class ResultSelector : Selector
     {
+        public static bool operator !=(ResultSelector left, JquerySelectorExtend right)
+        {
+            return true;
+        }
+
+        public static bool operator ==(ResultSelector left, JquerySelectorExtend right)
+        {
+            return !(left != right);
+        }
+
+        public static bool operator <=(ResultSelector left, JquerySelectorExtend right)
+        {
+            return true;
+        }
+
+        public static bool operator >=(ResultSelector left, JquerySelectorExtend right)
+        {
+            return true;
+        }
+
         internal const string TypeOfResult = "result";
 
         internal const string TypeOfEvent = "resultOfevent";
@@ -82,5 +102,7 @@
         }
 
         #endregion
+
+
     }
 }

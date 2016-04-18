@@ -8,6 +8,26 @@
 
     public class JquerySelectorExtend : JquerySelector
     {
+        public static bool operator !=(JquerySelectorExtend left, ResultSelector right)
+        {
+            return true;
+        }
+
+        public static bool operator ==(JquerySelectorExtend left, ResultSelector right)
+        {
+            return !(left != right);
+        }
+
+        public static bool operator <=(JquerySelectorExtend left, ResultSelector right)
+        {
+            return true;
+        }
+
+        public static bool operator >=(JquerySelectorExtend left, ResultSelector right)
+        {
+            return true;
+        }
+
         #region Constructors
 
         internal JquerySelectorExtend(string selector)
