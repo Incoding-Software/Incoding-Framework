@@ -3,9 +3,9 @@
     #region << Using >>
 
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Reflection.Emit;
     using System.Web;
     using System.Web.Mvc;
@@ -16,13 +16,10 @@
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-        private static readonly Dictionary<Type, CreateObject> creatorCache = new Dictionary<Type, CreateObject>();
+        private static readonly Dictionary<Type, object> creatorCache = new Dictionary<Type, object>();
+        
 
-        private static readonly Type coType = typeof(CreateObject);
-
-        public delegate object CreateObject();
-
-
+        
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -60,7 +57,7 @@
 
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
-                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => CreateObjectFactory(instanceType), instanceType),
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => creatorCache.GetOrAdd(instanceType, () => Activator.CreateInstance(instanceType)), instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                             ValueProvider = formCollection
                                                                                                     });
@@ -88,21 +85,14 @@
                 return cache.GetOrAdd(name, () =>
                                             {
                                                 var clearName = name.Contains("`") ? name.Split('`')[0] + "`1" : name;
-                                                var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                                                                        .Select(r => r.GetLoadableTypes())
-                                                                        .SelectMany(r => r)
-                                                                        .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
-                                                                        .ToList();
+                                                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                                                {
+                                                    var findType = assembly.GetLoadableTypes().FirstOrDefault(type => type.Name == clearName || type.FullName == clearName);
+                                                    if (findType != null)
+                                                        return findType;
+                                                }
 
-                                                var allSatisfied = allTypes.Where(type => type.Name.EqualsWithInvariant(clearName) || type.FullName.EqualsWithInvariant(clearName));
-
-                                                if (!allSatisfied.Any())
-                                                    throw new IncMvdException("Not found any type {0}".F(name));
-
-                                                if (allSatisfied.Count() > 1)
-                                                    throw new IncMvdException("Ambiguous type {0}".F(name));
-
-                                                return allSatisfied.Single();
+                                                throw new IncMvdException("Not found any type {0}".F(name));
                                             });
             }
         }

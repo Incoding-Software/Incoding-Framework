@@ -22,7 +22,11 @@
         Establish establish = () =>
                               {
                                   command = Pleasure.Generator.Invent<FakeCommand>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).Name)), (object)command);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                                   .Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                                   .Empty(r => r.IsModel)
+                                                                                                                   .Empty(r => r.IsGroup)
+                                                                                                                   .Tuning(r => r.Type, typeof(FakeCommand).Name)), (object)command);
                               };
 
         Because of = () => { result = controller.Push(incTypes: typeof(FakeCommand).Name); };

@@ -18,11 +18,15 @@
         Establish establish = () =>
                               {
                                   var query = Pleasure.Generator.Invent<FakeRenderQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)query);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Tuning(r => r.IsModel, true)
+                                                                                                              .Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)query);
                                   dispatcher.StubQuery(query, new FakeAppModel());
                               };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).FullName, true,  false); };
+        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).Name, true, false); };
 
         It should_be_render = () =>
                               {

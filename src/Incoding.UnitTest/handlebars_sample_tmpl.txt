@@ -1,0 +1,10 @@
+﻿
+{{#each data}}{{#if Title}}            <optgroup label="{{Title}}">
+{{#each Items}}                    <option {{#if Selected}}selected="selected"{{/if}} value="{{Value}}" title="{{Title}}">
+                        {{{Text}}}
+                    </option>
+{{/each}}            </optgroup>
+{{/if}}{{#unless Title}}{{#each Items}}                <option {{#if Selected}}selected="selected"{{/if}} value="{{Value}}" title="{{Title}}">
+                    {{{Text}}}
+                </option>
+{{/each}}{{/unless}}{{/each}}

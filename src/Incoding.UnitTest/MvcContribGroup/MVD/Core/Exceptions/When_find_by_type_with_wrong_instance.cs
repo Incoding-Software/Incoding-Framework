@@ -4,8 +4,8 @@
 
     #region << Using >>
 
-    using Incoding.MSpecContrib;
     using System;
+    using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
 

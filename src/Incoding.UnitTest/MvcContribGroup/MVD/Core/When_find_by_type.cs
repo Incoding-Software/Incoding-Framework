@@ -36,7 +36,9 @@
                                       Run(typeof(GetReferencesForDDQuery<>), "Incoding.UnitTest.MvcContribGroup.GetReferencesForDDQuery%601%5B%5BIncoding.UnitTest.MvcContribGroup.Currency%2C+Incoding.UnitTest.MvcContribGroup%2C+Version%3D1.0.0.0%2C+Culture%3Dneutral%2C+PublicKeyToken%3Dnull%5D%5D");
                                   };
 
-        It should_be_as_by_full_name = () => { Run(typeof(FakeInnerByFullNameCommand), typeof(FakeInnerByFullNameCommand).Name); };
+        It should_be_as_by_name = () => { Run(typeof(FakeInnerByFullNameCommand), typeof(FakeInnerByFullNameCommand).Name); };
+
+        It should_be_as_by_full_name = () => { Run(typeof(FakeInnerByFullNameCommand), typeof(FakeInnerByFullNameCommand).FullName); };
 
         It should_be_as_by_full_name_on_inner_class = () => { Run(typeof(FakeInnerByFullNameCommand.InnerByFullName), HttpUtility.UrlEncode(typeof(FakeInnerByFullNameCommand.InnerByFullName).FullName)); };
 

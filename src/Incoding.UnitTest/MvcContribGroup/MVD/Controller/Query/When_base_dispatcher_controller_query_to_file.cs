@@ -14,12 +14,16 @@
         Establish establish = () =>
                               {
                                   var query = Pleasure.Generator.Invent<FakeFileByNameQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeFileByNameQuery).Name)), (object)query);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Empty(r => r.IsModel)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Tuning(r => r.Type, typeof(FakeFileByNameQuery).Name)), (object)query);
                                   content = Pleasure.Generator.Bytes();
                                   contentType = Pleasure.Generator.String();
                                   fileName = Pleasure.Generator.String();
 
-                                  dispatcher.StubQuery(new FakeFileByNameQuery(), content);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)content);
                                   responseBase.Setup(r => r.AddHeader("X-Download-Options", "Open"));
                               };
 

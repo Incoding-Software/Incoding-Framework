@@ -20,9 +20,9 @@
 
         It should_be_is_result_vs_jquery = () => new ConditionalIs(() => Selector.Result.For<KeyValueVm>(r => r.Value) != Selector.Jquery.Id("Test"), true)
                                                       .GetData()
-                                                      .ShouldEqualConditionalIs(left: "$('#next')",
-                                                                                right: "$('#id')",
-                                                                                method: "equal");
+                                                      .ShouldEqualConditionalIs(left: "||result*Value||",
+                                                                                right: "$('#Test')",
+                                                                                method: "notequal");
 
         
         It should_be_is_confirm = () => new ConditionalIs(() => Selector.JS.Confirm("Message"), true)

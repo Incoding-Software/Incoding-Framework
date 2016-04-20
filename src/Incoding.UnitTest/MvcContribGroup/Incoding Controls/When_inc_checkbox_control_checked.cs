@@ -24,6 +24,6 @@
                          };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<div class=\"checkbox\"><label><input checked=\"checked\" id=\"Prop\" name=\"Prop\" type=\"checkbox\" value=\"true\" /><input name=\"Prop\" type=\"hidden\" value=\"false\" /><i></i><span>TheSameString</span></label></div>");
+                                          .ShouldEqual("<div class=\" checkbox\"><label><input checked=\"checked\" id=\"Prop\" name=\"Prop\" type=\"checkbox\" value=\"true\" /><input name=\"Prop\" type=\"hidden\" value=\"false\" /><i></i><span>TheSameString</span></label></div>");
     }
 }

@@ -14,9 +14,15 @@ namespace Incoding.Extensions
             if (source.ContainsKey(key))
                 return source[key];
 
-            var value = evaluated();
-            source[key] = value;
-            return value;
+            lock (key.ToString())
+            {
+                if (source.ContainsKey(key))
+                    return source[key];
+
+                var value = evaluated();
+                source[key] = value;
+                return value;
+            }
         }
 
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)

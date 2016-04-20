@@ -28,7 +28,7 @@
                                             CreateByTypeQuery query = Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.IsGroup, false)
                                                                                                                              .Tuning(r => r.IsModel, true)
                                                                                                                              .Tuning(r => r.Type, "{0}|{1}".F(typeof(FakeGenericByNameCommand<>).FullName, typeof(Currency).FullName)));
-                                            var expected = typeof(FakeGenericByNameCommand<IncEntityBase>);
+                                            var expected = typeof(FakeGenericByNameCommand<Currency>);
 
                                             var mockQuery = MockQuery<CreateByTypeQuery, Type>
                                                     .When(query)
@@ -45,7 +45,7 @@
                                    CreateByTypeQuery query = Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.IsGroup, false)
                                                                                                                     .Tuning(r => r.IsModel, true)
                                                                                                                     .Tuning(r => r.Type, "{0}|{1}".F(typeof(FakeGenericByNameCommand<>).Name, typeof(Currency).Name)));
-                                   var expected = typeof(FakeGenericByNameCommand<IncEntityBase>);
+                                   var expected = typeof(FakeGenericByNameCommand<Currency>);
 
                                    var mockQuery = MockQuery<CreateByTypeQuery, Type>
                                            .When(query)

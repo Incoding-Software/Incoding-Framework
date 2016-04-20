@@ -19,7 +19,7 @@
 
     public class UrlDispatcher : IUrlDispatcher
     {
-        internal static readonly List<Type> duplicates = new List<Type>();
+        internal static readonly Dictionary<string, bool> duplicates = new Dictionary<string, bool>();
 
         #region Constants
 
@@ -60,7 +60,7 @@
             return new UrlQuery<TQuery>(urlHelper, routes);
         }
 
-        public IUrlQuery<TQuery> Query<TQuery>( TQuery routes) where TQuery : new()
+        public IUrlQuery<TQuery> Query<TQuery>(TQuery routes) where TQuery : new()
         {
             return Query<TQuery>(routes: routes as object);
         }
@@ -82,9 +82,9 @@
             // ReSharper disable once Mvc.ActionNotResolved
             // ReSharper disable once Mvc.ControllerNotResolved
             return urlHelper.Action("Render", "Dispatcher", new
-            {
-                incView = incView,
-            });
+                                                            {
+                                                                    incView = incView,
+                                                            });
         }
 
         public UrlModel<TModel> Model<TModel>(object routes = null)
@@ -189,10 +189,10 @@
                 // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("QueryToFile", "Dispatcher", defaultRoutes)
                                 .AppendToQueryString(new
-                                {
-                                    incContentType = incContentType,
-                                    incFileDownloadName = incFileDownloadName
-                                })
+                                                     {
+                                                             incContentType = incContentType,
+                                                             incFileDownloadName = incFileDownloadName
+                                                     })
                                 .AppendToQueryString(query);
             }
 
@@ -316,14 +316,13 @@
                 return query;
             }
 
-            public static implicit operator string (UrlPush s)
+            public static implicit operator string(UrlPush s)
             {
                 return s.ToString();
             }
         }
 
         #endregion
-
 
         void VerifySchema<TOriginal>(object routes)
         {
@@ -340,7 +339,13 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = type.FullName;
+            string mainName = duplicates.GetOrAdd(type.Name, () =>
+                                                             {
+                                                                 return AppDomain.CurrentDomain.GetAssemblies()
+                                                                                 .Select(r => r.GetLoadableTypes())
+                                                                                 .SelectMany(r => r)
+                                                                                 .Count(s => s.Name == type.Name) > 1;
+                                                             }) ? type.FullName : type.Name;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
         }
 

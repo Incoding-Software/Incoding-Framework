@@ -5,8 +5,9 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using System.Web.Mvc.Html;
     using HandlebarsDotNet;
+    using Incoding.Block.IoC;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using JetBrains.Annotations;
 
@@ -14,7 +15,7 @@
 
     public class TemplateHandlebarsOnServerSide : ITemplateOnServerSide
     {
-       internal static readonly Dictionary<string, Func<object, string>> cache = new Dictionary<string, Func<object, string>>();
+        internal static readonly Dictionary<string, Func<object, string>> cache = new Dictionary<string, Func<object, string>>();
 
         private readonly HtmlHelper htmlHelper;
 
@@ -28,11 +29,16 @@
             return Render(pathToView, null, data);
         }
 
-        public string Render<T>(string pathToView, object modelForView, T data)
+        public string Render<T>([PathReference] string pathToView, object modelForView, T data)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
-            var compile = cache.GetOrAdd(fullPathToView, () => Handlebars.Compile(this.htmlHelper.Partial(pathToView, modelForView).ToHtmlString()));
-            return compile(data);
+            var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
+                                                                                    {
+                                                                                            HtmlHelper = this.htmlHelper,
+                                                                                            PathToView = pathToView,
+                                                                                            Model = modelForView
+                                                                                    });
+            return Handlebars.Compile(tmpl.ToHtmlString())(data);
         }
     }
 }

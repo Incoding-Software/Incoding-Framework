@@ -24,9 +24,12 @@
             dispatcher = Pleasure.Mock<IDispatcher>();
 
             IoCFactory.Instance.StubTryResolve(dispatcher.Object);
-            controller = new FakeDispatcher(Assembly.GetCallingAssembly());
+            controller = new FakeDispatcher();
 
-            requestBase = Pleasure.Mock<HttpRequestBase>(mock => { mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } }); });
+            requestBase = Pleasure.Mock<HttpRequestBase>(mock =>
+                                                         {
+                                                             mock.SetupGet(r => r.Headers).Returns(new NameValueCollection { { "X-Requested-With", "XMLHttpRequest" } });
+                                                         });
 
             responseBase = Pleasure.MockStrict<HttpResponseBase>();
             controller.ControllerContext = new ControllerContext(Pleasure.MockStrictAsObject<HttpContextBase>(mock =>
@@ -81,11 +84,6 @@
 
         public class FakeDispatcher : DispatcherControllerBase
         {
-            public FakeDispatcher(Assembly type, Func<Type, bool> filterTypes = null)
-                    : base(type, filterTypes) { }
-
-            public FakeDispatcher(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
-                    : base(assemblies, filterTypes) { }
         }
 
         #endregion
@@ -94,15 +92,15 @@
 
         #region Establish value
 
-        protected static FakeDispatcher controller;
+        protected static readonly FakeDispatcher controller;
 
-        protected static Mock<IDispatcher> dispatcher;
+        protected static readonly Mock<IDispatcher> dispatcher;
 
         protected static ActionResult result;
 
         protected static Mock<HttpRequestBase> requestBase;
 
-        protected static Mock<HttpResponseBase> responseBase;
+        protected static readonly Mock<HttpResponseBase> responseBase;
 
         #endregion
     }

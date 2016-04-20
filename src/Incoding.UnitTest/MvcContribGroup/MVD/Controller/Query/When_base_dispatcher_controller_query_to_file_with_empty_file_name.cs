@@ -14,28 +14,28 @@ namespace Incoding.UnitTest.MvcContribGroup
         Establish establish = () =>
                               {
                                   var query = Pleasure.Generator.Invent<FakeFileByNameQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeFileByNameQuery).Name)), (object)query);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Empty(r => r.IsModel)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Tuning(r => r.Type, typeof(FakeFileByNameQuery).Name)), (object)query);
                                   content = Pleasure.Generator.Bytes();
-                                  contentType = Pleasure.Generator.String();
-                                  fileName = string.Empty;
 
-                                  dispatcher.StubQuery(query, content);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)content);
                                   responseBase.Setup(r => r.AddHeader("X-Download-Options", "Open"));
                               };
 
-        Because of = () => { result = controller.QueryToFile(typeof(FakeFileByNameQuery).Name, contentType, fileName); };
+        Because of = () => { result = controller.QueryToFile(typeof(FakeFileByNameQuery).Name, Pleasure.Generator.TheSameString(), string.Empty); };
+
+        It should_be_verify = () => { responseBase.VerifyAll(); };
 
         It should_be_result = () => result.ShouldBeFileContent(content,
-                                                               contentType: contentType,
-                                                               fileDownloadName: fileName);
+                                                               contentType: Pleasure.Generator.TheSameString(),
+                                                               fileDownloadName: string.Empty);
 
         #region Establish value
 
         static byte[] content;
-
-        static string contentType;
-
-        static string fileName;
 
         #endregion
     }

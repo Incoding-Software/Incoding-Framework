@@ -18,46 +18,7 @@
     // ReSharper disable MemberCanBeProtected.Global
     public class DispatcherControllerBase : IncControllerBase
     {
-        ////ncrunch: no coverage start
-
-        #region Static Fields
-
         
-
-        
-        #endregion
-
-        ////ncrunch: no coverage end
-
-        #region Constructors
-
-        public DispatcherControllerBase(Assembly type, Func<Type, bool> filterTypes = null)
-                : this(new[] { type }, filterTypes) { }
-
-        public DispatcherControllerBase(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
-        {
-            //////ncrunch: no coverage end
-
-            //if (duplicates.Any())
-            //    return;
-
-            //lock (lockObject)
-            //{
-            //    if (duplicates.Any())
-            //        return;
-
-            //    var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-            //                            .Select(r => r.GetLoadableTypes())
-            //                            .SelectMany(r => r)
-            //                            .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
-            //                            .ToList();
-
-            //    duplicates.AddRange(allTypes.Where(r => allTypes.Count(s => s.Name == r.Name) > 1));
-            //}
-        }
-
-        #endregion
-
         #region Api Methods
 
         public virtual ActionResult Query(string incType, bool? incValidate, bool? incOnlyValidate = false)
@@ -137,7 +98,15 @@
         public virtual ActionResult QueryToFile(string incType, string incContentType, string incFileDownloadName)
         {
             Response.AddHeader("X-Download-Options", "Open");
-            var result = dispatcher.Query(new ExecuteQuery() { Instance = dispatcher.Query(new CreateByTypeQuery() { Type = incType, ControllerContext = ControllerContext, ModelState = ModelState }) });
+            var result = dispatcher.Query(new ExecuteQuery()
+                                          {
+                                                  Instance = dispatcher.Query(new CreateByTypeQuery()
+                                                                              {
+                                                                                      Type = incType,
+                                                                                      ControllerContext = ControllerContext,
+                                                                                      ModelState = ModelState
+                                                                              })
+                                          });
             return File((byte[])result, string.IsNullOrWhiteSpace(incContentType) ? "img" : incContentType, incFileDownloadName.Recovery(string.Empty));
         }
 

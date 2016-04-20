@@ -26,14 +26,16 @@
                                   command1 = Pleasure.Generator.Invent<FakeCommand>();
                                   command2 = Pleasure.Generator.Invent<FakeCommand>();
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).Name)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Empty(r => r.IsModel)
                                                                                                               .Tuning(r => r.IsGroup, true)), (object)new List<FakeCommand>() { command1, command2 });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeCommand).Name, string.Empty,true); };
+        Because of = () => { result = controller.Push(typeof(FakeCommand).Name, string.Empty, true); };
 
         It should_be_push_1 = () => dispatcher.ShouldBePush(command1);
 
         It should_be_push_2 = () => dispatcher.ShouldBePush(command2);
-
     }
 }

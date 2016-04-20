@@ -19,14 +19,17 @@
 
     #endregion
 
+    class DuplicateCommand { }
+
     [Subject(typeof(UrlDispatcher))]
     public class When_url_dispatcher
     {
         #region Fake classes
 
         class DuplicateCommand { }
+        
 
-        class FakeCommand
+        class When_Url_Dispatcher_FakeCommand
         {
             #region Properties
 
@@ -48,7 +51,7 @@
 
         class FakeGenericCommand<TEntity> { }
 
-        class FakeQuery : QueryBase<string>
+        class When_Url_dispatcher_FakeQuery : QueryBase<string>
         {
             #region Properties
 
@@ -108,7 +111,7 @@
             ////ncrunch: no coverage end        
         }
 
-        public class FakeModel
+        public class When_Url_Dispatcher_FakeModel
         {
             #region Properties
 
@@ -155,67 +158,66 @@
                                   httpContext = Pleasure.Mock<HttpContextBase>(mock => mock.Setup(r => r.Request.ApplicationPath).Returns("/"));
                                   var urlHelper = new UrlHelper(new RequestContext(httpContext.Object, routeData), routes);
                                   urlDispatcher = new UrlDispatcher(urlHelper);
-                                  typeof(DispatcherControllerBase).GetField("duplicates", BindingFlags.Static | BindingFlags.NonPublic)
-                                                                  .SetValue(null, new List<Type> { typeof(DuplicateCommand) });
+                                  
                               };
 
         It should_be_push_composite = () =>
                                       {
-                                          const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand%26FakeCommand2";
+                                          const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26FakeCommand2";
                                           httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                          urlDispatcher.Push(new FakeCommand { DecodeValue = "{{1}}" })
+                                          urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand { DecodeValue = "{{1}}" })
                                                        .Push(new FakeCommand2 { Command2Value = Pleasure.Generator.TheSameString() })
                                                        .ToString()
-                                                       .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand%26FakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
+                                                       .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26FakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
                                       };
 
         It should_be_push_composite_as_array = () =>
                                                {
-                                                   const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand&incIsCompositeAsArray=True";
+                                                   const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&incIsCompositeAsArray=True";
                                                    httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                                   urlDispatcher.Push(new FakeCommand { DecodeValue = "value1" })
-                                                                .Push(new FakeCommand { DecodeValue = "value2" })
+                                                   urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand { DecodeValue = "value1" })
+                                                                .Push(new When_Url_Dispatcher_FakeCommand { DecodeValue = "value2" })
                                                                 .ToString()
-                                                                .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&incIsCompositeAsArray=True&%5b0%5d.DecodeValue=value1&%5b1%5d.DecodeValue=value2");
+                                                                .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&incIsCompositeAsArray=True&%5b0%5d.DecodeValue=value1&%5b1%5d.DecodeValue=value2");
                                                };
 
         It should_be_push = () =>
                             {
-                                const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand";
+                                const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand";
                                 httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                urlDispatcher.Push(new FakeCommand
+                                urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand
                                                    {
                                                            DecodeValue = "{{1}}", 
                                                            EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
                                                    })
                                              .ToString()
-                                             .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                             .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                             };
 
         It should_be_push_only_validate = () =>
                                           {
-                                              const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand&incOnlyValidate=True";
+                                              const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&incOnlyValidate=True";
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                              urlDispatcher.Push(new FakeCommand
+                                              urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand
                                                                  {
                                                                          DecodeValue = "{{1}}", 
                                                                          EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
                                                                  })
                                                            .OnlyValidate()
                                                            .ToString()
-                                                           .ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&incOnlyValidate=True&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                                           .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&incOnlyValidate=True&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                           };
 
         It should_be_push_as_string = () =>
                                       {
-                                          const string actionUrl = "/Dispatcher/Push?incTypes=FakeCommand";
+                                          const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand";
                                           httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                          string pushAsString = urlDispatcher.Push(new FakeCommand
+                                          string pushAsString = urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand
                                                                                    {
                                                                                            DecodeValue = "{{1}}", 
                                                                                            EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
                                                                                    });
-                                          pushAsString.ShouldEqual("/Dispatcher/Push?incTypes=FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                          pushAsString.ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                       };
 
         It should_be_push_with_duplicate = () =>
@@ -255,23 +257,23 @@
 
         It should_be_model_null_to_view = () =>
                                           {
-                                              const string actionUrl = "/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
+                                              const string actionUrl = "/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                              urlDispatcher.Model<FakeModel>()
+                                              urlDispatcher.Model<When_Url_Dispatcher_FakeModel>()
                                                            .AsView("~/FakeSerializeObject.cs")
                                                            .ShouldEqual(actionUrl);
                                           };   
         
         It should_be_model_with_selector_to_view = () =>
                                           {
-                                              const string actionUrl = "/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
+                                              const string actionUrl = "/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
                                               httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                              string asView = urlDispatcher.Model<FakeModel>(new
+                                              string asView = urlDispatcher.Model<When_Url_Dispatcher_FakeModel>(new
                                                                                              {
                                                                                                      GapId = Selector.Incoding.AjaxPost("url?test=value1&test2=value2")
                                                                                              })
                                                                            .AsView("~/FakeSerializeObject.cs");
-                                              asView.ShouldEqual("/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&GapId=||ajax*{\"url\"%3A\"url%3Ftest%3Dvalue1%26test2%3Dvalue2\",\"type\"%3A\"POST\",\"async\"%3Afalse}||");
+                                              asView.ShouldEqual("/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&GapId=||ajax*{\"url\"%3A\"url%3Ftest%3Dvalue1%26test2%3Dvalue2\",\"type\"%3A\"POST\",\"async\"%3Afalse}||");
                                           };
 
         It should_be_model_generic_to_view = () =>
@@ -285,11 +287,11 @@
 
         It should_be_model_to_view = () =>
                                      {
-                                         const string actionUrl = "/Dispatcher/Render?incType=FakeMode&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
+                                         const string actionUrl = "/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs";
                                          httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                         urlDispatcher.Model(new FakeModel { DecodeValue = "{{1}}", EncodeValue = HttpUtility.UrlEncode("{{1}}") })
+                                         urlDispatcher.Model(new When_Url_Dispatcher_FakeModel { DecodeValue = "{{1}}", EncodeValue = HttpUtility.UrlEncode("{{1}}") })
                                                       .AsView("~/FakeSerializeObject.cs")
-                                                      .ShouldEqual("/Dispatcher/Render?incType=FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                                      .ShouldEqual("/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                      };
 
         It should_be_model_typical_to_view = () =>
@@ -316,9 +318,9 @@
 
         It should_be_query_to_json = () =>
                                      {
-                                         const string actionUrl = "/Dispatcher/Query?incType=FakeQuery";
+                                         const string actionUrl = "/Dispatcher/Query?incType=When_Url_dispatcher_FakeQuery";
                                          httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                         urlDispatcher.Query(new FakeQuery
+                                         urlDispatcher.Query(new When_Url_dispatcher_FakeQuery
                                                              {
                                                                      DecodeValue = "{{1}}", 
                                                                      EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
@@ -329,7 +331,7 @@
 
         It should_be_query_to_string = () =>
                                        {
-                                           var query = urlDispatcher.Query(new FakeQuery
+                                           var query = urlDispatcher.Query(new When_Url_dispatcher_FakeQuery
                                                                            {
                                                                                    DecodeValue = "{{1}}", EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
                                                                            });
@@ -338,9 +340,9 @@
 
         It should_be_query_enable_validate_as_json = () =>
                                                      {
-                                                         const string actionUrl = "/Dispatcher/Query?incType=FakeQuery&incValidate=True";
+                                                         const string actionUrl = "/Dispatcher/Query?incType=When_Url_dispatcher_FakeQuery&incValidate=True";
                                                          httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                                         urlDispatcher.Query(new FakeQuery())
+                                                         urlDispatcher.Query(new When_Url_dispatcher_FakeQuery())
                                                                       .EnableValidate()
                                                                       .AsJson()
                                                                       .ShouldEqual(actionUrl);
@@ -348,9 +350,9 @@
 
         It should_be_query_validate_only_as_json = () =>
                                                    {
-                                                       const string actionUrl = "/Dispatcher/Query?incType=FakeQuery&incOnlyValidate=True";
+                                                       const string actionUrl = "/Dispatcher/Query?incType=When_Url_dispatcher_FakeQuery&incOnlyValidate=True";
                                                        httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                                       urlDispatcher.Query(new FakeQuery())
+                                                       urlDispatcher.Query(new When_Url_dispatcher_FakeQuery())
                                                                     .ValidateOnly()
                                                                     .AsJson()
                                                                     .ShouldEqual(actionUrl);
@@ -376,9 +378,9 @@
 
         It should_be_query_to_view = () =>
                                      {
-                                         const string actionUrl = "/Dispatcher/Render?incType=FakeQuery&incView=~%2FFakeSerializeObject.cs";
+                                         const string actionUrl = "/Dispatcher/Render?incType=When_Url_dispatcher_FakeQuery&incView=~%2FFakeSerializeObject.cs";
                                          httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
-                                         urlDispatcher.Query(new FakeQuery())
+                                         urlDispatcher.Query(new When_Url_dispatcher_FakeQuery())
                                                       .AsView("~/FakeSerializeObject.cs")
                                                       .ShouldEqual(actionUrl);
                                      };

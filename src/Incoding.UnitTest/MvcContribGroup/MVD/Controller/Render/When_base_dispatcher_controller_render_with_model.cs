@@ -17,7 +17,11 @@
         Because of = () =>
                      {
                          var res = Pleasure.Generator.Invent<FakeModel>();
-                         dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
+                         dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                     .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                     .Tuning(r => r.IsModel, true)
+                                                                                                     .Empty(r => r.IsGroup)
+                                                                                                     .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
                          result = controller.Render("View", typeof(FakeModel).Name, true, false);
                      };
 

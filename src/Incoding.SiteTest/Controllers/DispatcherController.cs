@@ -10,7 +10,6 @@
 
     public class DispatcherController : DispatcherControllerBase
     {
-        public DispatcherController()
-                : base(typeof(DispatcherController).Assembly) { }
+
     }
 }
