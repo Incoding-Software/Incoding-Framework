@@ -19,6 +19,8 @@
 
     public class UrlDispatcher : IUrlDispatcher
     {
+        internal static readonly List<Type> duplicates = new List<Type>();
+
         #region Constants
 
         internal const string separatorByGeneric = "/";
@@ -338,9 +340,7 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = DispatcherControllerBase.duplicates.Any(r => r == type)
-                                      ? type.FullName
-                                      : type.Name;
+            string mainName = type.FullName;
             return type.IsGenericType ? "{0}{1}{2}".F(mainName, separatorByPair, type.GetGenericArguments().Select(GetTypeName).AsString(separatorByGeneric)) : mainName;
         }
 

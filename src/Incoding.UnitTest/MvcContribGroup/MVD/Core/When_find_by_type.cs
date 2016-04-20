@@ -12,6 +12,16 @@
 
     #endregion
 
+    public class GetReferencesForDDQuery<T> 
+    {
+    }
+
+    public class Currency 
+    {
+    }
+
+
+
     [Subject(typeof(CreateByTypeQuery.FindTypeByName))]
     public class When_find_by_type
     {
@@ -19,6 +29,12 @@
         { }
 
         It should_be_as_bool = () => { Run(typeof(Boolean), typeof(Boolean).Name); };
+
+        It should_be_as_generic = () =>
+                                  {
+                                      var expected = typeof(GetReferencesForDDQuery<>).Name;
+                                      Run(typeof(GetReferencesForDDQuery<>), "Incoding.UnitTest.MvcContribGroup.GetReferencesForDDQuery%601%5B%5BIncoding.UnitTest.MvcContribGroup.Currency%2C+Incoding.UnitTest.MvcContribGroup%2C+Version%3D1.0.0.0%2C+Culture%3Dneutral%2C+PublicKeyToken%3Dnull%5D%5D");
+                                  };
 
         It should_be_as_by_full_name = () => { Run(typeof(FakeInnerByFullNameCommand), typeof(FakeInnerByFullNameCommand).Name); };
 

@@ -30,6 +30,8 @@
             return true;
         }
 
+
+
         internal const string TypeOfResult = "result";
 
         internal const string TypeOfEvent = "resultOfevent";

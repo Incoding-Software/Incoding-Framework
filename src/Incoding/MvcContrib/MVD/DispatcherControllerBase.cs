@@ -22,10 +22,9 @@
 
         #region Static Fields
 
-        internal static readonly List<Type> duplicates = new List<Type>();
+        
 
-        static readonly object lockObject = new object();
-
+        
         #endregion
 
         ////ncrunch: no coverage end
@@ -37,24 +36,24 @@
 
         public DispatcherControllerBase(Assembly[] assemblies, Func<Type, bool> filterTypes = null)
         {
-            ////ncrunch: no coverage end
+            //////ncrunch: no coverage end
 
-            if (duplicates.Any())
-                return;
+            //if (duplicates.Any())
+            //    return;
 
-            lock (lockObject)
-            {
-                if (duplicates.Any())
-                    return;
+            //lock (lockObject)
+            //{
+            //    if (duplicates.Any())
+            //        return;
 
-                var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                                        .Select(r => r.GetLoadableTypes())
-                                        .SelectMany(r => r)
-                                        .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
-                                        .ToList();
+            //    var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+            //                            .Select(r => r.GetLoadableTypes())
+            //                            .SelectMany(r => r)
+            //                            .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
+            //                            .ToList();
 
-                duplicates.AddRange(allTypes.Where(r => allTypes.Count(s => s.Name == r.Name) > 1));
-            }
+            //    duplicates.AddRange(allTypes.Where(r => allTypes.Count(s => s.Name == r.Name) > 1));
+            //}
         }
 
         #endregion

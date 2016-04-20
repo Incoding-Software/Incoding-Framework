@@ -3,19 +3,26 @@
     #region << Using >>
 
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection.Emit;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
-    using Incoding.Data;
     using Incoding.Extensions;
 
     #endregion
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-      
+        private static readonly Dictionary<Type, CreateObject> creatorCache = new Dictionary<Type, CreateObject>();
+
+        private static readonly Type coType = typeof(CreateObject);
+
+        public delegate object CreateObject();
+
+
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -53,7 +60,7 @@
 
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
-                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => CreateObjectFactory(instanceType), instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                             ValueProvider = formCollection
                                                                                                     });
@@ -80,13 +87,14 @@
                 string name = HttpUtility.UrlDecode(Type).Replace(" ", "+");
                 return cache.GetOrAdd(name, () =>
                                             {
+                                                var clearName = name.Contains("`") ? name.Split('`')[0] + "`1" : name;
                                                 var allTypes = AppDomain.CurrentDomain.GetAssemblies()
                                                                         .Select(r => r.GetLoadableTypes())
                                                                         .SelectMany(r => r)
                                                                         .Where(r => !r.IsAbstract && (r.IsClass || r.IsTypicalType()))
                                                                         .ToList();
 
-                                                var allSatisfied = allTypes.Where(type => type.Name.EqualsWithInvariant(name) || type.FullName.EqualsWithInvariant(name));
+                                                var allSatisfied = allTypes.Where(type => type.Name.EqualsWithInvariant(clearName) || type.FullName.EqualsWithInvariant(clearName));
 
                                                 if (!allSatisfied.Any())
                                                     throw new IncMvdException("Not found any type {0}".F(name));
@@ -123,7 +131,6 @@
         public ModelStateDictionary ModelState { get; set; }
 
         public ControllerContext ControllerContext { get; set; }
-
 
         #endregion
     }
