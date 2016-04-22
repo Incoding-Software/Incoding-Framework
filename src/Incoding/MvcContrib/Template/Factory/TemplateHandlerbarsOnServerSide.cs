@@ -32,13 +32,17 @@
         public string Render<T>([PathReference] string pathToView, object modelForView, T data)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
-            var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
-                                                                                    {
-                                                                                            HtmlHelper = this.htmlHelper,
-                                                                                            PathToView = pathToView,
-                                                                                            Model = modelForView
-                                                                                    });
-            return Handlebars.Compile(tmpl.ToHtmlString())(data);
+
+            return cache.GetOrAdd(fullPathToView, () =>
+                                                  {
+                                                      var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
+                                                                                                                     {
+                                                                                                                             HtmlHelper = this.htmlHelper,
+                                                                                                                             PathToView = pathToView,
+                                                                                                                             Model = modelForView
+                                                                                                                     }).ToHtmlString();
+                                                      return Handlebars.Compile(tmpl);
+                                                  })(data);
         }
     }
 }

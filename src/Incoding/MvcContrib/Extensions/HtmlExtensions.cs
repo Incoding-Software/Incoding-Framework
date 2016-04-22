@@ -9,6 +9,7 @@ namespace Incoding.MvcContrib
     using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MvcContrib.MVD;
+    using JetBrains.Annotations;
 
     #endregion
 
@@ -20,13 +21,21 @@ namespace Incoding.MvcContrib
         [ThreadStatic]
         internal static IUrlDispatcher UrlDispatcher;
 
-
-
         #region Factory constructors
 
         public static IDispatcher Dispatcher(this HtmlHelper htmlHelper)
         {
-            return  IoCFactory.Instance.TryResolve<IDispatcher>();
+            return new DefaultDispatcher();
+        }
+
+        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view)
+        {
+            return data.AsView(view, null);
+        }
+
+        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null)
+        {
+            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateOnServerSide>().Render(view, model, data));
         }
 
         public static IncodingHtmlHelperFor<TModel, TProperty> For<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
@@ -60,7 +69,6 @@ namespace Incoding.MvcContrib
             UrlDispatcher = new UrlDispatcher(new UrlHelper(htmlHelper.ViewContext.RequestContext));
             return new IncodingMetaLanguageDsl(bind);
         }
-
 
         #endregion
     }

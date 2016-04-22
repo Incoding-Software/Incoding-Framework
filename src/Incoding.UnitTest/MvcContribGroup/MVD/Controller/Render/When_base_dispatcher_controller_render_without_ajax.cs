@@ -7,6 +7,7 @@
     using System.IO;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -21,13 +22,21 @@
         Because of = () =>
                      {
                          model = Pleasure.Generator.Invent<FakeModel>();
+
+
+                         controller.ControllerContext = new ControllerContext(Pleasure.MockAsObject<HttpContextBase>(mock =>
+                                                                                                                           {
+                                                                                                                               mock.SetupGet(r => r.Request).Returns(Pleasure.Mock<HttpRequestBase>(s => { s.SetupGet(r => r.Headers).Returns(new NameValueCollection()); }).Object);
+                                                                                                                               mock.SetupGet(r => r.Response).Returns(responseBase.Object);
+                                                                                                                           }), new RouteData(), controller);
+
                          dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
-                                                                                                     .Tuning(r => r.ModelState, controller.ModelState)
-                                                                                                     .Empty(r => r.IsGroup)
-                                                                                                     .Empty(r => r.IsModel)
-                                                                                                     .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)model);
+                                                                            .Tuning(r => r.ModelState, controller.ModelState)
+                                                                            .Empty(r => r.IsGroup)
+                                                                            .Empty(r => r.IsModel)
+                                                                            .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)model);
                          dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, model)), (object)model);
-                         requestBase = Pleasure.Mock<HttpRequestBase>(mock => { mock.SetupGet(r => r.Headers).Returns(new NameValueCollection()); });
+
                          result = controller.Render("View", typeof(FakeModel).Name, null, false);
                      };
 

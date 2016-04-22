@@ -57,7 +57,8 @@
             ModelState.Clear();
 
             incView = HttpUtility.UrlDecode(incView);
-            return HttpContext.Request.IsAjaxRequest()
+            var isAjaxRequest = HttpContext.Request.IsAjaxRequest();
+            return isAjaxRequest
                            ? (ActionResult)IncPartialView(incView, model)
                            : Content(RenderToString(incView, model));
         }

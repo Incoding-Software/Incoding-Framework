@@ -40,7 +40,7 @@
             #endregion
         }
 
-        class FakeCommand2
+        class When_Url_Dispatcher_FakeCommand2
         {
             #region Properties
 
@@ -163,12 +163,12 @@
 
         It should_be_push_composite = () =>
                                       {
-                                          const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26FakeCommand2";
+                                          const string actionUrl = "/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26When_Url_Dispatcher_FakeCommand2";
                                           httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                           urlDispatcher.Push(new When_Url_Dispatcher_FakeCommand { DecodeValue = "{{1}}" })
-                                                       .Push(new FakeCommand2 { Command2Value = Pleasure.Generator.TheSameString() })
+                                                       .Push(new When_Url_Dispatcher_FakeCommand2 { Command2Value = Pleasure.Generator.TheSameString() })
                                                        .ToString()
-                                                       .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26FakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
+                                                       .ShouldEqual("/Dispatcher/Push?incTypes=When_Url_Dispatcher_FakeCommand%26When_Url_Dispatcher_FakeCommand2&DecodeValue={{1}}&Command2Value=TheSameString");
                                       };
 
         It should_be_push_composite_as_array = () =>
@@ -326,7 +326,7 @@
                                                                      EncodeValue = HttpUtility.UrlEncode("{{1}}"), 
                                                              })
                                                       .AsJson()
-                                                      .ShouldEqual("/Dispatcher/Query?incType=FakeQuery&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
+                                                      .ShouldEqual("/Dispatcher/Query?incType=When_Url_dispatcher_FakeQuery&EncodeValue=%7b%7b1%7d%7d&DecodeValue={{1}}");
                                      };
 
         It should_be_query_to_string = () =>

@@ -28,7 +28,7 @@ namespace Incoding.UnitTest.MvcContribGroup
         Because of = () => { result = control.ToHtmlString(); };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual(@"<div class=""form-group""><label class=""control-label col-xs-5"" for=""Prop"">Prop</label><div class=""col-xs-7""><div class=""checkbox""><label><input id=""Prop"" name =""Prop"" type=""checkbox"" value =""true"" /><input name=""Prop"" type =""hidden"" value =""false"" /><i></i><span></span></label></div></div></div>");
+                                          .ShouldEqual(@"<div class=""form-group""><label class=""control-label col-xs-5"" for=""Prop"">Prop</label><div class=""col-xs-7""><div class="" checkbox""><label><input id=""Prop"" name=""Prop"" type=""checkbox"" value=""true"" /><input name=""Prop"" type=""hidden"" value=""false"" /><i></i><span></span></label></div></div></div>");
 
         Cleanup clean = () => IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v2;
     }

@@ -4,6 +4,8 @@
 
     using System;
     using System.Linq.Expressions;
+    using Incoding.Block.IoC;
+    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib;
@@ -44,7 +46,27 @@
                                               .Incoding()
                                               .ShouldNotBeNull();
 
-        It should_be_dispatcher = () => {  };
+        It should_be_as_view = () =>
+                               {
+                                   var pathToView = Pleasure.Generator.String();
+                                   var data = Pleasure.Generator.Invent<KeyValueVm[]>();
+                                   var model = Pleasure.Generator.String();
+                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateOnServerSide>(mock => mock.Setup(s=>s.Render(pathToView,model,data)).Returns(Pleasure.Generator.TheSameString())));
+                                   data.AsView(pathToView, model).ToHtmlString().ShouldBeTheSameString();
+                               };
+
+        It should_be_as_view_without_model = () =>
+                               {
+                                   var pathToView = Pleasure.Generator.String();
+                                   var data = Pleasure.Generator.Invent<KeyValueVm[]>();                                   
+                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateOnServerSide>(mock => mock.Setup(s=>s.Render(pathToView,null,data)).Returns(Pleasure.Generator.TheSameString())));
+                                   data.AsView(pathToView, data).ToHtmlString().ShouldBeTheSameString();
+                               };
+
+        It should_be_dispatcher = () =>
+                                  {
+                                      htmlHelper.Original.Dispatcher().ShouldBeAssignableTo<DefaultDispatcher>();
+                                  };
 
         It should_be_for = () => htmlHelper
                                          .Original
