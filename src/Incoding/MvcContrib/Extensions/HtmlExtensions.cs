@@ -17,7 +17,7 @@ namespace Incoding.MvcContrib
     {
         [ThreadStatic]
         internal static HtmlHelper HtmlHelper;
-        
+
         [ThreadStatic]
         internal static IUrlDispatcher UrlDispatcher;
 
@@ -25,17 +25,13 @@ namespace Incoding.MvcContrib
 
         public static IDispatcher Dispatcher(this HtmlHelper htmlHelper)
         {
+            HtmlHelper = htmlHelper;
             return new DefaultDispatcher();
-        }
-
-        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view)
-        {
-            return data.AsView(view, null);
         }
 
         public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null)
         {
-            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateOnServerSide>().Render(view, model, data));
+            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateOnServerSide>().Render(HtmlHelper, view, data, model));
         }
 
         public static IncodingHtmlHelperFor<TModel, TProperty> For<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)

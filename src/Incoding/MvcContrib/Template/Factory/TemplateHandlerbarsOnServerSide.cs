@@ -9,7 +9,6 @@
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Extensions;
-    using JetBrains.Annotations;
 
     #endregion
 
@@ -17,19 +16,7 @@
     {
         internal static readonly Dictionary<string, Func<object, string>> cache = new Dictionary<string, Func<object, string>>();
 
-        private readonly HtmlHelper htmlHelper;
-
-        public TemplateHandlebarsOnServerSide(HtmlHelper htmlHelper)
-        {
-            this.htmlHelper = htmlHelper;
-        }
-
-        public string Render<T>([PathReference] string pathToView, T data)
-        {
-            return Render(pathToView, null, data);
-        }
-
-        public string Render<T>([PathReference] string pathToView, object modelForView, T data)
+        public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
 
@@ -37,12 +24,12 @@
                                                   {
                                                       var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
                                                                                                                      {
-                                                                                                                             HtmlHelper = this.htmlHelper,
+                                                                                                                             HtmlHelper = htmlHelper,
                                                                                                                              PathToView = pathToView,
                                                                                                                              Model = modelForView
                                                                                                                      }).ToHtmlString();
                                                       return Handlebars.Compile(tmpl);
-                                                  })(data);
+                                                  })(new { data = data });
         }
     }
 }

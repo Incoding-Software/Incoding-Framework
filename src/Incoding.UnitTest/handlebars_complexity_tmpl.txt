@@ -1,0 +1,145 @@
+﻿
+
+
+{{#each data}}            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th class="col-xs-3"></th>
+                    <th class="col-xs-9"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>ID / Year:</td>
+                    <td>
+                        <input type="text" readonly="readonly" class="col-xs-4" value="{{Id}}"/>
+                        <div class="col-xs-1">/</div>
+                        <input class="col-xs-4" type="text" readonly="readonly" value="{{Year}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Desc:</td>
+                    <td>
+                        <textarea class="form-control" readonly="readonly">{{{Description}}}</textarea>
+                    </td>
+                </tr>
+
+
+                    <tr>
+        <td>
+                <a href="#" title="
+                                                                         <label>Full name:</label> {{UW.FullName}}
+                                                                         <br/>
+                                                                         <label>Email:</label>{{UW.Email}}
+                                                                      " data-toggle="tooltip">UW:</a>
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{UW.FullName}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                <tr>
+                    <td>
+                        Brokers:
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+{{#each Brokers}}                                <li>
+                                    <a href="#" title="<label>Full name:</label> {{FullName}}" data-toggle="tooltip">{{Code}}</a>
+                                </li>
+{{/each}}                        </ul>
+
+                    </td>
+                </tr>
+                    <tr>
+        <td>
+                <a href="#" title="
+                                                                                 Full name: {{Client.FullName}}
+                                                                                 <br/>
+                                                                                 Code: {{Client.Code}}, Address:{{Client.Address}}, Phone:{{Client.Phone}}
+                                                                              " data-toggle="tooltip">Client:</a>
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Client.FullName}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+                <a href="#" title="
+                                                                                   <label>Full name:</label> {{Analyst.FullName}}
+                                                                                   <br/>
+                                                                                   <label>Email:</label>{{Analyst.Email}}
+                                                                                " data-toggle="tooltip">Analyst:</a>
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Analyst.FullName}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Incept
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Incept}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Expiry
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Expiry}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Stamp
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Stamp}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Supergroup
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Supergroup}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Class
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{Class}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Con Type
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{ContractType}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                    <tr>
+        <td>
+Trty Cov Bsis
+        </td>
+        <td>
+            <input class="form-control" type="text" value="{{TreatyCoverageBasis}}" readonly="readonly"/>
+        </td>
+    </tr>
+
+                </tbody>
+            </table>
+{{/each}}

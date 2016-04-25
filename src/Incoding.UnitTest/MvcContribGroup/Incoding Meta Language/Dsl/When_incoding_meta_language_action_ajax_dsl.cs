@@ -100,8 +100,7 @@
                                           .GetExecutable<ExecutableAjaxAction>()
                                           .Should(action => VerifyAjax(action, "GET", false, string.Empty));
 
-        It should_be_ajax_get = () => new IncodingMetaLanguageDsl(JqueryBind.Click.ToString())
-                                              .Do()
+        It should_be_ajax_get = () => new IncodingMetaLanguageDsl(JqueryBind.Click.ToString())                                              
                                               .AjaxGet(url)
                                               .Where<ArgumentException>(r => r.Message == "message")
                                               .GetExecutable<ExecutableAjaxAction>()

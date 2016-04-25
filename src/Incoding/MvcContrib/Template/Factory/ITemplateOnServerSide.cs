@@ -1,11 +1,14 @@
 namespace Incoding.MvcContrib
 {
-    using JetBrains.Annotations;
+    #region << Using >>
+
+    using System.Web.Mvc;
+
+    #endregion
 
     public interface ITemplateOnServerSide
     {
-        string Render<T>([PathReference] string pathToView, T data);
-
-        string Render<T>([PathReference] string pathToView, object modelForView, T data);
+        
+        string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null);
     }
 }

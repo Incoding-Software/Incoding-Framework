@@ -5,8 +5,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
-    using System.Reflection.Emit;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
@@ -16,10 +14,6 @@
 
     public class CreateByTypeQuery : QueryBase<object>
     {
-        private static readonly Dictionary<Type, object> creatorCache = new Dictionary<Type, object>();
-        
-
-        
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -57,7 +51,7 @@
 
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
-                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => creatorCache.GetOrAdd(instanceType, () => Activator.CreateInstance(instanceType)), instanceType),
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                             ValueProvider = formCollection
                                                                                                     });
