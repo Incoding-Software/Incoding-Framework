@@ -16,6 +16,8 @@
 
     public class CreateByTypeQuery : QueryBase<object>
     {       
+       static  readonly  Dictionary<string,Delegate>  cached = new Dictionary<string, Delegate>();
+
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -51,9 +53,10 @@
                                                                        .ToArray());
             }
 
+            Func<object> modelAccessor = () => cached.GetOrAdd(instanceType.FullName, () => Expression.Lambda(typeof(Func<object>), Expression.New(instanceType.GetConstructors().First()), true).Compile()).DynamicInvoke();
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
-                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, instanceType),
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(modelAccessor, instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                             ValueProvider = formCollection
                                                                                                     });

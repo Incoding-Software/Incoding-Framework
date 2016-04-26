@@ -121,6 +121,8 @@ namespace Incoding.MSpecContrib
                                                                                                                                      if (a.Setting != null)
                                                                                                                                          a.Setting.ShouldEqualWeak(sAsT.Setting);
                                                                                                                                  });
+                                                                                      if (dsl != null)
+                                                                                          dsl(factoryDsl);
                                                                                   });
                                            isAny = true;
                                            if (this.stubsOfSuccess.ContainsKey(type))

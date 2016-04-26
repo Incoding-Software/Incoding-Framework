@@ -36,8 +36,8 @@
                                                                                                                            .Tuning(r => r.FetchSize, command.FetchSize)),
                                                      dsl => dsl.ForwardToAction(r => r.Date, query => query.Date.ShouldBeDate(DateTime.UtcNow)),
                                                      new[] { Pleasure.Generator.Invent<GetExpectedDelayToSchedulerQuery.Response>(dsl => dsl.Tuning(s => s.Id, "2").Tuning(r => r.Instance, instance1)) }.ToList())
-                                          .StubPush(instance1)
-                                          .StubPush(instance2)
+                                          //.StubPush(instance1)
+                                          //.StubPush(instance2)
                                           .StubPush<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(r => r.Id, "1")
                                                                                                    .Tuning(r => r.Description, null)
                                                                                                    .Tuning(r => r.Status, DelayOfStatus.InProgress))

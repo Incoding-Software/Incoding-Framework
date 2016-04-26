@@ -143,7 +143,10 @@
 
         It should_be_ajax_dispatcher = () => new IncodingMetaLanguageDsl("click")
                                                      .Do()
-                                                     .Ajax(r => r.AsView("IncodingMetaLanguageDslHelper.cs"))
+                                                     .Ajax(r =>
+                                                           {
+                                                               return r.AsView("IncodingMetaLanguageDslHelper.cs");
+                                                           })
                                                      .Where<ArgumentException>(r => r.Message == "message")
                                                      .GetExecutable<ExecutableAjaxAction>()
                                                      .Should(action => VerifyAjax(action, "GET", false, string.Empty));

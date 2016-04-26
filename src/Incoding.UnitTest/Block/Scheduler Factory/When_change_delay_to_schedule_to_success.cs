@@ -14,18 +14,6 @@
     [Subject(typeof(ChangeDelayToSchedulerStatusCommand))]
     public class When_change_delay_to_schedule_to_success
     {
-        #region Establish value
-
-        static MockMessage<ChangeDelayToSchedulerStatusCommand, object> mockCommand;
-
-        static Mock<DelayToScheduler> delay;
-
-        static DateTime lastStartOn;
-
-        static GetRecurrencyDateQuery recurrency;
-
-        #endregion
-
         Establish establish = () =>
                               {
                                   var command = Pleasure.Generator.Invent<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(s => s.Status, DelayOfStatus.Success));
@@ -45,19 +33,17 @@
                                                                                 });
                                   DateTime? nextDt = Pleasure.Generator.DateTime();
                                   Action<ICompareFactoryDsl<AddDelayToSchedulerCommand, AddDelayToSchedulerCommand>> compare
-                                          = dsl => dsl.ForwardToAction(r => r.Recurrency, 
-                                                                       schedulerCommand => schedulerCommand.Recurrency.ShouldEqualWeak(recurrency, 
-                                                                                                                                       factoryDsl => factoryDsl.ForwardToValue(r => r.NowDate, null)
-                                                                                                                                                               .ForwardToValue(r => r.RepeatCount, recurrency.RepeatCount - 1)
-                                                                                                                                                               .ForwardToValue(r => r.StartDate, nextDt)));
+                                          = dsl => dsl.ForwardToAction(r => r.Recurrency, schedulerCommand => schedulerCommand.Recurrency.ShouldEqualWeak(recurrency,
+                                                                                                                                                          factoryDsl => factoryDsl.ForwardToValue(r => r.NowDate, null)
+                                                                                                                                                                                  .ForwardToValue(r => r.RepeatCount, recurrency.RepeatCount - 1)
+                                                                                                                                                                                  .ForwardToValue(r => r.StartDate, nextDt)));
                                   mockCommand = MockCommand<ChangeDelayToSchedulerStatusCommand>
                                           .When(command)
                                           .StubGetById(command.Id, delay.Object)
                                           .StubQuery(recurrency, nextDt)
                                           .StubPush(dsl => dsl.Tuning(r => r.UID, delay.Object.UID)
-                                                              .Tuning(r => r.Command, instance)
-                                                              .Tuning(r => r.Priority, delay.Object.Priority)
-                                                              .Tuning(r => r.Setting, instance.Setting), compare);
+                                                              .Tuning(r => r.Command, instance)                                                              
+                                                              .Tuning(r => r.Priority, delay.Object.Priority), compare);
                               };
 
         Because of = () => mockCommand.Original.Execute();
@@ -65,5 +51,17 @@
         It should_be_update_start_on = () => recurrency.NowDate.ShouldEqual(lastStartOn);
 
         It should_be_verify = () => delay.VerifyAll();
+
+        #region Establish value
+
+        static MockMessage<ChangeDelayToSchedulerStatusCommand, object> mockCommand;
+
+        static Mock<DelayToScheduler> delay;
+
+        static DateTime lastStartOn;
+
+        static GetRecurrencyDateQuery recurrency;
+
+        #endregion
     }
 }

@@ -23,6 +23,8 @@
                 delay.Recurrence.NowDate = delay.StartsOn; // calculate next start depending on previously calculated start (to run every day at exactly same time for example)
                 Dispatcher.Push(new AddDelayToSchedulerCommand(delay)
                                 {
+                                        UID = delay.UID,
+                                        Priority = delay.Priority,
                                         Recurrency = new GetRecurrencyDateQuery
                                                      {
                                                              EndDate = delay.Recurrence.EndDate,

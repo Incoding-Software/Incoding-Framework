@@ -45,9 +45,7 @@
                                                                                                            IncludeInProgress = isFirstTime
                                                                                                    }))
                                                    {
-                                                       var closureResponse = response;
-
-                                                       Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
+                                                       Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = response.Id, Status = DelayOfStatus.InProgress });
 
                                                        var task = Task.Factory.StartNew(() =>
                                                                                         {
@@ -55,14 +53,14 @@
                                                                                             {
                                                                                                 Stopwatch sw = new Stopwatch();
                                                                                                 sw.Start();
-                                                                                                Dispatcher.New().Push(closureResponse.Instance);
+                                                                                                Dispatcher.New().Push(response.Instance);
                                                                                                 sw.Stop();
 
                                                                                                 Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
                                                                                                                       {
-                                                                                                                              Id = closureResponse.Id,
+                                                                                                                              Id = response.Id,
                                                                                                                               Status = DelayOfStatus.Success,
-                                                                                                                              Description = "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut)
+                                                                                                                              Description = "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, response.TimeOut)
                                                                                                                       });
                                                                                             }
                                                                                             catch (Exception ex)
@@ -72,7 +70,7 @@
 
                                                                                                 Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
                                                                                                                       {
-                                                                                                                              Id = closureResponse.Id,
+                                                                                                                              Id = response.Id,
                                                                                                                               Status = DelayOfStatus.Error,
                                                                                                                               Description = ex.ToString()
                                                                                                                       });

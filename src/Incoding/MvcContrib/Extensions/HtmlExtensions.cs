@@ -29,7 +29,7 @@ namespace Incoding.MvcContrib
             return new DefaultDispatcher();
         }
 
-        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null)
+        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData :class
         {
             return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateOnServerSide>().Render(HtmlHelper, view, data, model));
         }
