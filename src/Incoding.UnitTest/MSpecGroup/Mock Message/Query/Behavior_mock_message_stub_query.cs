@@ -19,7 +19,7 @@ namespace Incoding.UnitTest.MSpecGroup
                             {
                                 var input = Pleasure.Generator.Invent<TMessage>();
                                 var mockMessage = MockCommand<TMessage>
-                                        .When(input)
+                                        .When(input)                                        
                                         .StubQuery(Pleasure.Generator.Invent<FakeQuery>(dsl => dsl.Tuning(r => r.Id, input.Id)),
                                                    Pleasure.Generator.TheSameString());
                                 mockMessage.Execute();

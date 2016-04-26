@@ -14,8 +14,6 @@
 
     public class GetExpectedDelayToSchedulerQuery : QueryBase<List<GetExpectedDelayToSchedulerQuery.Response>>
     {
-        public bool IncludeInProgress { get; set; }
-
         protected override List<Response> ExecuteResult()
         {
             var delayOfStatuses = new[] { DelayOfStatus.New, DelayOfStatus.Error, }.ToList();
@@ -55,6 +53,8 @@
         #endregion
 
         #region Properties
+
+        public bool IncludeInProgress { get; set; }
 
         public int FetchSize { get; set; }
 

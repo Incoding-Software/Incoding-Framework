@@ -5,6 +5,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
+    using System.Reflection;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
@@ -13,7 +15,7 @@
     #endregion
 
     public class CreateByTypeQuery : QueryBase<object>
-    {
+    {       
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -51,7 +53,7 @@
 
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
-                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
+                                                                                                            ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(null, instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
                                                                                                             ValueProvider = formCollection
                                                                                                     });

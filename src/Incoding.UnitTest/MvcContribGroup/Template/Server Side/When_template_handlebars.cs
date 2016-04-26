@@ -65,10 +65,29 @@
                                   {
                                       var tmpl = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "handlebars_complexity_tmpl.txt"));
                                       var newQuery = Pleasure.Generator.Invent<RenderViewQuery>(dsl => dsl.Tuning(r => r.HtmlHelper, htmlHelper));
-                                      dispatcher.StubQuery(newQuery, new MvcHtmlString(tmpl));                                      
+                                      dispatcher.StubQuery(newQuery, new MvcHtmlString(tmpl));
                                       var render = new TemplateHandlebarsOnServerSide()
-                                              .Render(htmlHelper, query.PathToView, new { data = new ComplexityVm() }, query.Model);
-                                      render.ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
+                                              .Render(htmlHelper, newQuery.PathToView, new { data = new ComplexityVm() {Description = "Description"} }, newQuery.Model);
+                                      render.ShouldEqual(@"
+       
+     <table class=""table table-condensed"">
+                <thead>
+                <tr>
+                    <th class=""col-xs-3""></th>
+                    <th class=""col-xs-9""></th>
+                </tr>
+                </thead>
+                <tbody>             
+                </tr>
+                <tr>
+                    <td>Desc:</td>
+                    <td>
+                        <textarea class=""form-control"" readonly=""readonly"">Description</textarea>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+");
                                   };
 
         public class ComplexityVm

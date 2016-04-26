@@ -67,6 +67,8 @@ namespace Incoding.MSpecContrib
         
         private readonly List<Func<IMessage, bool>> predcatesStubs = new List<Func<IMessage, bool>>();
 
+        private bool isNew;
+
         #endregion
 
         #region Api Methods
@@ -77,6 +79,9 @@ namespace Incoding.MSpecContrib
             ShouldBePushed();            
             repository.VerifyAll();
         }
+
+
+        
 
         public MockMessage<TMessage, TResult> StubPushAsThrow<TCommand>(TCommand command, Exception ex, MessageExecuteSetting setting = null) where TCommand : CommandBase
         {
@@ -109,7 +114,14 @@ namespace Incoding.MSpecContrib
                                        try
                                        {
                                            var sAsT = s as TCommand;
-                                           sAsT.ShouldEqualWeak(pair as TCommand, dsl);
+                                           sAsT.ShouldEqualWeak(pair as TCommand, factoryDsl =>
+                                                                                  {
+                                                                                      factoryDsl.ForwardToAction(r => r.Setting, a =>
+                                                                                                                                 {
+                                                                                                                                     if (a.Setting != null)
+                                                                                                                                         a.Setting.ShouldEqualWeak(sAsT.Setting);
+                                                                                                                                 });
+                                                                                  });
                                            isAny = true;
                                            if (this.stubsOfSuccess.ContainsKey(type))
                                                this.stubsOfSuccess[type]++;
@@ -214,12 +226,15 @@ namespace Incoding.MSpecContrib
         public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, TNextResult result) where TQuery : QueryBase<TNextResult>
         {
             dispatcher.StubQuery(query, result, new MessageExecuteSetting());
+            dispatcher.StubQuery(query, result, null);
             return this;
         }
 
+
+
         public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TNextResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TNextResult>
         {
-            dispatcher.StubQuery(query, dsl, result, executeSetting);
+            dispatcher.StubQuery(query, dsl, result, executeSetting);            
             return this;
         }
 

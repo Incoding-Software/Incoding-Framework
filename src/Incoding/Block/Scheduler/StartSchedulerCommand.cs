@@ -20,15 +20,15 @@
             FetchSize = 10;
             Interval = new TimeSpan(0, 0, 0, 1, 0);
             TaskCreationOptions = TaskCreationOptions.LongRunning;
-            DelayToStart = null;
+            DelayToStart = TimeSpan.Zero;
         }
 
         protected override void Execute()
         {
             Action<bool> execute = (isAsync) =>
                                    {
-                                       if (DelayToStart.HasValue)
-                                           Thread.Sleep(DelayToStart.Value);
+                                       if (DelayToStart.GetValueOrDefault(TimeSpan.Zero) != TimeSpan.Zero)
+                                           Thread.Sleep(DelayToStart.GetValueOrDefault());
 
                                        var isFirstTime = true;
                                        while (true)
