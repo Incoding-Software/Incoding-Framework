@@ -399,6 +399,12 @@ describe('Incoding', function() {
 
                     });
 
+                    it('Should be toSelectorAsName', function () {
+                        expect(''.toSelectorAsName()).toEqual('[name=""]');
+                        expect('email'.toSelectorAsName()).toEqual('[name="email"]');
+                        expect('[email]'.toSelectorAsName()).toEqual('[name="\\[email\\]"]');
+                    });
+
                     it('Should be trim', function() {
                         expect(' Vlad '.trim()).toEqual('Vlad');
                     });
@@ -1361,11 +1367,10 @@ describe('Incoding', function() {
 
                 it('Should be create', function() {
 
-                    var sandboxSubmit = TestHelper.Instance.SandboxSubmit();
+                    
                     var executable = ExecutableFactory.Create('ExecutableInsert', $.parseJSON('{ "onBind":"Value","timeOut":5, "interval":10,"intervalId":"id","target":"$(\'#sandboxSubmit\')","ands":[1,2] }'), instanceSandBox);
 
-                    expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));
-                    expect($(executable.getTarget()).get(0)).toEqual($(sandboxSubmit).get(0));
+                    expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));                    
                     expect(executable.onBind).toEqual('Value');
                     expect(executable.timeOut).toEqual(5);
                     expect(executable.interval).toEqual(10);
@@ -1377,8 +1382,7 @@ describe('Incoding', function() {
                 it('Should be create with self target', function() {
                     var executable = ExecutableFactory.Create('ExecutableInsert', $.parseJSON('{ "onBind":"Value","timeOut":5,"target":"$(this.self)" }'), instanceSandBox);
 
-                    expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));
-                    expect($(executable.getTarget()).get(0)).toEqual($(instanceSandBox).get(0));
+                    expect($(executable.self).get(0)).toEqual($(instanceSandBox).get(0));                    
                 });
 
             });
@@ -1801,14 +1805,6 @@ describe('Incoding', function() {
                         expect($(element).text()).toEqual(data);
                     });
 
-                    it('Should be set val to textbox', function() {
-                        var element = TestHelper.Instance.SandboxTextBox();
-                        var data = 'Data';
-
-                        ExecutableHelper.Instance.TrySetValue(element, data);
-
-                        expect($(element).val()).toEqual(data);
-                    });
 
                     it('Should be set val to hidden', function() {
                         var element = TestHelper.Instance.SandboxHidden();
@@ -1819,18 +1815,6 @@ describe('Incoding', function() {
                         expect($(element).val()).toEqual(data);
                     });
 
-                    it('Should be set val to hidden with checkbox', function() {
-                        appendSetFixtures($('<input>').attr({
-                            type : 'checkbox',
-                            name : 'sandboxHidden'
-                        }));
-                        var element = TestHelper.Instance.SandboxHidden();
-                        var data = 'Data';
-
-                        ExecutableHelper.Instance.TrySetValue(element, data);
-
-                        expect($(element).val()).toEqual(data);
-                    });
 
                     it('Should be set radio', function() {
                         var data = 'aws';
@@ -1954,6 +1938,20 @@ describe('Incoding', function() {
                             expect(element).toHaveProp('checked', false);
 
                         });
+
+                        it('Should be set if hidden', function () {
+                            appendSetFixtures($('<input>').attr({
+                                type: 'checkbox',
+                                name: 'sandboxHidden'
+                            }));
+                            var element = TestHelper.Instance.SandboxHidden();
+
+
+                            ExecutableHelper.Instance.TrySetValue($('[name="sandboxHidden"]'), true);
+
+                            expect($('[name="sandboxHidden"]:checkbox')).toHaveProp('checked', true);
+                        });
+
 
                         it('Should be set array to checkbox', function() {
 
@@ -2746,6 +2744,7 @@ describe('Incoding', function() {
             navigator.Ie8 = false;
             TemplateFactory.Version = '';
             localStorage.removeItem(selectorKey);
+            localStorage.remainingSpace = 9999;
         });
 
         it('Should be ToHtml item', function() {
@@ -2803,6 +2802,8 @@ describe('Incoding', function() {
             expect(localStorage.setItem).toHaveBeenCalledWith(selectorKey, compile);
         });
 
+
+
         it('Should be ToHtml local storage set with empty evaluated selector', function() {
             spyOn(localStorage, 'getItem').andReturn('');
 
@@ -2825,6 +2826,18 @@ describe('Incoding', function() {
             expect(builder.render).toHaveBeenCalledWith(compile, { data : [item] });
             expect(localStorage.clear).toHaveBeenCalled();
         });
+
+
+        it('Should be ToHtml local storage with remainingSpace lowest', function () {
+            localStorage.remainingSpace = 1999;
+            spyOn(localStorage, 'clear');
+
+            TemplateFactory.ToHtml(builder, selectorKey, evaluatedSelector, [{ id : 1 }]);
+
+            expect(localStorage.clear).toHaveBeenCalled();
+        });
+
+
 
         it('Should be ToHtml local storage set with throw', function() {
             spyOn(localStorage, 'setItem').andThrow('SpecificationException');
@@ -2923,8 +2936,36 @@ describe('Incoding', function() {
                 expect(executable.interval).toEqual(0);
                 expect(executable.intervalId).toEqual('');
                 expect(executable.target).toEqual('');
-                expect(executable.ands).toEqual(null);
-                expect(executable.getTarget()).toEqual('');
+                expect(executable.ands).toEqual(null);                
+            });
+
+            describe('getTarget', function() {
+
+                var executable;
+
+                beforeEach(function() {
+                    executable = new ExecutableBase();
+                });
+
+                it('Should be empty target', function() {
+                    expect(executable.getTarget()).toEqual('');
+                });
+
+                it('Should be self', function () {
+                    executable.target = '$(this.self)';
+                    executable.self = '123';
+                    expect(executable.getTarget()).toEqual('123');
+                    
+                });
+
+
+                it('Should be self', function () {
+                    executable.target = '$(this.self)';
+                    executable.self = '123';
+                    expect(executable.getTarget()).toEqual('123');
+                    
+                });
+
             });
 
             describe('Execute', function() {
@@ -2952,7 +2993,7 @@ describe('Incoding', function() {
                     executable.execute(expectedState);
 
                     expect(callExecute).toBeTruthy();
-                    expect(executable.target).toEqual($(5));
+                    expect(executable.target).toEqual(5);
                 });
 
                 it('Should be execute broken valid', function() {
@@ -3391,14 +3432,13 @@ describe('Incoding', function() {
 
                 it('Should be success', function() {
 
-                    var jsonData = { data : 'aws', redirectTo : '', success : true };
-                    var eventState = { eventResult : new IncodingResult(jsonData) };
+                   
+                    eventAction.resultOfEvent = 'aws';
 
-                    $.extend(eventState, state);
+                    
+                    eventAction.internalExecute(state);
 
-                    eventAction.internalExecute(eventState);
-
-                    expect(fakeSuccess.result).toEqual(jsonData.data);
+                    expect(fakeSuccess.result).toEqual(eventAction.resultOfEvent);
                     expect(fakeSuccess.execute).toHaveBeenCalled();
                     expect(fakeComplete.execute).toHaveBeenCalled();
                     expect(fakeError.execute).not.toHaveBeenCalled();
@@ -3725,7 +3765,15 @@ describe('Incoding', function() {
                 it('Should be addClass', function() {
                     executable.jsonData = $.parseJSON($('#ExecutableJquery_AddClass').val());
                     executable.internalExecute();
-                    $(instanceSandBox).hasClass('545BE33E-3A4E-4600-9CA9-2959FFB9DBCA');
+                    expect($(instanceSandBox).hasClass('545BE33E-3A4E-4600-9CA9-2959FFB9DBCA')).toBeTruthy();
+                });
+
+
+                it('Should be removeClass', function () {
+                    $(instanceSandBox).addClass('545BE33E-3A4E-4600-9CA9-2959FFB9DBCA');
+                    executable.jsonData = $.parseJSON($('#ExecutableJquery_RemoveClass').val());
+                    executable.internalExecute();
+                    expect($(instanceSandBox).hasClass('545BE33E-3A4E-4600-9CA9-2959FFB9DBCA')).toBeFalsy();
                 });
 
             });
@@ -4102,6 +4150,7 @@ describe('Incoding', function() {
 
                     validationRefresh = new ExecutableValidationRefresh();
                     validationRefresh.target = form;
+                    validationRefresh.jsonData = { prefix : '' };
 
                 });
 
@@ -4136,6 +4185,22 @@ describe('Incoding', function() {
 
                 });
 
+                it('Should be is valid by prefix', function() {
+
+                    $(span).addClass(messageErrorClass).html('message');
+                    $(input).addClass(inputErrorClass);
+
+                    validationRefresh.jsonData.prefix = 'input';
+                    validationRefresh.result = [{ name : 'Email', errorMessage : 'errroMessage', isValid : true }];
+                    validationRefresh.internalExecute();
+
+                    expect(input).not.toHaveClass(inputErrorClass);
+                    expect(span).not.toHaveClass(messageErrorClass);
+                    expect(span).toHaveClass(messageValidClass);
+                    expect(span).toHaveHtml('');
+
+                });
+
                 it('Should be is empty', function () {
 
                     $(span).addClass(messageErrorClass).html('message');
@@ -4156,7 +4221,7 @@ describe('Incoding', function() {
                     $(span).addClass(messageErrorClass).html('message');
                     $(input).addClass(inputErrorClass);
 
-                    validationRefresh.result = {name:'',value:''};
+                    validationRefresh.result = [{ name: '', value: '' }];
                     validationRefresh.internalExecute();
 
                     expect(input).not.toHaveClass(inputErrorClass);
@@ -4648,6 +4713,8 @@ describe('Incoding', function() {
                 beforeEach(function() {
                     executable = new ExecutableBase();
                     executable.self = 'self';
+                    executable.getTarget = function() {
+                    };
                     spyOn(executable, 'getTarget').andReturn('target');
 
                     conditional = new ConditionalBase();

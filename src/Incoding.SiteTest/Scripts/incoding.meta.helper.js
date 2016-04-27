@@ -281,28 +281,29 @@ function ExecutableHelper() {
             var valueSelector = selector.substring(2, selector.length - 2)
                 .substring(selector.indexOf('*') - 1, selector.length);
 
-            var isType = function (type) {
+            var isType = function(type) {
                 return selector.startsWith("||{0}*".f(type));
             };
 
             if (isType('buildurl')) {
                 var toBuildUrl = $.url(valueSelector);
-                $.eachProperties(toBuildUrl.param(), function () {
+                $.eachProperties(toBuildUrl.param(), function() {
                     toBuildUrl.setParam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.param()[this]));
                 });
 
-                $.eachProperties(toBuildUrl.fparam(), function () {
+                $.eachProperties(toBuildUrl.fparam(), function() {
                     toBuildUrl.setFparam(this, ExecutableHelper.Instance.TryGetVal(toBuildUrl.fparam()[this]));
-                }); return toBuildUrl.toHref();
+                });
+                return toBuildUrl.toHref();
             }
             if (isType('ajax')) {
-                var options = $.extend(true, { data: [] }, $.parseJSON(valueSelector));
+                var options = $.extend(true, { data : [] }, $.parseJSON(valueSelector));
                 var ajaxUrl = $.url(options.url);
-                $.eachProperties(ajaxUrl.param(), function () {
-                    options.data.push({ name: this, selector: ExecutableHelper.Instance.TryGetVal(ajaxUrl.param()[this]) });
+                $.eachProperties(ajaxUrl.param(), function() {
+                    options.data.push({ name : this, selector : ExecutableHelper.Instance.TryGetVal(ajaxUrl.param()[this]) });
                 });
                 var ajaxData;
-                AjaxAdapter.Instance.request(options, function (result) {
+                AjaxAdapter.Instance.request(options, function(result) {
                     ajaxData = result.data;
                 });
                 res = ajaxData;
@@ -326,9 +327,12 @@ function ExecutableHelper() {
             else if (isType('javascript')) {
                 res = eval(valueSelector);
             }
+            else if (isType('jquery')) {
+                res = $(valueSelector);
+            }
             else if (isType('result') || isType('resultOfevent')) {
                 res = getResult(valueSelector, isType('result') ? this.result : this.resultOfEvent);
-            }            
+            }
         }
 
         return ExecutableHelper.IsNullOrEmpty(res) ? '' : res;
@@ -414,13 +418,6 @@ ExecutableHelper.IsData = function (data, property, evaluated) {
     return res;
 };
 
-ExecutableHelper.ParaseQueryString = function (url) {
-
-    if (ExecutableHelper.IsNullOrEmpty(url) && (!url.contains('?') || !url.contains('#'))) {
-        return [];
-    }
-
-};
 
 ExecutableHelper.Filter = function (data, filter) {
     var res;
@@ -508,20 +505,17 @@ ExecutableHelper.IsNullOrEmpty = function (value) {
 ExecutableHelper.RedirectTo = function(destentationUrl) {
     // decode url issue for special characters like % or /
     // fixed like here: https://github.com/medialize/URI.js/commit/fd8ee89a024698986ebef57393fcedbe22631616
-    var decodeUri;
-    try {
-        decodeUri = decodeURIComponent(destentationUrl);
-    }
-    catch (ex) {
-        decodeUri = destentationUrl;
-    }
-    var decodeHash;
-    try {
-        decodeHash = decodeURIComponent(window.location.hash);
-    }
-    catch (ex) {
-        decodeHash = window.location.hash;
-    }
+
+    var safeGetUri = function(url) {        
+        try {
+           return   decodeURIComponent(url);
+        }
+        catch (ex) {
+            return url;
+        }        
+    };
+    var decodeUri = safeGetUri(destentationUrl);
+    var decodeHash = safeGetUri(window.location.hash);
 
     var isSame = decodeUri.contains('#') && decodeHash.replace("#", "") == decodeUri.split('#')[1];
     if (isSame) {

@@ -20,29 +20,7 @@ ExecutableFactory.Create = function(type, data, self) {
         interval : data.interval,
         intervalId : data.intervalId,
         ands : data.ands,
-        target : data.target,
-        getTarget : function() {
-
-            if (ExecutableHelper.IsNullOrEmpty(data.target)) {
-                return '';
-            }
-
-            if (this.target instanceof jQuery) {
-                this.target = $(this.target);
-            }
-            else if (data.target === "$(this.self)") {
-                this.target = this.self;
-            }
-            else if (data.target.startsWith("||") && data.target.endWith("||")) {
-                var selector = data.target.substring(2, data.target.length - 2).substring(data.target.indexOf('*') - 1, data.target.length);
-                this.target = $(selector);
-            }
-            else {
-                this.target = eval(data.target);
-            }
-
-            return this.target;
-        }
+        target : data.target
     });
 
 };
@@ -65,7 +43,26 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';    
+    this.resultOfEvent = '';
+    this.getTarget = function() {
+
+        if (ExecutableHelper.IsNullOrEmpty(this.target)) {
+            return '';
+        }
+        if (this.target === "$(this.self)") {
+            return this.self;
+        }
+           
+        if (this.target.startsWith("||") && this.target.endWith("||")) {
+            var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
+            return $(selector);
+        }
+        else {
+            this.target = eval(this.target);
+        }
+
+        return this.target;
+    };
 }
 
 ExecutableBase.prototype = {
@@ -73,9 +70,9 @@ ExecutableBase.prototype = {
     execute: function (state) {
 
         var current = this;
-        current.target = current.getTarget();
+        this.target = this.getTarget();
         
-        if (!current.isValid()) {   
+        if (!this.isValid()) {
             return;
         }
 
@@ -83,16 +80,16 @@ ExecutableBase.prototype = {
             current.target = current.getTarget();
             current.internalExecute(state);        
         };
-        if (current.timeOut > 0) {
+        if (this.timeOut > 0) {
             window.setTimeout(delayExecute, current.timeOut);            
             return;
         }
-        if (current.interval > 0) {
+        if (this.interval > 0) {
             ExecutableBase.IntervalIds[current.intervalId] = window.setInterval(delayExecute, current.interval);            
             return;
         }
 
-        current.internalExecute(state);        
+        this.internalExecute(state);
     },
     internalExecute : function(state) {
     },
@@ -485,10 +482,7 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
     var isWasRefresh = false;
     for (var i = 0; i < result.length; i++) {
         var item = result[i];
-        if (!item.hasOwnProperty('name') ||
-            !item.hasOwnProperty('isValid') ||
-            !item.hasOwnProperty('errorMessage')) {
-            isWasRefresh = false;
+        if (!item.hasOwnProperty('name') || !item.hasOwnProperty('isValid') || !item.hasOwnProperty('errorMessage')) {
             break;
         }
         if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.prefix)) {

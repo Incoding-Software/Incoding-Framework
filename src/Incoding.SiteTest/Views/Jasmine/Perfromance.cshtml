@@ -26,8 +26,7 @@
     <script src="@Url.Content("~/Scripts/incoding.meta.engine.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.conditional.js")"> </script>
     <script src="@Url.Content("~/Scripts/incoding.meta.executable.js")"> </script>    
-    <script src="@Url.Content("~/Scripts/incoding.meta.trace.js")"> </script>    
-
+    
 
     @Html.Incoding().Script(Url.Content("~/Scripts/JSON2.js"))
     @Html.Incoding().Script(Url.Content("~/Scripts/jasmine.js"))
@@ -36,8 +35,33 @@
     @Html.Incoding().Script(Url.Content("~/Scripts/jquery.mockjax.js"))
 
 
-    @Html.Incoding().Script(Url.Content("~/Scripts/inc-performance.js"))
+    @Html.Incoding().Script("https://cdn.jsdelivr.net/lodash/4.11.2/lodash.min.js")
+    @Html.Incoding().Script(Url.Content("~/Scripts/platform.js"))    
+    @Html.Incoding().Script(Url.Content("~/Scripts/benchmark.js"))    
+    @*@Html.Incoding().Script(Url.Content("~/Scripts/inc-performance.js"))*@
 
+
+    <script>
+        var suite = new Benchmark.Suite;
+
+        var prevOb = $('#ExecutableInsertWithProperty');
+        // add tests
+        suite.add('Search by selector', function() {
+                $('#ExecutableInsertWithProperty');
+            })
+            .add('Search by jquery object', function() {
+                if (prevOb instanceof JQuery) {
+                    prevOb = $(prevOb);
+                }
+            })
+            .on('cycle', function(event) {
+                console.log(String(event.target));
+            })
+            .on('complete', function() {
+                console.log('Fastest is ' + this.filter('fastest').map('name'));
+            })
+            .run({ 'async' : true });
+    </script>
 
     <script type="text/javascript">
         IncodingEngine.Current = {
@@ -78,7 +102,7 @@
 <body>
 <input type="hidden" value="@(new ExecutableInsert("html", "Prop2", string.Empty, false, string.Empty).ToJsonString())" id="ExecutableInsertWithProperty"/>
 
-    @for (int i = 0; i < 1000; i++)
+    @*@for (int i = 0; i < 1000; i++)
     {
         @(Html.When(JqueryBind.InitIncoding)
               .OnSuccess(dsl => dsl.Self().JQuery.Attr.AddClass(B.Btn))
@@ -126,5 +150,5 @@
               .AsHtmlAttributes()
               .ToDiv())
     }
-</div>
+</div>*@
 </body>

@@ -213,6 +213,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\benchmark.js" />
     <Content Include="Scripts\blanket.jasmine.adapter.js" />
     <Content Include="Scripts\blanket.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -301,6 +302,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\JSON2.js" />
     <Content Include="Scripts\mustache.js" />
+    <Content Include="Scripts\platform.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Web.config" />

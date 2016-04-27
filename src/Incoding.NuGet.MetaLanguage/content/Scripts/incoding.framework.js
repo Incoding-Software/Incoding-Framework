@@ -98,7 +98,9 @@ function AjaxAdapter() {
                 callback(parseResult);
             },
             beforeSend: function (jqXHR, settings) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                if (settings.global) {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                }
             },
             complete: function (jqXHR, textStatus) {
                 $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
@@ -127,8 +129,9 @@ function ExecutableHelper() {
     };
     var getJquery = function (selector) {
 
-        if ($(selector).is(':checkbox')) {
-            var onlyCheckbox = $(selector).filter(':checkbox');
+        var asJquery = $(selector);
+        if (asJquery.is(':checkbox')) {
+            var onlyCheckbox = asJquery.filter(':checkbox');
             if (onlyCheckbox.length == 1) {
                 return $(onlyCheckbox).is(':checked');
             }
@@ -146,9 +149,9 @@ function ExecutableHelper() {
                 return res;
             }
         }
-        else if (($(selector).is("select") && $(selector).length > 1)) {
+        else if ((asJquery.is("select") && asJquery.length > 1)) {
             var res = [];
-            $(selector).each(function () {
+            asJquery.each(function () {
                 var val = $(this).val();
                 if (!ExecutableHelper.IsNullOrEmpty(val)) {
                     res.push(val);
@@ -156,25 +159,39 @@ function ExecutableHelper() {
             });
             return res;
         }
-        else if ($(selector).is("select[multiple]")) {
+        else if (asJquery.is("select[multiple]")) {
             var res = [];
-            $($(selector).val()).each(function () {
+            $(asJquery.val()).each(function () {
                 if (!ExecutableHelper.IsNullOrEmpty(this)) {
                     res.push(this);
                 }
             });
             return res;
         }
-        else if ($(selector).is(":radio")) {
-            return $($(selector).prop("name").toSelectorAsName() + ":checked").val();
+        else if (asJquery.is(":radio")) {
+            return $(asJquery.prop("name").toSelectorAsName() + ":checked").val();
         }
-        else if ($(selector).isFormElement()) {
-            return $(selector).val();
+        else if (asJquery.isFormElement()) {
+            return asJquery.val();
+        }
+        
+        if (asJquery.length > 1) {
+            var res = [];
+            $(asJquery).each(function () {
+                var something = $(this).val();
+                var value = ExecutableHelper.IsNullOrEmpty(something)
+                    ? $.trim($(this).html())
+                    : something;
+                if (!ExecutableHelper.IsNullOrEmpty(value)) {
+                    res.push(value);
+                }
+            });
+            return res;
         }
 
-        var something = $(selector).val();
+        var something = asJquery.val();
         return ExecutableHelper.IsNullOrEmpty(something)
-            ? $.trim($(selector).html())
+            ? $.trim(asJquery.html())
             : something;
     };
     var getResult = function (selector, currentResult) {
@@ -1279,6 +1296,18 @@ function IncodingMetaElement(element) {
 
             var strStatus = status.toString();
 
+            try {
+                new IncodingMetaElement(this)
+                .invoke(e, result);
+            }
+            catch (e) {
+                if (e instanceof IncPreventException) {
+                    strStatus = '2'; //prevent default if break
+                }
+                else
+                    throw e;
+            }
+
             if (strStatus === '4' || eventName === IncSpecialBinds.Incoding) {
                 e.stopPropagation(); // if native js trigger
                 e.preventDefault(); // if native js trigger                
@@ -1291,8 +1320,7 @@ function IncodingMetaElement(element) {
                 e.stopPropagation();
             }
 
-            new IncodingMetaElement(this)
-                .invoke(e, result);
+            
 
             return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
         });
@@ -1406,6 +1434,9 @@ IncodingRunner.prototype = {
 //#region class IncClientException
 
 function IncClientException() {
+}
+
+function IncPreventException() {
 }
 
 //#endregion
@@ -1548,7 +1579,25 @@ ExecutableFactory.Create = function(type, data, self) {
         interval : data.interval,
         intervalId : data.intervalId,
         ands: data.ands,
-        target: data.target
+        target: data.target,
+        getTarget: function () {
+
+            if (ExecutableHelper.IsNullOrEmpty(data.target)) {
+                this.target = '';
+            }            
+            else if (data.target === "$(this.self)") {
+                this.target = this.self;
+            }
+            else if (data.target.startsWith("||") && data.target.endWith("||")) {
+                var selector = data.target.substring(2, data.target.length - 2).substring(data.target.indexOf('*') - 1, data.target.length);
+                this.target = $(selector);
+            }
+            else {
+                this.target = eval(data.target);
+            }
+
+            return this.target;
+        }
     });
 
 };
@@ -1571,18 +1620,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
-    this.getTarget = function() {
-        if (this.target instanceof jQuery) {
-            this.target.splice(0, this.target.length);
-            this.target.push.apply(this.target, this.target);
-            return this.target;
-        }
-
-        this.target = this.target === "$(this.self)" ? $(this.self) : $(eval(this.target));
-        return this.target;
-    };
-
+    this.resultOfEvent = '';    
 }
 
 ExecutableBase.prototype = {
@@ -1590,7 +1628,7 @@ ExecutableBase.prototype = {
     execute: function (state) {
 
         var current = this;
-        
+        current.target = current.getTarget();
         
         if (!current.isValid()) {   
             return;
@@ -1665,6 +1703,7 @@ ExecutableBase.IntervalIds = {};
 incodingExtend(ExecutableActionBase, ExecutableBase);
 
 function ExecutableActionBase() {
+    
 }
 
 $.extend(ExecutableActionBase.prototype, {
@@ -1674,7 +1713,7 @@ $.extend(ExecutableActionBase.prototype, {
             ExecutableHelper.RedirectTo(result.redirectTo);
             return;
         }
-
+        
         var resultData = result.data;
 
         if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.filterResult)) {
@@ -1683,15 +1722,16 @@ $.extend(ExecutableActionBase.prototype, {
             resultData = ExecutableHelper.Filter(result.data, filter);
         }
 
-        var hasBreak = false;
+        var wasBreak = false;
         var executeState = function(executable) {
             try {
                 executable.result = resultData;
                 executable.execute();
+                return true;
             }
             catch (e) {
                 if (e instanceof IncClientException) {
-                    hasBreak = true;
+                    wasBreak = true;
                     return false; //stop execute
                 }
 
@@ -1706,16 +1746,21 @@ $.extend(ExecutableActionBase.prototype, {
         };
         var mainStates = result.success ? state.success : state.error;
         for (var i = 0; i < mainStates.length; i++) {
-            executeState(mainStates[i]);
+            if (!executeState(mainStates[i]))
+                break;
         }
 
         for (var j = 0; j < state.complete.length; j++) {
-            executeState(state.complete[j]);
+            if (!executeState(state.complete[j]))
+                break;
+
         }
-        if (hasBreak) {
+        if (wasBreak) {
             for (var k = 0; k < state.breakes.length; k++) {
-                executeState(state.breakes[k]);
-            }
+                if (!executeState(state.breakes[k]))
+                    break;
+
+            }            
         }
     }
 });
@@ -1782,7 +1827,9 @@ ExecutableAjaxAction.prototype.internalExecute = function(state) {
         var fragmentParams = href.fparam();
         $.eachProperties(fragmentParams, function() {
             var name = this.replace(current.jsonData.prefix + '__', '');
-            ajaxOptions.data.push({ name : name, selector : fragmentParams[this] });
+            if (!ExecutableHelper.IsNullOrEmpty(name)) {
+                ajaxOptions.data.push({ name : name, selector : fragmentParams[this] });
+            }
         });
 
     }
@@ -1990,7 +2037,7 @@ function ExecutableValidationRefresh() {
 }
 
 ExecutableValidationRefresh.prototype.name = "Validation Refresh";
-ExecutableValidationRefresh.prototype.internalExecute = function() {
+ExecutableValidationRefresh.prototype.internalExecute = function () {
 
     var inputErrorClass = 'input-validation-error';
     var messageErrorClass = 'field-validation-error';
@@ -2006,11 +2053,14 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
             isWasRefresh = false;
             break;
         }
+        if (!ExecutableHelper.IsNullOrEmpty(this.jsonData.prefix)) {
+            item.name = "{0}.{1}".f(this.jsonData.prefix, item.name);
+        }
 
-        var input = $('[name]', this.target).filter(function() {
+        var input = $('[name]', this.target).filter(function () {
             return $(this).attr('name').toLowerCase() == item.name.toString().toLowerCase();
         });
-        var span = $('[{0}]'.f(attrSpan), this.target).filter(function() {
+        var span = $('[{0}]'.f(attrSpan), this.target).filter(function () {
             return $(this).attr(attrSpan).toLowerCase() == item.name.toString().toLowerCase();
         });
 
@@ -2025,7 +2075,7 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
             $(span).removeClass(messageValidClass)
                 .addClass(messageErrorClass)
                 .html($('<span/>')
-                    .attr({ for : item.name, generated : true })
+                    .attr({ for: item.name, generated: true })
                     .html(item.errorMessage));
         }
         isWasRefresh = true;
@@ -2039,9 +2089,9 @@ ExecutableValidationRefresh.prototype.internalExecute = function() {
         this.target.find('.' + messageErrorClass).addClass(messageValidClass).removeClass(messageErrorClass).empty();
     }
 
-    (this.target.is('form') ? this.target : $('form', this.target))
-        .validate()
-        .focusInvalid();
+    var validate = (this.target.is('form') ? this.target : $('form', this.target)).validate();
+    if(!ExecutableHelper.IsNullOrEmpty(validate))
+        validate.focusInvalid();
 };
 
 //#endregion
@@ -2258,10 +2308,13 @@ function ExecutableJquery() {
 }
 
 ExecutableJquery.prototype.name = "Jquery";
-ExecutableJquery.prototype.internalExecute = function () {
+ExecutableJquery.prototype.internalExecute = function() {
     switch (this.jsonData.method) {
         case 1:
             this.target.addClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
+            break;
+        case 2:
+            this.target.removeClass(ExecutableHelper.Instance.TryGetVal(this.jsonData.args[0]));
             break;
         default:
             throw 'Not found method {0}'.f(this.jsonData.method);
