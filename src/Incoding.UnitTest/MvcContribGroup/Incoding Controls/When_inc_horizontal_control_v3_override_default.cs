@@ -1,9 +1,13 @@
 namespace Incoding.UnitTest.MvcContribGroup
 {
+    #region << Using >>
+
     using System;
     using System.Linq.Expressions;
     using Incoding.MvcContrib;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(IncHiddenControl<,>))]
     public class When_inc_horizontal_control_v3_override_default : Context_inc_control
@@ -13,6 +17,13 @@ namespace Incoding.UnitTest.MvcContribGroup
         static IncHorizontalControl<IncHiddenControl<FakeModel, object>> control;
 
         #endregion
+
+        Cleanup clean = () =>
+                        {
+                            IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v2;
+                            IncodingHtmlHelper.Def_Control_Class = B.Col_xs_7;
+                            IncodingHtmlHelper.Def_Label_Class = B.Col_xs_5;
+                        };
 
         Establish establish = () =>
                               {
@@ -35,7 +46,5 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_render = () => result.ToString()
                                           .ShouldEqual(@"<div class=""col-xs-12 form-group""><label class=""col-xs-5 control-label"" for=""Prop"">Prop</label><div class=""col-xs-9""><input class=""col-xs-7 form-control"" id=""Prop"" name=""Prop"" type=""hidden"" value=""TheSameString"" /></div></div>");
-
-        Cleanup clean = () => IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v2;
     }
 }

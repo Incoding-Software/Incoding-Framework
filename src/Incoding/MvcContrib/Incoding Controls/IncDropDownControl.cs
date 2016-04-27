@@ -35,7 +35,7 @@ namespace Incoding.MvcContrib
             var meta = isAjax ? this.htmlHelper.When(InitBind).Ajax(currentUrl)
                                : this.htmlHelper.When(InitBind);
             attributes = meta.OnSuccess(dsl =>
-                                        {                                            
+                                        {
                                             if (isAjax)
                                             {
                                                 dsl.Self().JQuery.Dom.Empty();
@@ -48,22 +48,9 @@ namespace Incoding.MvcContrib
                                                 }
                                                 dsl.Self().Insert.WithTemplate(Template).Append();
                                             }
-                                            
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
-                                            var isMultiple = this.attributes.ContainsKey(HtmlAttribute.Multiple.ToString());
-                                            if (isMultiple)
-                                                dsl.Self().JQuery.Attr.Val(selected);
-                                            else
-                                            {
-                                                if (selected != null)
-                                                {
-                                                    dsl.Self().JQuery.Attr.Val(selected)
-                                                       .If(() => Selector.Jquery.Self().Find(HtmlTag.Option).Filter(r => r.EqualsAttribute(HtmlAttribute.Value, selected.ToString())).Length() > 0);
-                                                }
-                                                dsl.Self().JQuery.Attr.Val(Selector.Jquery.Self().Find(r => r.Tag(HtmlTag.Option).Expression(JqueryExpression.First)).Attr(HtmlAttribute.Value))
-                                                   .If(() => Selector.Jquery.Self().Find(s => s.Tag(HtmlTag.Option).Expression(JqueryExpression.Selected)).Length() == 0);
-                                            }
+                                            dsl.Self().JQuery.Attr.Val(selected);
 
                                             OnInit.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));
