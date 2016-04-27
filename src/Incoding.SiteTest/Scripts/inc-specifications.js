@@ -2966,6 +2966,19 @@ describe('Incoding', function() {
                     
                 });
 
+
+                it('Should be jquery as eval', function () {
+                    var target = TestHelper.Instance.SandboxTextBox();
+                    executable.target = '$("#sandboxTextBox")';                    
+                    expect(executable.getTarget()).toEqual($("#sandboxTextBox"));
+                });
+
+                it('Should be jquery as selector', function() {
+                    var target = TestHelper.Instance.SandboxTextBox();
+                    executable.target = '||jquery*#sandboxTextBox||';
+                    expect(executable.getTarget()).toEqual($("#sandboxTextBox"));
+                });
+
             });
 
             describe('Execute', function() {

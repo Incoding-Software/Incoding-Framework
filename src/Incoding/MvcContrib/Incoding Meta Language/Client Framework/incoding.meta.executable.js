@@ -45,23 +45,20 @@ function ExecutableBase() {
     this.result = '';
     this.resultOfEvent = '';
     this.getTarget = function() {
-
         if (ExecutableHelper.IsNullOrEmpty(this.target)) {
             return '';
         }
         if (this.target === "$(this.self)") {
             return this.self;
         }
-           
+
         if (this.target.startsWith("||") && this.target.endWith("||")) {
             var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
             return $(selector);
         }
         else {
-            this.target = eval(this.target);
+            return eval(this.target);
         }
-
-        return this.target;
     };
 }
 
