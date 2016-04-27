@@ -106,12 +106,14 @@
             this.methods.Add("{0}".F(propName));
         }
 
-        protected void AndSelector(string value)
+        protected JquerySelectorExtend AndSelector(string value)
         {
             if (string.IsNullOrWhiteSpace(this.selector))
-                this.selector += value;
-            else
-                this.selector += " " + value;
+                return new JquerySelectorExtend(this.selector += value);
+            if (this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector())
+                return new JquerySelectorExtend(this.selector).Filter(new JquerySelectorExtend(value));
+
+            return new JquerySelectorExtend(this.selector += " " + value);
         }
 
         protected void OrSelector(string value)
@@ -154,16 +156,13 @@
             return this.selector;
         }
 
-        public string ToJquerySelector()
+        public string ToJqueryObject()
         {
             if (string.IsNullOrWhiteSpace(this.selector) && !this.methods.Any())
                 return string.Empty;
 
             bool isVariable = this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector();
-            if (isVariable)
-                return ToString();
-
-            if (!this.methods.Any())
+            if (!isVariable && !this.methods.Any())
                 return "||jquery*{0}||".F(this.selector);
 
             return ToString();

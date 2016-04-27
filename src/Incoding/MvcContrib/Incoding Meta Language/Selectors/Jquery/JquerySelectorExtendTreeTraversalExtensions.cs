@@ -174,6 +174,18 @@
         }
 
         /// <summary>
+        ///     Reduce the set of matched elements to those that match the action or pass the function's test.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="selector">
+        ///     selector to match elements against.
+        /// </param>
+        public static JquerySelectorExtend Filter(this JquerySelectorExtend original, JquerySelector selector)
+        {
+            return AddTree(original, jquerySelector => selector, "filter");
+        }
+
+        /// <summary>
         ///     Reduce the set of tag to those that match the action or pass the function's test.
         /// </summary>
         public static JquerySelectorExtend Filter(this JquerySelectorExtend original, HtmlTag tag)

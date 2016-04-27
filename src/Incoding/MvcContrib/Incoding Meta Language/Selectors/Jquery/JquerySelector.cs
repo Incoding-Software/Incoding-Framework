@@ -65,8 +65,7 @@
         /// </summary>
         public JquerySelectorExtend HasAttribute(string attribute)
         {
-            AndSelector("[{0}]".F(attribute.ToLower()));
-            return new JquerySelectorExtend(selector);
+            return AndSelector("[{0}]".F(attribute.ToLower()));
         }
 
         /// <summary>
@@ -89,8 +88,7 @@
         /// </summary>
         public JquerySelectorExtend StartWithAttribute(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute, Escaping(value), "^"));
-            return new JquerySelectorExtend(selector);
+            return AndSelector(FixedAsAttribute(attribute, Escaping(value), "^"));
         }
 
         /// <summary>
@@ -108,8 +106,7 @@
         /// </summary>
         public JquerySelectorExtend ContainsAttribute(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute, Escaping(value), "*"));
-            return new JquerySelectorExtend(selector);
+            return AndSelector(FixedAsAttribute(attribute, Escaping(value), "*"));
         }
 
         /// <summary>
@@ -127,15 +124,13 @@
         /// </summary>
         public JquerySelectorExtend EndsWith(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute, Escaping(value), "$"));
-            return new JquerySelectorExtend(selector);
+            return AndSelector(FixedAsAttribute(attribute, Escaping(value), "$"));
         }
 
         [Obsolete("Please use EndWith")]
         public JquerySelectorExtend EndsWithAttribute(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute, Escaping(value), "$"));
-            return new JquerySelectorExtend(selector);
+            return AndSelector(FixedAsAttribute(attribute, Escaping(value), "$"));
         }
 
         public JquerySelectorExtend Expression(JqueryExpression expression)
@@ -219,8 +214,7 @@
 
         public JquerySelectorExtend Tag(HtmlTag tag)
         {
-            AndSelector(tag.ToStringLower());
-            return new JquerySelectorExtend(selector);
+            return AndSelector(tag.ToStringLower());
         }
 
         /// <summary>
@@ -228,8 +222,7 @@
         /// </summary>
         public JquerySelectorExtend All()
         {
-            AndSelector("*");
-            return new JquerySelectorExtend(selector);
+            return AndSelector("*");
         }
 
         /// <summary>
@@ -237,8 +230,7 @@
         /// </summary>
         public JquerySelectorExtend Class(string @class)
         {
-            AndSelector("." + Escaping(@class.Trim()));
-            return new JquerySelectorExtend(selector);
+           return AndSelector("." + Escaping(@class.Trim()));            
         }
 
         /// <summary>
@@ -261,27 +253,23 @@
 
         public JquerySelectorExtend Document()
         {
-            AndSelector("window.document");
-            return new JquerySelectorExtend(selector);
+           return AndSelector("window.document");           
         }
 
         public JquerySelectorExtend Immediate()
         {
-            AndSelector(">");
-            return new JquerySelectorExtend(selector);
+          return  AndSelector(">");            
         }
 
         public JquerySelectorExtend Self()
         {
-            AndSelector("this.self");
-            return new JquerySelectorExtend(selector);
+          return  AndSelector("this.self");            
         }
 
         [Obsolete("Will be remove on next version")]
         public JquerySelectorExtend Target()
         {
-            AndSelector("this.target");
-            return new JquerySelectorExtend(selector);
+            return AndSelector("this.target");
         }
 
         #endregion
@@ -296,8 +284,7 @@
         /// </summary>
         public JquerySelectorExtend NotEqualsAttribute(string attribute, string value)
         {
-            AndSelector(FixedAsAttribute(attribute, Escaping(value), "!"));
-            return new JquerySelectorExtend(selector);
+          return  AndSelector(FixedAsAttribute(attribute, Escaping(value), "!"));            
         }
 
         /// <summary>

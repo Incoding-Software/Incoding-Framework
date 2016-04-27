@@ -19,7 +19,7 @@
 
         It should_be_self_with_has_attribute= () => Selector.Jquery.Self().HasAttribute(HtmlAttribute.Placeholder)
                                          .ToString()
-                                         .ShouldEqual("$(this.self)");
+                                         .ShouldEqual("$(this.self).filter('[placeholder]')");
 
         It should_be_124 = () => Selector.Jquery.Name("SelectedDropOutType")
                                          .Tag(HtmlTag.Option)

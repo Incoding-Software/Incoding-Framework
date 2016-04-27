@@ -107,7 +107,7 @@ namespace Incoding.MvcContrib
             }
             executable.Add("onBind", OnBind);
             executable.Add("onStatus", (int)OnCurrentStatus);
-            executable.Add("target", Target.With(r => r.ToJquerySelector()));
+            executable.Add("target", Target.With(r => r.ToJqueryObject()));
             executable.Add("onEventStatus", (int)OnEventStatus);
             this.merges.Add(executable);
             if (!LockTarget)
