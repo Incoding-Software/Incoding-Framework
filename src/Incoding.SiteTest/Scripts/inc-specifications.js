@@ -1562,7 +1562,8 @@ describe('Incoding', function() {
                     beforeEach(function() {
 
                         fakeUrl = 'url';
-                        ajaxOptions = TestHelper.Instance.GetAjaxOptions({ url : fakeUrl, data : [{ name : 'element', selector : 'val' }] });
+                        ajaxOptions = TestHelper.Instance.GetAjaxOptions({ url: fakeUrl, data: [{ name: 'element', selector: 'val' }] });
+                        ajaxOptions.global = true;
                         $.mockjax({
                             url : ajaxOptions.url,
                             type : ajaxOptions.type,
@@ -1608,9 +1609,25 @@ describe('Incoding', function() {
                             waits(500);
                             runs(function() {
                                 expect(IncSpecialBinds.IncAjaxBefore).toHaveBeenTriggeredOn(document);
-                                +expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document);
-                                +expect(IncSpecialBinds.IncAjaxSuccess).toHaveBeenTriggeredOn(document);
-                                +expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxSuccess).toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
+                            });
+                        });
+
+                        it('Should be success with global false', function() {
+
+                            runs(function () {
+                                ajaxOptions.global = false;
+                                adapter.request($.extend({}, ajaxOptions, true), function() {
+                                });
+                            });
+                            waits(500);
+                            runs(function() {
+                                expect(IncSpecialBinds.IncAjaxBefore).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxComplete).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxSuccess).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
                             });
                         });
 
@@ -1627,6 +1644,23 @@ describe('Incoding', function() {
                                 expect(IncSpecialBinds.IncAjaxComplete).toHaveBeenTriggeredOn(document);
                                 expect(IncSpecialBinds.IncAjaxSuccess).not.toHaveBeenTriggeredOn(document);
                                 expect(IncSpecialBinds.IncAjaxError).toHaveBeenTriggeredOn(document);
+                            });
+                        });
+
+                        it('Should be error with global false', function() {
+                            runs(function () {
+                                ajaxOptions.global = false;
+                                var extend = $.extend({}, ajaxOptions, true);
+                                extend.url = "bad url";                                
+                                adapter.request(extend, function() {
+                                });
+                            });
+                            waits(500);
+                            runs(function() {
+                                expect(IncSpecialBinds.IncAjaxBefore).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxComplete).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxSuccess).not.toHaveBeenTriggeredOn(document);
+                                expect(IncSpecialBinds.IncAjaxError).not.toHaveBeenTriggeredOn(document);
                             });
                         });
 

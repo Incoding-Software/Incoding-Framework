@@ -86,27 +86,38 @@ function AjaxAdapter() {
         return res;
     };
 
-    this.request = function (options, callback) {
+    this.request = function(options, callback) {
+        if (!options.hasOwnProperty('global')) {
+            options.global = true;
+        }
 
         $.extend(options, {
-            url: options.url.split("?")[0],
-            headers: { "X-Requested-With": "XMLHttpRequest" },
-            dataType: 'JSON',
-            success: function (data, textStatus, jqXHR) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+            url : options.url.split("?")[0],
+            headers : { "X-Requested-With" : "XMLHttpRequest" },
+            dataType : 'JSON',
+            success : function(data, textStatus, jqXHR) {
+                if (options.global) {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                }
                 var parseResult = new IncodingResult(data);
                 callback(parseResult);
             },
-            beforeSend: function (jqXHR, settings) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+            beforeSend : function(jqXHR, settings) {
+                if (options.global) {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                }
             },
-            complete: function (jqXHR, textStatus) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+            complete : function(jqXHR, textStatus) {
+                if (options.global) {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                }
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+            error : function(jqXHR, textStatus, errorThrown) {
+                if (options.global) {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                }
             },
-            data: this.params(options.data)
+            data : this.params(options.data)
         });
 
         return $.ajax(options);
