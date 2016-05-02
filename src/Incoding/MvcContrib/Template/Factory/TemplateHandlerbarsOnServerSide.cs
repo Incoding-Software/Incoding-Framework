@@ -9,6 +9,7 @@
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Extensions;
+    using Mustache;
 
     #endregion
 
@@ -19,7 +20,6 @@
         public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
-
             return cache.GetOrAdd(fullPathToView, () =>
                                                   {
                                                       var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()

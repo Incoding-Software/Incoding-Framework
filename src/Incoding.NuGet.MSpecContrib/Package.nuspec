@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Incoding.MSpecContrib</id>
-    <version>1.4.0.161-beta</version>
+    <version>1.4.0.1</version>
     <title>Incoding tests helpers</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>

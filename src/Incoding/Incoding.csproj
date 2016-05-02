@@ -202,6 +202,10 @@
     <Reference Include="MongoDB.Driver">
       <HintPath>..\packages\mongocsharpdriver.1.9.0\lib\net35\MongoDB.Driver.dll</HintPath>
     </Reference>
+    <Reference Include="mustache-sharp, Version=0.2.9.0, Culture=neutral, PublicKeyToken=40ca26c1e088cef4, processorArchitecture=MSIL">
+      <HintPath>..\packages\mustache-sharp.0.2.9.0\lib\net40\mustache-sharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
@@ -431,6 +435,7 @@
     <Compile Include="MvcContrib\Incoding Controls\IncStaticControl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\RenderViewQuery.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Executables\ExecutableJquery.cs" />
+    <Compile Include="MvcContrib\Incoding Meta Language\Selectors\SelectorMapEx.cs" />
     <Compile Include="MvcContrib\MVD\ExecuteQuery.cs" />
     <Compile Include="MvcContrib\Primitive\IncHtmlString.cs" />
     <Compile Include="MvcContrib\Primitive\IncSelectList.cs" />

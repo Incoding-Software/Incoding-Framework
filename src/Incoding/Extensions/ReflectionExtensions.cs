@@ -143,7 +143,7 @@ namespace Incoding.Extensions
             var fieldInfo = memberInfo as FieldInfo;
             return fieldInfo != null ? fieldInfo.GetValue(ob) : null;
         }
-
+            
         public static TResult TryGetValue<TResult>(this object ob, string property)
         {
             return (TResult)ob.TryGetValue(property);

@@ -68,7 +68,7 @@
         {
             #region Static Fields
 
-            static readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
+            static readonly Dictionary<string, string> cache = new Dictionary<string, string>();
 
             #endregion
 
@@ -81,18 +81,19 @@
             protected override Type ExecuteResult()
             {
                 string name = HttpUtility.UrlDecode(Type).Replace(" ", "+");
-                return cache.GetOrAdd(name, () =>
-                                            {
-                                                var clearName = name.Contains("`") ? name.Split('`')[0] + "`1" : name;
-                                                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                                                {
-                                                    var findType = assembly.GetLoadableTypes().FirstOrDefault(type => type.Name == clearName || type.FullName == clearName);
-                                                    if (findType != null)
-                                                        return findType;
-                                                }
+                var assmelbyName = cache.GetOrAdd(name, () =>
+                                                        {
+                                                            var clearName = name.Contains("`") ? name.Split('`')[0] + "`1" : name;
+                                                            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                                                            {
+                                                                var findType = assembly.GetLoadableTypes().FirstOrDefault(type => type.Name == clearName || type.FullName == clearName);
+                                                                if (findType != null)
+                                                                    return findType.AssemblyQualifiedName;
+                                                            }
 
-                                                throw new IncMvdException("Not found any type {0}".F(name));
-                                            });
+                                                            throw new IncMvdException("Not found any type {0}".F(name));
+                                                        });
+                return System.Type.GetType(assmelbyName);
             }
         }
 

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Block.IoC;
@@ -64,10 +65,36 @@
         It should_be_complexity = () =>
                                   {
                                       var tmpl = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "handlebars_complexity_tmpl.txt"));
-                                      var newQuery = Pleasure.Generator.Invent<RenderViewQuery>(dsl => dsl.Tuning(r => r.HtmlHelper, htmlHelper));
+                                      var newQuery = Pleasure.Generator.Invent<RenderViewQuery>(dsl => dsl.Tuning(r => r.Model,null)
+                                                                                                          .Tuning(r => r.HtmlHelper, htmlHelper));
                                       dispatcher.StubQuery(newQuery, new MvcHtmlString(tmpl));
+                                      var data = new ComplexityVm()
+                                                 {
+                                                         BreadCrumbsLinks = new List<ComplexityVm.TabVm>()
+                                                                            {
+                                                                                    new ComplexityVm.TabVm() { After = "" }
+                                                                            },
+                                                        GroupLinks = new List<ComplexityVm.TabVm>(),
+                                                         CountTabs = new[]
+                                                                     {
+                                                                             new ComplexityVm.TabVm()
+                                                                             {
+                                                                                     After = " 1-50 од 231593",
+                                                                                     Active = true,
+                                                                                     Url = "",
+                                                                                     Title = "Сите"
+                                                                             },
+                                                                             new ComplexityVm.TabVm()
+                                                                             {
+                                                                                     After = " 1-50 од 231593",
+                                                                                     Active = false,
+                                                                                     Url = "private",
+                                                                                     Title = "Title"
+                                                                             }
+                                                                     }.ToList()
+                                                 };
                                       var render = new TemplateHandlebarsOnServerSide()
-                                              .Render(htmlHelper, newQuery.PathToView, new { data = new ComplexityVm() {Description = "Description"} }, newQuery.Model);
+                                              .Render(htmlHelper, newQuery.PathToView, new {data = data }, newQuery.Model);
                                       render.ShouldEqual(@"
        
      <table class=""table table-condensed"">
@@ -92,50 +119,143 @@
 
         public class ComplexityVm
         {
-            public string Id { get; set; }
+            public List<TabVm> CountTabs { get; set; }
 
-            public string Year { get; set; }
+            public List<TabVm> SortingLinks { get; set; }
 
-            public OfUser UW { get; set; }
+            public List<TabVm> DisplayTypeLinks { get; set; }
 
-            public List<OfCompany> Brokers { get; set; }
+            public List<TabVm> GroupLinks { get; set; }
 
-            public OfCompany Client { get; set; }
+            public bool HideGroupLinks { get; set; }
 
-            public OfUser Analyst { get; set; }
+            public List<TabVm> BreadCrumbsLinks { get; set; }
 
-            public string Description { get; set; }
+            public string PageTitle { get; set; }
 
-            public string Incept { get; set; }
+            public List<ListingSearchAdVm> FirstPositionItems { get; set; }
 
-            public string Expiry { get; set; }
+            //public ListingAdsNoResultsVm NoResults { get; set; }
 
-            public string Stamp { get; set; }
+            public string LocationString { get; set; }
 
-            public string Supergroup { get; set; }
+            public string CategoryString { get; set; }
 
-            public string Class { get; set; }
+            //public List<GroupTabVm> MobileGroupLinks { get; set; }
 
-            public string ContractType { get; set; }
+            public bool IsAuthorized { get; set; }
 
-            public string TreatyCoverageBasis { get; set; }
+            public bool HasGroups { get { return GroupLinks.Any(); } }
 
-            public class OfUser
+            public bool HasBreadCrumbs { get { return BreadCrumbsLinks.Any(); } }
+
+            public class NameWithLink
             {
-                public string FullName { get; set; }
+                public string Name { get; set; }
 
-                public string Email { get; set; }
+                public string Link { get; set; }
             }
 
-            public class OfCompany
+            public class ListingSearchAdVm
             {
-                public string FullName { get; set; }
+                #region Constructors
 
-                public string Phone { get; set; }
+                public ListingSearchAdVm() { }
 
-                public string Code { get; set; }
+                #endregion
 
-                public string Address { get; set; }
+                #region Properties
+
+                public long AdvertiserId { get; set; }
+
+                public List<NameWithLink> Categories { get; set; }
+
+                public NameWithLink Category { get; set; }
+
+                public string CreateDate { get; set; }
+
+                public string Currency { get; set; }
+
+                public string DateTimeBr { get; set; }
+
+                public bool ExtColored { get; set; }
+
+                public bool ExtShowLogo { get; set; }
+
+                public bool ExtTopPositioned { get; set; }
+
+                public bool IsMessageAvailable { get; set; }
+
+                public bool HasPrice { get; set; }
+
+                public long Id { get; set; }
+
+                public string IdSeo { get; set; }
+
+                public string ImageDate { get; set; }
+
+                public bool ImageIsVideo { get; set; }
+
+                public string ImageTitle { get; set; }
+
+                public bool IsCompany { get; set; }
+
+                public bool IsNew { get; set; }
+
+                public bool IsRent { get; set; }
+
+                public bool IsSavedAd { get; set; }
+
+                public bool IsStore { get; set; }
+
+                public string StoreText { get; set; }
+
+                public NameWithLink Location { get; set; }
+
+                public List<NameWithLink> Locations { get; set; }
+
+                public bool ManyImages { get; set; }
+
+                public string MapAltitude { get; set; }
+
+                public string MapLongtitude { get; set; }
+
+                public string Price { get; set; }
+
+                public string PriceFrequency { get; set; }
+
+                public bool PriceLowered { get; set; }
+
+                public string ResponseItemId { get; set; }
+
+                public string ShortTitle { get; set; }
+
+                public string StoreLogin { get; set; }
+
+                public string StoreLogoDate { get; set; }
+
+                public string StoreLogoTitle { get; set; }
+
+                public string Title { get; set; }
+
+                public bool IsAuthorized { get; set; }
+
+                #endregion
+            }
+
+            public class TabVm
+            {
+                public string Title { get; set; }
+
+                public string After { get; set; }
+
+                public string Url { get; set; }
+
+                public bool Active { get; set; }
+
+                public string Value { get; set; }
+
+                public string Notice { get; set; }
             }
         }
     }
