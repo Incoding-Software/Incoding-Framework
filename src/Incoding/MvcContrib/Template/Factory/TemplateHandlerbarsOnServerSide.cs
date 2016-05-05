@@ -16,7 +16,7 @@
     public class TemplateHandlebarsOnServerSide : ITemplateOnServerSide
     {
         internal static readonly Dictionary<string, Func<object, string>> cache = new Dictionary<string, Func<object, string>>();
-
+        
         public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);

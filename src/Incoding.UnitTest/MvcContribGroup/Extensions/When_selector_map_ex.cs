@@ -31,7 +31,7 @@
         It should_be_as_query_string = () =>
                                        {
                                            var test = new Test();
-                                           var routeValueDictionary = test.MapAsHash();
+                                           var routeValueDictionary = test.MapAsQueryString();
                                            routeValueDictionary.ShouldBeKeyValue("Name", Selector.Incoding.QueryString("Name"));
                                            routeValueDictionary.ShouldBeKeyValue("Name2", Selector.Incoding.QueryString("Name2"));
                                        };

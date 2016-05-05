@@ -28,6 +28,8 @@
 
         public IncodingMetaCallbackStoreDsl Hash { get { return new IncodingMetaCallbackStoreDsl("hash", this.plugIn); } }
 
+        public IncodingMetaCallbackStoreDsl QueryString { get { return new IncodingMetaCallbackStoreDsl("queryString", this.plugIn); } }
+
         #endregion
 
         #region Nested classes

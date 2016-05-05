@@ -625,14 +625,20 @@ ExecutableStoreFetch.prototype.name = "Store fetch";
 ExecutableStoreFetch.prototype.internalExecute = function() {
 
     var prefix = this.jsonData.prefix + "__";
-    var fparam = $.url(window.location.href).fparam();
+    var params = [];
+    if (this.jsonData.type == 'hash') {
+        params = $.url(window.location.href).fparam();
+    }
+    else if (this.jsonData.type = 'queryString') {
+        params = $.url(window.location.href).param();
+    }
 
     $.eachFormElements(this.target, function() {
         var name = $(this).prop('name');
         var key = prefix + name;
         var value = '';
-        if (fparam.hasOwnProperty(key)) {
-            value = fparam[key];
+        if (params.hasOwnProperty(key)) {
+            value = params[key];
         }
         ExecutableHelper.Instance.TrySetValue(this, value);
     });
