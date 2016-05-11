@@ -51,7 +51,7 @@
                                            {
                                                Pleasure.Do(i => new TemplateHandlebarsOnServerSide()
                                                                         .Render(htmlHelper, query.PathToView, data, query.Model)
-                                                                        .ShouldNotBeEmpty(), 1000).ShouldBeLessThan(50);
+                                                                        .ShouldNotBeEmpty(), 1000).ShouldBeLessThan(100);
                                            };
 
         It should_be_compile_wihtout_view_model = () =>
@@ -96,24 +96,26 @@
                                       var render = new TemplateHandlebarsOnServerSide()
                                               .Render(htmlHelper, newQuery.PathToView, new {data = data }, newQuery.Model);
                                       render.ShouldEqual(@"
-       
-     <table class=""table table-condensed"">
-                <thead>
-                <tr>
-                    <th class=""col-xs-3""></th>
-                    <th class=""col-xs-9""></th>
-                </tr>
-                </thead>
-                <tbody>             
-                </tr>
-                <tr>
-                    <td>Desc:</td>
-                    <td>
-                        <textarea class=""form-control"" readonly=""readonly"">Description</textarea>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        
+    <div class=""clearfix""></div>
+            <div class=""navbar small"">
+                <div class=""navbar-inner"">
+                    <ul class=""nav nav-count"">
+                            <li class=""tab-item active"">
+                                <a href=""javascript:void(0)"">
+                                    &#1057;&#1080;&#1090;&#1077;
+                                    <span class=""after""> 1-50 &#1086;&#1076; 231593</span>
+                                </a>  
+                            </li>
+                            <li class=""tab-item"">
+                                <a href = ""#!private"">
+                                    Title
+                                    <span class=""after""> 1-50 &#1086;&#1076; 231593</span>
+                                </a>  
+                            </li>
+                    </ul>
+                   
+
 ");
                                   };
 
