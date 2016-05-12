@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -19,7 +20,7 @@
 
     public class UrlDispatcher : IUrlDispatcher
     {
-        internal static readonly Dictionary<string, bool> duplicates = new Dictionary<string, bool>();
+        internal static readonly ConcurrentDictionary<string, bool> duplicates = new ConcurrentDictionary<string, bool>();
 
         #region Constants
 
@@ -339,7 +340,7 @@
 
         static string GetTypeName(Type type)
         {
-            string mainName = duplicates.GetOrAdd(type.Name, () =>
+            string mainName = duplicates.GetOrAdd(type.Name, (i) =>
                                                              {
                                                                  return AppDomain.CurrentDomain.GetAssemblies()
                                                                                  .Select(r => r.GetLoadableTypes())

@@ -68,7 +68,7 @@
         {
             #region Static Fields
 
-            static readonly Dictionary<string, string> cache = new Dictionary<string, string>();
+            static readonly ConcurrentDictionary<string, string> cache = new ConcurrentDictionary<string, string>();
 
             #endregion
 
@@ -81,7 +81,7 @@
             protected override Type ExecuteResult()
             {
                 string name = HttpUtility.UrlDecode(Type).Replace(" ", "+");
-                var assmelbyName = cache.GetOrAdd(name, () =>
+                var assmelbyName = cache.GetOrAdd(name, (i) =>
                                                         {
                                                             var clearName = name.Contains("`") ? name.Split('`')[0] + "`1" : name;
                                                             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())

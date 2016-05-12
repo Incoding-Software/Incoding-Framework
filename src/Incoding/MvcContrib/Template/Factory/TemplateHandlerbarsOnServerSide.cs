@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Web.Mvc;
     using HandlebarsDotNet;
@@ -15,14 +16,15 @@
 
     public class TemplateHandlebarsOnServerSide : ITemplateOnServerSide
     {
-        internal static readonly Dictionary<string, Func<object, string>> cache = new Dictionary<string, Func<object, string>>();
+        internal static readonly ConcurrentDictionary<string, Func<object, string>> cache = new ConcurrentDictionary<string, Func<object, string>>();
 
         public static string Version { get; set; }
 
         public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null)
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
-            return cache.GetOrAdd(fullPathToView + Version, () =>
+
+            return cache.GetOrAdd(fullPathToView + Version, (i) =>
                                                             {
                                                                 var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
                                                                                                                                {

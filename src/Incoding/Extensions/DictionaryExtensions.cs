@@ -9,21 +9,6 @@ namespace Incoding.Extensions
 
     public static class DictionaryExtensions
     {
-        public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, Func<TValue> evaluated)
-        {
-            if (source.ContainsKey(key))
-                return source[key];
-
-            lock (key.ToString())
-            {
-                if (source.ContainsKey(key))
-                    return source[key];
-
-                var value = evaluated();
-                source[key] = value;
-                return value;
-            }
-        }
 
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key)
         {

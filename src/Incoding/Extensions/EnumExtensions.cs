@@ -3,6 +3,7 @@ namespace Incoding.Extensions
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
@@ -11,7 +12,7 @@ namespace Incoding.Extensions
 
     public static class EnumExtensions
     {
-        static readonly Dictionary<string, string> cachedEnumToString = new Dictionary<string, string>();
+        static readonly ConcurrentDictionary<string, string> cachedEnumToString = new ConcurrentDictionary<string, string>();
 
         #region Factory constructors
 
@@ -34,7 +35,7 @@ namespace Incoding.Extensions
         {
             var type = value.GetType();
             var key = "{0}{1}".F(type.FullName, value.ToString("D"));
-            return cachedEnumToString.GetOrAdd(key, () =>
+            return cachedEnumToString.GetOrAdd(key, (i) =>
                                                     {
                                                         var enumType = type;
 

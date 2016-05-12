@@ -10,6 +10,7 @@ namespace Incoding.MSpecContrib
     using System.IO;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Routing;
     using Incoding.Data;
@@ -177,23 +178,24 @@ namespace Incoding.MSpecContrib
             {
                 var manualResetEvent = new ManualResetEvent(false);
 
-                var threads = new List<Thread>();
+                var tasks = new List<Task>();
 
                 for (int i = 0; i < countThread; i++)
                 {
                     int currentIndex = i;
-                    var thread = new Thread(() =>
-                                                {
-                                                    action.Invoke();
-                                                    Debug.Print("Start thread ¹ {0}".F(currentIndex));
-                                                    manualResetEvent.Set();
-                                                });
-                    threads.Add(thread);
+                    var thread = new Task(() =>
+                                          {
+                                              action.Invoke();
+                                              Debug.Print("Start thread ¹ {0}".F(currentIndex));
+                                              manualResetEvent.Set();
+                                          });
+                    tasks.Add(thread);
                 }
 
-                for (int i = threads.Count - 1; i != -1; i--)
-                    threads[i].Start();
+                for (int i = tasks.Count - 1; i != -1; i--)
+                    tasks[i].Start();
 
+                Task.WaitAll(tasks.ToArray());
                 manualResetEvent.Reset();
                 return manualResetEvent;
             }
