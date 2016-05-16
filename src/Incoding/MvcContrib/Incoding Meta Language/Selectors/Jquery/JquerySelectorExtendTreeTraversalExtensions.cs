@@ -352,6 +352,14 @@
         }
 
         /// <summary>
+        ///     Selects all elements that do not match the given <paramref name="selector" />.
+        /// </summary>
+        public static JquerySelectorExtend Not(this JquerySelectorExtend original, JquerySelectorExtend selector)
+        {
+            return AddTree(original, jquerySelector => selector, "not");
+        }
+
+        /// <summary>
         ///     Selects all elements that do not match the given <paramref name="action" />.
         /// </summary>
         public static JquerySelectorExtend Not(this JquerySelectorExtend original, HtmlTag tag)

@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using Incoding.Extensions;
     using Incoding.MvcContrib;
     using Machine.Specifications;
 
@@ -142,6 +143,11 @@
                                          .Not(selector => selector.Tag(HtmlTag.P))
                                          .ToString()
                                          .ShouldEqual("$('*').not('p')");
+
+        It should_be_not_by_selector = () => Selector.Jquery.All()
+                                         .Not("Id".ToId())
+                                         .ToString()
+                                         .ShouldEqual("$('*').not('#Id')");
 
         It should_be_not_by_expression = () => Selector.Jquery.All()
                                                        .Not(JqueryExpression.Button)
