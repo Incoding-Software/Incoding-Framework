@@ -22,6 +22,12 @@ if (!window.console) {
     };
 }
 
+document.setTitle = function(value) {
+    document.title = value;
+};
+
+
+
 function InitGps() {
     if (navigator.geolocation && !navigator.geolocation.currentPosition) {
         navigator.geolocation.currentPosition = { longitude: 0, latitude: 0 };
@@ -31,6 +37,7 @@ function InitGps() {
         });
     }
 }
+
 
 $.extend(String.prototype, {
     replaceAll: function (find, replace) {

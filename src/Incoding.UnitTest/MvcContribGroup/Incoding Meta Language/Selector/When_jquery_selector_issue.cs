@@ -79,6 +79,12 @@
                                         .ToString()
                                         .ShouldEqual("$('.extraCheckbox').not(':checked')");
 
+        It should_be_not_not_not = () => Selector.Jquery.Class("extraCheckbox")
+                                        .Not(JqueryExpression.Checked)
+                                        .Not(HtmlTag.TBody)
+                                        .ToString()
+                                        .ShouldEqual("$('.extraCheckbox').not(':checked').not('tbody')");
+
         It should_be_expression_after_method = () => Selector.Jquery.Self()
                                                              .Find(HtmlTag.Label)
                                                              .Expression(JqueryExpression.First)

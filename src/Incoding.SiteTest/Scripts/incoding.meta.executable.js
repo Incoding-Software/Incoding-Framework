@@ -7,20 +7,36 @@ function ExecutableFactory() {
 
 // ReSharper disable UnusedParameter
 
-ExecutableFactory.Create = function(type, data, self) {
+ExecutableFactory.Create = function (type, data, self) {
 
     if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
     return $.extend(false, document[type], {
-        jsonData : data,
-        onBind : data.onBind,
-        self : $(self),
-        timeOut : data.timeOut,
-        interval : data.interval,
-        intervalId : data.intervalId,
-        ands : data.ands,
-        target : data.target
+        jsonData: data,
+        onBind: data.onBind,
+        self: $(self),
+        timeOut: data.timeOut,
+        interval: data.interval,
+        intervalId: data.intervalId,
+        ands: data.ands,
+        target: data.target,
+        getTarget: function () {
+            if (ExecutableHelper.IsNullOrEmpty(data.target)) {
+                return '';
+            }
+            if (data.target === "$(this.self)") {
+                return this.self;
+            }
+
+            if (data.target.startsWith("||") && data.target.endWith("||")) {
+                var selector = data.target.substring(2, data.target.length - 2).substring(data.target.indexOf('*') - 1, data.target.length);
+                return $(selector);
+            }
+            else {
+                return eval(data.target);
+            }
+        }
     });
 
 };
@@ -44,22 +60,7 @@ function ExecutableBase() {
     this.ands = null;
     this.result = '';
     this.resultOfEvent = '';
-    this.getTarget = function() {
-        if (ExecutableHelper.IsNullOrEmpty(this.target)) {
-            return '';
-        }
-        if (this.target === "$(this.self)") {
-            return this.self;
-        }
-
-        if (this.target.startsWith("||") && this.target.endWith("||")) {
-            var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
-            return $(selector);
-        }
-        else {
-            return eval(this.target);
-        }
-    };
+    this.getTarget = function() {};
 }
 
 ExecutableBase.prototype = {

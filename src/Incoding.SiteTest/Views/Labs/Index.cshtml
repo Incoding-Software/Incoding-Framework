@@ -1,4 +1,5 @@
-﻿@using Incoding.SiteTest
+﻿@using Incoding.Extensions
+@using Incoding.SiteTest
 @using Incoding.SiteTest.Domain
 @model AddProductCommand
 <!DOCTYPE html>
@@ -32,8 +33,10 @@
     </script>
 </head>
 <body>
-<a href="@Url.Dispatcher().Model(true).AsView("~/Views/Labs/MVD/SignUpAdvertiser.cshtml")">
-    Test
-</a>
+<input type="text" value="Title 2" id="id"/>
+@(Html.When(JqueryBind.InitIncoding)      
+      .OnSuccess(dsl => dsl.Document.Title("id".ToId()))
+      .AsHtmlAttributes()
+      .ToDiv())
 </body>
 </html>
