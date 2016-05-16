@@ -55,7 +55,7 @@ namespace Incoding.MvcContrib
             return this.plugIn.Registry(new ExecutableEval(JavaScriptCodeTemplate.Window_Location_Reload.F(force.ToString().ToLower())));
         }
 
-        public IExecutableSetting Title(JquerySelector title)
+        public IExecutableSetting Title(Selector title)
         {
             return this.plugIn.Registry(new ExecutableEvalMethod("setTitle", new[] { title }, "document"));
         }

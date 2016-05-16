@@ -71,6 +71,16 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                           });
 
         It should_be_document_set_title = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                        .OnSuccess(r => r.Document.Title("Id"))
+                                                        .GetExecutable<ExecutableEvalMethod>()
+                                                        .ShouldEqualData(new Dictionary<string, object>
+                                                                         {
+                                                                                 { "method", "setTitle" },
+                                                                                 { "args", new[] { "Id" } },
+                                                                                 { "context", "document" },
+                                                                         });
+
+        It should_be_document_set_title_jquery = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                         .OnSuccess(r => r.Document.Title("Id".ToId()))
                                                         .GetExecutable<ExecutableEvalMethod>()
                                                         .ShouldEqualData(new Dictionary<string, object>
