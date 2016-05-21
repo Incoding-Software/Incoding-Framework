@@ -182,18 +182,18 @@ namespace Incoding.MSpecContrib
 
                 for (int i = 0; i < countThread; i++)
                 {
-                    int currentIndex = i;
+                    var i1 = i;
                     var thread = new Task(() =>
                                           {
                                               action.Invoke();
-                                              Debug.Print("Start thread ¹ {0}".F(currentIndex));
+                                              Debug.Print("Start thread {0}".F(i1));
                                               manualResetEvent.Set();
                                           });
                     tasks.Add(thread);
                 }
 
-                for (int i = tasks.Count - 1; i != -1; i--)
-                    tasks[i].Start();
+                foreach (var task in tasks)
+                    task.Start();
 
                 Task.WaitAll(tasks.ToArray());
                 manualResetEvent.Reset();

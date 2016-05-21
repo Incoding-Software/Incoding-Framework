@@ -6,10 +6,11 @@
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
+    using NCrunch.Framework;
 
     #endregion
 
-    [Subject(typeof(CreateByTypeQuery.FindTypeByName))]
+    [Subject(typeof(CreateByTypeQuery.FindTypeByName)),Isolated]
     public class When_find_by_type_concurrency
     {
         Establish establish = () =>

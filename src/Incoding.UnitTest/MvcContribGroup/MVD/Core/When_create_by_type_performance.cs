@@ -1,11 +1,15 @@
 namespace Incoding.UnitTest.MvcContribGroup.Core
 {
+    #region << Using >>
+
     using System;
     using System.Collections.Specialized;
     using System.Web.Mvc;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
+
+    #endregion
 
     [Subject(typeof(CreateByTypeQuery))]
     public class When_create_by_type_performance
@@ -26,7 +30,7 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
 
         It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
 
-          It should_be_time = () => { time.ShouldBeLessThan(900); };
+        It should_be_time = () => { time.ShouldBeLessThan(900); };
 
         public class UniqueNameClass { }
 

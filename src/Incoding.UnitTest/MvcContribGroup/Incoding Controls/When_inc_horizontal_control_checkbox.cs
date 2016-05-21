@@ -17,6 +17,9 @@ namespace Incoding.UnitTest.MvcContribGroup
         Establish establish = () =>
                               {
                                   IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
+                                  IncodingHtmlHelper.Def_Control_Class = B.Col_xs_7;
+                                  IncodingHtmlHelper.Def_Label_Class = B.Col_xs_5;
+
                                   Expression<Func<FakeModel, object>> expression = model => model.Prop;
                                   var label = new IncLabelControl(mockHtmlHelper.Original, expression);
                                   var input = new IncCheckBoxControl<FakeModel, object>(mockHtmlHelper.Original, expression);

@@ -2,15 +2,10 @@
 {
     #region << Using >>
 
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Diagnostics.CodeAnalysis;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
-    using Machine.Specifications.Annotations;
 
     #endregion
 
@@ -21,18 +16,20 @@
 
         static FakeCommand command2;
 
+        private static bool isComposite;
+
         Establish establish = () =>
                               {
+                                  isComposite = Pleasure.Generator.Bool();
                                   command1 = Pleasure.Generator.Invent<FakeCommand>();
                                   command2 = Pleasure.Generator.Invent<FakeCommand>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(FakeCommand).Name)
-                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
-                                                                                                              .Tuning(r => r.ControllerContext, controller.ControllerContext)
-                                                                                                              .Empty(r => r.IsModel)
-                                                                                                              .Tuning(r => r.IsGroup, true)), (object)new List<FakeCommand>() { command1, command2 });
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery.AsCommands>(dsl => dsl.Tuning(r => r.IncTypes, typeof(FakeCommand).Name)
+                                                                                                                         .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                                         .Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                                         .Tuning(r => r.IsComposite, isComposite)), new CommandBase[] { command1, command2 });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeCommand).Name, string.Empty, true); };
+        Because of = () => { result = controller.Push(typeof(FakeCommand).Name, string.Empty, incIsCompositeAsArray: isComposite); };
 
         It should_be_push_1 = () => dispatcher.ShouldBePush(command1);
 

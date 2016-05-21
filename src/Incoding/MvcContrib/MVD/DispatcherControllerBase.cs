@@ -68,19 +68,13 @@
             if (!string.IsNullOrWhiteSpace(incType))
                 incTypes = incType;
 
-            Guard.NotNullOrWhiteSpace("incTypes", incTypes);
-
-            var splitByType = incTypes.Split(UrlDispatcher.separatorByType.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            bool isCompositeAsArray = splitByType.Count() == 1 && incIsCompositeAsArray.GetValueOrDefault();
-            var commands = isCompositeAsArray
-                                   ? ((IEnumerable<CommandBase>)dispatcher.Query(new CreateByTypeQuery()
-                                                                                 {
-                                                                                         Type = splitByType[0],
-                                                                                         ControllerContext = this.ControllerContext,
-                                                                                         ModelState = ModelState,
-                                                                                         IsGroup = true
-                                                                                 })).ToList()
-                                   : splitByType.Select(r => (CommandBase)dispatcher.Query(new CreateByTypeQuery() { Type = r, ControllerContext = this.ControllerContext, ModelState = ModelState })).ToList();
+            var commands = dispatcher.Query(new CreateByTypeQuery.AsCommands()
+                                            {
+                                                    IncTypes = incTypes,
+                                                    ModelState = ModelState,
+                                                    ControllerContext = ControllerContext,
+                                                    IsComposite = incIsCompositeAsArray
+                                            });
 
             if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
                 return IncodingResult.Success();
@@ -91,7 +85,7 @@
                                    composite.Quote(commandBase);
                            }, setting => setting.SuccessResult = () =>
                                                                  {
-                                                                     var data = commands.Count == 1 ? commands[0].Result : commands.Select(r => r.Result);
+                                                                     var data = commands.Length == 1 ? commands[0].Result : commands.Select(r => r.Result);
                                                                      return IncodingResult.Success(data);
                                                                  });
         }

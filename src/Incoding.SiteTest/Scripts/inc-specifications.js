@@ -5039,13 +5039,6 @@ describe('Incoding', function() {
             expect(window.clearInterval).toHaveBeenCalledWith(1);
         });
 
-        it('Should be Document_SetTitle', function() {
-
-            var code = $('#Document_SetTitle').val().f("vlad");
-            eval(code);
-
-            expect(document.title).toEqual('vlad');
-        });
 
     });
 

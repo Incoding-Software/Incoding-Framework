@@ -46,5 +46,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 
         It should_be_render = () => result.ToString()
                                           .ShouldEqual(@"<div class=""col-xs-12 form-group""><label class=""col-xs-5 control-label"" for=""Prop"">Prop</label><div class=""col-xs-9""><input class=""col-xs-7 form-control"" id=""Prop"" name=""Prop"" type=""hidden"" value=""TheSameString"" /></div></div>");
+
+
     }
 }

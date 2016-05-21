@@ -534,7 +534,7 @@
     <Compile Include="MvcContribGroup\MVD\Controller\Context_dispatcher_controller.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_concurrency.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_performance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_composite.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_as_command.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_as_array.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_only_validate.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_model_state.cs" />
@@ -770,6 +770,10 @@
       <Project>{D07EC3BB-F2FD-4093-838B-39C73B42140E}</Project>
       <Name>Incoding.MSpecContrib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Incoding.SiteTest\Incoding.SiteTest.csproj">
+      <Project>{FE64E248-A5C7-472A-93E0-68B5EC8A8DA4}</Project>
+      <Name>Incoding.SiteTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Incoding\Incoding.csproj">
       <Project>{d66ad474-a026-4ab2-b475-6477488443c4}</Project>
       <Name>Incoding</Name>
@@ -788,7 +792,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
