@@ -382,5 +382,17 @@
                                                                                             .Tuning(r => r.RepeatCount, 3)
                                                                                             .Tuning(r => r.NowDate, Convert.ToDateTime("05/15/2020 16:30")))
                                                                                   .ShouldBeIsResult(Convert.ToDateTime("05/15/2020 16:36"));
+
+
+        It should_be_observation = () =>
+                                   {
+                                       Execute(dsl => dsl.Tuning(r => r.Type, GetRecurrencyDateQuery.RepeatType.Daily)
+                                                         .Tuning(r => r.RepeatInterval, 1)
+                                                         .Tuning(r => r.StartDate, Convert.ToDateTime("05/21/2016 05:06"))
+                                                         .Tuning(r => r.EndDate, null)
+                                                         .Tuning(r => r.RepeatCount, -1)
+                                                         .Tuning(r => r.NowDate, Convert.ToDateTime("05/21/2016 05:06")))
+                                               .ShouldBeIsResult(Convert.ToDateTime("05/22/2016 05:06"));
+                                   };
     }
 }

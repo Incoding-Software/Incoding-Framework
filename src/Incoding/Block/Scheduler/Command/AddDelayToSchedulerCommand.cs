@@ -43,7 +43,7 @@
         {
             Recurrency = Recurrency ?? new GetRecurrencyDateQuery
                                        {
-                                               Type = GetRecurrencyDateQuery.RepeatType.Once
+                                               Type = GetRecurrencyDateQuery.RepeatType.Once,                                               
                                        };
             var type = Command.GetType();
             var option = type.FirstOrDefaultAttribute<OptionOfDelayAttribute>() ?? new OptionOfDelayAttribute();
@@ -55,7 +55,7 @@
                                     Priority = Priority,
                                     Status = DelayOfStatus.New,
                                     Recurrence = Recurrency,
-                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow)),
+                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(DateTime.UtcNow),
                                     Option = new DelayToScheduler.OptionOfDelay()
                                              {
                                                      Async = option.Async,

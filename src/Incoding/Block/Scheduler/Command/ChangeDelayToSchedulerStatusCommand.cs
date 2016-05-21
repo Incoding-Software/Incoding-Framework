@@ -24,14 +24,14 @@
                 Dispatcher.Push(new AddDelayToSchedulerCommand(delay)
                                 {
                                         UID = delay.UID,
-                                        Priority = delay.Priority,
+                                        Priority = delay.Priority,                                                                               
                                         Recurrency = new GetRecurrencyDateQuery
                                                      {
                                                              EndDate = delay.Recurrence.EndDate,
                                                              RepeatCount = delay.Recurrence.RepeatCount - 1,
                                                              RepeatDays = delay.Recurrence.RepeatDays,
                                                              RepeatInterval = delay.Recurrence.RepeatInterval,
-                                                             StartDate = nextStartsOn.Value,
+                                                             StartDate = delay.StartsOn,
                                                              Type = delay.Recurrence.Type
                                                      },
                                 });

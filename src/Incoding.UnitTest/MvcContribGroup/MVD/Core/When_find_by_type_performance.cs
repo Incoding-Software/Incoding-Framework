@@ -3,6 +3,7 @@
     #region << Using >>
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Reflection;
     using Incoding.MSpecContrib;
@@ -48,11 +49,11 @@
                                                                       message.Execute();
                                                                       message.ShouldBeIsResult(typeof(When_find_by_type_performanceCommand));
                                                                   };
-                                             var dictionary = new Dictionary<string, Type>();
-                                             dictionary.Add(typeof(When_find_by_type_performanceCommand).Name, typeof(When_find_by_type_performanceCommand));
+                                             var dictionary = new ConcurrentDictionary<string, string>();
+                                             dictionary.TryAdd(typeof(When_find_by_type_performanceCommand).Name, typeof(When_find_by_type_performanceCommand).AssemblyQualifiedName);
                                              typeof(CreateByTypeQuery.FindTypeByName).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, dictionary);
 
-                                             Pleasure.Do(action, 1000).ShouldBeLessThan(100);
+                                             Pleasure.Do(action, 1000).ShouldBeLessThan(75);
                                          };
 
 

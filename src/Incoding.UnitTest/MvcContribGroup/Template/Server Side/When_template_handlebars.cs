@@ -94,7 +94,7 @@
                                                                      }.ToList()
                                                  };
                                       var render = new TemplateHandlebarsOnServerSide()
-                                              .Render(htmlHelper, newQuery.PathToView, new {data = data }, newQuery.Model);
+                                              .Render(htmlHelper, newQuery.PathToView, data, newQuery.Model);
                                       render.ShouldEqual(@"
         
     <div class=""clearfix""></div>

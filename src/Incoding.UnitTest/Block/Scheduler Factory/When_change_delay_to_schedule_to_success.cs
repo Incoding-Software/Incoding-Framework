@@ -36,13 +36,13 @@
                                           = dsl => dsl.ForwardToAction(r => r.Recurrency, schedulerCommand => schedulerCommand.Recurrency.ShouldEqualWeak(recurrency,
                                                                                                                                                           factoryDsl => factoryDsl.ForwardToValue(r => r.NowDate, null)
                                                                                                                                                                                   .ForwardToValue(r => r.RepeatCount, recurrency.RepeatCount - 1)
-                                                                                                                                                                                  .ForwardToValue(r => r.StartDate, nextDt)));
+                                                                                                                                                                                  .ForwardToValue(r => r.StartDate, lastStartOn)));
                                   mockCommand = MockCommand<ChangeDelayToSchedulerStatusCommand>
                                           .When(command)
                                           .StubGetById(command.Id, delay.Object)
                                           .StubQuery(recurrency, nextDt)
                                           .StubPush(dsl => dsl.Tuning(r => r.UID, delay.Object.UID)
-                                                              .Tuning(r => r.Command, instance)                                                              
+                                                              .Tuning(r => r.Command, instance)
                                                               .Tuning(r => r.Priority, delay.Object.Priority), compare);
                               };
 

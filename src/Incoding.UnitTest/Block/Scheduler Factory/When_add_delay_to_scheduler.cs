@@ -17,7 +17,7 @@
         Establish establish = () =>
                               {
                                   When_add_delay_to_scheduler.command = Pleasure.Generator.Invent<FakeCommand>(factoryDsl => factoryDsl.GenerateTo(r => r.Setting, dsl => { }));
-                                  nextDt = null; // Pleasure.Generator.DateTime();
+                                  nextDt = Pleasure.Generator.DateTime();
                                   var command = Pleasure.Generator.Invent<AddDelayToSchedulerCommand>(dsl => dsl.Tuning(r => r.Command, When_add_delay_to_scheduler.command)
                                                                                                                 .Tuning(r => r.Recurrency, Pleasure.Generator.Invent<GetRecurrencyDateQuery>()));
 
@@ -35,7 +35,7 @@
                                                                                                                                                                          })
                                                                                                                                           .ForwardToValue(r => r.UID, mockCommand.Original.UID)
                                                                                                                                           .ForwardToValue(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
-                                                                                                                                          .ForwardToValue(r => r.StartsOn, nextDt.GetValueOrDefault(mockCommand.Original.Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow)))
+                                                                                                                                          .ForwardToValue(r => r.StartsOn, nextDt)
                                                                                                                                           .ForwardToValue(r => r.Status, DelayOfStatus.New)
                                                                                                                                           .ForwardToValue(r => r.Priority, mockCommand.Original.Priority)
                                                                                                                                           .ForwardToValue(r => r.Command, command.ToJsonString())
