@@ -156,8 +156,14 @@ function purl(existsUrl) {
         },
 
         // set fragment parameters
-        setParam : function(param, value) {
-            return this.data.param.query[param] = ExecutableHelper.UrlEncode(value);
+        setParam: function (param, value) {
+            var encodeValue = ExecutableHelper.UrlEncode(value);
+            if (ExecutableHelper.IsNullOrEmpty(encodeValue)) {
+                delete this.data.param.query[param];
+            }
+            else {
+                return this.data.param.query[param] = encodeValue;
+            }
         },
 
         // set fragment parameters

@@ -280,6 +280,10 @@ $(document).ready(function() {
         });
     }
 
+    window.addEventListener('popstate', function (e) {
+        $(document).trigger(IncSpecialBinds.IncChangeUrl);
+    });
+
     IncodingEngine.Current.parse(document);
 });
 

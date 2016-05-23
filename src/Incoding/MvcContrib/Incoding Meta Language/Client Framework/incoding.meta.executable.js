@@ -59,8 +59,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
-    this.getTarget = function() {};
+    this.resultOfEvent = '';   
 }
 
 ExecutableBase.prototype = {
@@ -625,9 +624,14 @@ function ExecutableStoreFetch() {
 ExecutableStoreFetch.prototype.name = "Store fetch";
 ExecutableStoreFetch.prototype.internalExecute = function() {
 
-    var prefix = this.jsonData.prefix + "__";
+    var prefix = '';
+    var isHash = this.jsonData.type == 'hash';
+
+    if (isHash) {
+        prefix = this.jsonData.prefix + "__";
+    }
     var params = [];
-    if (this.jsonData.type == 'hash') {
+    if (isHash) {
         params = $.url(window.location.href).fparam();
     }
     else if (this.jsonData.type = 'queryString') {
