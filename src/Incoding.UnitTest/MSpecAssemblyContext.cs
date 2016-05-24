@@ -37,8 +37,8 @@
                     .Configure()
                     .Database(MsSqlConfiguration.MsSql2008
                                                 .ConnectionString(ConnectionString)
-                                                .ShowSql())
-                    .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
+                                                .ShowSql())                                                
+                    .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))                    
                     .Mappings(configuration => configuration.FluentMappings
                                                             .Add(typeof(DelayToScheduler.Map))
                                                             .AddFromAssembly(typeof(DbEntity).Assembly));

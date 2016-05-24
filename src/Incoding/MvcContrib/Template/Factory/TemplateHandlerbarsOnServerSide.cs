@@ -3,14 +3,15 @@
     #region << Using >>
 
     using System;
+    using System.Collections;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Web.Mvc;
+    using FluentNHibernate.Utils;
     using HandlebarsDotNet;
     using Incoding.Block.IoC;
     using Incoding.CQRS;
     using Incoding.Extensions;
-    using Mustache;
+    using Incoding.Maybe;
 
     #endregion
 
@@ -20,9 +21,13 @@
 
         public static string Version { get; set; }
 
-        public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null)
+        public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null) where T : class
         {
             var fullPathToView = pathToView.AppendToQueryString(modelForView);
+
+            object correctData = data;
+            if (data != null && !data.GetType().HasInterface(typeof(IEnumerable)))
+                correctData = new { data = data };
 
             return cache.GetOrAdd(fullPathToView + Version, (i) =>
                                                             {
@@ -33,7 +38,7 @@
                                                                                                                                        Model = modelForView
                                                                                                                                }).ToHtmlString();
                                                                 return Handlebars.Compile(tmpl);
-                                                            })(new { data = data });
+                                                            })(new { data = correctData });
         }
     }
 }

@@ -62,6 +62,15 @@
                                                       render.ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
                                                   };
 
+        It should_be_compile_with_null_data = () =>
+                                                  {
+                                                      query.Model = null;
+                                                      object data = null;
+                                                      var render = new TemplateHandlebarsOnServerSide()
+                                                              .Render(htmlHelper, query.PathToView, data);
+                                                      render.ShouldEqual(@"");
+                                                  };
+
         It should_be_complexity = () =>
                                   {
                                       var tmpl = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "handlebars_complexity_tmpl.txt"));
@@ -107,8 +116,8 @@
                                     <span class=""after""> 1-50 &#1086;&#1076; 231593</span>
                                 </a>  
                             </li>
-                            <li class=""tab-item"">
-                                <a href = ""#!private"">
+                            <li class=""tab-item "">
+                                <a href=""#!private"">
                                     Title
                                     <span class=""after""> 1-50 &#1086;&#1076; 231593</span>
                                 </a>  
