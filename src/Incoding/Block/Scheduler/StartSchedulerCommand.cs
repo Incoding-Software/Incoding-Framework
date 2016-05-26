@@ -1,7 +1,5 @@
 ﻿namespace Incoding.Block
 {
-    #region << Using >>
-
     using System;
     using System.Diagnostics;
     using System.Threading;
@@ -9,8 +7,6 @@
     using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Extensions;
-
-    #endregion
 
     public class StartSchedulerCommand : CommandBase
     {
@@ -45,7 +41,9 @@
                                                                                                            IncludeInProgress = isFirstTime
                                                                                                    }))
                                                    {
-                                                       Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = response.Id, Status = DelayOfStatus.InProgress });
+                                                       var closureResponse = response;
+
+                                                       Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand { Id = closureResponse.Id, Status = DelayOfStatus.InProgress });
 
                                                        var task = Task.Factory.StartNew(() =>
                                                                                         {
@@ -53,14 +51,14 @@
                                                                                             {
                                                                                                 Stopwatch sw = new Stopwatch();
                                                                                                 sw.Start();
-                                                                                                Dispatcher.New().Push(response.Instance);
+                                                                                                Dispatcher.New().Push(closureResponse.Instance);
                                                                                                 sw.Stop();
 
                                                                                                 Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
                                                                                                                       {
-                                                                                                                              Id = response.Id,
+                                                                                                                              Id = closureResponse.Id,
                                                                                                                               Status = DelayOfStatus.Success,
-                                                                                                                              Description = "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, response.TimeOut)
+                                                                                                                              Description = "Executed in {0} sec of {1} timeout".F(sw.Elapsed.TotalSeconds, closureResponse.TimeOut)
                                                                                                                       });
                                                                                             }
                                                                                             catch (Exception ex)
@@ -70,7 +68,7 @@
 
                                                                                                 Dispatcher.New().Push(new ChangeDelayToSchedulerStatusCommand
                                                                                                                       {
-                                                                                                                              Id = response.Id,
+                                                                                                                              Id = closureResponse.Id,
                                                                                                                               Status = DelayOfStatus.Error,
                                                                                                                               Description = ex.ToString()
                                                                                                                       });
