@@ -78,11 +78,14 @@
                                                                        .ToArray());
             }
 
+
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
                                                                                                             ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
-                                                                                                            ValueProvider = formCollection
+                                                                                                            ValueProvider =  ControllerContext != null 
+                                                                                                             ? ValueProviderFactories.Factories.GetValueProvider(ControllerContext)
+                                                                                                             : formCollection,
                                                                                                     });
         }
 

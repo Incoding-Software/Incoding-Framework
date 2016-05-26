@@ -849,8 +849,14 @@ function purl(existsUrl) {
         },
 
         // set fragment parameters
-        setParam : function(param, value) {
-            return this.data.param.query[param] = ExecutableHelper.UrlEncode(value);
+        setParam: function (param, value) {
+            var encodeValue = ExecutableHelper.UrlEncode(value);
+            if (ExecutableHelper.IsNullOrEmpty(encodeValue)) {
+                delete this.data.param.query[param];
+            }
+            else {
+                return this.data.param.query[param] = encodeValue;
+            }
         },
 
         // set fragment parameters
@@ -972,6 +978,12 @@ if (!window.console) {
     };
 }
 
+document.setTitle = function(value) {
+    document.title = value;
+};
+
+
+
 function InitGps() {
     if (navigator.geolocation && !navigator.geolocation.currentPosition) {
         navigator.geolocation.currentPosition = { longitude: 0, latitude: 0 };
@@ -981,6 +993,7 @@ function InitGps() {
         });
     }
 }
+
 
 $.extend(String.prototype, {
     replaceAll: function (find, replace) {
@@ -1528,6 +1541,10 @@ $(document).ready(function() {
         });
     }
 
+    window.addEventListener('popstate', function (e) {
+        $(document).trigger(IncSpecialBinds.IncChangeUrl);
+    });
+
     IncodingEngine.Current.parse(document);
 });
 
@@ -1540,20 +1557,36 @@ function ExecutableFactory() {
 
 // ReSharper disable UnusedParameter
 
-ExecutableFactory.Create = function(type, data, self) {
+ExecutableFactory.Create = function (type, data, self) {
 
     if (!document[type]) {
         document[type] = eval('new ' + type + '();');
     }
     return $.extend(false, document[type], {
-        jsonData : data,
-        onBind : data.onBind,
-        self : $(self),
-        timeOut : data.timeOut,
-        interval : data.interval,
-        intervalId : data.intervalId,
-        ands : data.ands,
-        target : data.target
+        jsonData: data,
+        onBind: data.onBind,
+        self: $(self),
+        timeOut: data.timeOut,
+        interval: data.interval,
+        intervalId: data.intervalId,
+        ands: data.ands,
+        target: data.target,
+        getTarget: function () {
+            if (ExecutableHelper.IsNullOrEmpty(data.target)) {
+                return '';
+            }
+            if (data.target === "$(this.self)") {
+                return this.self;
+            }
+
+            if (data.target.startsWith("||") && data.target.endWith("||")) {
+                var selector = data.target.substring(2, data.target.length - 2).substring(data.target.indexOf('*') - 1, data.target.length);
+                return $(selector);
+            }
+            else {
+                return eval(data.target);
+            }
+        }
     });
 
 };
@@ -1576,23 +1609,7 @@ function ExecutableBase() {
     this.target = '';
     this.ands = null;
     this.result = '';
-    this.resultOfEvent = '';
-    this.getTarget = function() {
-        if (ExecutableHelper.IsNullOrEmpty(this.target)) {
-            return '';
-        }
-        if (this.target === "$(this.self)") {
-            return this.self;
-        }
-
-        if (this.target.startsWith("||") && this.target.endWith("||")) {
-            var selector = this.target.substring(2, this.target.length - 2).substring(this.target.indexOf('*') - 1, this.target.length);
-            return $(selector);
-        }
-        else {
-            return eval(this.target);
-        }
-    };
+    this.resultOfEvent = '';   
 }
 
 ExecutableBase.prototype = {
@@ -2157,15 +2174,26 @@ function ExecutableStoreFetch() {
 ExecutableStoreFetch.prototype.name = "Store fetch";
 ExecutableStoreFetch.prototype.internalExecute = function() {
 
-    var prefix = this.jsonData.prefix + "__";
-    var fparam = $.url(window.location.href).fparam();
+    var prefix = '';
+    var isHash = this.jsonData.type == 'hash';
+
+    if (isHash) {
+        prefix = this.jsonData.prefix + "__";
+    }
+    var params = [];
+    if (isHash) {
+        params = $.url(window.location.href).fparam();
+    }
+    else if (this.jsonData.type = 'queryString') {
+        params = $.url(window.location.href).param();
+    }
 
     $.eachFormElements(this.target, function() {
         var name = $(this).prop('name');
         var key = prefix + name;
         var value = '';
-        if (fparam.hasOwnProperty(key)) {
-            value = fparam[key];
+        if (params.hasOwnProperty(key)) {
+            value = params[key];
         }
         ExecutableHelper.Instance.TrySetValue(this, value);
     });
