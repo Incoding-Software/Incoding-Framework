@@ -29,7 +29,7 @@
             if (data != null && !data.GetType().HasInterface(typeof(IEnumerable)))
                 correctData = new { data = data };
 
-            return cache.GetOrAdd(fullPathToView + Version, (i) =>
+            return cache.GetOrAdd(fullPathToView + System.Threading.Thread.CurrentThread.CurrentCulture.Name + Version, (i) =>
                                                             {
                                                                 var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
                                                                                                                                {
