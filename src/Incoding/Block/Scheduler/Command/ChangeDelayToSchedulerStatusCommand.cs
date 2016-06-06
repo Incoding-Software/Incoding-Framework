@@ -16,24 +16,24 @@
 
             if (Status == DelayOfStatus.Success && delay.Recurrence != null)
             {
-                var nextStartsOn = Dispatcher.Query(delay.Recurrence);
-                if (!nextStartsOn.HasValue)
+                var recurrency = new GetRecurrencyDateQuery
+                {
+                    EndDate = delay.Recurrence.EndDate,
+                    RepeatCount = delay.Recurrence.RepeatCount - 1,
+                    RepeatDays = delay.Recurrence.RepeatDays,
+                    RepeatInterval = delay.Recurrence.RepeatInterval,
+                    StartDate = delay.StartsOn,
+                    Type = delay.Recurrence.Type
+                };
+                recurrency.NowDate = delay.StartsOn; // calculate next start depending on previously calculated start (to run every day at exactly same time for example)
+                recurrency.StartDate = Dispatcher.Query(recurrency);
+                if (!recurrency.StartDate.HasValue)
                     return;
-
-                delay.Recurrence.NowDate = delay.StartsOn; // calculate next start depending on previously calculated start (to run every day at exactly same time for example)
                 Dispatcher.Push(new AddDelayToSchedulerCommand(delay)
                                 {
                                         UID = delay.UID,
                                         Priority = delay.Priority,                                                                               
-                                        Recurrency = new GetRecurrencyDateQuery
-                                                     {
-                                                             EndDate = delay.Recurrence.EndDate,
-                                                             RepeatCount = delay.Recurrence.RepeatCount - 1,
-                                                             RepeatDays = delay.Recurrence.RepeatDays,
-                                                             RepeatInterval = delay.Recurrence.RepeatInterval,
-                                                             StartDate = delay.StartsOn,
-                                                             Type = delay.Recurrence.Type
-                                                     },
+                                        Recurrency = recurrency,
                                 });
             }
         }

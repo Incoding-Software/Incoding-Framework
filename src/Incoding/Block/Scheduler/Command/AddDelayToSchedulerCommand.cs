@@ -55,7 +55,7 @@
                                     Priority = Priority,
                                     Status = DelayOfStatus.New,
                                     Recurrence = Recurrency,
-                                    StartsOn = Dispatcher.Query(Recurrency).GetValueOrDefault(DateTime.UtcNow),
+                                    StartsOn = Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow),
                                     Option = new DelayToScheduler.OptionOfDelay()
                                              {
                                                      Async = option.Async,

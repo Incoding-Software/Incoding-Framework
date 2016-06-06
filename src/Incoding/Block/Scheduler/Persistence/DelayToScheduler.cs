@@ -1,4 +1,6 @@
-﻿namespace Incoding.Block
+﻿using System.Web.UI.WebControls;
+
+namespace Incoding.Block
 {
     #region << Using >>
 
@@ -25,6 +27,7 @@
         public DelayToScheduler()
         {
             Id = Guid.NewGuid().ToString();
+            CreateDt = DateTime.UtcNow;
         }
 
         #endregion
@@ -163,6 +166,8 @@
 
         public virtual OptionOfDelay Option { get; set; }
 
+        public virtual DateTime? CreateDt { get; set; }
+
         #endregion
 
         #region Nested classes
@@ -182,6 +187,7 @@
                 MapEscaping(r => r.Description).CustomType("StringClob").CustomSqlType("nvarchar(max)");
                 MapEscaping(r => r.Status).CustomType<DelayOfStatus>();
                 MapEscaping(r => r.StartsOn);
+                MapEscaping(r => r.CreateDt);  
                 Component(r => r.Option, part =>
                                          {
                                              part.Map(r => r.Async, "Option_Async");
