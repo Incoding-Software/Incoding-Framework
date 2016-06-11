@@ -34,6 +34,7 @@
                                                                                                      {
                                                                                                          registry.For<IDispatcher>().Use<DefaultDispatcher>();                                                                                                         
                                                                                                          registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
+																										 registry.For<ITemplateOnServerSide>().Singleton().Use<TemplateHandlebarsOnServerSide>();
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()
@@ -56,10 +57,7 @@
 
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));
             FluentValidationModelValidatorProvider.Configure();
-
-            foreach (var setUp in IoCFactory.Instance.ResolveAll<ISetUp>().OrderBy(r => r.GetOrder()))
-                setUp.Execute();
-
+            
             var ajaxDef = JqueryAjaxOptions.Default;
             ajaxDef.Cache = false; // disabled cache as default
         }

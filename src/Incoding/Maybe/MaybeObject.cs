@@ -3,12 +3,22 @@ namespace Incoding.Maybe
     #region << Using >>
 
     using System;
+    using System.Collections.Generic;
 
     #endregion
 
     public static class MaybeObject
     {
         #region Factory constructors
+
+        public static void DoEach<TInput>(this IEnumerable<TInput> source, Action<TInput> action)
+        {
+            if (source == null)
+                return;
+
+            foreach (var input in source)
+                action(input);
+        }
 
         public static void Do<TSource>(this TSource source, Action<TSource> action)
                 where TSource : class

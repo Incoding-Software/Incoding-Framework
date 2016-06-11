@@ -247,7 +247,7 @@
         /// </summary>
         public JquerySelectorExtend Class(params string[] @class)
         {
-            @class.DoEach((r, index) => OrSelector("." + Escaping(r)));
+            @class.DoEach(r => OrSelector("." + Escaping(r)));
             return new JquerySelectorExtend(selector);
         }
 

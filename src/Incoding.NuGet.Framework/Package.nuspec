@@ -24,7 +24,7 @@
     <iconUrl>http://incframework.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2013 - 2015</copyright>
+    <copyright>Copyright  2013 - 2016</copyright>
     <dependencies>
       <group>
         <dependency id="structuremap" version="3.1.6.186" />

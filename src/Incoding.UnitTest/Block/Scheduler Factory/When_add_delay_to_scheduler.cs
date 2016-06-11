@@ -35,7 +35,7 @@
                                                                                                                                                                          })
                                                                                                                                           .ForwardToValue(r => r.UID, mockCommand.Original.UID)
                                                                                                                                           .ForwardToValue(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
-                                                                                                                                          .ForwardToValue(r => r.StartsOn, nextDt)
+                                                                                                                                          .ForwardToValue(r => r.StartsOn, mockCommand.Original.Recurrency.StartDate.Value)
                                                                                                                                           .ForwardToValue(r => r.Status, DelayOfStatus.New)
                                                                                                                                           .ForwardToValue(r => r.Priority, mockCommand.Original.Priority)
                                                                                                                                           .ForwardToValue(r => r.Command, command.ToJsonString())

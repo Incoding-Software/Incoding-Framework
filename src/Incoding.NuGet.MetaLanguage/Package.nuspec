@@ -21,7 +21,7 @@
     <iconUrl>http://incframework.com/favicon.ico</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2013 - 2015</copyright>
+    <copyright>Copyright  2013 - 2016</copyright>
     <dependencies>
       <group targetFramework="net40">
         <dependency id="WebActivator" />
@@ -35,6 +35,7 @@
         <dependency id="Handlebars.js" version="3.0.0.0" />
         <dependency id="jQuery" version="1.9.1" />
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+        <dependency id="Handlebars.Net" version="1.7.1" />
       </group>
       <group targetFramework="net45">
         <dependency id="WebActivator" />
@@ -48,6 +49,7 @@
         <dependency id="Handlebars.js" version="3.0.0.0" />
         <dependency id="jQuery" version="1.9.1" />
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+        <dependency id="Handlebars.Net" version="1.7.1" />
       </group>
     </dependencies>
     <references>

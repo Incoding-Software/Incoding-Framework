@@ -256,6 +256,9 @@
     <Compile Include="Block\Scheduler Factory\When_start_scheduler_with_success.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Common\Response\When_inc_bool_response.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_not_satisfied.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_satisfied_failed.cs" />
+    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_satisfied_success.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_command_without_repository.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_without_repository.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_exception.cs" />
@@ -792,7 +795,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
