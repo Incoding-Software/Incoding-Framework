@@ -1,10 +1,14 @@
 namespace Incoding.UnitTest
 {
+    #region << Using >>
+
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Machine.Specifications;
     using Moq;
     using It = Machine.Specifications.It;
+
+    #endregion
 
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_interception_not_satisfied : Context_default_dispatcher
@@ -15,16 +19,17 @@ namespace Incoding.UnitTest
 
         #endregion
 
-        private static Mock<DefaultDispatcher.IMessageInterception> interception;
+        private static Mock<IMessageInterception> interception;
 
         Establish establish = () =>
                               {
                                   message = Pleasure.Generator.Invent<CommandWithRepository>();
-                                  interception = Pleasure.MockStrict<DefaultDispatcher.IMessageInterception>(mock =>
-                                                                                                             {
-                                                                                                                 mock.Setup(r => r.IsSatisfied(Pleasure.MockIt.IsStrong(message))).Returns(false);                                                                                                                 
-                                                                                                             });
-                                  dispatcher.SetInterception(interception.Object);
+                                  interception = Pleasure.MockStrict<IMessageInterception>(mock => { mock.Setup(r => r.IsSatisfied(Pleasure.MockIt.IsStrong(new MessageInterceptionContext()
+                                                                                                                                                            {
+                                                                                                                                                                    Dispatcher = dispatcher,
+                                                                                                                                                                    Message = message
+                                                                                                                                                            }))).Returns(false); });
+                                  DefaultDispatcher.SetInterception(interception.Object);
                               };
 
         Because of = () => dispatcher.Push(message);

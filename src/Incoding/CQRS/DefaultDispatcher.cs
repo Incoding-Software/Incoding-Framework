@@ -13,41 +13,32 @@ namespace Incoding.CQRS
 
     #endregion
 
+    public class MessageInterceptionContext
+    {
+        public IMessage Message { get; set; }
+
+        public DefaultDispatcher Dispatcher { get; set; }
+    }
+
+    public interface IMessageInterception
+    {
+        bool IsSatisfied(MessageInterceptionContext context);
+
+        void OnBefore(MessageInterceptionContext context);
+
+        void OnSuccess(MessageInterceptionContext context);
+
+        void OnError(MessageInterceptionContext context, Exception exception);
+
+        void OnComplete(MessageInterceptionContext context);
+    }
+
     public class DefaultDispatcher : IDispatcher
     {
-        public DefaultDispatcher SetInterception(IMessageInterception interception)
+        public static void SetInterception(params IMessageInterception[] interceptions)
         {
-            this.messageInterceptions.Add(interception);
-            return this;
-        }
-
-        public abstract class EmptyInterceptionBase : IMessageInterception
-        {
-            public virtual bool IsSatisfied(IMessage message)
-            {
-                return true;
-            }
-
-            public virtual void OnBefore(IMessage message) { }
-
-            public virtual void OnSuccess(IMessage message) { }
-
-            public virtual void OnError(IMessage message, Exception exception) { }
-
-            public virtual void OnComplete(IMessage message) { }
-        }
-
-        public interface IMessageInterception
-        {
-            bool IsSatisfied(IMessage message);
-
-            void OnBefore(IMessage message);
-
-            void OnSuccess(IMessage message);
-
-            void OnError(IMessage message, Exception exception);
-
-            void OnComplete(IMessage message);
+            messageInterceptions.Clear();
+            messageInterceptions.AddRange(interceptions);
         }
 
         #region Nested classes
@@ -96,7 +87,7 @@ namespace Incoding.CQRS
 
         #region Fields
 
-        readonly List<IMessageInterception> messageInterceptions = new List<IMessageInterception>();
+        readonly static List<IMessageInterception> messageInterceptions = new List<IMessageInterception>();
 
         readonly UnitOfWorkCollection unitOfWorkCollection = new UnitOfWorkCollection();
 
@@ -113,27 +104,32 @@ namespace Incoding.CQRS
                 bool isFlush = groupMessage.Any(r => r is CommandBase);
                 foreach (var part in groupMessage)
                 {
-                    var allSatisfiedInterceptions = this.messageInterceptions.Where(r => r.IsSatisfied(part)).ToList();
+                    var messageInterceptionContext = new MessageInterceptionContext()
+                                                     {
+                                                             Dispatcher = this,
+                                                             Message = part
+                                                     };
+                    var allSatisfiedInterceptions = messageInterceptions.Where(r => r.IsSatisfied(messageInterceptionContext)).ToList();
                     bool isThrow = false;
 
                     try
                     {
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnBefore(part));
+                        allSatisfiedInterceptions.DoEach(interception => interception.OnBefore(messageInterceptionContext));
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         part.OnExecute(this, unitOfWork);
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnSuccess(part));
+                        allSatisfiedInterceptions.DoEach(interception => interception.OnSuccess(messageInterceptionContext));
                         if (unitOfWork.IsValueCreated)
                             unitOfWork.Value.Flush();
                     }
                     catch (Exception ex)
                     {
                         isThrow = true;
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnError(part, ex));
+                        allSatisfiedInterceptions.DoEach(interception => interception.OnError(messageInterceptionContext, ex));
                         throw;
                     }
                     finally
                     {
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnComplete(part));
+                        allSatisfiedInterceptions.DoEach(interception => interception.OnComplete(messageInterceptionContext));
                         if (isThrow && isOuterCycle)
                             unitOfWorkCollection.Dispose();
                     }
