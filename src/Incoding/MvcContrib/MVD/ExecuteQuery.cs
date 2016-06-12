@@ -8,7 +8,7 @@
 
     #endregion
 
-    public class ExecuteQuery : QueryBase<object>
+    internal sealed class ExecuteQuery : QueryBase<object>
     {
         public object Instance { get; set; }
 
@@ -21,9 +21,9 @@
                 if (baseType.Name.StartsWith("QueryBase"))
                 {
                     var defaultDispatcher = new DefaultDispatcher();
-                    return defaultDispatcher.GetType().GetMethod("Query")
-                                            .MakeGenericMethod(baseType.GenericTypeArguments[0])
-                                            .Invoke(defaultDispatcher, new[] { Instance, null });
+                    return typeof(DefaultDispatcher).GetMethod("Query")
+                                                    .MakeGenericMethod(baseType.GenericTypeArguments[0])
+                                                    .Invoke(defaultDispatcher, new[] { Instance, null });
                 }
                 baseType = baseType.BaseType;
             }

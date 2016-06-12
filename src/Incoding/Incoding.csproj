@@ -442,7 +442,6 @@
     <Compile Include="MvcContrib\Primitive\ModeOfRadio.cs" />
     <Compile Include="MvcContrib\MVD\CreateByTypeQuery.cs" />
     <Compile Include="MvcContrib\MVD\DispatcherHttpHandler.cs" />
-    <Compile Include="MvcContrib\MVD\IsUniqueTypeByNameQuery.cs" />
     <Compile Include="MvcContrib\MVD\IUrlDispatcher.cs" />
     <Compile Include="MvcContrib\Primitive\Enctype.cs" />
     <Compile Include="MvcContrib\HtmlHelper\B.cs" />

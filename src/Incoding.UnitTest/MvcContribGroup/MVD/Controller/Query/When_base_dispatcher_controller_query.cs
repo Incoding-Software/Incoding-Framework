@@ -26,10 +26,14 @@
                                                                                                               .Tuning(r => r.IsModel, false)
                                                                                                               .Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)query);
                                   queryResult = Pleasure.Generator.String();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(ShareQuery).Name
+                                                                                                                                                                                 });
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)queryResult);
                               };
 
-        Because of = () => { result = controller.Query(typeof(ShareQuery).Name, false); };
+        Because of = () => { result = controller.Query(); };
 
         It should_be_result = () => result.ShouldBeIncodingSuccess<string>(s => s.ShouldEqual(queryResult));
     }

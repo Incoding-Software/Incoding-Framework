@@ -22,41 +22,9 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        #region Constructors
-
-        [UsedImplicitly, Obsolete("Please use default ctor without parameters", false), ExcludeFromCodeCoverage]
-        public IncControllerBase(IDispatcher dispatcher)
-        {
-            ////ncrunch: no coverage start
-            this._dispatcher = new Lazy<IDispatcher>(() => dispatcher);
-            ////ncrunch: no coverage end        
-        }
-
-        public IncControllerBase()
-        {
-            this._dispatcher = new Lazy<IDispatcher>(() => IoCFactory.Instance.TryResolve<IDispatcher>());
-        }
-
-        #endregion
-
         #region Properties
 
         protected IDispatcher dispatcher { get { return this._dispatcher.Value; } }
-
-        #endregion
-
-        #region Nested classes
-
-        protected class IncTryPushSetting
-        {
-            #region Properties
-
-            public Func<ActionResult> SuccessResult { get; set; }
-
-            public Func<IncWebException, ActionResult> ErrorResult { get; set; }
-
-            #endregion
-        }
 
         #endregion
 
@@ -155,5 +123,38 @@ namespace Incoding.MvcContrib
                 return error(exception);
             }
         }
+
+        #region Nested classes
+
+        protected class IncTryPushSetting
+        {
+            #region Properties
+
+            public Func<ActionResult> SuccessResult { get; set; }
+
+            public Func<IncWebException, ActionResult> ErrorResult { get; set; }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Constructors
+
+        [UsedImplicitly, Obsolete("Please use default ctor without parameters", false), ExcludeFromCodeCoverage]
+        public IncControllerBase(IDispatcher dispatcher)
+        {
+            ////ncrunch: no coverage start
+            this._dispatcher = new Lazy<IDispatcher>(() => dispatcher);
+            ////ncrunch: no coverage end        
+        }
+
+        public IncControllerBase()
+        {
+            this._dispatcher = new Lazy<IDispatcher>(() => IoCFactory.Instance.TryResolve<IDispatcher>());
+        }
+
+        #endregion
     }
+
 }

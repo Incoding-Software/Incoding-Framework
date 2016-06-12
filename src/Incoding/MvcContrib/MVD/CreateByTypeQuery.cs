@@ -6,8 +6,6 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
     using System.Web;
     using System.Web.Mvc;
     using Incoding.CQRS;
@@ -15,34 +13,8 @@
 
     #endregion
 
-    public class CreateByTypeQuery : QueryBase<object>
+    internal sealed class CreateByTypeQuery : QueryBase<object>
     {
-        public class AsCommands : QueryBase<CommandBase[]>
-        {
-            public string IncTypes { get; set; }
-
-            public bool? IsComposite { get; set; }
-
-            public ModelStateDictionary ModelState { get; set; }
-
-            public ControllerContext ControllerContext { get; set; }
-
-            protected override CommandBase[] ExecuteResult()
-            {
-                var splitByType = IncTypes.Split(UrlDispatcher.separatorByType.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                bool isCompositeAsArray = splitByType.Count() == 1 && IsComposite.GetValueOrDefault();
-                return isCompositeAsArray
-                               ? ((IEnumerable<CommandBase>)Dispatcher.Query(new CreateByTypeQuery()
-                                                                             {
-                                                                                     Type = splitByType[0],
-                                                                                     ControllerContext = ControllerContext,
-                                                                                     ModelState = ModelState,
-                                                                                     IsGroup = true
-                                                                             })).ToArray()
-                               : splitByType.Select(r => (CommandBase)Dispatcher.Query(new CreateByTypeQuery() { Type = r, ControllerContext = this.ControllerContext, ModelState = ModelState })).ToArray();
-            }
-        }
-
         protected override object ExecuteResult()
         {
             var byPair = Type.Split(UrlDispatcher.separatorByPair.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -78,15 +50,40 @@
                                                                        .ToArray());
             }
 
-
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
                                                                                                             ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
                                                                                                             ModelState = ModelState ?? new ModelStateDictionary(),
-                                                                                                            ValueProvider =  ControllerContext != null 
-                                                                                                             ? ValueProviderFactories.Factories.GetValueProvider(ControllerContext)
-                                                                                                             : formCollection,
+                                                                                                            ValueProvider = ControllerContext != null
+                                                                                                                                    ? ValueProviderFactories.Factories.GetValueProvider(ControllerContext)
+                                                                                                                                    : formCollection,
                                                                                                     });
+        }
+
+        public class AsCommands : QueryBase<CommandBase[]>
+        {
+            public string IncTypes { get; set; }
+
+            public bool? IsComposite { get; set; }
+
+            public ModelStateDictionary ModelState { get; set; }
+
+            public ControllerContext ControllerContext { get; set; }
+
+            protected override CommandBase[] ExecuteResult()
+            {
+                var splitByType = IncTypes.Split(UrlDispatcher.separatorByType.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                bool isCompositeAsArray = splitByType.Count() == 1 && IsComposite.GetValueOrDefault();
+                return isCompositeAsArray
+                               ? ((IEnumerable<CommandBase>)Dispatcher.Query(new CreateByTypeQuery()
+                                                                             {
+                                                                                     Type = splitByType[0],
+                                                                                     ControllerContext = ControllerContext,
+                                                                                     ModelState = ModelState,
+                                                                                     IsGroup = true
+                                                                             })).ToArray()
+                               : splitByType.Select(r => (CommandBase)Dispatcher.Query(new CreateByTypeQuery() { Type = r, ControllerContext = this.ControllerContext, ModelState = ModelState })).ToArray();
+            }
         }
 
         #region Nested classes

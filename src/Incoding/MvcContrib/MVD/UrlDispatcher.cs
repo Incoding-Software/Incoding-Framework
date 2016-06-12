@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Block.IoC;
@@ -20,6 +21,14 @@
 
     public class UrlDispatcher : IUrlDispatcher
     {
+        public static void SetInterception(params IMessageInterception[] values)
+        {
+            interceptions.Clear();
+            interceptions.AddRange(values);
+        }
+
+        static readonly List<IMessageInterception> interceptions = new List<IMessageInterception>();
+
         internal static readonly ConcurrentDictionary<string, bool> duplicates = new ConcurrentDictionary<string, bool>();
 
         #region Constants
@@ -362,5 +371,12 @@
 
             string AsView([PathReference, NotNull] string incView);
         }
+    }
+
+    public interface IMessageInterception
+    {
+        void OnBefore(IMessage message, HttpContext context);
+
+        void OnAfter(IMessage message, HttpContext context);
     }
 }

@@ -13,33 +13,13 @@ namespace Incoding.CQRS
 
     #endregion
 
-    public class MessageInterceptionContext
-    {
-        public IMessage Message { get; set; }
-
-        public DefaultDispatcher Dispatcher { get; set; }
-    }
-
-    public interface IMessageInterception
-    {
-        bool IsSatisfied(MessageInterceptionContext context);
-
-        void OnBefore(MessageInterceptionContext context);
-
-        void OnSuccess(MessageInterceptionContext context);
-
-        void OnError(MessageInterceptionContext context, Exception exception);
-
-        void OnComplete(MessageInterceptionContext context);
-    }
-
     public class DefaultDispatcher : IDispatcher
     {
-        public static void SetInterception(params IMessageInterception[] interceptions)
-        {
-            messageInterceptions.Clear();
-            messageInterceptions.AddRange(interceptions);
-        }
+        #region Fields
+
+        readonly UnitOfWorkCollection unitOfWorkCollection = new UnitOfWorkCollection();
+
+        #endregion
 
         #region Nested classes
 
@@ -85,14 +65,6 @@ namespace Incoding.CQRS
 
         #endregion
 
-        #region Fields
-
-        readonly static List<IMessageInterception> messageInterceptions = new List<IMessageInterception>();
-
-        readonly UnitOfWorkCollection unitOfWorkCollection = new UnitOfWorkCollection();
-
-        #endregion
-
         #region IDispatcher Members
 
         public void Push(CommandComposite composite)
@@ -104,32 +76,22 @@ namespace Incoding.CQRS
                 bool isFlush = groupMessage.Any(r => r is CommandBase);
                 foreach (var part in groupMessage)
                 {
-                    var messageInterceptionContext = new MessageInterceptionContext()
-                                                     {
-                                                             Dispatcher = this,
-                                                             Message = part
-                                                     };
-                    var allSatisfiedInterceptions = messageInterceptions.Where(r => r.IsSatisfied(messageInterceptionContext)).ToList();
                     bool isThrow = false;
 
                     try
                     {
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnBefore(messageInterceptionContext));
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         part.OnExecute(this, unitOfWork);
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnSuccess(messageInterceptionContext));
                         if (unitOfWork.IsValueCreated)
                             unitOfWork.Value.Flush();
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         isThrow = true;
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnError(messageInterceptionContext, ex));
                         throw;
                     }
                     finally
                     {
-                        allSatisfiedInterceptions.DoEach(interception => interception.OnComplete(messageInterceptionContext));
                         if (isThrow && isOuterCycle)
                             unitOfWorkCollection.Dispose();
                     }

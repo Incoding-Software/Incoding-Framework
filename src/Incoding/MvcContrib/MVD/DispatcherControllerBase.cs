@@ -2,14 +2,9 @@
 {
     #region << Using >>
 
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Web;
     using System.Web.Mvc;
-    using Incoding.CQRS;
-    using Incoding.Extensions;
     using Incoding.Maybe;
 
     #endregion
@@ -18,16 +13,19 @@
     // ReSharper disable MemberCanBeProtected.Global
     public class DispatcherControllerBase : IncControllerBase
     {
-        
         #region Api Methods
 
-        public virtual ActionResult Query(string incType, bool? incValidate, bool? incOnlyValidate = false)
+        public virtual ActionResult Query()
         {
-            var query = dispatcher.Query(new CreateByTypeQuery() { Type = incType, ControllerContext = this.ControllerContext, ModelState = ModelState });
-            if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
+            var parameter = dispatcher.Query(new GetMvdParameterQuery()
+                                             {
+                                                     Params = HttpContext.Request.Params
+                                             });
+            var query = dispatcher.Query(new CreateByTypeQuery() { Type = parameter.Type, ControllerContext = this.ControllerContext, ModelState = ModelState });
+            if (parameter.OnlyValidate && ModelState.IsValid)
                 return IncodingResult.Success();
 
-            if ((incValidate.GetValueOrDefault() || incOnlyValidate.GetValueOrDefault()) && !ModelState.IsValid)
+            if ((parameter.IsValidate || parameter.OnlyValidate) && !ModelState.IsValid)
                 return IncodingResult.Error(ModelState);
 
             return IncJson(dispatcher.Query(new ExecuteQuery() { Instance = query }));

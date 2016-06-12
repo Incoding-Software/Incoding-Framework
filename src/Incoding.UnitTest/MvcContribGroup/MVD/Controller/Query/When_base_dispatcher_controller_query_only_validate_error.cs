@@ -17,9 +17,14 @@ namespace Incoding.UnitTest.MvcContribGroup
                                   var res = Pleasure.Generator.Invent<ShareQuery>();
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)res);
                                   controller.ModelState.AddModelError("Fake", "Error");
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(ShareQuery).Name,
+                                                                                                                                                                                         OnlyValidate = true
+                                                                                                                                                                                 });
                               };
 
-        Because of = () => { result = controller.Query(typeof(ShareQuery).Name, false, incOnlyValidate: true); };
+        Because of = () => { result = controller.Query(); };
 
         It should_be_error = () => result.ShouldEqualWeak(IncodingResult.Error(controller.ModelState));
     }

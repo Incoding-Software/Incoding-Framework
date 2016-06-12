@@ -256,9 +256,6 @@
     <Compile Include="Block\Scheduler Factory\When_start_scheduler_with_success.cs" />
     <Compile Include="CQRSGroup\Common\Command\When_delete_entity_by_id_with_generic.cs" />
     <Compile Include="CQRSGroup\Common\Response\When_inc_bool_response.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_not_satisfied.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_satisfied_failed.cs" />
-    <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_interception_satisfied_success.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_command_without_repository.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_without_repository.cs" />
     <Compile Include="CQRSGroup\Dispatcher\When_default_dispatcher_push_composite_with_exception.cs" />
@@ -376,6 +373,7 @@
     <Compile Include="MvcContribGroup\Extensions\When_selector_map_ex.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_checkbox.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_and_checkbox.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_by_old_inc_type.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_enable_validate.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_find_by_type_with_wrong_instance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
