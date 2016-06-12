@@ -60,7 +60,7 @@
                                                                                                     });
         }
 
-        public class AsCommands : QueryBase<CommandBase[]>
+        internal sealed class AsCommands : QueryBase<CommandBase[]>
         {
             public string IncTypes { get; set; }
 
@@ -88,7 +88,7 @@
 
         #region Nested classes
 
-        public class FindTypeByName : QueryBase<Type>
+        internal sealed class FindTypeByName : QueryBase<Type>
         {
             #region Static Fields
 
@@ -123,7 +123,7 @@
 
         #endregion
 
-        public class GetFormCollectionsQuery : QueryBase<FormCollection>
+        internal sealed class GetFormCollectionsQuery : QueryBase<FormCollection>
         {
             protected override FormCollection ExecuteResult()
             {
