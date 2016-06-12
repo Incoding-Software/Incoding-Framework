@@ -350,11 +350,10 @@
 
         It should_be_query_validate_only_as_json = () =>
                                                    {
-                                                       const string actionUrl = "/Dispatcher/Query?incType=When_Url_dispatcher_FakeQuery&incOnlyValidate=True";
+                                                       const string actionUrl = "/Dispatcher/Validate?incType=When_Url_dispatcher_FakeQuery";
                                                        httpContext.Setup(r => r.Response.ApplyAppPathModifier(Pleasure.MockIt.IsStrong(actionUrl))).Returns(actionUrl);
                                                        urlDispatcher.Query(new When_Url_dispatcher_FakeQuery())
-                                                                    .ValidateOnly()
-                                                                    .AsJson()
+                                                                    .Validate()                                                                    
                                                                     .ShouldEqual(actionUrl);
                                                    };
 

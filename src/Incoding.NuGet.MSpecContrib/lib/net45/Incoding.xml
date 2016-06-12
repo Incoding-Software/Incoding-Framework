@@ -1,0 +1,2364 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Incoding</name>
+    </assembly>
+    <members>
+        <member name="M:Incoding.Block.Caching.ICacheKey.GetName">
+            <summary>
+                Unique key
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.CachingPolicyFluentEx.AlwaysExpires(Incoding.Block.Core.IsSatisfied{Incoding.Block.Caching.ICacheKey})">
+            <summary>
+                Reset cache each get
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.CachingPolicyFluentEx.EndAbsolute(Incoding.Block.Core.IsSatisfied{Incoding.Block.Caching.ICacheKey},System.Func{System.DateTime})">
+            <summary>
+                Set expires to <paramref name="generateEndDt" />
+            </summary>
+            <param name="satisfied">
+                See <see cref="T:Incoding.Block.Core.IsSatisfied`1" />
+            </param>
+            <param name="generateEndDt"> Date end caching key </param>
+        </member>
+        <member name="M:Incoding.Block.Caching.CachingPolicyFluentEx.EndSliding(Incoding.Block.Core.IsSatisfied{Incoding.Block.Caching.ICacheKey},System.Func{System.DateTime})">
+            <summary>
+                Set expires to <paramref name="generateEndDt" /> and reset each try get value by caching key
+            </summary>
+            <param name="satisfied">
+                See <see cref="T:Incoding.Block.Core.IsSatisfied`1" />
+            </param>
+            <param name="generateEndDt"> Date end caching key </param>
+        </member>
+        <member name="M:Incoding.Block.Caching.CachingPolicyFluentEx.NeverExpires(Incoding.Block.Core.IsSatisfied{Incoding.Block.Caching.ICacheKey})">
+            <summary>
+                Set always expires
+            </summary>
+            <param name="satisfied">
+                See <see cref="T:Incoding.Block.Core.IsSatisfied`1" />
+            </param>
+        </member>
+        <member name="M:Incoding.Block.Caching.CachingPolicyFluentEx.SetExpires(Incoding.Block.Core.IsSatisfied{Incoding.Block.Caching.ICacheKey},Incoding.Block.Caching.IsCacheExpires)">
+            <summary>
+                Set custom<c>expires</c>s
+            </summary>
+            <param name="satisfied"> Filter for caching key </param>
+            <param name="expires">
+                Predicate for <c>expires</c>
+            </param>
+            <returns> Instance caching policy </returns>
+        </member>
+        <member name="T:Incoding.Block.Caching.ICachedProvider">
+            <summary>
+                All <c>lock</c> implement in <see cref="T:Incoding.Block.Caching.CachingFactory" /> then not need added lock or any multi-threaded.
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.ICachedProvider.Delete(Incoding.Block.Caching.ICacheKey)">
+            <summary>
+                Delete all assign value for <c>key</c>
+            </summary>
+            <param name="key">
+                Caching <c>key</c>
+            </param>
+        </member>
+        <member name="M:Incoding.Block.Caching.ICachedProvider.DeleteAll">
+            <summary>
+                <c>Delete</c> all keys
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.ICachedProvider.Set``1(Incoding.Block.Caching.ICacheKey,``0)">
+            <summary>
+                Add or replace if value is exists
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.ICachedProvider.Get``1(Incoding.Block.Caching.ICacheKey)">
+            <summary>
+                Get value by caching <c>key</c>.
+                If value not exists return default(<c>T</c>)
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.Caching.MemCachedProvider.#ctor(System.String,System.Int32,Enyim.Caching.Memcached.ITranscoder)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Incoding.Block.Caching.MemCachedProvider" /> class.
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.ExceptionHandling.ExceptionPolicy.Filter(System.Func{System.Exception,System.Boolean})">
+            <summary>
+                See <see cref="T:Incoding.Block.Core.SatisfiedSyntax" />
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.ExceptionHandling.ExceptionPolicy.For``1">
+            <summary>
+                See <see cref="T:Incoding.Block.Core.SatisfiedSyntax" />
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.ExceptionHandling.ExceptionPolicy.ForDeepDerived``1">
+            <summary>
+                See <see cref="T:Incoding.Block.Core.SatisfiedSyntax" />
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.ExceptionHandling.ExceptionPolicy.ForFirstDerived``1">
+            <summary>
+                See <see cref="T:Incoding.Block.Core.SatisfiedSyntax" />
+            </summary>
+        </member>
+        <member name="M:Incoding.Block.ExceptionHandling.ExceptionPolicy.ForAll">
+            <summary>
+                See <see cref="T:Incoding.Block.Core.SatisfiedSyntax" />
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.IoC.NinjectIoCProvider">
+            <summary>
+                Implement provider IoC for Ninject. Get started http://dotnetslackers.com/articles/csharp/Get-Started-with-Ninject-2-0-in-C-sharp-Programming.aspx
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.IoC.StructureMapIoCProvider">
+            <summary>
+                Implement provider for StructureMap. http://docs.structuremap.net/
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.Logging.ActionLogger">
+            <summary>
+                Imp <see cref="T:Incoding.Block.Logging.ILogger" /> for action
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.Logging.ClipboardLogger">
+            <summary>
+                Imp <see cref="T:Incoding.Block.Logging.ILogger" /> for clipboard windows
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.Logging.ConsoleLogger">
+            <summary>
+                Imp <see cref="T:Incoding.Block.Logging.ILogger" /> for console.
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.Logging.FileLogger">
+            <summary>
+                Imp <see cref="T:Incoding.Block.Logging.ILogger" /> for stream file writer
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.Logging.TraceLogger">
+            <summary>
+                Imp <see cref="T:Incoding.Block.Logging.ILogger" /> for <see cref="T:System.Diagnostics.Trace" />
+            </summary>
+        </member>
+        <member name="T:Incoding.Block.GetRecurrencyDateQuery">
+            <summary>
+                Query returns next date for Scheduler by provided settings.
+            </summary>
+        </member>
+        <member name="T:Incoding.ContractAbbreviateAttribute">
+            <summary>
+                Enables writing abbreviations for contracts that get copied to other methods
+            </summary>
+        </member>
+        <member name="T:Incoding.ContractArgumentValidatorAttribute">
+            <summary>
+                Enables factoring legacy if-then-<c>throw</c> into separate methods for reuse and full control over
+                thrown exception and arguments
+            </summary>
+        </member>
+        <member name="T:Incoding.ContractOptionAttribute">
+            <summary>
+                Allows setting contract and tool options at assembly, type, or method granularity.
+            </summary>
+        </member>
+        <member name="T:Incoding.CQRS.IDispatcher">
+            <summary>
+                Interface Dispatcher
+            </summary>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Save``1(``0)">
+            <summary>
+                Persist the given entity instance
+            </summary>
+            <typeparam name="TEntity">Strong type entity</typeparam>
+            <param name="entity">Entity instance</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Saves``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Persist the given entity instance
+            </summary>
+            <typeparam name="TEntity">Strong type entity</typeparam>
+            <param name="entities">Entities instance</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Flush">
+            <summary>
+                Flushed if a query is requested for some entity type and there are dirty local entity instances
+            </summary>
+        </member>
+        <member name="M:Incoding.Data.IRepository.SaveOrUpdate``1(``0)">
+            <summary>
+                <see cref="M:Incoding.Data.IRepository.Saves``1(System.Collections.Generic.IEnumerable{``0})" /> or update
+            </summary>
+            <typeparam name="TEntity">Type entity</typeparam>
+            <param name="entity">Entity instance</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Delete``1(System.Object)">
+            <summary>
+                Delete a entity from the datastore  by id
+            </summary>
+            <typeparam name="TEntity">Type entity</typeparam>
+            <param name="id">Id</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.DeleteByIds``1(System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+                Delete a entity from the datastore  by ids ( don't support cascade )
+            </summary>
+            <typeparam name="TEntity">Type entity</typeparam>
+            <param name="ids">Ids</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Delete``1(``0)">
+            <summary>
+                Delete a entity instance from the datastore
+            </summary>
+            <typeparam name="TEntity">Type entity</typeparam>
+            <param name="entity">Persistence instance</param>
+        </member>
+        <member name="M:Incoding.Data.IRepository.DeleteAll``1">
+            <summary>
+                Delete all entities
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+        </member>
+        <member name="M:Incoding.Data.IRepository.GetById``1(System.Object)">
+            <summary>
+                Getting entity instance from persist
+            </summary>
+            <typeparam name="TEntity">Strong type entity</typeparam>
+            <param name="id">Primary key</param>
+            <returns> Instance entity </returns>
+        </member>
+        <member name="M:Incoding.Data.IRepository.LoadById``1(System.Object)">
+            <summary>
+                Getting entity instance from persist or cache
+            </summary>
+            <typeparam name="TEntity">Strong type entity</typeparam>
+            <param name="id">Primary key</param>
+            <returns> Instance entity </returns>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Query``1(Incoding.Data.OrderSpecification{``0},Incoding.Specification{``0},Incoding.Data.FetchSpecification{``0},Incoding.Data.PaginatedSpecification)">
+            <summary>
+                Query entities with specifications
+            </summary>
+            <typeparam name="TEntity">
+                Strong type entity
+            </typeparam>
+            <param name="orderSpecification">
+                Specification how sort entities
+            </param>
+            <param name="whereSpecification">
+                Specification how filter entities
+            </param>
+            <param name="fetchSpecification">
+                Specification why join with entities ( many to many , many to one , one to one )
+            </param>
+            <param name="paginatedSpecification">
+                Specification how much skip and take entities
+            </param>
+            <returns>
+                Queryable collections ( pending request )
+            </returns>
+        </member>
+        <member name="M:Incoding.Data.IRepository.Paginated``1(Incoding.Data.PaginatedSpecification,Incoding.Data.OrderSpecification{``0},Incoding.Specification{``0},Incoding.Data.FetchSpecification{``0})">
+            <summary>
+                Query page by page
+            </summary>
+            <typeparam name="TEntity">
+                Strong type entity
+            </typeparam>
+            <param name="paginatedSpecification">
+                Specification how much skip and take entities
+            </param>
+            <param name="orderSpecification">
+                Specification how sort entities
+            </param>
+            <param name="whereSpecification">
+                Specification how filter entities
+            </param>
+            <param name="fetchSpecification">
+                Specification why join with entities ( many to many , many to one , one to one )
+            </param>
+            <returns>
+                <see cref="T:Incoding.Data.IncPaginatedResult`1" />
+            </returns>
+        </member>
+        <member name="M:Incoding.Data.AdHocFetchSpecificationBase`1.Equals(Incoding.Data.AdHocFetchNhibernateSpecification{`0})">
+            
+        </member>
+        <member name="M:Incoding.Data.NHibernateEntityMap`1.IdGenerateByGuid(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            See sample
+            <code>
+            Id(property).CustomType(typeof(string)).GeneratedBy.Custom(typeof(GuidStringGenerator)).Length(36);
+            </code>
+            </summary>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Incoding.Extensions.ReflectionExtensions.FirstOrDefaultAttribute``1(System.Reflection.MemberInfo)">
+            <summary>
+                Try find first attribute by T (type attribute)
+            </summary>
+            <typeparam name="TAttribute"> Type attribute for found </typeparam>
+            <param name="methodInfo"> The method for search </param>
+            <returns>
+                If method has attribute will be return attribute else <c>null</c>
+            </returns>
+        </member>
+        <member name="T:Incoding.AndSpecification`1">
+            <summary>
+                The and specification.
+            </summary>
+            <typeparam name="T">
+            </typeparam>
+        </member>
+        <member name="T:Incoding.ExpressionSerialization.ExpressionUtility">
+            <summary>
+                ExpressionUtility
+            </summary>
+        </member>
+        <member name="M:Incoding.ExpressionSerialization.ExpressionUtility.Ensure(System.Linq.Expressions.Expression)">
+            <summary>
+                Ensure
+            </summary>
+            <param name="expression"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Incoding.OrSpecification`1">
+            <summary>
+                The or specification.
+            </summary>
+            <typeparam name="T">
+            </typeparam>
+        </member>
+        <member name="T:Incoding.MvcContrib.B">
+            <summary>
+                Bootstrap classes
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Container">
+            <summary>
+                Bootstrap requires a containing element to wrap site contents and house our grid system. You may choose one of two
+                containers to use in your projects. Note that, due to padding and more, neither container is nestable.
+                Use .container for a responsive fixed width container.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Container_fluid">
+            <summary>
+                Use .container-fluid for a full width container, spanning the entire width of your viewport.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Active">
+            <summary>
+                Active state Buttons will appear pressed (with a darker background, darker border, and inset shadow) when active.
+                For      button   elements, this is done via :active.
+                For a elements, it's done with .active. However, you may use .active on buttons (and include the
+                aria-pressed="true" attribute) should you need to replicate the active state programmatically.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Disabled">
+            <summary>
+                Make buttons look unclickable by fading them back with opacity.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Hide">
+            <summary>
+                Force an element to be shown or hidden (including for screen readers) with the use of .show and .hidden classes.
+                These classes use !important to avoid specificity conflicts, just like the quick floats. They are only available
+                for block level toggling. They can also be used as mixins.
+                .hide is available, but it does not always affect screen readers and is deprecated as of v3.0.1. Use .hidden or
+                .sr-only instead.
+                Furthermore, .invisible can be used to toggle only the visibility of an element, meaning its display is not
+                modified and the element can still affect the flow of the document.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.B.Hidden">
+            <summary>
+                Force an element to be shown or hidden (including for screen readers) with the use of .show and .hidden classes.
+                These classes use !important to avoid specificity conflicts, just like the quick floats. They are only available
+                for block level toggling. They can also be used as mixins.
+                .hide is available, but it does not always affect screen readers and is deprecated as of v3.0.1. Use .hidden or
+                .sr-only instead.
+                Furthermore, .invisible can be used to toggle only the visibility of an element, meaning its display is not
+                modified and the element can still affect the flow of the document.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Incoding.MvcContrib.B.Form_horizontal" -->
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Toggle(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Add or remove attribute
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Toggle(System.String)">
+            <summary>
+                Add or remove attribute
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.ToggleChecked">
+            <summary>
+                Add or remove attribute <see cref="F:Incoding.MvcContrib.HtmlAttribute.Checked" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.ToggleDisabled">
+            <summary>
+                Add or remove attribute <see cref="F:Incoding.MvcContrib.HtmlAttribute.Disabled" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.ToggleReadonly">
+            <summary>
+                Add or remove attribute <see cref="F:Incoding.MvcContrib.HtmlAttribute.Readonly" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.ToggleClass(System.String)">
+            <summary>
+                Add or remove one or more classes from each element in the set of matched elements, depending on either the class's
+                presence or the value of the switch argument.
+            </summary>
+            <param name="class">
+                One or more <c>class</c> names (separated by spaces) to be toggled for each element in the matched set.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.ToggleClass(Incoding.MvcContrib.B)">
+            <summary>
+                Add or remove one or more classes from each element in the set of matched elements, depending on either the class's
+                presence or the value of the switch argument.
+            </summary>
+            <param name="class">
+                Bootstrap classes
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveClass(System.String)">
+            <summary>
+                <c>Remove</c> a single <c>class</c>, multiple classes, or all classes from each element in the set of matched
+                elements.
+            </summary>
+            <param name="class">
+                One or more space-separated classes to be removed from the class attribute of each matched
+                element.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveClass(Incoding.MvcContrib.B)">
+            <summary>
+                <c>Remove</c> a single <c>class</c>, multiple classes, or all classes from each element in the set of matched
+                elements.
+            </summary>
+            <param name="class">
+                Bootstrap classes
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveAttr(System.String)">
+            <summary>
+                Remove an attribute from each element in the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Remove(System.String)">
+            <summary>
+                Remove an attribute from each element in the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Remove(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Remove an attribute from each element in the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveAttr(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Remove an attribute from each element in the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.SetAttr(System.String,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Set(System.String,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.SetAttr(Incoding.MvcContrib.HtmlAttribute,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Set(Incoding.MvcContrib.HtmlAttribute,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveProp(System.String)">
+            <summary>
+                Remove a property for the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.RemoveProp(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Remove a property for the set of matched elements.
+            </summary>
+            <param name="key">Html attributes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.SetProp(System.String,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one properties for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.SetProp(Incoding.MvcContrib.HtmlAttribute,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one properties for every matched element in context.
+            </summary>
+            <param name="key">Html attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Val(System.Object)">
+            <summary>
+                Set the <paramref name="value" /> of each element in the set of matched elements.
+            </summary>
+            <param name="value">
+                A string of text or an array of strings corresponding to the value of each matched element to set
+                as selected
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.Val(System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelectorExtend})">
+            <summary>
+                Set the <paramref name="value" /> of each element in the set of matched elements.
+            </summary>
+            <param name="value">
+                A string of text or an array of strings corresponding to the value of each matched element to set
+                as selected
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.AddClass(System.String)">
+            <summary>
+                Adds the specified <c>class</c> to each of the set of matched elements
+            </summary>
+            <param name="class">
+                One or more <c>class</c> names to be added to the class attribute of each matched element.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryAttributesDsl.AddClass(Incoding.MvcContrib.B)">
+            <summary>
+                Adds the specified <c>class</c> to each of the set of matched elements
+            </summary>
+            <param name="class">Twitter bootstrap classes</param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.Set(System.String,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">Css attributes</param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.Set(Incoding.MvcContrib.CssStyling,Incoding.MvcContrib.Selector)">
+            <summary>
+                Set one attributes for every matched element in context.
+            </summary>
+            <param name="key">
+                <see cref="T:Incoding.MvcContrib.CssStyling" />
+            </param>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.Display(Incoding.MvcContrib.Display)">
+            <summary>
+                Set css display attribute of every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.Height(Incoding.MvcContrib.Selector)">
+            <summary>
+                Set the height of every matched element.
+            </summary>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.ScrollLeft(Incoding.MvcContrib.Selector)">
+            <summary>
+                set the horizontal position of the scroll bar for every matched element.
+            </summary>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.ScrollTop(Incoding.MvcContrib.Selector)">
+            <summary>
+                set the vertical position of the scroll bar for every matched element.
+            </summary>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryCssDsl.Width(Incoding.MvcContrib.Selector)">
+            <summary>
+                set the width of every matched element.
+            </summary>
+            <param name="value">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Wrap(Incoding.MvcContrib.Selector)">
+            <summary>
+                Wrap an HTML structure around each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Wrap(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Wrap an HTML structure around each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.WrapAll(Incoding.MvcContrib.Selector)">
+            <summary>
+                Wrap an HTML structure around all elements in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.WrapAll(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Wrap an HTML structure around all elements in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Html(Incoding.MvcContrib.Selector)">
+            <summary>
+                Set of matched elements or set the HTML contents of every matched element.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Html(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Set of matched elements or set the HTML contents of every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Text(Incoding.MvcContrib.Selector)">
+            <summary>
+                Set the text contents of the matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Text(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Set the text contents of the matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Append(Incoding.MvcContrib.Selector)">
+            <summary>
+                Insert content, specified by the parameter, to the end of each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Append(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Insert content, specified by the parameter, to the end of each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Prepend(Incoding.MvcContrib.Selector)">
+            <summary>
+                Insert content, specified by the parameter, to the beginning of each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Prepend(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Insert content, specified by the parameter, to the beginning of each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.After(Incoding.MvcContrib.Selector)">
+            <summary>
+                Insert content, specified by the parameter, after each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.After(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Insert content, specified by the parameter, after each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Before(Incoding.MvcContrib.Selector)">
+            <summary>
+                Insert content, specified by the parameter, before each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Before(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Insert content, specified by the parameter, before each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.ReplaceWith(Incoding.MvcContrib.Selector)">
+            <summary>
+                Replace each element in the set of matched elements with the provided new content
+            </summary>
+            <param name="newContent">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.ReplaceWith(System.Func{System.Object,System.Web.WebPages.HelperResult})">
+            <summary>
+                Replace each element in the set of matched elements with the provided new content
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Remove">
+            <summary>
+                Remove the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Empty">
+            <summary>
+                Remove all child nodes of the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackJqueryManipulationDsl.Detach">
+            <summary>
+                Remove the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.Inline">
+            <summary>
+                Default. Displays an element as an inline element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.Block">
+            <summary>
+                Displays an element as a block element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.None">
+            <summary>
+                The element will not be displayed at all (has no effect on layout)
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.Inherit">
+            <summary>
+                The value of the display property will be inherited from the parent element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.InlineBlock">
+            <summary>
+                Displays an element as an inline-level block container. The inside of this block is formatted as block-level box, and the element itself is formatted as an inline-level box
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.InlineTable">
+            <summary>
+                The element is displayed as an inline-level table
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.ListItem">
+            <summary>
+                Let the element behave like a li element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.RunIn">
+            <summary>
+                Displays an element as either block or inline, depending on context
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.Table">
+            <summary>
+                Let the element behave like a table element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableCaption">
+            <summary>
+                Let the element behave like a caption element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableColumnGroup">
+            <summary>
+                Let the element behave like a colgroup element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableHeaderGroup">
+            <summary>
+                Let the element behave like a thead element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableFooterGroup">
+            <summary>
+                Let the element behave like a tfoot element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableRowGroup">
+            <summary>
+                Let the element behave like a tbody element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableCell">
+            <summary>
+                Let the element behave like a td element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableColumn">
+            <summary>
+                Let the element behave like a col element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.Display.TableRow">
+            <summary>
+                Let the element behave like a tr element
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.Type">
+            <summary>
+                Returns the name of the event
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.MetaKey">
+            <summary>
+                Returns indicates whether the META key was pressed when the event fired.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.Which">
+            <summary>
+                Returns which keyboard key or mouse button was pressed for the event.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.PageX">
+            <summary>
+                Returns the horizontal coordinate of the mouse pointer, relative to the current window, when an event was triggered
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.PageY">
+            <summary>
+                Returns the vertical coordinate of the mouse pointer, relative to the current window, when an event was triggered
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.ScreenX">
+            <summary>
+                Returns the horizontal coordinate of the mouse pointer, relative to the screen, when an event was triggered
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.EventSelector.ScreenY">
+            <summary>
+                Returns the vertical coordinate of the mouse pointer, relative to the screen, when an event was triggered
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Attr(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Get the value of an attribute for the first element in the set of matched elements every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Attr(Incoding.MvcContrib.JquerySelectorExtend,System.String)">
+            <summary>
+                Get the value of an attribute for the first element in the set of matched elements every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Css(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.CssStyling)">
+            <summary>
+                Get the value of a style property for the first element in the set of matched elements every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Css(Incoding.MvcContrib.JquerySelectorExtend,System.String)">
+            <summary>
+                Get the value of a style property for the first element in the set of matched elements every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.FormIsValid(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the value of an attribute for the first element in the set of matched elements every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.HasClass(Incoding.MvcContrib.JquerySelectorExtend,System.String)">
+            <summary>
+                Get the determine whether any of the matched elements are assigned the given class.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.HasClass(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                Get the determine whether any of the matched elements are assigned the given class.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Height(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed height for the first element in the set of matched elements
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.InnerHeight(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed height for the first element in the set of matched elements, including padding but not border.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.InnerWidth(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed width for the first element in the set of matched elements, including padding but not border.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Is(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JquerySelector)">
+            <summary>
+                Check the current matched set of elements against a selector, element and return true
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Is(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JqueryExpression)">
+            <summary>
+                Check the current matched set of elements against a expression, element and return true
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Is(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Check the current matched set of elements against a tag, element and return true
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Is(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Check the current matched set of elements against a selector, element and return true
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Length(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current count element of matched elements
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Val(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current value of the first element in the set of matched elements
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Method(Incoding.MvcContrib.JquerySelectorExtend,System.String,System.Object[])">
+            <summary>
+                Call method
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.OuterHeight(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed height for the first element in the set of matched elements,
+                including padding, border, and optionally margin. Returns an integer (without “px”) representation of the value or null if called on an empty set of elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.OuterWidth(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed width for the first element in the set of matched elements, including padding and border.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Property(Incoding.MvcContrib.JquerySelectorExtend,System.String)">
+            <summary>
+                Get property
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.ScrollLeft(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current horizontal position of the scroll bar for the first element in the set of matched elements the horizontal position of the scroll bar for every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.ScrollTop(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current horizontal position of the scroll bar for the first element in the set of matched elements the vertical position of the scroll bar for every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Text(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the combined text contents of each element in the set of matched elements, including their descendants
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendValueExtensions.Width(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the current computed width for the first element in the set of matched elements  the width of every matched element.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Add(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Add elements to the set of matched elements.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Add(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                Add elements to the set of matched elements.
+            </summary>
+            <param name="original"></param>
+            <param name="bOfClass">
+                bootstrap of classes
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Add(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Add elements to the set of matched elements.
+            </summary>
+            <param name="original"></param>
+            <param name="selector">
+                selector to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Children(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the children of each element in the set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Children(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Get the children of each element in the set of tag, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="tag">
+                Html tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Children(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the children of each element
+            </summary>
+            <param name="original"></param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Closest(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                For each element in the set, get the first element that matches the action by testing the element itself and
+                traversing up through its ancestors in the DOM tree.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Closest(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                For each element in the set, get the first element that tag the action by testing the element itself and traversing
+                up through its ancestors in the DOM tree.
+            </summary>
+            <param name="original">
+            </param>
+            <param name="tag">
+                Html tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Closest(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                For each element in the set, get the first element that tag the action by testing the element itself and traversing
+                up through its ancestors in the DOM tree.
+            </summary>
+            <param name="original">
+            </param>
+            <param name="classes">
+                Bootstrapp classes
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Closest(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JquerySelector)">
+            <summary>
+                For each element in the set, get the first element that tag the action by testing the element itself and traversing
+                up through its ancestors in the DOM tree.
+            </summary>
+            <param name="original">
+            </param>
+            <param name="selector">
+                Selector
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Closest(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JqueryExpression)">
+            <summary>
+                For each element in the set, get the first element that expression the action by testing the element itself and
+                traversing up through its ancestors in the DOM tree.
+            </summary>
+            <param name="original">
+            </param>
+            <param name="expression">
+                Jquery expression
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Filter(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Reduce the set of matched elements to those that match the action or pass the function's test.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Filter(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JquerySelector)">
+            <summary>
+                Reduce the set of matched elements to those that match the action or pass the function's test.
+            </summary>
+            <param name="original"></param>
+            <param name="selector">
+                selector to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Filter(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Reduce the set of tag to those that match the action or pass the function's test.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Filter(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JqueryExpression)">
+            <summary>
+                Reduce the set of expression to those that match the action or pass the function's test.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Filter(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                Reduce the set of expression to those that match the action or pass the function's test.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Find(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+                element
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Find(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
+            </summary>
+            <param name="original"></param>
+            <param name="tag">
+                Html tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Find(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
+            </summary>
+            <param name="original"></param>
+            <param name="B">
+                Bootstrapp class
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Find(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JqueryExpression)">
+            <summary>
+                Get the descendants of each element in the current set of tag, filtered by a action, jQuery object, or element
+            </summary>
+            <param name="original"></param>
+            <param name="expression">
+                Jquery expression
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Next(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+                element
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Next(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+                element
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.NextAll(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get all following siblings of each element in the set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.NextAll(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get all following siblings of each element in the set of matched elements, optionally filtered by a action.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.NextUntil(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get all following siblings of each element up to but not including the element matched by the action, DOM node, or
+                jQuery object passed.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.NextUntil(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get all following siblings of each element up to but not including the element matched by the action, DOM node, or
+                jQuery object passed.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Not(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Selects all elements that do not match the given <paramref name="action" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Not(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JqueryExpression)">
+            <summary>
+                Selects all elements that do not match the given <paramref name="action" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Not(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Selects all elements that do not match the given <paramref name="selector" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Not(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Selects all elements that do not match the given <paramref name="action" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.OffsetParent(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the closest ancestor element that is positioned.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parent(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the parent of each element in the current set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parent(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the parent of each element in the current set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original">
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parent(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Get the parent of each element in the current set of tag, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="tag">
+                Tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parents(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Get the parents of each element in the current set of tag, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="tag">
+                Tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parents(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the parents of each element in the current set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Parents(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the parents of each element in the current set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.ParentsUntil(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the ancestors of each element in the current set of matched elements, up to but not including the element
+                matched by the action, DOM node, or jQuery object
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.ParentsUntil(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the ancestors of each element in the current set of matched elements, up to but not including the element
+                matched by the action, DOM node, or jQuery object
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Prev(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a
+                action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Prev(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the immediately preceding sibling of each element in the set of matched elements, optionally filtered by a
+                action.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.PrevAll(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get all preceding siblings of each element in the set of matched elements, optionally filtered by a action.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.PrevAll(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get all preceding siblings of each element in the set of matched elements, optionally filtered by a action.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.PrevUntil(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or
+                jQuery object.
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                Action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.PrevUntil(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get all preceding siblings of each element up to but not including the element matched by the action, DOM node, or
+                jQuery object.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Siblings(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Get the siblings of each element in the set of matched elements, optionally filtered by a action
+            </summary>
+            <param name="original"></param>
+            <param name="action">
+                Action expression to match elements against.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Siblings(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.HtmlTag)">
+            <summary>
+                Get the siblings of each element in the set of matched elements, optionally filtered by a action
+            </summary>
+            <param name="original"></param>
+            <param name="tag">
+                Html tag
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Siblings(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.B)">
+            <summary>
+                Get the siblings of each element in the set of matched elements, optionally filtered by a action
+            </summary>
+            <param name="original"></param>
+            <param name="bOfClass">
+                Bootstrap class
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Siblings(Incoding.MvcContrib.JquerySelectorExtend)">
+            <summary>
+                Get the siblings of each element in the set of matched elements, optionally filtered by a action
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendTreeTraversalExtensions.Slice(Incoding.MvcContrib.JquerySelectorExtend,Incoding.MvcContrib.Selector,Incoding.MvcContrib.Selector)">
+            <summary>
+                Reduce the set of matched elements to a subset specified by a range of indices.
+            </summary>
+            <param name="original"></param>
+            <param name="start">
+                An integer indicating the 0-based position at which the elements begin to be selected. If negative, it indicates an
+                offset from the end of the set.
+            </param>
+            <param name="end">
+                An integer indicating the 0-based position at which the elements stop being selected. If negative, it indicates an
+                offset from the end of the set. If omitted, the range continues until the end of the set.
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendExtensions.Eq(Incoding.MvcContrib.JquerySelectorExtend,System.Int32)">
+            <summary>
+                Select the element at <paramref name="index" /> n within the matched set.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendExtensions.Gt(Incoding.MvcContrib.JquerySelectorExtend,System.Int32)">
+            <summary>
+                Select all elements at an <paramref name="index" /> greater than <paramref name="index" /> within the matched set.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendExtensions.Has(Incoding.MvcContrib.JquerySelectorExtend,System.Func{Incoding.MvcContrib.JquerySelector,Incoding.MvcContrib.JquerySelector})">
+            <summary>
+                Selects elements which contain at least one element that matches the specified <paramref name="hasAction" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelectorExtendExtensions.It(Incoding.MvcContrib.JquerySelectorExtend,System.Int32)">
+            <summary>
+                Select all elements at an <paramref name="index" /> less than <paramref name="index" /> within the matched set.
+            </summary>
+        </member>
+        <member name="T:Incoding.MvcContrib.JquerySelector">
+            <summary>
+                An HTML snippet, action expression, jQuery object, or DOM element specifying the structure to wrap around the
+                matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.HasAttribute(System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" />, with any value.
+                <remarks>
+                    Jquery $('[attribute]')
+                </remarks>
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.HasAttribute(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" />, with any value.
+                <remarks>
+                    Jquery $('[attribute]')
+                </remarks>
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.StartWithAttribute(System.String,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> beginning
+                exactly with a given string.
+                <remarks>
+                    $('[attribute^="value"]')
+                </remarks>
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.StartWithAttribute(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> beginning
+                exactly with a given string.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.ContainsAttribute(System.String,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> containing
+                the a given substring.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.ContainsAttribute(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> containing
+                the a given substring.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EndsWith(System.String,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> ending
+                exactly with a given string. The comparison is case sensitive.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EndsWithAttribute(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> ending
+                exactly with a given string. The comparison is case sensitive.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EndsWith(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Selects elements that have the specified <paramref name="attribute" /> with a <paramref name="value" /> ending
+                exactly with a given string. The comparison is case sensitive.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Id(System.String[])">
+            <summary>
+                Selects a single element with the given <paramref name="ids" /> attribute.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Id``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+                Selects a single element with the given <paramref name="expressions" /> attribute.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Name(System.String[])">
+            <summary>
+                Selects a single element with the given <paramref name="name" /> attribute.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Name``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+                Selects a single element with the given <paramref name="expressions" /> attribute.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Name``2(System.Linq.Expressions.Expression{System.Func{``0,``1}}[])">
+            <summary>
+                Selects a single element with the given <paramref name="expressions" /> attribute.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.All">
+            <summary>
+                Selects all elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Class(System.String)">
+            <summary>
+                Selects all elements with the given <paramref name="class" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Class(Incoding.MvcContrib.B)">
+            <summary>
+                Selects all elements with the given <paramref name="class" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.Class(System.String[])">
+            <summary>
+                Selects all elements with the given <paramref name="@class" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.NotEqualsAttribute(System.String,System.String)">
+            <summary>
+                Select elements that either don't have the specified <paramref name="attribute" />, or do have the specified
+                <paramref
+                    name="attribute" />
+                but not with a certain <paramref name="value" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.NotEqualsAttribute(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Select elements that either don't have the specified <paramref name="attribute" />, or do have the specified
+                <paramref
+                    name="attribute" />
+                but not with a certain <paramref name="value" />.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.NotEqualsAttribute(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Select elements that either don't have the specified <paramref name="attribute" />, or do have the specified
+                <paramref name="attribute" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EqualsAttribute(System.String,System.String)">
+            <summary>
+                Selects elements that have the specified <c>attribute</c> with a <c>value</c> exactly equal to a certain
+                <c>value</c>.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EqualsAttribute(Incoding.MvcContrib.HtmlAttribute,System.String)">
+            <summary>
+                Selects elements that have the specified <c>attribute</c> with a <c>value</c> exactly equal to a certain
+                <c>value</c>.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.JquerySelector.EqualsAttribute(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                Selects elements that have the specified <c>attribute</c> with a <c>value</c> exactly equal to a certain
+                <c>value</c>.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.IncTextAreaControl`2.Cols">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.Cols" />
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.IncTextAreaControl`2.Rows">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.Rows" />
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.IncTextBoxControl`2.Placeholder">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.Placeholder" />
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.IncControlBase.TabIndex">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.TabIndex" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncControlBase.SetAttr(Incoding.MvcContrib.HtmlAttribute,System.Object)">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.AutoComplete" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncControlBase.SetAttr(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                <see cref="T:Incoding.MvcContrib.HtmlAttribute" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncControlBase.RemoveAttr(Incoding.MvcContrib.HtmlAttribute)">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.AutoComplete" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncControlBase.RemoveAttr(System.String)">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.AutoComplete" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncControlBase.SetAttr(System.String,System.Object)">
+            <summary>
+                <see cref="F:Incoding.MvcContrib.HtmlAttribute.AutoComplete" />
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Remove">
+            <summary>
+                Remove the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Empty">
+            <summary>
+                Remove all child nodes of the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Detach">
+            <summary>
+                Remove the set of matched elements from the DOM.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Wrap">
+            <summary>
+                Wrap an HTML structure around each element in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.WrapAll">
+            <summary>
+                Wrap an HTML structure around all elements in the set of matched elements.
+            </summary>
+            <param name="selector">
+                <see cref="T:Incoding.MvcContrib.Selector" />
+            </param>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.After">
+            <summary>
+                Set the data of every matched element through After.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Append">
+            <summary>
+                Insert content, specified by the parameter, to the end of each element in the set of matched elements.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Html">
+            <summary>
+                Set the data of every matched element through Html.
+            </summary>
+        </member>
+        <member name="M:Incoding.MvcContrib.IncodingMetaCallbackInsertDsl.Text">
+            <summary>
+                Set the data of every matched element through Text.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Display">
+            <summary>
+                This property controls the type of box an element generates.
+                <remarks>
+                    The computed value may differ from the specified value for the root element and for floated or absolutely positioned elements;
+                    The Relationship Between display, position, and float for details about the relationship between the display, float, and position properties.
+                </remarks>
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Width">
+            <summary>
+                The width property sets the width of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.MinWidth">
+            <summary>
+                The min-width property is used to set the minimum width of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.MaxWidth">
+            <summary>
+                The max-width property is used to set the maximum width of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Padding">
+            <summary>
+                Clears an area around the content. The padding is affected by the background color of the box
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Content">
+            <summary>
+                The content of the box, where text and images appear
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Margin">
+            <summary>
+                Clears an area around the border. The margin does not have a background color, it is completely transparent
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Height">
+            <summary>
+                The height property sets the height of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.MinHeight">
+            <summary>
+                The min-height property is used to set the minimum height of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.MaxHeight">
+            <summary>
+                The max-height property is used to set the maximum height of an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.TextAlign">
+            <summary>
+                The text-align property is used to set the horizontal alignment of a text.
+                Text can be centered, or aligned to the left or right, or justified.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.TextDecoration">
+            <summary>
+                The text-decoration property is used to set or remove decorations from text
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.TextTransform">
+            <summary>
+                The text-transform property is used to specify uppercase and lowercase letters in a text.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.TextIndent">
+            <summary>
+                The text-indent property is used to specify the indentation of the first line of a text.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Border">
+            <summary>
+                The border shorthand property sets all the border properties in one declaration.
+                The properties that can be set, are (in order): border-width, border-style, and border-color.
+                It does not matter if one of the values above are missing, e.g. border:solid #ff0000; is allowed.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Background">
+            <summary>
+                The background shorthand property sets all the background properties in one declaration.
+                The properties that can be set, are: background-color, background-position, background-size, background-repeat, background-origin, background-clip, background-attachment, and background-image.
+                It does not matter if one of the values above are missing, e.g. background:#ff0000 url(smiley.gif); is allowed.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Color">
+            <summary>
+                The color property is used to set the color of the text.
+                <example>
+                    With CSS, a color is most often specified by:
+                    a HEX value - like "#ff0000"
+                    an RGB value - like "rgb(255,0,0)"
+                    a color name - like "red"
+                </example>
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Visibility">
+            <summary>
+                This property specifies whether an element is visible—that is, whether the box(es) that are generated by an element are rendered.
+                <remarks>
+                    Note that even if a box in the normal flow is hidden, it still affects the layout of other elements, unlike the behavior that occurs when we suppress box generation altogether by setting display to none.
+                    Descendant boxes of a hidden box will be visible if their visibility is set to visible, whereas descendants of an element for which display is set to none can never generate boxes of their own.
+                </remarks>
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.Font">
+            <summary>
+                The font shorthand property sets all the font properties in one declaration.
+                The properties that can be set, are (in order): "font-style font-variant font-weight font-size/line-height font-family"
+                The font-size and font-family values are required. If one of the other values are missing, the default values will be inserted, if any.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.FontSize">
+            <summary>
+                The font-size property sets the size of a font.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.FontFamily">
+            <summary>
+                The font-family property specifies the font for an element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.FontStyle">
+            <summary>
+                The font-style property specifies the font style for a text.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.FontVariant">
+            <summary>
+                In a small-caps font, all lowercase letters are converted to uppercase letters.
+                However, the converted uppercase letters appears in a smaller font size than the original uppercase letters in the text.
+                The font-variant property specifies whether or not a text should be displayed in a small-caps font.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.CssStyling.FontWeight">
+            <summary>
+                The font-weight property sets how thick or thin characters in text should be displayed.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Alt">
+            <summary>
+                Specifies an alternate text for images (only for type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Accept">
+            <summary>
+                Specifies the types of files that the server accepts (only for type="file")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Id">
+            <summary>
+                Specifies a unique id for an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Class">
+            <summary>
+                Specifies one or more class names for an element (refers to a class in a style sheet)
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.ContentEditable">
+            <summary>
+                Specifies whether the content of an element is editable or not
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.ContextMenu">
+            <summary>
+                Specifies a context menu for an element. The context menu appears when a user right-clicks on the element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.DragGable">
+            <summary>
+                Specifies whether an element is drag gable or not
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.DropZone">
+            <summary>
+                Specifies whether the dragged data is copied, moved, or linked, when dropped
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Hidden">
+            <summary>
+                Specifies that an element is not yet, or is no longer, relevant
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Lang">
+            <summary>
+                Specifies the language of the element's content
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.SpellCheck">
+            <summary>
+                Specifies whether the element is to have its spelling and grammar checked or not
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Translate">
+            <summary>
+                Specifies whether an element's value are to be translated when the page is localized, or not.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Type">
+            <summary>
+                Specifies the type of input element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Href">
+            <summary>
+                The href attribute specifies the URL of the page the link goes to.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Rel">
+            <summary>
+                The rel attribute specifies the relationship between the current document and the linked document.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Src">
+            <summary>
+                Specifies the URL of the image to use as a submit button (only for type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.TabIndex">
+            <summary>
+                Specifies the tabbing order of an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.AccessKey">
+            <summary>
+                Specifies a shortcut key to activate/focus an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Title">
+            <summary>
+                Specifies extra information about an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Dir">
+            <summary>
+                Specifies the text direction for the content in an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Disabled">
+            <summary>
+                The disabled attribute specifies that an input element should be disabled.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.MaxLength">
+            <summary>
+                Specifies the maximum number of characters allowed in an input element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Readonly">
+            <summary>
+                Specifies that an input field should be read-only
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Checked">
+            <summary>
+                Specifies that an input element should be preselected when the page loads (for type="checkbox" or type="radio")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Size">
+            <summary>
+                Specifies the width, in characters, of an input element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Multiple">
+            <summary>
+                Specifies that multiple options can be selected at once
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Value">
+            <summary>
+                The value attribute specifies the value of an input element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Placeholder">
+            <summary>
+                The placeholder attribute specifies a short hint that describes the expected value of an input field (e.g. a sample value or a short description of the expected format).
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.AutoComplete">
+            <summary>
+                The autocomplete attribute specifies whether a form or input field should have autocomplete on or off.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Cols">
+            <summary>
+                The cols attribute specifies the visible width of a text area.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Rows">
+            <summary>
+                The rows property sets or returns the height (in rows) of a text area.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Style">
+            <summary>
+                Specifies an inline CSS style for an element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.AutoFocus">
+            <summary>
+                Specifies that an input element should automatically get focus when the page loads
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Action">
+            <summary>
+                Specifies the URL of the file that will process the input control when the form is submitted (for type="submit" and type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.EncType">
+            <summary>
+                Specifies how the form-data should be encoded when submitting it to the server (for type="submit" and type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Method">
+            <summary>
+                Defines the HTTP method for sending data to the action URL (for type="submit" and type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.NoValidate">
+            <summary>
+                Defines that form elements should not be validated when submitted
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Target">
+            <summary>
+                Specifies where to display the response that is received after submitting the form (for type="submit" and type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.Height">
+            <summary>
+                Specifies the height of an input element (only for type="image")
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.HtmlAttribute.HrefLang">
+            <summary>
+                The hreflang attribute specifies the language of the linked document.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Animated">
+            <summary>
+                Select all elements that are in the progress of an animation at the time the selector is run.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Checked">
+            <summary>
+                Matches all elements that are checked.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Disabled">
+            <summary>
+                Selects all elements that are disabled.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Empty">
+            <summary>
+                Select all elements that have no children (including text nodes).
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Input">
+            <summary>
+                Select all input elements
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Radio">
+            <summary>
+                Select all input elements with type="radio"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Checkbox">
+            <summary>
+                Select all input elements with type="checkbox"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Reset">
+            <summary>
+                Select all input elements with type="reset"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Submit">
+            <summary>
+                Select all input elements with type="submit"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Button">
+            <summary>
+                Select all input elements with type="button"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Image">
+            <summary>
+                Select all input elements with type="image"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.File">
+            <summary>
+                Select all input elements with type="file"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Text">
+            <summary>
+                Select all input elements with type="text"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Password">
+            <summary>
+                Select all input elements with type="password"
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Enabled">
+            <summary>
+                Selects all elements that are enabled.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Even">
+            <summary>
+                Selects even elements, zero-indexed. See also odd.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.First">
+            <summary>
+                Selects the first matched element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Focus">
+            <summary>
+                Selects element if it is currently focused.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Header">
+            <summary>
+                Selects all elements that are headers, like h1, h2, h3 and so on.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Hidden">
+            <summary>
+                Selects all elements that are hidden.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Last">
+            <summary>
+                Selects the last matched element.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Odd">
+            <summary>
+                Selects odd elements, zero-indexed
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Parent">
+            <summary>
+                Select all elements that are the parent of another element, including text nodes.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Selected">
+            <summary>
+                Selects all elements that are selected.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Visible">
+            <summary>
+                Selects all elements that are visible.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.First_Child">
+            <summary>
+                Select first child of their parent
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Last_Child">
+            <summary>
+                Select last child of their parent
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryExpression.Only_Child">
+            <summary>
+                Select  only child of their parent
+            </summary>
+        </member>
+        <member name="T:Incoding.MvcContrib.JqueryAjaxFormOptions">
+            <summary>
+                All options description in http://jquery.malsup.com/form/#options-<c>object</c>
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxFormOptions.ForceSync">
+            <summary>
+                Boolean value. Set to <c>true</c> to remove short delay before posting form when uploading files (or using the
+                iframe option).
+                <remarks>
+                    The delay is used to allow the browser to render DOM updates prior to performing a native form submit. This
+                    improves usability when displaying notifications to the user, such as "Please Wait..."
+                </remarks>
+                Default value: <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxFormOptions.Semantic">
+            <summary>
+                Boolean flag indicating whether data must be submitted in strict semantic order (slower).
+                <remarks>
+                    Note that the normal form serialization is done in semantic order with the exception of input elements of
+                    type="image". You should only set the semantic option to true if your server has strict semantic requirements
+                    and your form contains an input element of type="image".
+                </remarks>
+                Default value: <see langword="false" />
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxFormOptions.Type">
+            <summary>
+                The method in which the form data
+                Default value: value of form's method attribute (or 'GET' if none found)
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxFormOptions.Url">
+            <summary>
+                URL to which the form data will be submitted.
+                Default value: value of form's action attribute
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Async">
+            <summary>
+                Default: <c>true</c> By default, all requests are sent asynchronously (i.e. <c>this</c> is set to <c>true</c> by
+                default).
+                If you need synchronous requests, set <c>this</c> option to <c>false</c>.
+                <remarks>
+                    Cross-domain requests and dataType: "jsonp" requests do not support synchronous operation.
+                    Note that synchronous requests may temporarily <c>lock</c> the browser, disabling any actions <c>while</c> the
+                    request is active.
+                </remarks>
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Cache">
+            <summary>
+                Default: <c>true</c>
+                If set to <c>false</c>, it will force requested pages not to be cached by the browser. Setting cache to
+                <c>false</c> also appends a query string parameter, "_=[TIMESTAMP]", to the URL.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.CrossDomain">
+            <summary>
+                Default: <c>true</c> for same-domain requests, <c>true</c> for cross-domain requests
+                If you wish to force a crossDomain request (such as JSONP) on the same domain, set the value of crossDomain to
+                <c>true</c>.
+                This allows, for example, server-side redirection to another domain.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Global">
+            <summary>
+                Default: <c>true</c>.
+                Whether to trigger global Ajax event handlers for <c>this</c> request.
+                The default is <c>true</c>. Set to <c>false</c> to prevent the global handlers like ajaxStart or ajaxStop from
+                being triggered.
+                This can be used to control various Ajax Events.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Traditional">
+            <summary>
+                Default:<c>true</c>. Set <c>this</c> to <c>true</c> if you wish to use the traditional style of param
+                serialization.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Type">
+            <summary>
+                Default: <see cref="F:System.Web.Mvc.HttpVerbs.Get" />. The type of request to make ("POST" or "GET"), default is "GET".
+                Note: Other HTTP request methods, such as PUT and DELETE, can also be used here, but they are not supported by all
+                browsers.
+            </summary>
+        </member>
+        <member name="P:Incoding.MvcContrib.JqueryAjaxOptions.Timeout">
+            <summary>
+                Set a timeout (in milliseconds) for the request.
+            </summary>
+        </member>
+        <member name="T:Incoding.MvcContrib.JqueryBind">
+            <summary>
+                All support event jquery. Name bind should be in lower cases.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.Incoding">
+            <summary>
+                Universal bind
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.InitIncoding">
+            <summary>
+                First parse element
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.IncChangeUrl">
+            <summary>
+                Change url.
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.IncAjaxBefore">
+            <summary>
+                A pre-request callback
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.IncAjaxError">
+            <summary>
+                A function to be called if the request fails.
+                Are "timeout", "error", "abort", and "parsererror".
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.IncAjaxComplete">
+            <summary>
+                A function to be called when the request finishes (after error callback are executed).
+            </summary>
+        </member>
+        <member name="F:Incoding.MvcContrib.JqueryBind.IncAjaxSuccess">
+            <summary>
+                A function to be called when the request finishes (after error callback are executed).
+            </summary>
+        </member>
+        <member name="T:Incoding.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.AdHocFetchSpecification_Equal_diffrent_count_expressions">
+            <summary>
+              Looks up a localized string similar to Actual count expressions {0} but expected {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.AdHocFetchSpecification_Equal_diffrent_expressions">
+            <summary>
+              Looks up a localized string similar to Actual expression {0} but expected {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.AdHocOrderSpecification_Equal_diffrent_count_expressions">
+            <summary>
+              Looks up a localized string similar to Actual count expressions {0} but expected {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.AdHocOrderSpecification_Equal_diffrent_expressions">
+            <summary>
+              Looks up a localized string similar to Actual expression {0} but expected {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.AdHocOrderSpecification_Equal_diffrent_type">
+            <summary>
+              Looks up a localized string similar to Actual type {0} but expected {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.CompareFactory_Actual_Null_Or_Expected_Null">
+            <summary>
+              Looks up a localized string similar to Actual {0} null but Expected {1} null.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.CompareFactory_Has_Many_Configuration">
+            <summary>
+              Looks up a localized string similar to Property {0} should be has configuration one once.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.CompareFactory_Not_Found_Property">
+            <summary>
+              Looks up a localized string similar to Not found property {0} in class {1}.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.Exception_Handlerbars_Only_Member_Access">
+            <summary>
+              Looks up a localized string similar to You can use only MemberAccess model =&gt; model.Prop.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.Exception_Reflection_Not_Found_Member">
+            <summary>
+              Looks up a localized string similar to Not found property or field {0}&quot;.
+            </summary>
+        </member>
+        <member name="P:Incoding.Resources.Session_Factory_Not_Open">
+            <summary>
+              Looks up a localized string similar to &quot;Database access logic cannot be used, if session not opened. Implicitly session usage not allowed now. Please open session&quot;.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -27,9 +27,13 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                                               .Tuning(r => r.IsGroup, false)
                                                                                                               .Tuning(r => r.Type, typeof(FakeCommand).Name)), (object)command);
                                   controller.ModelState.AddModelError("Fake", "Error");
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeCommand).Name
+                                                                                                                                                                                 });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeCommand).Name); };
+        Because of = () => { result = controller.Push(); };
 
         It should_be_data = () => result.ShouldEqualWeak(IncodingResult.Error(controller.ModelState));
 

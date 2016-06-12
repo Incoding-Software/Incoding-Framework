@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
 {
     #region << Using >>
 
+    using System.Web;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
@@ -9,18 +10,20 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
 
     #endregion
 
-    [Subject(typeof(ExecuteQuery))]
-    public class When_execute_query_with_inheritance
+    [Subject(typeof(MVDExecute))]
+    public class When_mvd_execute_message_query_with_inheritance
     {
         Establish establish = () =>
                               {
                                   var fakeQuery = Pleasure.Generator.Invent<FakeInheritanceQuery>();
-                                  ExecuteQuery query = Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, fakeQuery));
+                                  MVDExecute query = new MVDExecute(Pleasure.MockStrictAsObject<HttpContextBase>())
+                                                                        {
+                                                                                Instance = new CommandComposite(fakeQuery)
+                                                                        };
                                   expected = Pleasure.Generator.TheSameString();
 
-                                  mockQuery = MockQuery<ExecuteQuery, object>
-                                          .When(query)
-                                          .StubQuery(fakeQuery, expected);
+                                  mockQuery = MockQuery<MVDExecute, object>
+                                          .When(query);
                               };
 
         Because of = () => mockQuery.Execute();
@@ -39,7 +42,7 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
             }
         }
 
-        static MockMessage<ExecuteQuery, object> mockQuery;
+        static MockMessage<MVDExecute, object> mockQuery;
 
         static string expected;
 

@@ -10,7 +10,7 @@ namespace Incoding.UnitTest.MvcContribGroup
     #endregion
 
     [Subject(typeof(DispatcherControllerBase))]
-    public class When_base_dispatcher_controller_query_only_validate_error : Context_dispatcher_controller
+    public class When_base_dispatcher_controller_validate : Context_dispatcher_controller
     {
         Establish establish = () =>
                               {
@@ -19,12 +19,11 @@ namespace Incoding.UnitTest.MvcContribGroup
                                   controller.ModelState.AddModelError("Fake", "Error");
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
                                                                                                                                                                                  {
-                                                                                                                                                                                         Type = typeof(ShareQuery).Name,
-                                                                                                                                                                                         OnlyValidate = true
+                                                                                                                                                                                         Type = typeof(ShareQuery).Name,                                                                                                                                                                                         
                                                                                                                                                                                  });
                               };
 
-        Because of = () => { result = controller.Query(); };
+        Because of = () => { result = controller.Validate(); };
 
         It should_be_error = () => result.ShouldEqualWeak(IncodingResult.Error(controller.ModelState));
     }

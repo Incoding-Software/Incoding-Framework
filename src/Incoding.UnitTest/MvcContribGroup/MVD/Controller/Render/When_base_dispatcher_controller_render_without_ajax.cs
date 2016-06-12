@@ -8,6 +8,7 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
+    using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -17,28 +18,32 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_render_without_ajax : Context_dispatcher_controller_render
     {
-        private static FakeModel model;
+        private static ShareQuery model;
 
-        Because of = () =>
-                     {
-                         model = Pleasure.Generator.Invent<FakeModel>();
+        Establish establish = () =>
+                              {
+                                  model = Pleasure.Generator.Invent<ShareQuery>();
 
+                                  controller.ControllerContext = new ControllerContext(Pleasure.MockAsObject<HttpContextBase>(mock =>
+                                                                                                                              {
+                                                                                                                                  mock.SetupGet(r => r.Request).Returns(Pleasure.Mock<HttpRequestBase>(s => { s.SetupGet(r => r.Headers).Returns(new NameValueCollection()); }).Object);
+                                                                                                                                  mock.SetupGet(r => r.Response).Returns(responseBase.Object);
+                                                                                                                              }), new RouteData(), controller);
 
-                         controller.ControllerContext = new ControllerContext(Pleasure.MockAsObject<HttpContextBase>(mock =>
-                                                                                                                           {
-                                                                                                                               mock.SetupGet(r => r.Request).Returns(Pleasure.Mock<HttpRequestBase>(s => { s.SetupGet(r => r.Headers).Returns(new NameValueCollection()); }).Object);
-                                                                                                                               mock.SetupGet(r => r.Response).Returns(responseBase.Object);
-                                                                                                                           }), new RouteData(), controller);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Empty(r => r.IsModel)
+                                                                                                              .Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)model);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(model))), (object)model);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(ShareQuery).Name,
+                                                                                                                                                                                         View = "View",
+                                                                                                                                                                                 });
+                              };
 
-                         dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
-                                                                            .Tuning(r => r.ModelState, controller.ModelState)
-                                                                            .Empty(r => r.IsGroup)
-                                                                            .Empty(r => r.IsModel)
-                                                                            .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)model);
-                         dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, model)), (object)model);
-
-                         result = controller.Render("View", typeof(FakeModel).Name, null, false);
-                     };
+        Because of = () => { result = controller.Render(); };
 
         It should_be_content = () => result.ShouldBeAssignableTo<ContentResult>();
 

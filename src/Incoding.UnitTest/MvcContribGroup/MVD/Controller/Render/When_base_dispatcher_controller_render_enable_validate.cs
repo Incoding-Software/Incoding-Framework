@@ -17,6 +17,12 @@ namespace Incoding.UnitTest.MvcContribGroup
                               {
                                   var res = Pleasure.Generator.Invent<FakeRenderQuery>();
                                   controller.ModelState.AddModelError("Fake", "Error");
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeRenderQuery).Name,
+                                                                                                                                                                                         View = "View",
+                                                                                                                                                                                         IsValidate = true
+                                                                                                                                                                                 });
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
                                                                                                               .Tuning(r => r.ModelState, controller.ModelState)
                                                                                                               .Empty(r => r.IsGroup)
@@ -24,7 +30,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                                               .Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)res);
                               };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).Name, false, true); };
+        Because of = () => { result = controller.Render(); };
 
         It should_be_error = () => { result.ShouldBeIncodingError(); };
 

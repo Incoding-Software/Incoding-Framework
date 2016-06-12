@@ -2,7 +2,11 @@
 {
     #region << Using >>
 
+    using System;
     using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Web;
     using System.Web.Mvc;
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
@@ -10,10 +14,12 @@
     using FluentValidation.Mvc;
     using Incoding.Block;
     using Incoding.Block.IoC;
+    using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Data;
     using Incoding.Extensions;
     using Incoding.MvcContrib;
+    using Incoding.MvcContrib.MVD;
     using NHibernate.Tool.hbm2ddl;
     using StructureMap.Graph;
 
@@ -34,6 +40,12 @@
 
         public static void Start()
         {
+            LoggingFactory.Instance.Initialize(logging =>
+            {
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Log");
+                logging.WithPolicy(policy => policy.For(LogType.Trace).Use(FileLogger.WithAtOnceReplace(path, () => "Trace_{0}.txt".F(DateTime.Now.ToString("yyyyMMdd")))));
+            });
+
             IoCFactory.Instance.Initialize(init => init.WithProvider(new StructureMapIoCProvider(registry =>
                                                                                                  {
                                                                                                      registry.For<IDispatcher>().Use<DefaultDispatcher>();
@@ -60,6 +72,8 @@
                                                                                                                        r.AddAllTypesOf<ISetUp>();
                                                                                                                    });
                                                                                                  })));
+
+            MVDExecute.SetInterception(() => new TraceMessageInterception());
             //var container = new Container();
             //container.Register<IDispatcher, DefaultDispatcher>();
             //container.Register<ITemplateFactory, TemplateDoTFactory>();
@@ -84,8 +98,8 @@
             //container.RegisterConditional(typeof(IValidator<>), typeof(ValidateNothingDecorator<>), Lifestyle.Singleton, context => !context.Handled);
             //IoCFactory.Instance.Initialize(init => init.WithProvider(new SimpleInjectorIoCProvider(container)));
 
-            FluentValidationModelValidatorProvider.Configure();
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));
+            FluentValidationModelValidatorProvider.Configure();
 
             IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
 
@@ -97,5 +111,22 @@
         }
 
         #endregion
+    }
+
+    public class TraceMessageInterception : IMessageInterception
+    {
+        readonly Stopwatch time = new Stopwatch();
+
+        public void OnBefore(IMessage message, HttpContextBase context)
+        {
+            this.time.Start();
+        }
+
+        public void OnAfter(IMessage message, HttpContextBase context)
+        {
+            this.time.Stop();
+            var txt = "Message {0} execute at {1} milliseconds".F(message.GetType().Name, this.time.ElapsedMilliseconds);
+            LoggingFactory.Instance.LogMessage(LogType.Trace, txt);
+        }
     }
 }

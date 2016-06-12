@@ -3,9 +3,8 @@
     #region << Using >>
 
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
-    using Incoding.Maybe;
+    using Incoding.CQRS;
 
     #endregion
 
@@ -15,6 +14,17 @@
     {
         #region Api Methods
 
+        public virtual ActionResult Validate()
+        {
+            var parameter = dispatcher.Query(new GetMvdParameterQuery()
+                                             {
+                                                     Params = HttpContext.Request.Params
+                                             });
+            // ReSharper disable once UnusedVariable
+            var instance = dispatcher.Query(new CreateByTypeQuery() { Type = parameter.Type, ControllerContext = this.ControllerContext, ModelState = ModelState });
+            return ModelState.IsValid ? IncodingResult.Success() : IncodingResult.Error(ModelState);
+        }
+
         public virtual ActionResult Query()
         {
             var parameter = dispatcher.Query(new GetMvdParameterQuery()
@@ -22,60 +32,61 @@
                                                      Params = HttpContext.Request.Params
                                              });
             var query = dispatcher.Query(new CreateByTypeQuery() { Type = parameter.Type, ControllerContext = this.ControllerContext, ModelState = ModelState });
-            if (parameter.OnlyValidate && ModelState.IsValid)
-                return IncodingResult.Success();
 
-            if ((parameter.IsValidate || parameter.OnlyValidate) && !ModelState.IsValid)
+            if (parameter.IsValidate && !ModelState.IsValid)
                 return IncodingResult.Error(ModelState);
 
-            return IncJson(dispatcher.Query(new ExecuteQuery() { Instance = query }));
+            return IncJson(dispatcher.Query(new MVDExecute(HttpContext)
+                                            {
+                                                    Instance = new CommandComposite((IMessage)query)
+                                            }));
         }
 
-        public virtual ActionResult Render(string incView, string incType, bool? incIsModel, bool? incValidate)
+        public virtual ActionResult Render()
         {
+            var parameter = dispatcher.Query(new GetMvdParameterQuery()
+                                             {
+                                                     Params = HttpContext.Request.Params
+                                             });
             object model = null;
-            if (!string.IsNullOrWhiteSpace(incType))
+            if (!string.IsNullOrWhiteSpace(parameter.Type))
             {
                 var instance = dispatcher.Query(new CreateByTypeQuery()
                                                 {
-                                                        Type = incType,
+                                                        Type = parameter.Type,
                                                         ControllerContext = ControllerContext,
                                                         ModelState = ModelState,
-                                                        IsModel = incIsModel.GetValueOrDefault()
+                                                        IsModel = parameter.IsModel
                                                 });
 
-                if (incValidate.GetValueOrDefault() && !ModelState.IsValid)
+                if (parameter.IsValidate && !ModelState.IsValid)
                     return IncodingResult.Error(ModelState);
 
-                model = incIsModel.GetValueOrDefault(false)
-                                ? instance
-                                : dispatcher.Query(new ExecuteQuery() { Instance = instance });
+                model = parameter.IsModel ? instance : dispatcher.Query(new MVDExecute(HttpContext) { Instance = new CommandComposite((IMessage)instance) });
             }
 
             ModelState.Clear();
 
-            incView = HttpUtility.UrlDecode(incView);
             var isAjaxRequest = HttpContext.Request.IsAjaxRequest();
             return isAjaxRequest
-                           ? (ActionResult)IncPartialView(incView, model)
-                           : Content(RenderToString(incView, model));
+                           ? (ActionResult)IncPartialView(parameter.View, model)
+                           : Content(RenderToString(parameter.View, model));
         }
 
-        public virtual ActionResult Push(string incTypes, string incType = "", bool? incIsCompositeAsArray = false, bool? incOnlyValidate = false)
+        public virtual ActionResult Push()
         {
-            if (!string.IsNullOrWhiteSpace(incType))
-                incTypes = incType;
+            var parameter = dispatcher.Query(new GetMvdParameterQuery()
+                                             {
+                                                     Params = HttpContext.Request.Params
+                                             });
 
             var commands = dispatcher.Query(new CreateByTypeQuery.AsCommands()
                                             {
-                                                    IncTypes = incTypes,
+                                                    IncTypes = parameter.Type,
                                                     ModelState = ModelState,
                                                     ControllerContext = ControllerContext,
-                                                    IsComposite = incIsCompositeAsArray
+                                                    IsComposite = parameter.IsCompositeArray
                                             });
-
-            if (incOnlyValidate.GetValueOrDefault() && ModelState.IsValid)
-                return IncodingResult.Success();
 
             return TryPush(composite =>
                            {
@@ -88,19 +99,24 @@
                                                                  });
         }
 
-        public virtual ActionResult QueryToFile(string incType, string incContentType, string incFileDownloadName)
+        public virtual ActionResult QueryToFile()
         {
             Response.AddHeader("X-Download-Options", "Open");
-            var result = dispatcher.Query(new ExecuteQuery()
+            var parameter = dispatcher.Query(new GetMvdParameterQuery()
+                                             {
+                                                     Params = HttpContext.Request.Params
+                                             });
+            var instance = dispatcher.Query(new CreateByTypeQuery()
+                                            {
+                                                    Type = parameter.Type,
+                                                    ControllerContext = ControllerContext,
+                                                    ModelState = ModelState
+                                            });
+            var result = dispatcher.Query(new MVDExecute(HttpContext)
                                           {
-                                                  Instance = dispatcher.Query(new CreateByTypeQuery()
-                                                                              {
-                                                                                      Type = incType,
-                                                                                      ControllerContext = ControllerContext,
-                                                                                      ModelState = ModelState
-                                                                              })
+                                                  Instance = new CommandComposite((IMessage)instance)
                                           });
-            return File((byte[])result, string.IsNullOrWhiteSpace(incContentType) ? "img" : incContentType, incFileDownloadName.Recovery(string.Empty));
+            return File((byte[])result, parameter.ContentType, parameter.FileDownloadName);
         }
 
         #endregion

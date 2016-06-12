@@ -13,7 +13,7 @@
 
     #endregion
 
-    internal sealed class CreateByTypeQuery : QueryBase<object>
+    public sealed class CreateByTypeQuery : QueryBase<object>
     {
         protected override object ExecuteResult()
         {
@@ -53,7 +53,7 @@
             return new DefaultModelBinder().BindModel(ControllerContext ?? new ControllerContext(), new ModelBindingContext()
                                                                                                     {
                                                                                                             ModelMetadata = ModelMetadataProviders.Current.GetMetadataForType(() => Activator.CreateInstance(instanceType), instanceType),
-                                                                                                            ModelState = ModelState ?? new ModelStateDictionary(),
+                                                                                                            ModelState = ModelState ?? new ModelStateDictionary(),                                                                                                            
                                                                                                             ValueProvider = ControllerContext != null
                                                                                                                                     ? ValueProviderFactories.Factories.GetValueProvider(ControllerContext)
                                                                                                                                     : formCollection,

@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -23,11 +24,17 @@
                                   contentType = Pleasure.Generator.String();
                                   fileName = Pleasure.Generator.String();
 
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)content);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(query))), (object)content);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeFileByNameQuery).Name,
+                                                                                                                                                                                         ContentType = contentType,
+                                                                                                                                                                                         FileDownloadName = fileName
+                                                                                                                                                                                 });
                                   responseBase.Setup(r => r.AddHeader("X-Download-Options", "Open"));
                               };
 
-        Because of = () => { result = controller.QueryToFile(typeof(FakeFileByNameQuery).Name, contentType, fileName); };
+        Because of = () => { result = controller.QueryToFile(); };
 
         It should_be_result = () => result.ShouldBeFileContent(content,
                                                                contentType: contentType,

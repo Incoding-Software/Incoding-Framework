@@ -27,9 +27,14 @@
                                                                                                                          .Tuning(r => r.ModelState, controller.ModelState)
                                                                                                                          .Tuning(r => r.ControllerContext, controller.ControllerContext)
                                                                                                                          .Tuning(r => r.IsComposite, isComposite)), new CommandBase[] { command1, command2 });
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeCommand).Name,
+                                                                                                                                                                                         IsCompositeArray = isComposite
+                                  });
                               };
 
-        Because of = () => { result = controller.Push(typeof(FakeCommand).Name, string.Empty, incIsCompositeAsArray: isComposite); };
+        Because of = () => { result = controller.Push(); };
 
         It should_be_push_1 = () => dispatcher.ShouldBePush(command1);
 

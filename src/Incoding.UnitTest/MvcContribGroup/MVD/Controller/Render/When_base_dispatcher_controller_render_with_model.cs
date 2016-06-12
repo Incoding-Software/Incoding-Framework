@@ -14,16 +14,23 @@
     [Subject(typeof(DispatcherControllerBase))]
     public class When_base_dispatcher_controller_render_with_model : Context_dispatcher_controller_render
     {
-        Because of = () =>
-                     {
-                         var res = Pleasure.Generator.Invent<FakeModel>();
-                         dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
-                                                                                                     .Tuning(r => r.ModelState, controller.ModelState)
-                                                                                                     .Tuning(r => r.IsModel, true)
-                                                                                                     .Empty(r => r.IsGroup)
-                                                                                                     .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
-                         result = controller.Render("View", typeof(FakeModel).Name, true, false);
-                     };
+        Establish establish = () =>
+                              {
+                                  var res = Pleasure.Generator.Invent<FakeModel>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(r => r.ModelState, controller.ModelState)
+                                                                                                              .Tuning(r => r.IsModel, true)
+                                                                                                              .Empty(r => r.IsGroup)
+                                                                                                              .Tuning(r => r.Type, typeof(FakeModel).Name)), (object)res);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeModel).Name,
+                                                                                                                                                                                         IsModel = true,
+                                                                                                                                                                                         View = "View"
+                                                                                                                                                                                 });
+                              };
+
+        Because of = () => { result = controller.Render(); };
 
         It should_be_render = () =>
                               {

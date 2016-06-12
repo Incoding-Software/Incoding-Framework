@@ -24,9 +24,15 @@
                                                                                                               .Tuning(r => r.IsModel, true)
                                                                                                               .Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)query);
                                   dispatcher.StubQuery(query, new FakeAppModel());
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeRenderQuery).Name,
+                                                                                                                                                                                         IsModel = true,
+                                                                                                                                                                                         View = "View"
+                                                                                                                                                                                 });
                               };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).Name, true, false); };
+        Because of = () => { result = controller.Render(); };
 
         It should_be_render = () =>
                               {

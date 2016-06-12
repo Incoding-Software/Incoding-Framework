@@ -7,11 +7,9 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Incoding.Block.IoC;
-    using Incoding.CQRS;
     using Incoding.Extensions;
     using Incoding.Maybe;
     using Incoding.Quality;
@@ -21,13 +19,7 @@
 
     public class UrlDispatcher : IUrlDispatcher
     {
-        public static void SetInterception(params IMessageInterception[] values)
-        {
-            interceptions.Clear();
-            interceptions.AddRange(values);
-        }
-
-        static readonly List<IMessageInterception> interceptions = new List<IMessageInterception>();
+ 
 
         internal static readonly ConcurrentDictionary<string, bool> duplicates = new ConcurrentDictionary<string, bool>();
 
@@ -181,10 +173,12 @@
 
             #region IUrlQuery<TQuery> Members
 
-            public UrlQuery<TQuery> ValidateOnly()
+            public string Validate()
             {
-                defaultRoutes.Add("incOnlyValidate", true);
-                return this;
+                // ReSharper disable once Mvc.ActionNotResolved
+                // ReSharper disable once Mvc.ControllerNotResolved
+                return urlHelper.Action("Validate", "Dispatcher", defaultRoutes);
+
             }
 
             public UrlQuery<TQuery> EnableValidate()
@@ -214,7 +208,7 @@
                                 .AppendToQueryString(query);
             }
 
-            public string AsView([PathReference, NotNull] string incView)
+            public string AsView(string incView)
             {
                 defaultRoutes.Add("incView", incView);
                 // ReSharper disable once Mvc.ActionNotResolved
@@ -361,7 +355,7 @@
 
         public interface IUrlQuery<TQuery>
         {
-            UrlQuery<TQuery> ValidateOnly();
+            string Validate();
 
             UrlQuery<TQuery> EnableValidate();
 
@@ -371,12 +365,5 @@
 
             string AsView([PathReference, NotNull] string incView);
         }
-    }
-
-    public interface IMessageInterception
-    {
-        void OnBefore(IMessage message, HttpContext context);
-
-        void OnAfter(IMessage message, HttpContext context);
     }
 }

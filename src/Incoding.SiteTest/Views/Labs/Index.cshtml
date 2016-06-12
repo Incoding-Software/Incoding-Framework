@@ -34,9 +34,10 @@
 </head>
 <body>
 <input type="text" value="Title 2" id="id"/>
-@(Html.When(JqueryBind.InitIncoding)      
-      .OnSuccess(dsl => dsl.Document.Title("id".ToId()))
+@(Html.When(JqueryBind.Click)
+      .Ajax(new GetProductQuery())
+      .OnSuccess(dsl => dsl.Window.Alert("Ready"))
       .AsHtmlAttributes()
-      .ToDiv())
+      .ToButton("Test"))
 </body>
 </html>

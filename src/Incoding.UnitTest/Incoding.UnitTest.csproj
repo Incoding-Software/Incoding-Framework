@@ -373,16 +373,18 @@
     <Compile Include="MvcContribGroup\Extensions\When_selector_map_ex.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_checkbox.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_and_checkbox.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_by_old_inc_type.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_enable_validate.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\Currency.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\Exceptions\When_find_by_type_with_wrong_instance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_execute_query.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\GetReferencesForDDQuery.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_mvd_execute_message_query.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_performance.cs" />
-    <Compile Include="MvcContribGroup\MVD\Core\When_execute_query_with_inheritance.cs" />
+    <Compile Include="MvcContribGroup\MVD\Core\When_mvd_execute_message_query_with_inheritance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type.cs" />
     <None Include="handlebars_sample_tmpl.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="MvcContribGroup\MVD\Core\When_mvd_execute_message_query_with_interception.cs" />
     <Compile Include="MvcContribGroup\Template\Server Side\When_template_handlebars.cs" />
     <Compile Include="MvcContribGroup\When_inc_optional.cs" />
     <Compile Include="MvcContribGroup\Core\When_b_as_string.cs" />
@@ -537,12 +539,9 @@
     <Compile Include="MvcContribGroup\MVD\Core\When_find_by_type_performance.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\When_create_by_type_as_command.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_composite_as_array.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_only_validate.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Validate\When_base_dispatcher_controller_validate_success.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push_model_state.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_only_validate_error.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_only_validate_success.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_to_file_with_empty_content_type.cs" />
-    <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_to_file_with_empty_file_name.cs" />
+    <Compile Include="MvcContribGroup\MVD\Controller\Validate\When_base_dispatcher_controller_validate.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\Context_dispatcher_controller_render.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_clear_model_state.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Push\When_base_dispatcher_controller_push.cs" />

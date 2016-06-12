@@ -12,16 +12,6 @@
 
     #endregion
 
-    public class GetReferencesForDDQuery<T> 
-    {
-    }
-
-    public class Currency 
-    {
-    }
-
-
-
     [Subject(typeof(CreateByTypeQuery.FindTypeByName))]
     public class When_find_by_type
     {

@@ -2,7 +2,6 @@
 {
     #region << Using >>
 
-    using System;
     using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
@@ -26,9 +25,13 @@
                                                                                                                          .Tuning(r => r.ControllerContext, controller.ControllerContext)
                                                                                                                          .Tuning(r => r.IsComposite, false)
                                                                                                                          .Tuning(r => r.IncTypes, typeof(FakeCommand).Name)), new CommandBase[] { command });
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeCommand).Name
+                                                                                                                                                                                 });
                               };
 
-        Because of = () => { result = controller.Push(incTypes: typeof(FakeCommand).Name); };
+        Because of = () => { result = controller.Push(); };
 
         It should_be_push = () => dispatcher.ShouldBePush(command);
 

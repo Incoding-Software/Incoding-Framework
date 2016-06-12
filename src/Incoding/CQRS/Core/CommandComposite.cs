@@ -11,6 +11,19 @@
 
     public class CommandComposite : ISettingCommandComposite
     {
+        public CommandComposite() { }
+
+        public CommandComposite(IMessage message)
+        {
+            Quote(message);
+        }
+
+        public CommandComposite(CommandBase[] commands)
+        {
+            foreach (var commandBase in commands)
+                Quote(commandBase);
+        }
+
         #region Fields
 
         readonly List<IMessage> parts = new List<IMessage>();

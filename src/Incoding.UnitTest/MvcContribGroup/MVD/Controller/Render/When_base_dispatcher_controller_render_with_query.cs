@@ -17,16 +17,21 @@
     {
         Establish establish = () =>
                               {
-                                  var res = Pleasure.Generator.Invent<FakeRenderQuery>();                                  
+                                  var res = Pleasure.Generator.Invent<FakeRenderQuery>();
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.ControllerContext, controller.ControllerContext)
                                                                                                               .Tuning(r => r.ModelState, controller.ModelState)
                                                                                                               .Empty(r => r.IsGroup)
                                                                                                               .Tuning(r => r.IsModel, false)
                                                                                                               .Tuning(r => r.Type, typeof(FakeRenderQuery).Name)), (object)res);
-                                  dispatcher.StubQuery<ExecuteQuery, object>(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, res)), new FakeAppModel());
+                                  dispatcher.StubQuery<MVDExecute, object>(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(res))), new FakeAppModel());
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
+                                                                                                                                                                                 {
+                                                                                                                                                                                         Type = typeof(FakeRenderQuery).Name,
+                                                                                                                                                                                         View = "View"
+                                                                                                                                                                                 });
                               };
 
-        Because of = () => { result = controller.Render("View", typeof(FakeRenderQuery).Name, false, false); };
+        Because of = () => { result = controller.Render(); };
 
         It should_be_render = () =>
                               {

@@ -2,6 +2,7 @@
 {
     #region << Using >>
 
+    using Incoding.CQRS;
     using Incoding.MSpecContrib;
     using Incoding.MvcContrib.MVD;
     using Machine.Specifications;
@@ -30,7 +31,7 @@
                                                                                                                                                                                  {
                                                                                                                                                                                          Type = typeof(ShareQuery).Name
                                                                                                                                                                                  });
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<ExecuteQuery>(dsl => dsl.Tuning(r => r.Instance, query)), (object)queryResult);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(query))), (object)queryResult);
                               };
 
         Because of = () => { result = controller.Query(); };
