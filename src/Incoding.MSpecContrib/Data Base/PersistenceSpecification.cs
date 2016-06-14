@@ -18,27 +18,6 @@ namespace Incoding.MSpecContrib
 
     public class PersistenceSpecification<TEntity> where TEntity : class, IEntity, new()
     {
-        #region Fields
-
-        readonly List<string> ignoreProperties = new List<string>
-                                                 {
-                                                         "Id"
-                                                 };
-
-        readonly IRepository repository;
-
-        readonly List<string> properties;
-
-        readonly IUnitOfWork unitOfWork;
-
-        BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty;
-
-        TEntity preEntity;
-
-        TEntity original;
-
-        #endregion
-
         #region Constructors
 
         public PersistenceSpecification(IRepository repository = null)
@@ -60,6 +39,27 @@ namespace Incoding.MSpecContrib
         #region Properties
 
         public IRepository Repository { get { return repository; } }
+
+        #endregion
+
+        #region Fields
+
+        readonly List<string> ignoreProperties = new List<string>
+                                                 {
+                                                         "Id"
+                                                 };
+
+        readonly IRepository repository;
+
+        readonly List<string> properties;
+
+        readonly IUnitOfWork unitOfWork;
+
+        BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty;
+
+        TEntity preEntity;
+
+        TEntity original;
 
         #endregion
 
@@ -153,7 +153,10 @@ namespace Incoding.MSpecContrib
                                                    });
 
             if (unitOfWork != null)
+            {
+                unitOfWork.Flush();
                 unitOfWork.Dispose();
+            }
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()

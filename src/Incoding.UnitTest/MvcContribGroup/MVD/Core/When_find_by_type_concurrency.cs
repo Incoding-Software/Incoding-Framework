@@ -10,22 +10,21 @@
 
     #endregion
 
-    [Subject(typeof(CreateByTypeQuery.FindTypeByName)),Isolated]
+    [Subject(typeof(CreateByTypeQuery.FindTypeByName)), Isolated]
     public class When_find_by_type_concurrency
     {
         Establish establish = () =>
                               {
                                   expected = typeof(ConcurrencyClass);
-                                  CreateByTypeQuery.FindTypeByName query = Pleasure.Generator.Invent<CreateByTypeQuery.FindTypeByName>(dsl => dsl.Tuning(r => r.Type, expected.Name));
-
-                                  mockQuery = MockQuery<CreateByTypeQuery.FindTypeByName, Type>
-                                          .When(query);
+                                  query = Pleasure.Generator.Invent<CreateByTypeQuery.FindTypeByName>(dsl => dsl.Tuning(r => r.Type, expected.Name));
                               };
 
         It should_be_result = () =>
                               {
                                   Pleasure.MultiThread.Do(() =>
                                                           {
+                                                              var mockQuery = MockQuery<CreateByTypeQuery.FindTypeByName, Type>
+                                                                      .When(query);
                                                               mockQuery.Execute();
                                                               mockQuery.ShouldBeIsResult(expected);
                                                           }, 1000);
@@ -39,9 +38,9 @@
 
         #region Establish value
 
-        static MockMessage<CreateByTypeQuery.FindTypeByName, Type> mockQuery;
-
         static Type expected;
+
+        private static CreateByTypeQuery.FindTypeByName query;
 
         #endregion
     }

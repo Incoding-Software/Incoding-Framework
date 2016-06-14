@@ -88,7 +88,7 @@
 
         #region Nested classes
 
-        internal sealed class FindTypeByName : QueryBase<Type>
+        public   sealed class FindTypeByName : QueryBase<Type>
         {
             #region Static Fields
 

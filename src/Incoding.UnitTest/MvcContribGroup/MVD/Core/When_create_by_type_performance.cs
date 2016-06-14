@@ -30,7 +30,11 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
 
         It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
 
-        It should_be_time = () => { time.ShouldBeLessThan(900); };
+        It should_be_time = () =>
+                            {
+                                // plus 1000 for each Stub
+                                time.ShouldBeLessThan(300 + 1000 + 1000);
+                            };
 
         public class UniqueNameClass { }
 

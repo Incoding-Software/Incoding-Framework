@@ -14,14 +14,15 @@
 
         public void OnAssemblyStart()
         {
-		            var configure = Fluently
-                    .Configure()
-                    .Database(MsSqlConfiguration.MsSql2008
-                                                .ConnectionString(ConfigurationManager.ConnectionStrings["Test"].ConnectionString)
-                                                .ShowSql())
-                    .Mappings(configuration => configuration.FluentMappings.AddFromAssembly(typeof(Bootstrapper).Assembly));
-
-           PleasureForData.StartNhibernate(configure, true);
+            PleasureForData.StartNhibernate(() =>
+                                            {
+                                                return Fluently
+                                                        .Configure()
+                                                        .Database(MsSqlConfiguration.MsSql2008
+                                                                                    .ConnectionString(ConfigurationManager.ConnectionStrings["Test"].ConnectionString)
+                                                                                    .ShowSql())
+                                                        .Mappings(configuration => configuration.FluentMappings.AddFromAssembly(typeof(Bootstrapper).Assembly));
+                                            }, true);
         }
 
         public void OnAssemblyComplete()
