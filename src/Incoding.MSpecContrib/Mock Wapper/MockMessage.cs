@@ -76,12 +76,9 @@ namespace Incoding.MSpecContrib
         public void Execute()
         {
             Original.Execute();
-            ShouldBePushed();            
+            ShouldBePushed();
             repository.VerifyAll();
         }
-
-
-        
 
         public MockMessage<TMessage, TResult> StubPushAsThrow<TCommand>(TCommand command, Exception ex, MessageExecuteSetting setting = null) where TCommand : CommandBase
         {
@@ -233,10 +230,9 @@ namespace Incoding.MSpecContrib
         }
 
 
-
         public MockMessage<TMessage, TResult> StubQuery<TQuery, TNextResult>(TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TNextResult result, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TNextResult>
         {
-            dispatcher.StubQuery(query, dsl, result, executeSetting);            
+            dispatcher.StubQuery(query, dsl, result, executeSetting);
             return this;
         }
 

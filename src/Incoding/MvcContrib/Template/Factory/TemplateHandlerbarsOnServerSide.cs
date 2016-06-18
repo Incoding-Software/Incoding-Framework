@@ -19,17 +19,16 @@
     {
         internal static readonly ConcurrentDictionary<string, Func<object, string>> cache = new ConcurrentDictionary<string, Func<object, string>>();
 
-        public static string Version { get; set; }
+        public static Func<string> GetVersion = () => { return string.Empty; };
 
         public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null) where T : class
         {
-            var fullPathToView = pathToView.AppendToQueryString(modelForView);
-
+            var fullPathToView = pathToView.AppendToQueryString(modelForView);            
             object correctData = data;
             if (data != null && !data.GetType().HasInterface(typeof(IEnumerable)))
                 correctData = new { data = data };
 
-            return cache.GetOrAdd(fullPathToView + System.Threading.Thread.CurrentThread.CurrentCulture.Name + Version, (i) =>
+            return cache.GetOrAdd(fullPathToView + GetVersion(), (i) =>
                                                             {
                                                                 var tmpl = IoCFactory.Instance.TryResolve<IDispatcher>().Query(new RenderViewQuery()
                                                                                                                                {

@@ -1,6 +1,7 @@
 #region copyright
 
 // @incoding 2011
+
 #endregion
 
 namespace Incoding.CQRS
@@ -11,7 +12,7 @@ namespace Incoding.CQRS
     public interface IDispatcher
     {
         void Push(CommandComposite composite);
-
+        
         TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null);
     }
 }

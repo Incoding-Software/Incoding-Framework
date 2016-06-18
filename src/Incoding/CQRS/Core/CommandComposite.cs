@@ -13,9 +13,9 @@
     {
         public CommandComposite() { }
 
-        public CommandComposite(IMessage message)
+        public CommandComposite(IMessage message, MessageExecuteSetting executeSetting = null)
         {
-            Quote(message);
+            Quote(message, executeSetting);
         }
 
         public CommandComposite(CommandBase[] commands)

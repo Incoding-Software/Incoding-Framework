@@ -22,7 +22,7 @@ namespace Incoding.MSpecContrib
         
 
         #endregion
-
+            
         #region Fields
 
         [UsedImplicitly, Obsolete(ObsoleteMessage.ClassNotForDirectUsage, true)]

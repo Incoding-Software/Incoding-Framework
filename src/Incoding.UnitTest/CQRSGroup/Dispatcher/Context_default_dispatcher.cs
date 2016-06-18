@@ -27,6 +27,7 @@
             }
         }
 
+
         protected class QueryWithRepository : QueryBase<string>
         {
             protected override string ExecuteResult()

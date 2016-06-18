@@ -266,7 +266,6 @@ function IncodingEngine() {
 }
 
 IncodingEngine.Current = new IncodingEngine();
-
 var initializedHistoryPlugin = false;
 $(document).ready(function() {
 
@@ -279,11 +278,11 @@ $(document).ready(function() {
             initializedHistoryPlugin = true;
         });
     }
-
-    window.addEventListener('popstate', function (e) {
-        $(document).trigger(IncSpecialBinds.IncChangeUrl);
-    });
-
+    else {
+        window.addEventListener('popstate', function() {
+            $(document).trigger(IncSpecialBinds.IncChangeUrl);
+        });
+    }
     IncodingEngine.Current.parse(document);
 });
 

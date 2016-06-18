@@ -69,12 +69,14 @@ namespace Incoding.MSpecContrib
                     .Returns(result);
         }
 
+
         public static void StubQuery<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Action<ICompareFactoryDsl<TQuery, TQuery>> dsl, TResult result, MessageExecuteSetting executeSetting = null)
                 where TQuery : QueryBase<TResult>                
         {
             dispatcher.Setup(r => r.Query(Pleasure.MockIt.IsStrong(query, dsl), Pleasure.MockIt.IsStrong(executeSetting)))
                       .Returns(result);
         }
+
 
         public static void StubQueryAsThrow<TQuery, TResult>(this Mock<IDispatcher> dispatcher, TQuery query, Exception exception, MessageExecuteSetting executeSetting = null) where TQuery : QueryBase<TResult>
         {

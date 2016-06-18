@@ -102,11 +102,11 @@ namespace Incoding.CQRS
                 unitOfWorkCollection.Dispose();
         }
 
+
         public TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null)
         {
-            var commandComposite = new CommandComposite();
-            commandComposite.Quote(message, executeSetting);
-            Push(commandComposite);
+            
+            Push(new CommandComposite(message,executeSetting));
             return (TResult)message.Result;
         }
 

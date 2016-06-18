@@ -25,10 +25,10 @@
 
         #region Properties
 
-        [IgnoreCompare("System"), JsonIgnore]
+        [IgnoreCompare("System"), JsonIgnore, IgnoreDataMember]
         protected IRepository Repository { get { return lazyRepository.Value; } }
 
-        [IgnoreCompare("System"), JsonIgnore]
+        [IgnoreCompare("System"), JsonIgnore, IgnoreDataMember]
         protected MessageDispatcher Dispatcher { get { return messageDispatcher.Value; } }
 
         
@@ -139,6 +139,13 @@
             {
                 configuration.Do(action => action(outerSetting));
                 dispatcher.Push(command, outerSetting);
+            }
+
+            public TResult Push<TResult>(CommandBase command, Action<MessageExecuteSetting> configuration = null)
+            {
+                configuration.Do(action => action(outerSetting));
+                dispatcher.Push(command, outerSetting);
+                return (TResult)command.Result;
             }
 
             #endregion

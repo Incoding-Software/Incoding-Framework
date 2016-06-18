@@ -60,7 +60,7 @@
                                                                                                     });
         }
 
-        internal sealed class AsCommands : QueryBase<CommandBase[]>
+        public sealed class AsCommands : QueryBase<CommandBase[]>
         {
             public string IncTypes { get; set; }
 
@@ -123,7 +123,7 @@
 
         #endregion
 
-        internal sealed class GetFormCollectionsQuery : QueryBase<FormCollection>
+        public sealed class GetFormCollectionsQuery : QueryBase<FormCollection>
         {
             protected override FormCollection ExecuteResult()
             {
