@@ -20,9 +20,15 @@
                                            Enctype enctype = Enctype.ApplicationXWWWFormUrlEncoded
                 )
         {
-            htmlAttributes.Set("method", method.ToStringLower());
-            htmlAttributes.Set("enctype", enctype.ToLocalization());
-            htmlAttributes.Set("action", url);
+            if (!htmlAttributes.ContainsKey(HtmlAttribute.Method.ToStringLower()))
+                htmlAttributes.Set(HtmlAttribute.Method.ToStringLower(), method.ToStringLower());
+
+            if (!htmlAttributes.ContainsKey(HtmlAttribute.Enctype.ToStringLower()))
+                htmlAttributes.Set(HtmlAttribute.Enctype.ToStringLower(), enctype.ToLocalization());
+
+            if (!htmlAttributes.ContainsKey(HtmlAttribute.Action.ToStringLower()))
+                htmlAttributes.Set(HtmlAttribute.Action.ToStringLower(), url);
+
             return htmlAttributes.ToBeginTag(HtmlTag.Form);
         }
 
