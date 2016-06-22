@@ -185,7 +185,7 @@
         /// <summary>
         ///     Specifies how the form-data should be encoded when submitting it to the server (for type="submit" and type="image")
         /// </summary>
-        EncType = 68719476736, 
+        Enctype = 68719476736, 
 
         /// <summary>
         ///     Defines the HTTP method for sending data to the action URL (for type="submit" and type="image")
