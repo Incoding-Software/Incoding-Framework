@@ -505,8 +505,6 @@
     <Compile Include="MvcContrib\Primitive\HtmlInputType.cs" />
     <Compile Include="MvcContrib\Primitive\KeyCode.cs" />
     <Compile Include="MvcContrib\Template\Factory\ITemplateFactory.cs" />
-    <Compile Include="MvcContrib\Template\Factory\ITemplateOnServerSide.cs" />
-    <Compile Include="MvcContrib\Template\Factory\TemplateHandlerbarsOnServerSide.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateDoTFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateHandlebarsFactory.cs" />
     <Compile Include="MvcContrib\Template\Factory\TemplateMustacheFactory.cs" />
@@ -677,7 +675,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

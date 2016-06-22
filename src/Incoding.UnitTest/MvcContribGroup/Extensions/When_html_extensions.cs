@@ -34,7 +34,7 @@
                                    var pathToView = Pleasure.Generator.String();
                                    var data = Pleasure.Generator.Invent<KeyValueVm[]>();
                                    var model = Pleasure.Generator.String();
-                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateOnServerSide>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, model)).Returns(Pleasure.Generator.TheSameString())));
+                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, model)).Returns(Pleasure.Generator.TheSameString())));
                                    data.AsView(pathToView, model).ToHtmlString().ShouldBeTheSameString();
                                };
 
@@ -42,7 +42,7 @@
                                              {
                                                  var pathToView = Pleasure.Generator.String();
                                                  var data = Pleasure.Generator.Invent<KeyValueVm[]>();
-                                                 IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateOnServerSide>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, null)).Returns(Pleasure.Generator.TheSameString())));
+                                                 IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, null)).Returns(Pleasure.Generator.TheSameString())));
                                                  data.AsView(pathToView).ToHtmlString().ShouldBeTheSameString();
                                              };
 

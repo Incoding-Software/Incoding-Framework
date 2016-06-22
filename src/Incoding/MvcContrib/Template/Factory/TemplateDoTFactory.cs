@@ -1,6 +1,11 @@
 ﻿namespace Incoding.MvcContrib
 {
+    #region << Using >>
+
+    using System;
     using System.Web.Mvc;
+
+    #endregion
 
     public class TemplateDoTFactory : ITemplateFactory
     {
@@ -31,6 +36,11 @@
                                  {{/each}}
                                  {{/if}}
                                  {{/data}}";
+        }
+
+        public string Render<T>(HtmlHelper htmlHelper, string pathToView, T data, object modelForView = null) where T : class
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

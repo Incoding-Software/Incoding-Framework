@@ -18,7 +18,7 @@
 
     #endregion
 
-    [Subject(typeof(TemplateHandlebarsOnServerSide))]
+    [Subject(typeof(TemplateHandlebarsFactory))]
     public class When_template_handlebars
     {
         private static RenderViewQuery query;
@@ -42,14 +42,14 @@
 
         It should_be_compile = () =>
                                {
-                                   new TemplateHandlebarsOnServerSide()
+                                   new TemplateHandlebarsFactory()
                                            .Render(htmlHelper, query.PathToView, data, query.Model)
                                            .ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
                                };
 
         It should_be_compile_performance = () =>
                                            {
-                                               Pleasure.Do(i => new TemplateHandlebarsOnServerSide()
+                                               Pleasure.Do(i => new TemplateHandlebarsFactory()
                                                                         .Render(htmlHelper, query.PathToView, data, query.Model)
                                                                         .ShouldNotBeEmpty(), 1000).ShouldBeLessThan(100);
                                            };
@@ -57,24 +57,24 @@
         It should_be_compile_wihtout_view_model = () =>
                                                   {
                                                       query.Model = null;
-                                                      var render = new TemplateHandlebarsOnServerSide()
+                                                      var render = new TemplateHandlebarsFactory()
                                                               .Render(htmlHelper, query.PathToView, data);
                                                       render.ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
                                                   };
 
         It should_be_compile_with_null_data = () =>
-                                                  {
-                                                      query.Model = null;
-                                                      object data = null;
-                                                      var render = new TemplateHandlebarsOnServerSide()
-                                                              .Render(htmlHelper, query.PathToView, data);
-                                                      render.ShouldEqual(@"");
-                                                  };
+                                              {
+                                                  query.Model = null;
+                                                  object data = null;
+                                                  var render = new TemplateHandlebarsFactory()
+                                                          .Render(htmlHelper, query.PathToView, data);
+                                                  render.ShouldEqual(@"");
+                                              };
 
         It should_be_complexity = () =>
                                   {
                                       var tmpl = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "handlebars_complexity_tmpl.txt"));
-                                      var newQuery = Pleasure.Generator.Invent<RenderViewQuery>(dsl => dsl.Tuning(r => r.Model,null)
+                                      var newQuery = Pleasure.Generator.Invent<RenderViewQuery>(dsl => dsl.Tuning(r => r.Model, null)
                                                                                                           .Tuning(r => r.HtmlHelper, htmlHelper));
                                       dispatcher.StubQuery(newQuery, new MvcHtmlString(tmpl));
                                       var data = new ComplexityVm()
@@ -83,7 +83,7 @@
                                                                             {
                                                                                     new ComplexityVm.TabVm() { After = "" }
                                                                             },
-                                                        GroupLinks = new List<ComplexityVm.TabVm>(),
+                                                         GroupLinks = new List<ComplexityVm.TabVm>(),
                                                          CountTabs = new[]
                                                                      {
                                                                              new ComplexityVm.TabVm()
@@ -102,8 +102,7 @@
                                                                              }
                                                                      }.ToList()
                                                  };
-                                      var render = new TemplateHandlebarsOnServerSide()
-                                              .Render(htmlHelper, newQuery.PathToView, data, newQuery.Model);
+                                      var render = new TemplateHandlebarsFactory().Render(htmlHelper, newQuery.PathToView, data, newQuery.Model);
                                       render.ShouldEqual(@"
         
     <div class=""clearfix""></div>

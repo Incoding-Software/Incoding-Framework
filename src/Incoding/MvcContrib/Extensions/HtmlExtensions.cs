@@ -31,7 +31,7 @@ namespace Incoding.MvcContrib
 
         public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData :class
         {
-            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateOnServerSide>().Render(HtmlHelper, view, data, model));
+            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
         }
 
         public static IncodingHtmlHelperFor<TModel, TProperty> For<TModel, TProperty>(this HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> property)
