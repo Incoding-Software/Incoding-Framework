@@ -74,6 +74,7 @@
                                                                                                  })));
 
             MVDExecute.SetInterception(() => new TraceMessageInterception());
+            TemplateHandlebarsFactory.GetVersion =() => Guid.NewGuid().ToString();// disable cache template on server side as default
             //var container = new Container();
             //container.Register<IDispatcher, DefaultDispatcher>();
             //container.Register<ITemplateFactory, TemplateDoTFactory>();

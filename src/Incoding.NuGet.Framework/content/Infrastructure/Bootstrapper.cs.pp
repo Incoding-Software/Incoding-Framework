@@ -34,7 +34,7 @@
                                                                                                      {
                                                                                                          registry.For<IDispatcher>().Use<DefaultDispatcher>();                                                                                                         
                                                                                                          registry.For<ITemplateFactory>().Singleton().Use<TemplateHandlebarsFactory>();
-																										 registry.For<ITemplateOnServerSide>().Singleton().Use<TemplateHandlebarsOnServerSide>();
+																										 
 
                                                                                                          var configure = Fluently
                                                                                                                  .Configure()
@@ -43,8 +43,7 @@
 																												 .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true));                                                                                                                 ;                                                                                                         
                                                                                                          registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
                                                                                                          registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();
-                                                                                                         registry.For<IRepository>().Use<NhibernateRepository>();
-
+                                                                                                         
                                                                                                          registry.Scan(r =>
                                                                                                                            {
                                                                                                                                r.TheCallingAssembly();
@@ -58,6 +57,9 @@
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));
             FluentValidationModelValidatorProvider.Configure();
             
+
+			TemplateHandlebarsFactory.GetVersion =() => Guid.NewGuid().ToString();// disable cache template on server side as default
+
             var ajaxDef = JqueryAjaxOptions.Default;
             ajaxDef.Cache = false; // disabled cache as default
         }
