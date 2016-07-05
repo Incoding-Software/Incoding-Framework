@@ -21,6 +21,7 @@
         Establish establish = () =>
                               {
                                   command = Pleasure.Generator.Invent<FakeCommand>();
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(command))), (object)Pleasure.Generator.String());
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery.AsCommands>(dsl => dsl.Tuning(r => r.ModelState, controller.ModelState)
                                                                                                                          .Tuning(r => r.ControllerContext, controller.ControllerContext)
                                                                                                                          .Tuning(r => r.IsComposite, false)
@@ -32,8 +33,6 @@
                               };
 
         Because of = () => { result = controller.Push(); };
-
-        It should_be_push = () => dispatcher.ShouldBePush(command);
 
         It should_be_result = () => result.ShouldBeIncodingSuccess();
     }

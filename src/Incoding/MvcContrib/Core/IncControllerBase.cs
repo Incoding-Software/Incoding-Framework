@@ -91,6 +91,11 @@ namespace Incoding.MvcContrib
 
         protected ActionResult TryPush(CommandComposite composite, Action<IncTryPushSetting> action = null)
         {
+            return TryPush(commandComposite => dispatcher.Push(commandComposite), composite, action);
+        }
+
+        protected ActionResult TryPush(Action<CommandComposite> push, CommandComposite composite, Action<IncTryPushSetting> action = null)
+        {
             var setting = new IncTryPushSetting();
             action.Do(r => r(setting));
 
@@ -109,7 +114,7 @@ namespace Incoding.MvcContrib
 
             try
             {
-                dispatcher.Push(composite);
+                push(composite);
                 return success();
             }
             catch (IncWebException exception)
@@ -156,5 +161,4 @@ namespace Incoding.MvcContrib
 
         #endregion
     }
-
 }

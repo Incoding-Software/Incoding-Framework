@@ -20,7 +20,11 @@
         Establish establish = () =>
                               {
                                   var res = Pleasure.Generator.Invent<ShareQuery>();
-                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)res);
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery>(dsl => dsl.Tuning(s => s.ControllerContext, controller.ControllerContext)
+                                                                                                              .Tuning(s => s.ModelState, controller.ModelState)
+                                                                                                              .Empty(s => s.IsGroup)
+                                                                                                              .Empty(s => s.IsModel)
+                                                                                                              .Tuning(r => r.Type, typeof(ShareQuery).Name)), (object)res);
                                   controller.ModelState.AddModelError("Fake", "Error");
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<GetMvdParameterQuery>(dsl => dsl.Tuning(r => r.Params, controller.HttpContext.Request.Params)), new GetMvdParameterQuery.Response()
                                                                                                                                                                                  {

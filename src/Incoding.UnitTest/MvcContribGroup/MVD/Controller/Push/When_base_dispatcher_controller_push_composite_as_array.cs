@@ -18,11 +18,15 @@
 
         private static bool isComposite;
 
+        
+
         Establish establish = () =>
                               {
                                   isComposite = Pleasure.Generator.Bool();
                                   command1 = Pleasure.Generator.Invent<FakeCommand>();
                                   command2 = Pleasure.Generator.Invent<FakeCommand>();
+                                  
+                                  dispatcher.StubQuery(Pleasure.Generator.Invent<MVDExecute>(dsl => dsl.Tuning(r => r.Instance, new CommandComposite(new[] { command1, command2 }))), (object)Pleasure.Generator.String());
                                   dispatcher.StubQuery(Pleasure.Generator.Invent<CreateByTypeQuery.AsCommands>(dsl => dsl.Tuning(r => r.IncTypes, typeof(FakeCommand).Name)
                                                                                                                          .Tuning(r => r.ModelState, controller.ModelState)
                                                                                                                          .Tuning(r => r.ControllerContext, controller.ControllerContext)
@@ -31,13 +35,11 @@
                                                                                                                                                                                  {
                                                                                                                                                                                          Type = typeof(FakeCommand).Name,
                                                                                                                                                                                          IsCompositeArray = isComposite
-                                  });
+                                                                                                                                                                                 });
                               };
 
         Because of = () => { result = controller.Push(); };
 
-        It should_be_push_1 = () => dispatcher.ShouldBePush(command1);
-
-        It should_be_push_2 = () => dispatcher.ShouldBePush(command2);
+        It should_be_success = () => { result.ShouldBeIncodingSuccess(); };
     }
 }

@@ -88,15 +88,12 @@
                                                     IsComposite = parameter.IsCompositeArray
                                             });
 
-            return TryPush(composite =>
-                           {
-                               foreach (var commandBase in commands)
-                                   composite.Quote(commandBase);
-                           }, setting => setting.SuccessResult = () =>
-                                                                 {
-                                                                     var data = commands.Length == 1 ? commands[0].Result : commands.Select(r => r.Result);
-                                                                     return IncodingResult.Success(data);
-                                                                 });
+            var composite = new CommandComposite(commands);
+            return TryPush(commandComposite => dispatcher.Query(new MVDExecute(HttpContext) { Instance = composite }), composite, setting => setting.SuccessResult = () =>
+                                                                                                                                                                     {
+                                                                                                                                                                         var data = commands.Length == 1 ? commands[0].Result : commands.Select(r => r.Result);
+                                                                                                                                                                         return IncodingResult.Success(data);
+                                                                                                                                                                     });
         }
 
         public virtual ActionResult QueryToFile()
