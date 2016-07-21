@@ -8,6 +8,7 @@ namespace Incoding.Extensions
     using System.Linq.Expressions;
     using System.Management.Instrumentation;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Web.Mvc;
     using Incoding.Maybe;
 
@@ -81,6 +82,15 @@ namespace Incoding.Extensions
         public static bool IsImplement<TImplement>(this Type targetType) where TImplement : class
         {
             return targetType.IsImplement(typeof(TImplement));
+        }
+
+        public static bool IsAnonymous(this Type type)
+        {
+            // HACK: The only way to detect anonymous types right now.
+            return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+                   && type.IsGenericType && type.Name.Contains("AnonymousType")
+                   && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+                   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
 
         public static bool IsImplement(this Type targetType, Type implementType)
