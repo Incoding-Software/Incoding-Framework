@@ -43,6 +43,47 @@
 
         #endregion
 
+        static RouteValueDictionary GetQueryString(Dictionary<Type, List<object>> dictionary)
+        {
+            var query = new RouteValueDictionary();
+            foreach (var pair in dictionary)
+            {
+                var valueAsRoutes = pair.Value
+                                        .Where(s => s != null)
+                                        .Select(o =>
+                                        {
+                                            var res = new RouteValueDictionary();
+                                            var type = o.GetType();
+
+                                            foreach (var keys in (type.IsAnonymous() ? type.GetProperties() : type
+                                                                                                                          .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                                                                                                          .Where(r => !r.HasAttribute<IgnoreDataMemberAttribute>())
+                                                                                                                          .Where(r => r.CanWrite)))
+                                                res.Add(keys.Name, o.TryGetValue(keys.Name));
+                                            return res;
+                                        })
+                                        .ToList();
+
+                if (valueAsRoutes.Count > 1)
+                {
+                    for (int i = 0; i < valueAsRoutes.Count; i++)
+                    {
+                        foreach (var keyValue in valueAsRoutes[i].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
+                            query.Add("[{0}].{1}".F(i, keyValue.Key), keyValue.Value.ToString());
+                    }
+                }
+                else if (valueAsRoutes.Count == 1)
+                {
+                    foreach (var keyValue in valueAsRoutes[0].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
+                        query.Add(keyValue.Key, keyValue.Value.ToString());
+                }
+            }
+
+            return query;
+        }
+
+
+
         void VerifySchema<TOriginal>(object routes)
         {
             if (!IsVerifySchema || routes == null)
@@ -193,7 +234,10 @@
                 defaultRoutes = new RouteValueDictionary();
                 defaultRoutes.Add("incType", GetTypeName(typeof(TQuery)));
                 this.urlHelper = urlHelper;
-                this.query = AnonymousHelper.ToDictionary(query);
+                this.query = GetQueryString(new Dictionary<Type, List<object>>()
+                                            {
+                                                    { typeof(TQuery), new List<object>() { query } }
+                                            });
             }
 
             #endregion
@@ -272,48 +316,9 @@
                     routeValues.Add("incOnlyValidate", true);
                 // ReSharper disable once Mvc.ActionNotResolved
                 // ReSharper disable once Mvc.ControllerNotResolved
-                return urlHelper.Action("Push", "Dispatcher", routeValues)
-                                .AppendToQueryString(GetQueryString());
+                return urlHelper.Action("Push", "Dispatcher", routeValues).AppendToQueryString(GetQueryString(this.dictionary));
             }
 
-            RouteValueDictionary GetQueryString()
-            {
-                var query = new RouteValueDictionary();
-                foreach (var pair in dictionary)
-                {
-                    var valueAsRoutes = pair.Value
-                                            .Where(s => s != null)
-                                            .Select(o =>
-                                                    {
-                                                        var res = new RouteValueDictionary();
-                                                        var type = o.GetType();
-
-                                                        foreach (var keys in (type.IsAnonymous() ? type.GetProperties() : type
-                                                                                                                                  .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                                                                                                  .Where(r => !r.HasAttribute<IgnoreDataMemberAttribute>())
-                                                                                                                                  .Where(r => r.CanWrite)))
-                                                            res.Add(keys.Name, o.TryGetValue(keys.Name));
-                                                        return res;
-                                                    })
-                                            .ToList();
-
-                    if (valueAsRoutes.Count > 1)
-                    {
-                        for (int i = 0; i < valueAsRoutes.Count; i++)
-                        {
-                            foreach (var keyValue in valueAsRoutes[i].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
-                                query.Add("[{0}].{1}".F(i, keyValue.Key), keyValue.Value.ToString());
-                        }
-                    }
-                    else if (valueAsRoutes.Count == 1)
-                    {
-                        foreach (var keyValue in valueAsRoutes[0].Where(valueDictionary => !string.IsNullOrWhiteSpace(valueDictionary.Value.With(r => r.ToString()))))
-                            query.Add(keyValue.Key, keyValue.Value.ToString());
-                    }
-                }
-
-                return query;
-            }
 
             public static implicit operator string(UrlPush s)
             {
