@@ -1,0 +1,18 @@
+﻿@using Incoding.SiteTest
+@{
+    using (var template = Html.Incoding().Template<GetProductQuery.Response>())
+    {
+        using (template.NotEach())
+        {
+            <li class="ui-menu-item">Empty list....</li>
+        }
+
+        using (var each = template.ForEach())
+        {
+            @(Html.When(JqueryBind.Click)
+                  .OnSuccess(dsl => dsl.WithName<AddProductCommand>(s => s.Name).JQuery.Attr.Val(each.For(s => s.Id)))
+                  .AsHtmlAttributes(new { @class = "ui-menu-item" })
+                  .ToTag(HtmlTag.Li, @each.For(s => s.Name)))
+        }
+    }
+}

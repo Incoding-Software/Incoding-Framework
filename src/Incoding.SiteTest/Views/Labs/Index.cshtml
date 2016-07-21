@@ -1,7 +1,5 @@
-﻿@using Incoding.Extensions
-@using Incoding.SiteTest
-@using Incoding.SiteTest.Domain
-@model AddProductCommand
+﻿@using Incoding.SiteTest
+@model Incoding.SiteTest.AddProductCommand
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,11 +31,21 @@
     </script>
 </head>
 <body>
-<input type="text" value="Title 2" id="id"/>
-@(Html.When(JqueryBind.Click)
-      .Ajax(new GetProductQuery())
-      .OnSuccess(dsl => dsl.Window.Alert("Ready"))
+@{
+    var containerId = "219338C0-4CE4-4CA7-8C15-30CFA5876490";
+}
+
+@Html.HiddenFor(s => s.Name)
+@(Html.When(JqueryBind.KeyPress)
+      .Ajax(Url.Dispatcher().Query(new GetProductQuery()).AsJson())      
+      .OnSuccess(dsl =>
+                 {                     
+                     dsl.WithId(containerId).JQuery.Dom.WithTemplateByView("~/Views/Labs/Template/Autocomplete_Tmpl.cshtml").Html();
+                     dsl.WithId(containerId).JQuery.Attr.RemoveClass(B.Hidden);
+                 })
       .AsHtmlAttributes()
-      .ToButton("Test"))
+      .ToInput(HtmlInputType.Text, ""))
+<ul id="@containerId" class="ui-autocomplete ui-front ui-menu ui-widget ui-widget-content hidden" tabindex="0" style="top: 27px; left: 42.7187px; width: 158px;">
+</ul>
 </body>
 </html>
