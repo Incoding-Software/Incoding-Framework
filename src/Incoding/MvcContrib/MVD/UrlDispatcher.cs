@@ -51,17 +51,17 @@
                 var valueAsRoutes = pair.Value
                                         .Where(s => s != null)
                                         .Select(o =>
-                                        {
-                                            var res = new RouteValueDictionary();
-                                            var type = o.GetType();
+                                                {
+                                                    var res = new RouteValueDictionary();
+                                                    var type = o.GetType();
 
-                                            foreach (var keys in (type.IsAnonymous() ? type.GetProperties() : type
-                                                                                                                          .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                                                                                          .Where(r => !r.HasAttribute<IgnoreDataMemberAttribute>())
-                                                                                                                          .Where(r => r.CanWrite)))
-                                                res.Add(keys.Name, o.TryGetValue(keys.Name));
-                                            return res;
-                                        })
+                                                    foreach (var keys in (type.IsAnonymous() ? type.GetProperties() : type
+                                                                                                                              .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                                                                                                              .Where(r => !r.HasAttribute<IgnoreDataMemberAttribute>())
+                                                                                                                              .Where(r => r.CanWrite)))
+                                                        res.Add(keys.Name, o.TryGetValue(keys.Name));
+                                                    return res;
+                                                })
                                         .ToList();
 
                 if (valueAsRoutes.Count > 1)
@@ -81,8 +81,6 @@
 
             return query;
         }
-
-
 
         void VerifySchema<TOriginal>(object routes)
         {
@@ -208,8 +206,7 @@
                 defaultRoutes.Add("incView", incView);
                 // ReSharper disable once Mvc.ActionNotResolved
                 // ReSharper disable once Mvc.ControllerNotResolved
-                return urlHelper.Action("Render", "Dispatcher", defaultRoutes)
-                                .AppendToQueryString(model);
+                return urlHelper.Action("Render", "Dispatcher", defaultRoutes).AppendToQueryString(GetQueryString(new Dictionary<Type, List<object>>() { { typeof(TModel), new List<object>() { this.model } } }));
             }
 
             #endregion
@@ -318,7 +315,6 @@
                 // ReSharper disable once Mvc.ControllerNotResolved
                 return urlHelper.Action("Push", "Dispatcher", routeValues).AppendToQueryString(GetQueryString(this.dictionary));
             }
-
 
             public static implicit operator string(UrlPush s)
             {
