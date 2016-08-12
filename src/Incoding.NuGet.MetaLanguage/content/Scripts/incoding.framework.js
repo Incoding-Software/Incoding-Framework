@@ -44,8 +44,6 @@ IncSpecialBinds.IncInsert = 'incinsert';
 
 IncSpecialBinds.IncGlobalError = 'incglobalerror';
 
-IncSpecialBinds.IncError = 'incerror';
-
 IncSpecialBinds.DocumentBinds = [
     IncSpecialBinds.IncChangeUrl,
     IncSpecialBinds.IncAjaxBefore,
@@ -100,7 +98,7 @@ function AjaxAdapter() {
             var value = LocalStorageFactory.Get(key);
             if (!ExecutableHelper.IsNullOrEmpty(value)) {
                 if (options.global) {
-                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess));
+                    $(self).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess));
                 }
                 callback(JSON.parse(value));
                 return;
@@ -112,10 +110,11 @@ function AjaxAdapter() {
             headers: { "X-Requested-With": "XMLHttpRequest" },
             dataType: 'JSON',
             success: function (data, textStatus, jqXHR) {
-                if (options.global) {
-                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
-                }
                 var parseResult = new IncodingResult(data);
+                if (options.global) {
+                    $(self).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), parseResult);
+                }
+                
                 if (isReadyForLocalCache) {
                     LocalStorageFactory.Set(key, JSON.stringify(data));
                 }
@@ -123,17 +122,17 @@ function AjaxAdapter() {
             },
             beforeSend: function (jqXHR, settings) {
                 if (options.global) {
-                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                    $(self).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
                 }
             },
             complete: function (jqXHR, textStatus) {
                 if (options.global) {
-                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                    $(self).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), new IncodingResult(jqXHR.responseText).data);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (options.global) {
-                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(jqXHR)));
+                    $(self).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), new IncodingResult(jqXHR.responseText).data);
                 }
             },
             data: this.params(options.data)
@@ -1042,6 +1041,9 @@ $.extend(String.prototype, {
     endWith: function (suffix) {
         return (this.substr(this.length - suffix.length) === suffix);
     },
+    length : function() {
+        return this.length;
+    },
     toSelectorAsName: function () {
         var name = this;
         if (ExecutableHelper.IsNullOrEmpty(name)) {
@@ -1311,47 +1313,52 @@ function IncodingMetaElement(element) {
     this.getExecutables = function () {
         return JSON.parse(this.attr);
     };
-    this.bind = function (eventName, status) {
+    this.bind = function(eventName, status) {
 
+        var strStatus = status.toString();
         var currentElement = this.element;
-        for (var i = 0; i < IncSpecialBinds.DocumentBinds.length; i++) {
-            var docBind = IncSpecialBinds.DocumentBinds[i];
-            if (!eventName.contains(docBind)) {
-                continue;
+        if (strStatus !== '4') {
+            for (var i = 0; i < IncSpecialBinds.DocumentBinds.length; i++) {
+                var docBind = IncSpecialBinds.DocumentBinds[i];
+                if (!eventName.contains(docBind)) {
+                    continue;
+                }
+                eventName = eventName.replaceAll(docBind, ''); //remove document bind from element bind           
+                $(document)
+                    .bind(docBind.toString(),
+                        function(e, result) { //docBind.toString() fixed for ie <10
+                            new IncodingMetaElement(currentElement)
+                                .invoke(e, result);
+                            return false;
+                        });
             }
-            eventName = eventName.replaceAll(docBind, ''); //remove document bind from element bind           
-            $(document).bind(docBind.toString(), function (e, result) { //docBind.toString() fixed for ie <10
-                new IncodingMetaElement(currentElement)
-                    .invoke(e, result);
-                return false;
-            });
         }
 
         if (eventName === "") {
             return;
         }
 
-        $(currentElement).bind(eventName.toString(), function (e, result) {
+        $(currentElement)
+            .bind(eventName.toString(),
+                function(e, result) {
 
-            var strStatus = status.toString();
+                    if (strStatus === '4' || eventName === IncSpecialBinds.Incoding) {
+                        e.stopPropagation(); // if native js trigger
+                        e.preventDefault(); // if native js trigger                
+                    }
 
-            if (strStatus === '4' || eventName === IncSpecialBinds.Incoding) {
-                e.stopPropagation(); // if native js trigger
-                e.preventDefault(); // if native js trigger                
-            }
+                    if (strStatus === '2') {
+                        e.preventDefault();
+                    }
+                    if (strStatus === '3') {
+                        e.stopPropagation();
+                    }
 
-            if (strStatus === '2') {
-                e.preventDefault();
-            }
-            if (strStatus === '3') {
-                e.stopPropagation();
-            }
+                    new IncodingMetaElement(this)
+                        .invoke(e, result);
 
-            new IncodingMetaElement(this)
-                .invoke(e, result);
-
-            return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
-        });
+                    return !(strStatus === '4' || eventName === IncSpecialBinds.Incoding);
+                });
     };
 
     this.invoke = function (e, result) {
@@ -1473,7 +1480,7 @@ function IncodingResult(result) {
     var parse = function (json) {
         try {
             var res = _.isObject(json) ? json : $.parseJSON(json);
-            var isSchemaValid = _.has(res, 'success') && _.has(res, 'redirectTo') && _.has(res, 'data');
+            var isSchemaValid = _.has(res, 'success') && _.has(res, 'data');
             if (!isSchemaValid) {
                 throw new 'Not valid json result';
             }
@@ -1497,6 +1504,7 @@ function IncodingResult(result) {
     this.success = this.isValid() ? this.parseJson.success : false;
 
     this.data = this.isValid() ? this.parseJson.data : '';
+    
 
 }
 
@@ -1763,8 +1771,7 @@ $.extend(ExecutableActionBase.prototype, {
                 }
 
                 console.log('Incoding exception: {0}'.f(e.message ? e.message : e));
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncGlobalError));
-                $(executable.self).trigger(jQuery.Event(IncSpecialBinds.IncError));
+                $(executable.self).trigger(jQuery.Event(IncSpecialBinds.IncGlobalError));                
                 if (navigator.Ie8) {
                     return false; //stop execute
                 }
@@ -1878,35 +1885,45 @@ ExecutableSubmitAction.prototype.internalExecute = function (state) {
     var formSelector = eval(this.jsonData.formSelector);
     var form = $(formSelector).is('form') ? formSelector : $(formSelector).closest('form').first();
 
-    var ajaxOptions = $.extend(true, {
-        data: [],
-        xhr: function () {
-            var xhr = new window.XMLHttpRequest();
-            xhr.addEventListener("progress", function (evt) {
-                current.self.trigger(IncSpecialBinds.IncAjaxProgress);
-            }, false);
-            return xhr;
-        },
-        error: function (error) {
-            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxError), IncodingResult.Success(IncAjaxEvent.Create(error)));
-            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(error)));
-        },
-        success: function (responseText, statusText, xhr, $form) {
-            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
-            $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete), IncodingResult.Success(IncAjaxEvent.Create(xhr)));
-            current.complete(new IncodingResult(responseText), state);
-        },
-        beforeSubmit: function (formData, jqForm, options) {
-            var isValid = $(form).valid();
-            if (!isValid) {
-                $(form).validate().focusInvalid();
+    var ajaxOptions = $.extend(true,
+        {
+            data : [],
+            xhr : function() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.addEventListener("progress",
+                    function(evt) {
+                        current.self.trigger(IncSpecialBinds.IncAjaxProgress);
+                    },
+                    false);
+                return xhr;
+            },
+            error : function(error) {
+                var incodingResult = new IncodingResult(error.responseText).data;    
+                $(current.self)
+                    .trigger(jQuery.Event(IncSpecialBinds.IncAjaxError),incodingResult)
+                    .trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete),incodingResult);
+            },
+            success : function(responseText, statusText, xhr, $form) {
+                $(document)
+                    .trigger(jQuery.Event(IncSpecialBinds.IncAjaxSuccess),
+                        IncodingResult.Success(IncAjaxEvent.Create(xhr)));
+                $(document)
+                    .trigger(jQuery.Event(IncSpecialBinds.IncAjaxComplete),
+                        IncodingResult.Success(IncAjaxEvent.Create(xhr)));
+                current.complete(new IncodingResult(responseText), state);
+            },
+            beforeSubmit : function(formData, jqForm, options) {
+                var isValid = $(form).valid();
+                if (!isValid) {
+                    $(form).validate().focusInvalid();
+                }
+                else {
+                    $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success({}));
+                }
+                return isValid;
             }
-            else {
-                $(document).trigger(jQuery.Event(IncSpecialBinds.IncAjaxBefore), IncodingResult.Success({}));
-            }
-            return isValid;
-        }
-    }, this.jsonData.options);
+        },
+        this.jsonData.options);
 
     var url = this.jsonData.options.url || form.attr('action');
     if (!ExecutableHelper.IsNullOrEmpty(url)) {
@@ -2004,7 +2021,7 @@ ExecutableInsert.prototype.internalExecute = function () {
     else {
         IncodingEngine.Current.parse(current.target);
     }
-    $(document).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
+    $(self).trigger(jQuery.Event(IncSpecialBinds.IncInsert));
 
 };
 

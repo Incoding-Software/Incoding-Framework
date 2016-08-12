@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html >
     <head>                 
-        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.js")"> </script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.9.1.min.js")"> </script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/underscore.min.js")"> </script>                
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.form.min.js")"> </script>
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.history.js")"> </script>        
