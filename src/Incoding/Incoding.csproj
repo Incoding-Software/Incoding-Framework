@@ -307,10 +307,7 @@
     <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusByUIDCommand.cs" />
     <Compile Include="Block\Scheduler\Command\ChangeDelayToSchedulerStatusCommand.cs" />
     <Compile Include="Block\Scheduler\Persistence\OptionOfDelayAttribute.cs" />
-    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerAsyncWhere.cs" />
     <Compile Include="Block\Scheduler\Query\GetRecurrencyDateQuery.cs" />
-    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByUIDWhereSpec.cs" />
-    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerLessStartsOnWhereSpec.cs" />
     <Compile Include="Block\Scheduler\StartSchedulerCommand.cs" />
     <Compile Include="ContractAbbreviateAttribute.cs" />
     <Compile Include="ContractArgumentValidatorAttribute.cs" />
@@ -331,7 +328,6 @@
     <Compile Include="Block\Scheduler\Command\AddDelayToSchedulerCommand.cs" />
     <Compile Include="Block\Scheduler\Persistence\DelayOfStatus.cs" />
     <Compile Include="Block\Scheduler\Persistence\DelayToScheduler.cs" />
-    <Compile Include="Block\Scheduler\Specification\DelayToSchedulerByStatusWhere.cs" />
     <Compile Include="CQRS\Core\ISettingCommandComposite.cs" />
     <Compile Include="CQRS\Core\MessageBase.cs" />
     <Compile Include="CQRS\Core\IDispatcher.cs" />
@@ -453,7 +449,6 @@
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Instances\ConditionalIs.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\IConditionalBinaryBuilder.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\Condionals\Builder\IConditionalBuilder.cs" />
-    <Compile Include="MvcContrib\Incoding Meta Language\Condionals\ModernizrSupport.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageActionDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageBehaviorDsl.cs" />
     <Compile Include="MvcContrib\Incoding Meta Language\DSL\Core\IIncodingMetaLanguageBindingDsl.cs" />
@@ -675,7 +670,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="False" BuildVersion_DetectChanges="True" />
+      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="False" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" />
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>

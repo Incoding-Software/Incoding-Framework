@@ -19,9 +19,7 @@ namespace Incoding.MSpecContrib
         readonly Mock<ViewContext> viewContext;
 
         readonly Mock<IViewDataContainer> viewDataContainer;
-
-        Mock<HttpContextBase> httpContext;
-
+        
         #endregion
 
         #region Constructors

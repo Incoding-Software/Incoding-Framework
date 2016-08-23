@@ -18,7 +18,7 @@
 
     #endregion
 
-    public class UrlDispatcher : IUrlDispatcher
+    public struct UrlDispatcher : IUrlDispatcher
     {
         internal static readonly ConcurrentDictionary<string, bool> duplicates = new ConcurrentDictionary<string, bool>();
 

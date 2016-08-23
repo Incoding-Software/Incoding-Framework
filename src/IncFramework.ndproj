@@ -1,60 +1,72 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="IncFramework" Platform="DotNet">
-  <OutputDir KeepHistoric="False" KeepXmlFiles="True">F:\IncFramework\src\NDependOut</OutputDir>
+  <OutputDir KeepXmlFiles="True">C:\Workspace\Incoding-Framework-Git\src\NDependOut</OutputDir>
   <Assemblies>
-    <Name>Incoding.Infrastructure.Core</Name>
-    <Name>Incoding.Infrastructure.CrossCutting</Name>
+    <Name>Incoding</Name>
+    <Name>Incoding.MSpecContrib</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
     <Name>System.Core</Name>
-    <Name>System.Data</Name>
-    <Name>LinqSpecs</Name>
-    <Name>FluentNHibernate</Name>
-    <Name>System.Web</Name>
-    <Name>NHibernate</Name>
-    <Name>Moq</Name>
-    <Name>System.Web.Mvc</Name>
+    <Name>System.Xml.Linq</Name>
     <Name>System</Name>
-    <Name>Machine.Specifications</Name>
-    <Name>System.Windows.Forms</Name>
     <Name>FluentValidation</Name>
-    <Name>FluentValidation.Mvc</Name>
+    <Name>System.Web.Mvc</Name>
+    <Name>System.Web</Name>
     <Name>System.Web.WebPages</Name>
-    <Name>JetBrains.Annotations</Name>
-    <Name>Enyim.Caching</Name>
+    <Name>System.Drawing</Name>
+    <Name>System.Data</Name>
+    <Name>Raven.Client.Lightweight</Name>
+    <Name>EntityFramework</Name>
+    <Name>MongoDB.Driver</Name>
+    <Name>MongoDB.Bson</Name>
+    <Name>NHibernate</Name>
+    <Name>FluentNHibernate</Name>
+    <Name>Raven.Abstractions</Name>
+    <Name>System.Transactions</Name>
+    <Name>Newtonsoft.Json</Name>
+    <Name>System.Runtime.Serialization</Name>
+    <Name>SimpleInjector</Name>
+    <Name>DryIoc</Name>
     <Name>Ninject</Name>
     <Name>StructureMap</Name>
-    <Name>System.Drawing</Name>
-    <Name>System.Runtime.Serialization</Name>
-    <Name>Newtonsoft.Json</Name>
-    <Name>protobuf-net</Name>
+    <Name>Enyim.Caching</Name>
+    <Name>FluentValidation.Mvc</Name>
+    <Name>Microsoft.CSharp</Name>
     <Name>System.Xml</Name>
+    <Name>System.Windows.Forms</Name>
+    <Name>Handlebars</Name>
+    <Name>Machine.Specifications</Name>
+    <Name>Moq</Name>
+    <Name>Machine.Specifications.Should</Name>
   </FrameworkAssemblies>
   <Dirs>
+    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319</Dir>
+    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
     <Dir>F:\IncFramework\src\Incoding.Infrastructure.Core\bin\Debug</Dir>
     <Dir>F:\IncFramework\src\Incoding.Infrastructure.IntegratedTest\bin\Debug</Dir>
     <Dir>F:\IncFramework\src\Incoding.WebMeta.Test\bin\Debug</Dir>
-    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319</Dir>
-    <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319\WPF</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.UnitTest\bin\Release</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding\bin\Debug</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.UnitTest\bin\Debug</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.SiteTest\bin</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.MSpecContrib\bin\Debug</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.Framework\bin\Debug</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MetaLanguage\bin\Debug</Dir>
+    <Dir>C:\Workspace\Incoding-Framework-Git\src\Incoding.NuGet.MSpecContrib\bin\Debug</Dir>
   </Dirs>
-  <Report Kind="0" SectionsEnabled="12287" XslPath="" Flags="64512">
-    <Section Enabled="True">Application Metrics</Section>
-    <Section Enabled="True">.NET Assemblies Metrics</Section>
-    <Section Enabled="True">Treemap Metric View</Section>
-    <Section Enabled="True">.NET Assemblies Abstractness vs. Instability</Section>
-    <Section Enabled="True">.NET Assemblies Dependencies</Section>
-    <Section Enabled="True">.NET Assemblies Dependency Graph</Section>
-    <Section Enabled="True">.NET Assemblies Build Order</Section>
-    <Section Enabled="True">Analysis Log</Section>
-    <Section Enabled="True">CQL Rules Violated</Section>
-    <Section Enabled="True">Types Metrics</Section>
-    <Section Enabled="False">Types Dependencies</Section>
-  </Report>
-  <BuildComparisonSetting ProjectMode="DontCompare" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="1" />
-  <BaselineInUISetting ProjectMode="DontCompare" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="1" />
-  <CoverageFiles UncoverableAttribute="" />
-  <SourceFileRebasing FromPath="" ToPath="" /><Queries>
+  <MergeCodeGeneratedByCompiler>True</MergeCodeGeneratedByCompiler>
+  <Report Kind="0" SectionsEnabled="12287" XslPath="" Flags="64512" />
+  <BuildComparisonSetting ProjectMode="DontCompare" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <BaselineInUISetting ProjectMode="DontCompare" BuildMode="MostRecentAnalysisResultAvailable" ProjectFileToCompareWith="" BuildFileToCompareWith="" NDaysAgo="1" FocusOnRecentRulesViolations="False" />
+  <CoverageFiles CoverageDir="" UncoverableAttribute="" />
+  <TrendMetrics UseCustomLog="False" LogRecurrence="3" LogLabel="2" UseCustomDir="False" CustomDir="" />
+  <HistoricAnalysisResult PersistRecurrence="2" UseCustomDir="False" CustomDir="" />
+  <SourceFileRebasing FromPath="" ToPath="" />
+  <PathVariables />
+  <RuleFiles />
+  <ProjectRules AreActive="True" />
+  <Queries>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -2370,33 +2382,6 @@ select new { m, m.NbLinesOfCode }
 // introduced with .NET v4.0.]]></Query>
     </Group>
     <Group Name="Naming Conventions" Active="True" ShownInReport="False">
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Instance fields should be prefixed with a 'm_'</Name>
-warnif count > 0 from f in Application.Fields where 
-  !f.NameLike (@"^m_") && 
-  !f.IsStatic && 
-  !f.IsLiteral && 
-  !f.IsGeneratedByCompiler  && 
-  !f.IsSpecialName && 
-  !f.IsEventDelegateObject
-select new { f, f.SizeOfInst } 
-
-// This naming convention provokes debate.
-// Don't hesitate to customize the regex of 
-// NameLike to your preference.]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Static fields should be prefixed with a 's_'</Name>
-warnif count > 0 from f in Application.Fields where 
-  !f.NameLike (@"^s_") && 
-   f.IsStatic && 
-  !f.IsLiteral && 
-  !f.IsGeneratedByCompiler && 
-  !f.IsSpecialName && 
-  !f.IsEventDelegateObject
-select new { f, f.SizeOfInst }  
-
-// This naming convention provokes debate.
-// Don't hesitate to customize the regex of 
-// NameLike to your preference.
-]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Interface name should begin with a 'I'</Name>
 warnif count > 0 from t in Application.Types where 
 t.IsInterface  
@@ -2407,17 +2392,6 @@ let name = !t.IsNested  ? t.Name : t.Name.Substring(t.Name.LastIndexOf('+') + 1,
 where name[0] != 'I'
 select t
 ]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Abstract base class should be suffixed with 'Base'</Name>
-warnif count > 0 from t in Application.Types where 
-  t.IsAbstract && 
-  t.IsClass &&
-
-  // equivalent to:   DepthOfDeriveFrom "System.Object" == 1
-  t.DepthOfInheritance == 1 && 
-
-  ((!t.IsGeneric && !t.NameLike (@"Base$")) ||
-   ( t.IsGeneric && !t.NameLike (@"Base<")))
-select new { t, t.DepthOfInheritance }]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Exception class name should be suffixed with 'Exception'</Name>
 warnif count > 0 from t in Application.Types where 
   t.IsExceptionClass && 
@@ -2478,14 +2452,6 @@ select new { f, f.SizeOfInst }
 // member is not a breaking change, as long as the 
 // addition does not cause the values of the 
 // original members to change.]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid types with name too long</Name>
-warnif count > 0 from t in Application.Types 
-where !t.IsGeneratedByCompiler
-
-where t.SimpleName.Length > 35 
-select new { t, t.SimpleName }
-
-      ]]></Query>
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid methods with name too long</Name>
 warnif count > 0 from m in Application.Methods where 
  !m.IsExplicitInterfaceImpl &&
@@ -2589,16 +2555,6 @@ select new { t, namespaces = Namespaces.Where(n => n.SimpleName == t.Name) }]]><
 from m in Application.Methods.WithSimpleName("Dispose")
 where !m.ParentType.Implement("System.IDisposable".AllowNoMatch())
 select m]]></Query>
-      <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Methods prefixed with 'Try' should return a boolean</Name>
-// and such TryXXX method can eventually have out parameters to return results.
-// Get inspired from the API design of:
-// System.Int32.TryParse(int,out string):bool
-warnif count > 0
-from m in Application.Methods where
-  m.SimpleNameLike("^Try") &&
-  m.ReturnType != null &&
-  m.ReturnType.FullName != "System.Boolean"
-select new { m, m.ReturnType }]]></Query>
     </Group>
     <Group Name="Source Files Organization" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Avoid referencing source file out of Visual Studio project directory</Name>
@@ -2901,26 +2857,6 @@ select new { m, m.NbLinesOfCode }
 //   GC.Collect();
 // To make sure that finalizer got executed, and 
 // object with finalizer got cleaned properly.]]></Query>
-        <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Enum Storage should be Int32</Name>
-warnif count > 0 from f in Fields where 
-   f.Name == @"value__" && 
-  !f.FieldTypeIs ("System.Int32".AllowNoMatch()) &&
-  !f.IsThirdParty
-select new { f, f.SizeOfInst, f.FieldType }
-
-// An enumeration is a value type that defines 
-// a set of related named constants. By default, 
-// the System.Int32 data type is used to store 
-// the constant value. Even though you can change 
-// this underlying type, it is not necessary or 
-// recommended for most scenarios. Note that there 
-// is no significant performance gain in using 
-// a data type smaller than Int32. If you cannot 
-// use the default data type, you should use one 
-// of the CLS-compliant integral types, Byte, 
-// Int16, Int32, or Int64, to ensure that all of 
-// the enumeration's values are representable in 
-// CLS-compliant programming languages.]]></Query>
         <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="False"><![CDATA[// <Name>Do not raise too general exception types</Name>
 warnif count > 0 from m in Application.Methods where
   // Test for non-constructor, else this rule 
@@ -3617,6 +3553,8 @@ from f in Application.Fields where
   f.Name == "components" && f.ParentType.DeriveFrom("System.Windows.Forms.Control".AllowNoMatch())
 select f]]></Query>
     </Group>
-  </Queries><WarnFilter>
+  </Queries>
+  <WarnFilter>
     <DontWarn>Assembly {System.Web.Mvc} is referenced by {Incoding.WebMeta.SampleApp} but is not found.</DontWarn>
-  </WarnFilter></NDepend>
+  </WarnFilter>
+</NDepend>
