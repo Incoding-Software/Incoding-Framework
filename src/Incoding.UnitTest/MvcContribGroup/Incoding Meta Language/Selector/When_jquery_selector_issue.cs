@@ -17,10 +17,6 @@
                                          .ToString()
                                          .ShouldEqual("$('.nestedInputList input')");
 
-        It should_be_self_with_has_attribute= () => Selector.Jquery.Self().HasAttribute(HtmlAttribute.Placeholder)
-                                         .ToString()
-                                         .ShouldEqual("$(this.self).filter('[placeholder]')");
-
         It should_be_124 = () => Selector.Jquery.Name("SelectedDropOutType")
                                          .Tag(HtmlTag.Option)
                                          .Expression(JqueryExpression.Selected)
@@ -79,12 +75,6 @@
                                         .ToString()
                                         .ShouldEqual("$('.extraCheckbox').not(':checked')");
 
-        It should_be_not_not_not = () => Selector.Jquery.Class("extraCheckbox")
-                                        .Not(JqueryExpression.Checked)
-                                        .Not(HtmlTag.TBody)
-                                        .ToString()
-                                        .ShouldEqual("$('.extraCheckbox').not(':checked').not('tbody')");
-
         It should_be_expression_after_method = () => Selector.Jquery.Self()
                                                              .Find(HtmlTag.Label)
                                                              .Expression(JqueryExpression.First)
@@ -107,10 +97,27 @@
                                                           .ToString()
                                                           .ShouldEqual("$(this.self).closest('tbody').filter('tr').filter(':button')");
 
+        It should_be_issue_129 = () =>
+                                 {
+                                     Selector.Jquery.Self().Add(s => s.Self())
+                                             .ToString()
+                                             .ShouldEqual("$(this.self).add($(this.self))");
+                                 };
+
+        It should_be_not_not_not = () => Selector.Jquery.Class("extraCheckbox")
+                                                 .Not(JqueryExpression.Checked)
+                                                 .Not(HtmlTag.TBody)
+                                                 .ToString()
+                                                 .ShouldEqual("$('.extraCheckbox').not(':checked').not('tbody')");
+
         It should_be_self_with_attr = () => Selector.Jquery.Self()
                                                     .Attr("units")
                                                     .ToString()
                                                     .ShouldEqual("$(this.self).attr('units')");
+
+        It should_be_self_with_has_attribute = () => Selector.Jquery.Self().HasAttribute(HtmlAttribute.Placeholder)
+                                                             .ToString()
+                                                             .ShouldEqual("$(this.self).filter('[placeholder]')");
 
         It should_be_tag_also_attr = () => Selector.Jquery.Tag(HtmlTag.Input)
                                                    .EqualsAttribute(HtmlAttribute.Type, "text")
@@ -121,6 +128,5 @@
                                                               .EqualsAttribute(HtmlAttribute.Multiple)
                                                               .ToString()
                                                               .ShouldEqual("$('input[multiple=\"multiple\"]')");
-        
     }
 }

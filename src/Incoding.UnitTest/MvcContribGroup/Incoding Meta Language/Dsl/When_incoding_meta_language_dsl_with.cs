@@ -12,21 +12,13 @@
     [Subject(typeof(IncodingMetaLanguageDsl))]
     public class When_incoding_meta_language_dsl_with
     {
-        It should_be_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                          .Do()
-                                          .Direct()
-                                          .OnSuccess(r => r.Self().Core().Form.Validation.Parse())
-                                          .GetAll<ExecutableValidationParse>()
-                                          .First()["target"]
-                                          .ShouldEqual("$(this.self)");
-
-        It should_be_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                          .Do()
-                                          .Direct()
-                                          .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
-                                          .GetAll<ExecutableValidationParse>()
-                                          .First()["target"]
-                                          .ShouldEqual("$(this.self).closest('tr')");
+        It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                   .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr)))
+                                                                        .With(r => r.Id("Next"))
+                                                                        .Core().Form.Validation.Parse())
+                                                   .GetAll<ExecutableValidationParse>()
+                                                   .First()["target"]
+                                                   .ShouldEqual("$(this.self).closest('tr').add('#Next')");
 
         It should_be_reset_target = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                   .Do()
@@ -71,13 +63,21 @@
                                                                                    .ShouldEqual("||jquery*#Id||");
                                                                        });
 
-        It should_be_multiple_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                   
-                                                   .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr)))
-                                                                        .With(r => r.Id("Next"))
-                                                                        .Core().Form.Validation.Parse())
-                                                   .GetAll<ExecutableValidationParse>()
-                                                   .First()["target"]
-                                                   .ShouldEqual("$(this.self).closest('tr').add('#Next')");
+        It should_be_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                          .Do()
+                                          .Direct()
+                                          .OnSuccess(r => r.Self().Core().Form.Validation.Parse())
+                                          .GetAll<ExecutableValidationParse>()
+                                          .First()["target"]
+                                          .ShouldEqual("$(this.self)");
+
+        It should_be_with = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                          .Do()
+                                          .Direct()
+                                          .OnSuccess(dsl => dsl.With(Selector.Jquery.Self().Closest(s => s.Tag(HtmlTag.Tr))).Core().Form.Validation.Parse())
+                                          .GetAll<ExecutableValidationParse>()
+                                          .First()["target"]
+                                          .ShouldEqual("$(this.self).closest('tr')");
 
         It should_be_with_action = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                  .Do()
@@ -86,6 +86,22 @@
                                                  .GetAll<ExecutableValidationParse>()
                                                  .First()["target"]
                                                  .ShouldEqual("$(this.self).closest('tr')");
+
+        It should_be_with_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                .Do()
+                                                .Direct()
+                                                .OnSuccess(dsl => dsl.WithClass("red").Core().Form.Validation.Parse())
+                                                .GetAll<ExecutableValidationParse>()
+                                                .First()["target"]
+                                                .ShouldEqual("||jquery*.red||");
+
+        It should_be_with_class_b = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                  .Do()
+                                                  .Direct()
+                                                  .OnSuccess(dsl => dsl.WithClass(B.Active).Core().Form.Validation.Parse())
+                                                  .GetAll<ExecutableValidationParse>()
+                                                  .First()["target"]
+                                                  .ShouldEqual("||jquery*.active||");
 
         It should_be_with_id = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                              .Do()
@@ -111,27 +127,11 @@
                                                .First()["target"]
                                                .ShouldEqual(@"||jquery*[name=""Value""]||");
 
-        It should_be_with_name_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                                          
+        It should_be_with_name_expression = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                           .OnSuccess(dsl => dsl.WithName<KeyValueVm>(vm => vm.Value).Core().Form.Validation.Parse())
                                                           .GetAll<ExecutableValidationParse>()
                                                           .First()["target"]
                                                           .ShouldEqual(@"||jquery*[name=""Value""]||");
-
-        It should_be_with_class = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                .Do()
-                                                .Direct()
-                                                .OnSuccess(dsl => dsl.WithClass("red").Core().Form.Validation.Parse())
-                                                .GetAll<ExecutableValidationParse>()
-                                                .First()["target"]
-                                                .ShouldEqual("||jquery*.red||");
-
-        It should_be_with_class_b = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  .Do()
-                                                  .Direct()
-                                                  .OnSuccess(dsl => dsl.WithClass(B.Active).Core().Form.Validation.Parse())
-                                                  .GetAll<ExecutableValidationParse>()
-                                                  .First()["target"]
-                                                  .ShouldEqual("||jquery*.active||");
 
         It should_be_with_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                .Do()
@@ -140,6 +140,17 @@
                                                .GetAll<ExecutableValidationParse>()
                                                .First()["target"]
                                                .ShouldEqual("$(this.self).closest('tr')");
+
+        It should_be_with_self_and_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                        .Do()
+                                                        .Direct()
+                                                        .OnSuccess(dsl => dsl
+                                                                                  .WithSelf(s => s.Closest(HtmlTag.Li).Find(HtmlTag.Input))
+                                                                                  .Self()
+                                                                                  .Form.Validation.Parse())
+                                                        .GetAll<ExecutableValidationParse>()
+                                                        .First()["target"]
+                                                        .ShouldEqual("$(this.self).closest('li').find('input').add($(this.self))");
 
         It should_be_with_self_multiple_level = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                               .Do()

@@ -20,15 +20,26 @@ namespace Incoding.MvcContrib
         ////ncrunch: no coverage end      
 
         ////ncrunch: no coverage start
+
         #region Static Fields
 
         public static readonly JqueryAjaxOptions Default = new JqueryAjaxOptions();
-        
+
         #endregion
 
         #region Fields
 
         RouteValueDictionary data = new RouteValueDictionary();
+
+        #endregion
+
+        #region Api Methods
+
+        [Obsolete("Use property Url to set url"), UsedImplicitly]
+        public void WithUrl(string url)
+        {
+            Url = url;
+        }
 
         #endregion
 
@@ -45,6 +56,7 @@ namespace Incoding.MvcContrib
         #endregion
 
         ////ncrunch: no coverage end
+
         #region Properties
 
         /// <summary>
@@ -66,6 +78,13 @@ namespace Incoding.MvcContrib
         /// </summary>
         [UsedImplicitly]
         public bool Cache { set { this.Set("cache", value); } }
+
+        /// <summary>
+        ///     Default: <c>false</c>
+        ///     If set to <c>true</c>, it will cached last result from recent call ajax to local storage.
+        /// </summary>
+        [UsedImplicitly]
+        public bool LocalCache { set { this.Set("cache", value); } }
 
         /// <summary>
         ///     Default: <c>true</c> for same-domain requests, <c>true</c> for cross-domain requests
@@ -145,16 +164,6 @@ namespace Incoding.MvcContrib
                 data = value;
                 this.Set("url", Url.AppendOnlyToQueryString(data));
             }
-        }
-
-        #endregion
-
-        #region Api Methods
-
-        [Obsolete("Use property Url to set url"), UsedImplicitly]
-        public void WithUrl(string url)
-        {
-            Url = url;
         }
 
         #endregion
