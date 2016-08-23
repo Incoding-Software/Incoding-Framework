@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Web.Mvc;
     using Incoding.CQRS;
+    using Incoding.Extensions;
 
     #endregion
 
@@ -98,7 +99,6 @@
 
         public virtual ActionResult QueryToFile()
         {
-            Response.AddHeader("X-Download-Options", "Open");
             var parameter = dispatcher.Query(new GetMvdParameterQuery()
                                              {
                                                      Params = HttpContext.Request.Params
@@ -113,6 +113,9 @@
                                           {
                                                   Instance = new CommandComposite((IMessage)instance)
                                           });
+            Guard.NotNull("result", result, "Result from query {0} is null but argument 'result' should be not null".F(parameter.Type));
+
+            Response.AddHeader("X-Download-Options", "Open");
             return File((byte[])result, parameter.ContentType, parameter.FileDownloadName);
         }
 
