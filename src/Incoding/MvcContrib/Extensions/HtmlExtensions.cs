@@ -3,6 +3,7 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using Incoding.Block.IoC;
@@ -29,8 +30,17 @@ namespace Incoding.MvcContrib
             return new DefaultDispatcher();
         }
 
-        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData :class
+        // ReSharper disable once UnusedParameter.Global
+        public static MvcHtmlString AsView<TData>(this IDispatcher dispatcher, TData data, [PathReference] string view, object model = null) where TData : class
         {
+            Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");
+            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
+        }
+
+        [Obsolete("Please use AsView with Html.Dispatcher().AsView(data)", true), ExcludeFromCodeCoverage, UsedImplicitly]
+        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData : class
+        {
+            Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");
             return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
         }
 
@@ -46,11 +56,13 @@ namespace Incoding.MvcContrib
 
         public static IncodingHtmlHelper Incoding<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
+            HtmlHelper = htmlHelper;
             return new IncodingHtmlHelper(htmlHelper);
         }
 
         public static SelectorHelper<TModel> Selector<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
+            HtmlHelper = htmlHelper;
             return new SelectorHelper<TModel>();
         }
 
