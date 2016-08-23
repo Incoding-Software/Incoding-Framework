@@ -134,6 +134,17 @@
                                                                  .NextUntil().ToString()
                                                                  .ShouldEqual("$(this.self).nextUntil()");
 
+        It should_be_next_with_tag = () => Selector.Jquery
+                                                           .Self()
+                                                           .Next(HtmlTag.Area).ToString()
+                                                           .ShouldEqual("$(this.self).next('area')");
+
+        It should_be_next_with_b = () => Selector.Jquery
+                                                           .Self()
+                                                           .Next(B.Active).ToString()
+                                                           .ShouldEqual("$(this.self).next('.active')");
+
+
         It should_be_next_without_selector = () => Selector.Jquery
                                                            .Self()
                                                            .Next().ToString()
@@ -179,6 +190,13 @@
                                                              .Parent()
                                                              .ToString()
                                                              .ShouldEqual("$(this.self).parent()");
+
+
+        It should_be_parent_with_b = () => Selector.Jquery
+                                                             .Self()
+                                                             .Parent(B.Active)
+                                                             .ToString()
+                                                             .ShouldEqual("$(this.self).parent('.active')");
 
         It should_be_parents = () => Selector.Jquery
                                              .Self()
