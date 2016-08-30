@@ -14,7 +14,7 @@ namespace Incoding.Block.IoC
     /// <summary>
     ///     Implement provider IoC for Ninject. Get started http://dotnetslackers.com/articles/csharp/Get-Started-with-Ninject-2-0-in-C-sharp-Programming.aspx
     /// </summary>
-    public class NinjectIoCProvider : IIoCProvider
+    public struct NinjectIoCProvider : IIoCProvider
     {
         #region Fields
 

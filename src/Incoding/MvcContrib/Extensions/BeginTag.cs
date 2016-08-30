@@ -11,7 +11,7 @@
 
     #endregion
 
-    public class BeginTag : IDisposable
+    public struct  BeginTag : IDisposable
     {
         #region Fields
 

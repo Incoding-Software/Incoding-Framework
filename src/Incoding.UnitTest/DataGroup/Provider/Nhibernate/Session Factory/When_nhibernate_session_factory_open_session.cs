@@ -29,6 +29,6 @@
 
         Because of = () => { currentSession = nhSessionFactory.Open(null); };
 
-        It should_be_not_be_null = () => currentSession.ShouldBeTheSameAs(currentSession);
+        It should_be_not_be_null = () => currentSession.ShouldBeTheSameAs(currentSession); //-V3062
     }
 }

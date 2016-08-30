@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <NDepend AppName="IncFramework" Platform="DotNet">
   <OutputDir KeepXmlFiles="True">C:\Workspace\Incoding-Framework-Git\src\NDependOut</OutputDir>
   <Assemblies>
     <Name>Incoding</Name>
     <Name>Incoding.MSpecContrib</Name>
+    <Name>Incoding.UnitTest</Name>
   </Assemblies>
   <FrameworkAssemblies>
     <Name>mscorlib</Name>
@@ -39,6 +40,9 @@
     <Name>Machine.Specifications</Name>
     <Name>Moq</Name>
     <Name>Machine.Specifications.Should</Name>
+    <Name>NCrunch.Framework</Name>
+    <Name>Ninject.Extensions.Conventions</Name>
+    <Name>System.Configuration</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\Windows\Microsoft.NET\Framework\v4.0.30319</Dir>
@@ -65,8 +69,7 @@
   <SourceFileRebasing FromPath="" ToPath="" />
   <PathVariables />
   <RuleFiles />
-  <ProjectRules AreActive="True" />
-  <Queries>
+  <ProjectRules AreActive="True" /><Queries>
     <Group Name="Code Quality" Active="True" ShownInReport="False">
       <Query Active="True" DisplayList="True" DisplayStat="True" DisplaySelectionView="False" IsCriticalRule="True"><![CDATA[// <Name>Types too big - critical</Name>
 warnif count > 0 from t in JustMyCode.Types where 
@@ -3553,8 +3556,6 @@ from f in Application.Fields where
   f.Name == "components" && f.ParentType.DeriveFrom("System.Windows.Forms.Control".AllowNoMatch())
 select f]]></Query>
     </Group>
-  </Queries>
-  <WarnFilter>
+  </Queries><WarnFilter>
     <DontWarn>Assembly {System.Web.Mvc} is referenced by {Incoding.WebMeta.SampleApp} but is not found.</DontWarn>
-  </WarnFilter>
-</NDepend>
+  </WarnFilter></NDepend>

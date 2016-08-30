@@ -18,7 +18,7 @@ namespace Incoding.Extensions
 
         public static bool IsAllContainsIgnoreCase(this string value, params string[] param)
         {
-            return value.ToLower().IsAnyContains(param.Select(r => r.ToLower()).ToArray());
+            return value.ToLower().IsAllContains(param.Select(r => r.ToLower()).ToArray());
         }
 
         public static bool IsAnyContains(this string value, params string[] param)

@@ -9,7 +9,7 @@
 
     #endregion
 
-    public class SimpleInjectorIoCProvider : IIoCProvider
+    public struct SimpleInjectorIoCProvider : IIoCProvider
     {
         private readonly Container container;
 

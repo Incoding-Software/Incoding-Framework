@@ -1,9 +1,13 @@
 ﻿namespace Incoding.Data
 {
+    #region << Using >>
+
     using System;
 
-    public interface ISessionFactory<out TSession>
+    #endregion
+
+    public interface ISessionFactory<out TSession> 
     {
-        TSession Open(string connectionString);        
+        TSession Open(string connectionString);
     }
 }

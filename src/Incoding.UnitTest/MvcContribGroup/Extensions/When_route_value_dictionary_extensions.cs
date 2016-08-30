@@ -43,7 +43,7 @@
         It should_be_to_button_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
                                                                     .ToButton(o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                     .ToHtmlString()
-                                                                    .ShouldEqual("<button class=\"class\"><div></button>");
+                                                                    .ShouldEqual("<button class=\"class\"><div></button>"); //-V3050
 
         It should_be_to_checkbox_checked = () => new RouteValueDictionary(new { @class = "class" })
                                                          .ToCheckBox(true)
@@ -88,7 +88,7 @@
         It should_be_to_i_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
                                                                .ToI(o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                .ToHtmlString()
-                                                               .ShouldEqual("<i class=\"class\"><div></i>");
+                                                               .ShouldEqual("<i class=\"class\"><div></i>"); //-V3050
 
         It should_be_to_img = () => new RouteValueDictionary(new { @class = "class" })
                                             .ToImg()
@@ -103,7 +103,7 @@
         It should_be_to_img_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
                                                                  .ToImg(o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                  .ToHtmlString()
-                                                                 .ShouldEqual("<img class=\"class\"><div></img>");
+                                                                 .ShouldEqual("<img class=\"class\"><div></img>"); //-V3050
 
         It should_be_to_label = () => new RouteValueDictionary(new { @class = "class" })
                                               .ToLabel()
@@ -118,7 +118,7 @@
         It should_be_to_label_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
                                                                    .ToLabel(o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                    .ToHtmlString()
-                                                                   .ShouldEqual("<label class=\"class\"><div></label>");
+                                                                   .ShouldEqual("<label class=\"class\"><div></label>"); //-V3050
 
         It should_be_to_link = () => new RouteValueDictionary(new { @class = "class" })
                                              .ToLink()
@@ -138,7 +138,7 @@
         It should_be_to_link_with_content_as_helper = () => new RouteValueDictionary(new { @class = "class" })
                                                                     .ToLink(o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                     .ToHtmlString()
-                                                                    .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"><div></a>");
+                                                                    .ShouldEqual("<a class=\"class\" href=\"javascript:void(0);\"><div></a>"); //-V3050
 
         It should_be_to_radio_button = () => new RouteValueDictionary(new { @class = "class" })
                                                      .ToRadioButton("value", false)
@@ -173,7 +173,7 @@
         It should_be_to_tag_with_content_as_func = () => new RouteValueDictionary(new { @class = "class" })
                                                                  .ToTag(HtmlTag.Label, o => new HelperResult(writer => writer.WriteLine("<div>")))
                                                                  .ToHtmlString()
-                                                                 .ShouldEqual("<label class=\"class\"><div></label>");
+                                                                 .ShouldEqual("<label class=\"class\"><div></label>"); //-V3050
 
         It should_be_to_text_area = () => new RouteValueDictionary(new { @class = "class" })
                                                   .ToTextArea()

@@ -47,14 +47,6 @@
                                             .ShouldNotBeNull();
                                 };
 
-        It should_be_dispose = () =>
-                                   {
-                                       SetCurrentSession(Pleasure.MockStrictAsObject<IDocumentSession>());
-                                       new RavenDbSessionFactory(Pleasure.MockStrictAsObject<IDocumentStore>())
-                                               .Dispose();
-                                       typeof(RavenDbSessionFactory).GetField("currentSession", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null).ShouldBeNull();
-                                   };
-
         It should_be_open_session_with_connection_string = () =>
                                                                {
                                                                    SetCurrentSession(null);

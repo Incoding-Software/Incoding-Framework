@@ -1,9 +1,10 @@
 namespace Incoding.Block.Caching
 {
+    using System;
     /// <summary>
     ///     All <c>lock</c> implement in <see cref="CachingFactory" /> then not need added lock or any multi-threaded.
     /// </summary>
-    public interface ICachedProvider
+    public interface ICachedProvider:IDisposable
     {
         /// <summary>
         ///     Delete all assign value for <c>key</c>

@@ -62,14 +62,14 @@
         It should_be_is_weak = () => Pleasure.Generator.Invent<FakeCompareObject>().IsEqualWeak(Pleasure.Generator.Invent<FakeCompareObject>()).ShouldBeFalse();
 
         It should_be_weak_each_with_forward_with_index = () =>
-                                                             {
-                                                                 var left = Pleasure.Generator.Invent<FakeCompareObject>();
-                                                                 var right = new FakeCompareObject { Fake = left.Fake2, Fake2 = left.Fake };
-                                                                 var rightArray = Pleasure.ToReadOnly(right);
-                                                                 Pleasure.ToList(left).ShouldEqualWeakEach(rightArray, (factory, i) => factory
-                                                                                                                                               .ForwardToValue(r => r.Fake, rightArray[i].Fake2)
-                                                                                                                                               .ForwardToValue(r => r.Fake2, rightArray[i].Fake));
-                                                             };
+                                                         {
+                                                             var left = Pleasure.Generator.Invent<FakeCompareObject>();
+                                                             var right = new FakeCompareObject { Fake = left.Fake2, Fake2 = left.Fake };
+                                                             var rightArray = Pleasure.ToReadOnly(right);
+                                                             Pleasure.ToList(left).ShouldEqualWeakEach(rightArray, (factory, i) => factory
+                                                                                                                                           .ForwardToValue(r => r.Fake, rightArray[i].Fake2)
+                                                                                                                                           .ForwardToValue(r => r.Fake2, rightArray[i].Fake));
+                                                         };
 
         It should_be_key_value = () => Pleasure
                                                .ToDictionary(new KeyValuePair<string, int>(Pleasure.Generator.TheSameString(), Pleasure.Generator.TheSameNumber()))
@@ -104,114 +104,114 @@
         It should_be_not_satisfy = () => DateTime.Now.ShouldNotSatisfy(time => time.Date != DateTime.Now.Date);
 
         It should_be_date_nullable = () =>
-                                         {
-                                             DateTime? leftNullable = DateTime.Now;
-                                             var rightNullable = leftNullable;
-                                             leftNullable.ShouldBeDate(rightNullable);
-                                         };
+                                     {
+                                         DateTime? leftNullable = DateTime.Now;
+                                         var rightNullable = leftNullable;
+                                         leftNullable.ShouldBeDate(rightNullable);
+                                     };
 
         It should_be_date_nullable_with_wrong_has_value = () => Catch.Exception(() =>
-                                                                                    {
-                                                                                        DateTime? leftNullable = DateTime.Now;
-                                                                                        DateTime? rightNullable = null;
-                                                                                        leftNullable.ShouldBeDate(rightNullable);
-                                                                                    }).ShouldBeAssignableTo<SpecificationException>();
+                                                                                {
+                                                                                    DateTime? leftNullable = DateTime.Now;
+                                                                                    DateTime? rightNullable = null;
+                                                                                    leftNullable.ShouldBeDate(rightNullable);
+                                                                                }).ShouldBeAssignableTo<SpecificationException>();
 
         It should_be_time_with_time_span = () => new TimeSpan(1, 2, 3).ShouldBeTime(1, 2, 3);
 
         It should_be_time_with_date = () => new DateTime(1, 2, 3, 4, 5, 6).ShouldBeTime(4, 5, 6);
 
         It should_be_time_with_date_and_date = () =>
-                                                   {
-                                                       var time = new DateTime(1, 2, 3, 4, 5, 6);
-                                                       time.ShouldBeTime(time);
-                                                   };
+                                               {
+                                                   var time = new DateTime(1, 2, 3, 4, 5, 6);
+                                                   time.ShouldBeTime(new DateTime(0, 0, 0, time.Hour, time.Minute, time.Second, time.Millisecond));
+                                               };
 
         It should_be_time_with_time_span_and_time_span = () =>
-                                                             {
-                                                                 var timeSpan = new TimeSpan(1, 2, 3);
-                                                                 timeSpan.ShouldBeTime(timeSpan);
-                                                             };
+                                                         {
+                                                             var timeSpan = new TimeSpan(1, 2, 3);
+                                                             timeSpan.ShouldBeTime(new TimeSpan(timeSpan.Hours, timeSpan.Minutes, timeSpan.Seconds, timeSpan.Milliseconds));
+                                                         };
 
         It should_be_conditional = () => Pleasure.Generator.TheRuCulture().Name.ShouldEqual("ru-RU");
 
         It should_be_equal_weak_dictionary = () =>
-                                                 {
-                                                     IDictionary<string, int> left = Pleasure.ToDynamicDictionary<int>(new { value = 2 });
-                                                     IDictionary<string, int> right = Pleasure.ToDynamicDictionary<int>(new { value = 2 });
-                                                     left.ShouldEqualWeak(right);
-                                                 };
+                                             {
+                                                 IDictionary<string, int> left = Pleasure.ToDynamicDictionary<int>(new { value = 2 });
+                                                 IDictionary<string, int> right = Pleasure.ToDynamicDictionary<int>(new { value = 2 });
+                                                 left.ShouldEqualWeak(right);
+                                             };
 
         It should_be_equal_weak_specification = () =>
+                                                {
+                                                    var spec1 = new FakeSpecification(Pleasure.Generator.TheSameString());
+                                                    var spec2 = new FakeSpecification(Pleasure.Generator.TheSameString());
+                                                    spec1.ShouldEqualWeak(spec2);
+                                                };
+
+        It should_not_be_equal_weak_specification = () =>
                                                     {
-                                                        var spec1 = new FakeSpecification(Pleasure.Generator.TheSameString());
-                                                        var spec2 = new FakeSpecification(Pleasure.Generator.TheSameString());
+                                                        var spec1 = new FakeSpecification(Pleasure.Generator.String());
+                                                        var spec2 = new FakeSpecification(Pleasure.Generator.String());
                                                         spec1.ShouldEqualWeak(spec2);
                                                     };
 
-        It should_not_be_equal_weak_specification = () =>
-                                                        {
-                                                            var spec1 = new FakeSpecification(Pleasure.Generator.String());
-                                                            var spec2 = new FakeSpecification(Pleasure.Generator.String());
-                                                            spec1.ShouldEqualWeak(spec2);
-                                                        };
-
         It should_be_equal_weak_dual = () =>
-                                           {
-                                               var left = new { Field = 1 };
-                                               var right = new { Field = 1 };
-                                               left.ShouldEqualWeakDual(right);
-                                           };
-
-        It should_be_not_failure = () =>
-                                       {                                           
-                                           var valResult = new ValidationResult();
-                                           valResult.Errors.Add(new ValidationFailure("Property", Pleasure.Generator.TheSameString()));
-                                           string customMessage = Pleasure.Generator.String();
-                                           valResult.Errors.Add(new ValidationFailure("Property", customMessage));
-                                           valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString(), customMessage);
+                                       {
+                                           var left = new { Field = 1 };
+                                           var right = new { Field = 1 };
+                                           left.ShouldEqualWeakDual(right);
                                        };
 
+        It should_be_not_failure = () =>
+                                   {
+                                       var valResult = new ValidationResult();
+                                       valResult.Errors.Add(new ValidationFailure("Property", Pleasure.Generator.TheSameString()));
+                                       string customMessage = Pleasure.Generator.String();
+                                       valResult.Errors.Add(new ValidationFailure("Property", customMessage));
+                                       valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString(), customMessage);
+                                   };
+
         It should_be_failure_by_property = () =>
-                                               {
-                                                   var valResult = new ValidationResult();
-                                                   valResult.Errors.Add(new ValidationFailure("AnyProperty", Pleasure.Generator.TheSameString()));
-                                                   Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString())).ShouldBeAssignableTo<SpecificationException>();
-                                               };
+                                           {
+                                               var valResult = new ValidationResult();
+                                               valResult.Errors.Add(new ValidationFailure("AnyProperty", Pleasure.Generator.TheSameString()));
+                                               Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString())).ShouldBeAssignableTo<SpecificationException>();
+                                           };
 
         It should_be_failure_by_count = () =>
-                                            {
-                                                var valResult = new ValidationResult();
-                                                valResult.Errors.Add(new ValidationFailure("Property", Pleasure.Generator.TheSameString()));
-                                                string error = Pleasure.Generator.String();
-                                                valResult.Errors.Add(new ValidationFailure("Property", error));
-                                                var exception = Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString()));
-                                                exception.ShouldBeAssignableTo<SpecificationException>();
+                                        {
+                                            var valResult = new ValidationResult();
+                                            valResult.Errors.Add(new ValidationFailure("Property", Pleasure.Generator.TheSameString()));
+                                            string error = Pleasure.Generator.String();
+                                            valResult.Errors.Add(new ValidationFailure("Property", error));
+                                            var exception = Catch.Exception(() => valResult.ShouldBeFailure<When_should_extensions>(r => r.Property, Pleasure.Generator.TheSameString()));
+                                            exception.ShouldBeAssignableTo<SpecificationException>();
 
-                                                var st = new StringBuilder();
-                                                st.AppendLine("Expected: 2 failure But was:  1 failure");
-                                                st.AppendLine("Property:TheSameString;Property:{0};".F(error));
-                                                exception.Message.ShouldEqual(st.ToString());
-                                            };
+                                            var st = new StringBuilder();
+                                            st.AppendLine("Expected: 2 failure But was:  1 failure");
+                                            st.AppendLine("Property:TheSameString;Property:{0};".F(error));
+                                            exception.Message.ShouldEqual(st.ToString());
+                                        };
 
         It should_be_failure_without_error = () =>
-                                                 {
-                                                     var validationResult = new ValidationResult();
-                                                     var errorMessages = Pleasure.ToArray(Pleasure.Generator.String(), Pleasure.Generator.String(), Pleasure.Generator.String());
-                                                     var exception = Catch.Exception(() => validationResult.ShouldBeFailure<When_should_extensions>(r => r.Property, errorMessages));
-                                                     exception.ShouldBeAssignableTo<SpecificationException>();
-                                                     exception.Message.ShouldContain("Expected: {0} failure But was:  {1} failure".F(validationResult.Errors.Count, errorMessages.Length));
-                                                 };
+                                             {
+                                                 var validationResult = new ValidationResult();
+                                                 var errorMessages = Pleasure.ToArray(Pleasure.Generator.String(), Pleasure.Generator.String(), Pleasure.Generator.String());
+                                                 var exception = Catch.Exception(() => validationResult.ShouldBeFailure<When_should_extensions>(r => r.Property, errorMessages));
+                                                 exception.ShouldBeAssignableTo<SpecificationException>();
+                                                 exception.Message.ShouldContain("Expected: {0} failure But was:  {1} failure".F(validationResult.Errors.Count, errorMessages.Length));
+                                             };
 
         It should_not_be_failure_wrong = () =>
-                                             {
-                                                 var valResult = new ValidationResult(new List<ValidationFailure>
-                                                                                          {
-                                                                                                  new ValidationFailure("Property", Pleasure.Generator.TheSameString()),
-                                                                                                  new ValidationFailure("Property", Pleasure.Generator.String())
-                                                                                          });
-                                                 Catch.Exception(() => valResult.ShouldNotBeFailure<When_should_extensions>(r => r.Property)).ShouldBeAssignableTo<SpecificationException>();
-                                             };
+                                         {
+                                             var valResult = new ValidationResult(new List<ValidationFailure>
+                                                                                  {
+                                                                                          new ValidationFailure("Property", Pleasure.Generator.TheSameString()),
+                                                                                          new ValidationFailure("Property", Pleasure.Generator.String())
+                                                                                  });
+                                             Catch.Exception(() => valResult.ShouldNotBeFailure<When_should_extensions>(r => r.Property)).ShouldBeAssignableTo<SpecificationException>();
+                                         };
 
         It should_not_be_failure = () => new ValidationResult()
                                                  .ShouldNotBeFailure<When_should_extensions>(r => r.Property);

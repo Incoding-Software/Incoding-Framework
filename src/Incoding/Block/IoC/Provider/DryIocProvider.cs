@@ -8,7 +8,7 @@
 
     #endregion
 
-    public class DryIocProvider : IIoCProvider
+    public struct DryIocProvider : IIoCProvider
     {
         private readonly Container container;
 

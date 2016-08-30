@@ -8,7 +8,7 @@
 
     #endregion
 
-    public class IncHtmlString
+    public struct IncHtmlString
     {
         private readonly MvcHtmlString result;
 

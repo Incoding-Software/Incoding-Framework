@@ -35,8 +35,8 @@ namespace Incoding.Utilities
 
         public void Dispose()
         {
-            this.smtpClient
-                .Do(r => r.Dispose());
+            if (this.smtpClient != null)
+                this.smtpClient.Dispose();
         }
 
         #endregion

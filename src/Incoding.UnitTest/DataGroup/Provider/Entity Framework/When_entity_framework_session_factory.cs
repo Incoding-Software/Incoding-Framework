@@ -46,13 +46,6 @@
                                             .ShouldNotBeNull();
                                 };
 
-        It should_be_close = () =>
-                                 {
-                                     SetCurrentSession(null);
-                                     new EntityFrameworkSessionFactory(() => new IncDbContext("IncRealEFDb"))
-                                             .Dispose();
-                                 };
-
         It should_be_open_session_with_connection_string = () =>
                                                                {
                                                                    SetCurrentSession(null);

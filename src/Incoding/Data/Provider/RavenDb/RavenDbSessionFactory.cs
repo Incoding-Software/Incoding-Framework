@@ -4,7 +4,6 @@
 
     using System;
     using Raven.Client;
-    using Raven.Client.Document;
 
     #endregion
 
@@ -27,7 +26,7 @@
 
         public RavenDbSessionFactory(IDocumentStore documentStore)
         {
-            this.documentStore = new Lazy<IDocumentStore>(documentStore.Initialize);            
+            this.documentStore = new Lazy<IDocumentStore>(documentStore.Initialize);
         }
 
         #endregion
@@ -40,11 +39,6 @@
                                      ? this.documentStore.Value.OpenSession(connection)
                                      : this.documentStore.Value.OpenSession();
             return currentSession;
-        }
-
-        public void Dispose()
-        {
-            currentSession = null;
         }
 
         #endregion

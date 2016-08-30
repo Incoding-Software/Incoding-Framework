@@ -37,7 +37,7 @@ namespace Incoding.UnitTest.ExtensionsGroup
 
         It should_be_any_equal_with_ignore_case = () => theSameString.IsAnyEqualsIgnoreCase(theSameString.ToLower(), theSameString.ToUpper()).ShouldBeTrue();
 
-        It should_be_reference_equal = () => theSameString.IsReferenceEquals(theSameString);
+        It should_be_reference_equal = () => theSameString.IsReferenceEquals(theSameString); //-V3062
 
         It should_be_reference_equal_with_object_to_null = () => theSameString.IsReferenceEquals(null);
 

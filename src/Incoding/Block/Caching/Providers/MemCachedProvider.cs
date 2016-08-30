@@ -83,5 +83,11 @@ namespace Incoding.Block.Caching
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            if(this.memcached != null)
+                this.memcached.Dispose();
+        }
     }
 }

@@ -181,7 +181,7 @@
 
         #region Nested classes
 
-        public class UrlModel<TModel>
+        public struct UrlModel<TModel>
         {
             #region Constructors
 
@@ -222,7 +222,7 @@
             #endregion
         }
 
-        public class UrlQuery<TQuery> : IUrlQuery<TQuery>
+        public struct UrlQuery<TQuery> : IUrlQuery<TQuery>
         {
             #region Constructors
 

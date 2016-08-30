@@ -13,7 +13,7 @@ namespace Incoding.Block.IoC
     /// <summary>
     ///     Implement provider for StructureMap. http://docs.structuremap.net/
     /// </summary>
-    public class StructureMapIoCProvider : IIoCProvider
+    public struct StructureMapIoCProvider : IIoCProvider
     {
         #region Fields
 
