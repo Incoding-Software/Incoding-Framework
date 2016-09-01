@@ -42,7 +42,7 @@ namespace Incoding.MvcContrib
             return dispatcher.AsView(dispatcher.Query(query), view, model);
         }
 
-        [Obsolete("Please use AsView with Html.Dispatcher().AsView(data)", true), ExcludeFromCodeCoverage, UsedImplicitly]
+        [Obsolete("Please use AsView or AsViewFromQuery with Html.Dispatcher().AsView(data) / Html.Dispatcher().AsViewFromQuery(query)", true), ExcludeFromCodeCoverage, UsedImplicitly]
         public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData : class
         {
             Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");

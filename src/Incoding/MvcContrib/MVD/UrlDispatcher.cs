@@ -18,7 +18,7 @@
 
     #endregion
 
-    public struct UrlDispatcher : IUrlDispatcher
+    public class UrlDispatcher : IUrlDispatcher
     {
         internal static readonly ConcurrentDictionary<string, bool> duplicates = new ConcurrentDictionary<string, bool>();
 
@@ -181,7 +181,7 @@
 
         #region Nested classes
 
-        public struct UrlModel<TModel>
+        public class UrlModel<TModel>
         {
             #region Constructors
 
@@ -222,7 +222,7 @@
             #endregion
         }
 
-        public struct UrlQuery<TQuery> : IUrlQuery<TQuery>
+        public class UrlQuery<TQuery> : IUrlQuery<TQuery>
         {
             #region Constructors
 
