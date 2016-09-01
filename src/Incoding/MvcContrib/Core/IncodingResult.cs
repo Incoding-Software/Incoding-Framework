@@ -101,6 +101,7 @@ namespace Incoding.MvcContrib
                 this.success = success;
                 this.data = data;
                 this.redirectTo = redirectTo;
+                this.statusCode = statusCode;
             }
 
             #endregion

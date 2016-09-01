@@ -27,7 +27,7 @@ namespace Incoding.MvcContrib
         public static IDispatcher Dispatcher(this HtmlHelper htmlHelper)
         {
             HtmlHelper = htmlHelper;
-            return new DefaultDispatcher();
+            return IoCFactory.Instance.TryResolve<IDispatcher>();
         }
 
         // ReSharper disable once UnusedParameter.Global
@@ -35,6 +35,11 @@ namespace Incoding.MvcContrib
         {
             Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");
             return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
+        }
+
+        public static MvcHtmlString AsViewFromQuery<TResult>(this IDispatcher dispatcher, QueryBase<TResult> query, [PathReference] string view, object model = null) where TResult : class
+        {
+            return dispatcher.AsView(dispatcher.Query(query), view, model);
         }
 
         [Obsolete("Please use AsView with Html.Dispatcher().AsView(data)", true), ExcludeFromCodeCoverage, UsedImplicitly]
