@@ -4,6 +4,7 @@ namespace Incoding.MvcContrib
 
     using System;
     using System.Linq;
+    using System.Net;
     using System.Web.Mvc;
     using System.Web.WebPages;
     using Incoding.Extensions;
@@ -13,6 +14,12 @@ namespace Incoding.MvcContrib
 
     public class IncodingResult : ActionResult
     {
+        #region Properties
+
+        public object Data { get; set; }
+
+        #endregion
+
         public override string ToString()
         {
             return Data.ToJsonString();
@@ -23,17 +30,17 @@ namespace Incoding.MvcContrib
             var response = context.HttpContext.Response;
             var isMultiPart = context.HttpContext.Request.ContentType.Contains("multipart/form-data");
             var isIe = context.HttpContext.Request.Browser.Browser.IsAnyEqualsIgnoreCase("IE");
-            response.ContentType = isMultiPart && isIe ? "text/html" : "application/json";                 
+            response.ContentType = isMultiPart && isIe ? "text/html" : "application/json";
             response.Write(Data.ToJsonString());
         }
 
         #region Factory constructors
 
-        public static IncodingResult Error(object data = null)
+        public static IncodingResult Error(object data = null, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         {
             return new IncodingResult
                    {
-                           Data = new JsonData(false, data, string.Empty)
+                           Data = new JsonData(false, data, string.Empty, statusCode)
                    };
         }
 
@@ -51,7 +58,7 @@ namespace Incoding.MvcContrib
 
             return new IncodingResult
                    {
-                           Data = new JsonData(false, errorData, string.Empty)
+                           Data = new JsonData(false, errorData, string.Empty, HttpStatusCode.OK)
                    };
         }
 
@@ -60,7 +67,7 @@ namespace Incoding.MvcContrib
             Guard.NotNullOrWhiteSpace("url", url);
             return new IncodingResult
                    {
-                           Data = new JsonData(true, string.Empty, url)
+                           Data = new JsonData(true, string.Empty, url, HttpStatusCode.OK)
                    };
         }
 
@@ -68,7 +75,7 @@ namespace Incoding.MvcContrib
         {
             return new IncodingResult
                    {
-                           Data = new JsonData(true, data, string.Empty),
+                           Data = new JsonData(true, data, string.Empty, HttpStatusCode.OK),
                    };
         }
 
@@ -83,19 +90,13 @@ namespace Incoding.MvcContrib
 
         #endregion
 
-        #region Properties
-
-        public object Data { get; set; }
-
-        #endregion
-
         #region Nested classes
 
         public class JsonData
         {
             #region Constructors
 
-            public JsonData(bool success, object data, string redirectTo)
+            public JsonData(bool success, object data, string redirectTo, HttpStatusCode statusCode)
             {
                 this.success = success;
                 this.data = data;
@@ -111,6 +112,8 @@ namespace Incoding.MvcContrib
             public object data { get; set; }
 
             public string redirectTo { get; set; }
+
+            public HttpStatusCode statusCode { get; set; }
 
             #endregion
         }
