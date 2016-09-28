@@ -57,10 +57,5 @@
 
         #endregion
 
-        #region Disposable
-
-        public void Dispose() { }
-
-        #endregion
     }
 }

@@ -40,21 +40,21 @@
                                   IoCFactory.Instance.StubTryResolve(dispatcher.Object);
                               };
 
-        It should_be_compile = () =>
+        It should_be_render = () =>
                                {
                                    new TemplateHandlebarsFactory()
                                            .Render(htmlHelper, query.PathToView, data, query.Model)
                                            .ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
                                };
 
-        It should_be_compile_performance = () =>
+        It should_be_performance = () =>
                                            {
                                                Pleasure.Do(i => new TemplateHandlebarsFactory()
                                                                         .Render(htmlHelper, query.PathToView, data, query.Model)
                                                                         .ShouldNotBeEmpty(), 1000).ShouldBeLessThan(100);
                                            };
 
-        It should_be_compile_wihtout_view_model = () =>
+        It should_be_wihtout_view_model = () =>
                                                   {
                                                       query.Model = null;
                                                       var render = new TemplateHandlebarsFactory()
@@ -62,9 +62,18 @@
                                                       render.ShouldEqual(@"<option  value=""1"" title="""">1</option><option  value=""2"" title="""">2</option>");
                                                   };
 
-        It should_be_compile_with_null_data = () =>
+        It should_be_with_null_data = () =>
                                               {
                                                   query.Model = null;
+                                                  object data = null;
+                                                  var render = new TemplateHandlebarsFactory()
+                                                          .Render(htmlHelper, query.PathToView, data);
+                                                  render.ShouldEqual(@"");
+                                              };
+
+        It should_be_with_empty_data = () =>
+                                              {
+                                                  query.Model = new List<KeyValueVm>();
                                                   object data = null;
                                                   var render = new TemplateHandlebarsFactory()
                                                           .Render(htmlHelper, query.PathToView, data);

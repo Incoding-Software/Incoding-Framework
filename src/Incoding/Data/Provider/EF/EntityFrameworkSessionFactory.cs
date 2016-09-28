@@ -32,22 +32,13 @@
         #endregion
 
         #region IEntityFrameworkSessionFactory Members
-        
+
         public DbContext Open(string connectionString)
         {
             currentSession = this.createDb();
             if (!string.IsNullOrWhiteSpace(connectionString))
                 currentSession.Database.Connection.ConnectionString = connectionString;
             return currentSession;
-        }
-
-        #endregion
-
-        #region Disposable
-
-        public void Dispose()
-        {
-            currentSession = null;
         }
 
         #endregion

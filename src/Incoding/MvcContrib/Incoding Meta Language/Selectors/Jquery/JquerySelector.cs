@@ -7,7 +7,6 @@
     using System.Linq.Expressions;
     using Incoding.Extensions;
     using Incoding.Maybe;
-    using Raven.Abstractions.Extensions;
 
     #endregion
 
@@ -19,7 +18,14 @@
     {
         #region Properties
 
-        internal bool IsSimple { get { return !methods.Any(); } }
+        internal bool IsSimple
+        {
+            get
+            {
+                var isVariable = this.selector == Jquery.Self().ToSelector() || this.selector == Jquery.Document().ToSelector() || this.selector == Jquery.Target().ToSelector();
+                return !methods.Any() && !isVariable;
+            }
+        }
 
         #endregion
 
@@ -230,7 +236,7 @@
         /// </summary>
         public JquerySelectorExtend Class(string @class)
         {
-           return AndSelector("." + Escaping(@class.Trim()));            
+            return AndSelector("." + Escaping(@class.Trim()));
         }
 
         /// <summary>
@@ -253,17 +259,17 @@
 
         public JquerySelectorExtend Document()
         {
-           return AndSelector("window.document");           
+            return AndSelector("window.document");
         }
 
         public JquerySelectorExtend Immediate()
         {
-          return  AndSelector(">");            
+            return AndSelector(">");
         }
 
         public JquerySelectorExtend Self()
         {
-          return  AndSelector("this.self");            
+            return AndSelector("this.self");
         }
 
         [Obsolete("Will be remove on next version")]
@@ -284,7 +290,7 @@
         /// </summary>
         public JquerySelectorExtend NotEqualsAttribute(string attribute, string value)
         {
-          return  AndSelector(FixedAsAttribute(attribute, Escaping(value), "!"));            
+            return AndSelector(FixedAsAttribute(attribute, Escaping(value), "!"));
         }
 
         /// <summary>

@@ -83,7 +83,7 @@
                                                                                                                                   GapId = Selector.Incoding.AjaxPost("url?test=value1&test2=value2")
                                                                                                                           })
                                                                                     .AsView("~/FakeSerializeObject.cs");
-                                                       asView.ShouldEqual("/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&GapId=||ajax*{\"url\"%3A\"url%3Ftest%3Dvalue1%26test2%3Dvalue2\",\"type\"%3A\"POST\",\"async\"%3Afalse}||");
+                                                       asView.ShouldEqual("/Dispatcher/Render?incType=When_Url_Dispatcher_FakeModel&incIsModel=True&incView=~%2FFakeSerializeObject.cs&GapId=||ajax*{\"url\":\"url?test=value1&test2=value2\",\"type\":\"POST\",\"async\":false}||");                                                       
                                                    };
 
         It should_be_push = () =>

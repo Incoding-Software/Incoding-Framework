@@ -284,6 +284,32 @@
         ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
         ///     element
         /// </summary>
+        /// <param name="original"></param>
+        /// <param name="tag">
+        ///     Html Tag
+        /// </param>
+        public static JquerySelectorExtend Next(this JquerySelectorExtend original, HtmlTag tag)
+        {
+            return original.Next(s => s.Tag(tag));
+        }
+
+        /// <summary>
+        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+        ///     element
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="class">
+        ///     Bootstrap classes
+        /// </param>
+        public static JquerySelectorExtend Next(this JquerySelectorExtend original, B @class)
+        {
+            return original.Next(s => s.Class(@class));
+        }
+
+        /// <summary>
+        ///     Get the descendants of each element in the current set of matched elements, filtered by a action, jQuery object, or
+        ///     element
+        /// </summary>
         public static JquerySelectorExtend Next(this JquerySelectorExtend original)
         {
             return original.Next(null);
@@ -415,6 +441,19 @@
         {
             return original.Parent(selector => selector.Tag(tag));
         }
+
+        /// <summary>
+        ///     Get the parent of each element in the current set of tag, optionally filtered by a action.
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="class">
+        ///     Bootstrap classes
+        /// </param>
+        public static JquerySelectorExtend Parent(this JquerySelectorExtend original, B @class)
+        {
+            return original.Parent(selector => selector.Class(@class));
+        }
+
 
         /// <summary>
         ///     Get the parents of each element in the current set of tag, optionally filtered by a action.

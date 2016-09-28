@@ -48,5 +48,10 @@ namespace Incoding.Block.Caching
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            
+        }
     }
 }

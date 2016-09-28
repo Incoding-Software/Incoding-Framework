@@ -2,6 +2,7 @@ namespace Incoding.UnitTest.MvcContribGroup
 {
     #region << Using >>
 
+    using System.Net;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
@@ -34,7 +35,7 @@ namespace Incoding.UnitTest.MvcContribGroup
         Because of = () => IncodingResult.Success(fake)
                                          .ExecuteResult(controllerContext);
 
-        It should_be_execute_result = () => response.Verify(r => r.Write(new IncodingResult.JsonData(true, fake, string.Empty).ToJsonString()));
+        It should_be_execute_result = () => response.Verify(r => r.Write(new IncodingResult.JsonData(true, fake, string.Empty,HttpStatusCode.OK).ToJsonString()));
 
         #region Fake classes
 

@@ -16,16 +16,15 @@ namespace Incoding.UnitTest.MvcContribGroup
                                             .GetExecutable<ExecutableDirectAction>()
                                             .Should(action => action["result"].ShouldNotBeNull());
 
-        It should_be_direct_with_incoding_result = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                      .Do().Direct(IncodingResult.Success(Pleasure.Generator.TheSameString()))
-                                                      .GetExecutable<ExecutableDirectAction>()
-                                                      .Should(action => action["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\"}"));
-        
-        
         It should_be_direct_with_data = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                                       .Do()
                                                       .Direct(Pleasure.Generator.TheSameString())
                                                       .GetExecutable<ExecutableDirectAction>()
-                                                      .Should(action => action["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\"}"));
+                                                      .Should(action => action["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\",\"statusCode\":200}"));
+
+        It should_be_direct_with_incoding_result = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                                 .Do().Direct(IncodingResult.Success(Pleasure.Generator.TheSameString()))
+                                                                 .GetExecutable<ExecutableDirectAction>()
+                                                                 .Should(action => action["result"].ShouldEqual("{\"success\":true,\"data\":\"TheSameString\",\"redirectTo\":\"\",\"statusCode\":200}"));
     }
 }

@@ -34,19 +34,34 @@
                                    var pathToView = Pleasure.Generator.String();
                                    var data = Pleasure.Generator.Invent<KeyValueVm[]>();
                                    var model = Pleasure.Generator.String();
-                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, model)).Returns(Pleasure.Generator.TheSameString())));
-                                   data.AsView(pathToView, model).ToHtmlString().ShouldBeTheSameString();
+                                   IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNotNull<HtmlHelper>(), pathToView, data, model)).Returns(Pleasure.Generator.TheSameString())));
+                                   htmlHelper.Original.Dispatcher().AsView(data, pathToView, model).ToHtmlString().ShouldBeTheSameString();
                                };
+
+        It should_be_as_view_from_query = () =>
+                                          {
+                                              var pathToView = Pleasure.Generator.String();
+                                              var query = Pleasure.Generator.Invent<FakeQuery>();
+                                              var model = Pleasure.Generator.String();
+                                              var data = Pleasure.Generator.String();
+                                              IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<IDispatcher>(mock => { mock.StubQuery<FakeQuery, string>(query, data); }));
+                                              IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNotNull<HtmlHelper>(), pathToView, data, model)).Returns(Pleasure.Generator.TheSameString())));
+                                              htmlHelper.Original.Dispatcher().AsViewFromQuery(query, pathToView, model).ToHtmlString().ShouldBeTheSameString();
+                                          };
 
         It should_be_as_view_without_model = () =>
                                              {
                                                  var pathToView = Pleasure.Generator.String();
                                                  var data = Pleasure.Generator.Invent<KeyValueVm[]>();
-                                                 IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNull<HtmlHelper>(), pathToView, data, null)).Returns(Pleasure.Generator.TheSameString())));
-                                                 data.AsView(pathToView).ToHtmlString().ShouldBeTheSameString();
+                                                 IoCFactory.Instance.StubTryResolve(Pleasure.MockStrictAsObject<ITemplateFactory>(mock => mock.Setup(s => s.Render(Pleasure.MockIt.IsNotNull<HtmlHelper>(), pathToView, data, null)).Returns(Pleasure.Generator.TheSameString())));
+                                                 htmlHelper.Original.Dispatcher().AsView(data, pathToView).ToHtmlString().ShouldBeTheSameString();
                                              };
 
-        It should_be_dispatcher = () => { htmlHelper.Original.Dispatcher().ShouldBeAssignableTo<DefaultDispatcher>(); };
+        It should_be_dispatcher = () =>
+                                  {
+                                      IoCFactory.Instance.StubTryResolve(Pleasure.Generator.Invent<DefaultDispatcher>());
+                                      htmlHelper.Original.Dispatcher().ShouldNotBeNull();
+                                  };
 
         It should_be_for = () => htmlHelper
                                          .Original
@@ -94,6 +109,16 @@
                                                              meta.ShouldNotBeNull();
                                                              meta.OnBind.ShouldEqual("blur incoding");
                                                          });
+
+        public class FakeQuery : QueryBase<string>
+        {
+            public string Test { get; set; }
+
+            protected override string ExecuteResult()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         #region Fake classes
 

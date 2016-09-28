@@ -98,7 +98,7 @@
         It should_be_is_expression_not_and = () =>
                                                  {
                                                      Expression<Func<IEntity, object>> left = entity => entity.Id == "aws" && entity.Id == "swa";
-                                                     Expression<Func<IEntity, object>> right = entity => entity.Id == "aws" && entity.Id == "aws";
+                                                     Expression<Func<IEntity, object>> right = entity => entity.Id == "aws" && entity.Id == "aws"; //-V3001
                                                      left.IsExpressionEqual(right).ShouldBeFalse();
                                                  };
 
@@ -120,7 +120,7 @@
         It should_be_is_expression_not_or = () =>
                                                 {
                                                     Expression<Func<IEntity, object>> left = entity => entity.Id == "aws" || entity.Id == "swa";
-                                                    Expression<Func<IEntity, object>> right = entity => entity.Id == "aws" || entity.Id == "aws";
+                                                    Expression<Func<IEntity, object>> right = entity => entity.Id == "aws" || entity.Id == "aws"; //-V3001
                                                     left.IsExpressionEqual(right).ShouldBeFalse();
                                                 };
 

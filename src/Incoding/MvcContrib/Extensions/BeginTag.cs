@@ -11,7 +11,7 @@
 
     #endregion
 
-    public class BeginTag : IDisposable
+    public class  BeginTag : IDisposable
     {
         #region Fields
 

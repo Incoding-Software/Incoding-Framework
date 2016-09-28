@@ -3,6 +3,7 @@ namespace Incoding.MvcContrib
     #region << Using >>
 
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
     using System.Web.Mvc;
     using Incoding.Block.IoC;
@@ -26,11 +27,25 @@ namespace Incoding.MvcContrib
         public static IDispatcher Dispatcher(this HtmlHelper htmlHelper)
         {
             HtmlHelper = htmlHelper;
-            return new DefaultDispatcher();
+            return IoCFactory.Instance.TryResolve<IDispatcher>();
         }
 
-        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData :class
+        // ReSharper disable once UnusedParameter.Global
+        public static MvcHtmlString AsView<TData>(this IDispatcher dispatcher, TData data, [PathReference] string view, object model = null) where TData : class
         {
+            Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");
+            return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
+        }
+
+        public static MvcHtmlString AsViewFromQuery<TResult>(this IDispatcher dispatcher, QueryBase<TResult> query, [PathReference] string view, object model = null) where TResult : class
+        {
+            return dispatcher.AsView(dispatcher.Query(query), view, model);
+        }
+
+        [Obsolete("Please use AsView or AsViewFromQuery with Html.Dispatcher().AsView(data) / Html.Dispatcher().AsViewFromQuery(query)", true), ExcludeFromCodeCoverage, UsedImplicitly]
+        public static MvcHtmlString AsView<TData>(this TData data, [PathReference] string view, object model = null) where TData : class
+        {
+            Guard.NotNull("HtmlHelper", HtmlHelper, "HtmlHelper != null");
             return MvcHtmlString.Create(IoCFactory.Instance.TryResolve<ITemplateFactory>().Render(HtmlHelper, view, data, model));
         }
 
@@ -46,11 +61,13 @@ namespace Incoding.MvcContrib
 
         public static IncodingHtmlHelper Incoding<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
+            HtmlHelper = htmlHelper;
             return new IncodingHtmlHelper(htmlHelper);
         }
 
         public static SelectorHelper<TModel> Selector<TModel>(this HtmlHelper<TModel> htmlHelper)
         {
+            HtmlHelper = htmlHelper;
             return new SelectorHelper<TModel>();
         }
 
