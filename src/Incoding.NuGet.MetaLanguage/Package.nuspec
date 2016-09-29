@@ -34,7 +34,7 @@
         <dependency id="underscore.js" version="1.4.4" />
         <dependency id="Handlebars.js" version="3.0.0.0" />
         <dependency id="jQuery" version="1.9.1" />
-        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
         <dependency id="Handlebars.Net" version="1.7.1" />
       </group>
       <group targetFramework="net45">
@@ -45,10 +45,10 @@
         <dependency id="Microsoft.jQuery.Unobtrusive.Validation" />
         <dependency id="jQuery.Validation" />
         <dependency id="jQuery.Form" />
-        <dependency id="underscore.js" />
+        <dependency id="underscore.js" version="1.8.3" />
         <dependency id="Handlebars.js" version="3.0.0.0" />
         <dependency id="jQuery" version="1.9.1" />
-        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.1" />
+        <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
         <dependency id="Handlebars.Net" version="1.7.1" />
       </group>
     </dependencies>
