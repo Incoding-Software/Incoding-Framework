@@ -21,8 +21,8 @@
 
         #region Constructors
 
-        public EntityFrameworkUnitOfWork(DbContext session, IsolationLevel level, bool isFlush)
-                : base(session, level, isFlush)
+        public EntityFrameworkUnitOfWork(DbContext session, IsolationLevel level,bool isFlush)
+                : base(session)
         {
             transaction = session.Database.BeginTransaction(level);
             if (!isFlush)

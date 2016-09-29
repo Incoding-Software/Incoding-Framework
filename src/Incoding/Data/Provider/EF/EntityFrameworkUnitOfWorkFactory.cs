@@ -30,7 +30,7 @@
 
         public IUnitOfWork Create(IsolationLevel level, bool isFlush, string connection = null)
         {
-            return new EntityFrameworkUnitOfWork(sessionFactory.Open(connection), level, isFlush);
+            return new EntityFrameworkUnitOfWork(sessionFactory.Open(connection), level,isFlush);
         }
 
         #endregion

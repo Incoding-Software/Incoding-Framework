@@ -46,7 +46,7 @@
         {
             var isolationLevel = IsolationLevel.ReadCommitted;
             var dbContext = Pleasure.Mock<DbContext>();
-            var unitOfWork = new EntityFrameworkUnitOfWork(dbContext.Object, isolationLevel, true);
+            var unitOfWork = new EntityFrameworkUnitOfWork(dbContext.Object, isolationLevel,true);
 
             action(unitOfWork, dbContext);
         }

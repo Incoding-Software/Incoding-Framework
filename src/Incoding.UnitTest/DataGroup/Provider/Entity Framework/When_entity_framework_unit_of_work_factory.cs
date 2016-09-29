@@ -16,7 +16,7 @@
                               {
                                   var db = Pleasure.MockAsObject<DbContext>();
                                   var sessionFactory = Pleasure.MockStrictAsObject<IEntityFrameworkSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(db));
-                                  unitOfWork = new EntityFrameworkUnitOfWorkFactory(sessionFactory).Create(isolated, isFlush, connectionString);
+                                  unitOfWork = new EntityFrameworkUnitOfWorkFactory(sessionFactory).Create(isolated, true, connectionString);
                               };
 
         Because of = () => { };

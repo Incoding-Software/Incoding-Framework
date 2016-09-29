@@ -20,6 +20,7 @@
     using Incoding.Extensions;
     using Incoding.MvcContrib;
     using Incoding.MvcContrib.MVD;
+    using NHibernate.Context;
     using NHibernate.Tool.hbm2ddl;
     using StructureMap.Graph;
 
@@ -54,13 +55,14 @@
                                                                                                      var configure = Fluently
                                                                                                              .Configure()
                                                                                                              .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
-                                                                                                             .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
+                                                                                                             .Database(MsSqlConfiguration.MsSql2012.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
+                                                                                                             .CurrentSessionContext<CallSessionContext>()
                                                                                                              .Mappings(configuration => configuration.FluentMappings
                                                                                                                                                      .Add<DelayToScheduler.Map>()
                                                                                                                                                      .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly));
 
                                                                                                      registry.For<IManagerDataBase>().Singleton().Use(() => new NhibernateManagerDataBase(configure));
-                                                                                                     registry.For<INhibernateSessionFactory>().Singleton().Use(() => new NhibernateSessionFactory(configure));
+                                                                                                     registry.For<INhibernateSessionFactory>().Use(() => new NhibernateSessionFactory(configure));
                                                                                                      registry.For<IUnitOfWorkFactory>().Use<NhibernateUnitOfWorkFactory>();
 
                                                                                                      registry.Scan(r =>
@@ -75,40 +77,18 @@
 
             MVDExecute.SetInterception(() => new TraceMessageInterception());
             TemplateHandlebarsFactory.GetVersion =() => Guid.NewGuid().ToString();// disable cache template on server side as default
-            //var container = new Container();
-            //container.Register<IDispatcher, DefaultDispatcher>();
-            //container.Register<ITemplateFactory, TemplateDoTFactory>();
-
-            //var configure = Fluently
-            //        .Configure()
-            //        .ExposeConfiguration(cfg => new SchemaUpdate(cfg).Execute(false, true))
-            //        .Database(MsSqlConfiguration.MsSql2008.ConnectionString(ConfigurationManager.ConnectionStrings["Main"].ConnectionString))
-            //        .Mappings(configuration => configuration.FluentMappings
-            //                                                .Add<DelayToScheduler.Map>()
-            //                                                .AddFromAssembly(typeof(IncodingSiteBootstrapped).Assembly));
-
-            //container.RegisterSingleton<INhibernateSessionFactory>(() => new NhibernateSessionFactory(configure));
-            //container.Register<IUnitOfWorkFactory, NhibernateUnitOfWorkFactory>();
-
-            //foreach (var implementingClass in typeof(AddProductCommand).Assembly.GetExportedTypes()
-            //                                                           .Where(type => type.BaseType.With(r => r.Name.StartsWith("AbstractValidator"))))
-            //    container.Register(implementingClass.BaseType, implementingClass, Lifestyle.Singleton);
-
-            //// Add unregistered type resolution for objects missing an IValidator<T>
-            //// This should be placed after the registration of IValidator<>
-            //container.RegisterConditional(typeof(IValidator<>), typeof(ValidateNothingDecorator<>), Lifestyle.Singleton, context => !context.Handled);
-            //IoCFactory.Instance.Initialize(init => init.WithProvider(new SimpleInjectorIoCProvider(container)));
+   
 
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new IncValidatorFactory()));
             FluentValidationModelValidatorProvider.Configure();
 
             IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
 
-            IoCFactory.Instance.TryResolve<IDispatcher>().Push(new StartSchedulerCommand()
-                                                               {
-                                                                       FetchSize = 10,
-                                                                       Interval = 5.Seconds()
-                                                               });
+            //IoCFactory.Instance.TryResolve<IDispatcher>().Push(new StartSchedulerCommand()
+            //                                                   {
+            //                                                           FetchSize = 10,
+            //                                                           Interval = 5.Seconds()
+            //                                                   });
         }
 
         #endregion

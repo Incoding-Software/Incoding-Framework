@@ -204,6 +204,7 @@
     <Compile Include="Domain\GetProductQuery.cs" />
     <Compile Include="Domain\Product.cs" />
     <Compile Include="Domain\SampleOfCQRS.cs" />
+    <Compile Include="Domain\TestTransactionCommand.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -11,5 +11,7 @@
         void Flush();
 
         IRepository GetRepository();
+
+        void Commit();
     }
 }

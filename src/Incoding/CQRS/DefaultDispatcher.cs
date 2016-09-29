@@ -61,6 +61,16 @@ namespace Incoding.CQRS
             }
 
             #endregion
+
+            public void Commit()
+            {
+                this.Select(r => r.Value)
+                    .DoEach(r =>
+                            {
+                                if (r.IsValueCreated)
+                                    r.Value.Commit();
+                            });
+            }
         }
 
         #endregion
@@ -70,43 +80,33 @@ namespace Incoding.CQRS
         public void Push(CommandComposite composite)
         {
             bool isOuterCycle = !unitOfWorkCollection.Any();
-
-            foreach (var groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
+            var isFlush = composite.Parts.Any(s => s is CommandBase);
+            try
             {
-                bool isFlush = groupMessage.Any(r => r is CommandBase);
-                foreach (var part in groupMessage)
+                foreach (var groupMessage in composite.Parts.GroupBy(part => part.Setting, r => r))
                 {
-                    bool isThrow = false;
-
-                    try
+                    foreach (var part in groupMessage)
                     {
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         part.OnExecute(this, unitOfWork);
-                        if (unitOfWork.IsValueCreated)
+                        var isFlushInIteration = part is CommandBase;
+                        if (unitOfWork.IsValueCreated && isFlushInIteration)
                             unitOfWork.Value.Flush();
                     }
-                    catch
-                    {
-                        isThrow = true;
-                        throw;
-                    }
-                    finally
-                    {
-                        if (isThrow && isOuterCycle)
-                            unitOfWorkCollection.Dispose();
-                    }
                 }
+                if (isOuterCycle && isFlush)
+                    this.unitOfWorkCollection.Commit();
             }
-
-            if (isOuterCycle)
-                unitOfWorkCollection.Dispose();
+            finally
+            {
+                if (isOuterCycle)
+                    unitOfWorkCollection.Dispose();
+            }
         }
-
 
         public TResult Query<TResult>(QueryBase<TResult> message, MessageExecuteSetting executeSetting = null)
         {
-            
-            Push(new CommandComposite(message,executeSetting));
+            Push(new CommandComposite(message, executeSetting));
             return (TResult)message.Result;
         }
 

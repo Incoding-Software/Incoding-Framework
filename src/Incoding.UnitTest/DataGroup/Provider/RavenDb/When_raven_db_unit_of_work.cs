@@ -22,7 +22,7 @@
         static void Run(Action<RavenDbUnitOfWork, Mock<IDocumentSession>> action)
         {
             var session = Pleasure.Mock<IDocumentSession>();
-            var work = new RavenDbUnitOfWork(session.Object, IsolationLevel.ReadCommitted, true);
+            var work = new RavenDbUnitOfWork(session.Object, IsolationLevel.ReadCommitted);
             action(work, session);
         }
 

@@ -17,7 +17,7 @@
                          var document = Pleasure.MockAsObject<IDocumentSession>();
                          var sessionFactory = Pleasure.MockAsObject<IRavenDbSessionFactory>(mock => mock.Setup(r => r.Open(connectionString)).Returns(document));
                          unitOfWork = new RavenDbUnitOfWorkFactory(sessionFactory)
-                                 .Create(isolated, isFlush, connectionString);
+                                 .Create(isolated,  connectionString);
                      };
 
         Behaves_like<Behavior_unit_of_work_factory> verify;

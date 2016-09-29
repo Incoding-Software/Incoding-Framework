@@ -18,8 +18,8 @@
 
         #region Constructors
 
-        public RavenDbUnitOfWork(IDocumentSession session, IsolationLevel level, bool isFlush)
-                : base(session, level, isFlush)
+        public RavenDbUnitOfWork(IDocumentSession session,IsolationLevel level)
+                : base(session)
         {
             transaction = new TransactionScope(TransactionScopeOption.RequiresNew);
             repository = new RavenDbRepository(session);

@@ -13,8 +13,8 @@
     {
         #region Constructors
 
-        public MongoDbUnitOfWork(MongoDatabaseDisposable session, IsolationLevel level, bool isFlush)
-                : base(session, level, isFlush)
+        public MongoDbUnitOfWork(MongoDatabaseDisposable session, IsolationLevel level)
+                : base(session)
         {
             repository = new MongoDbRepository(session);
         }

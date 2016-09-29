@@ -18,7 +18,7 @@ namespace Incoding.Data
         #region Constructors
 
         public NhibernateUnitOfWork(ISession session, IsolationLevel isolationLevel, bool isFlush)
-                : base(session, isolationLevel, isFlush)
+                : base(session)
         {
             transaction = session.BeginTransaction(isolationLevel);
             bool isReadonly = !isFlush;

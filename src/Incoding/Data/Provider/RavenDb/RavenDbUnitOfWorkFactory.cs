@@ -27,9 +27,9 @@
 
         #region IUnitOfWorkFactory Members
 
-        public IUnitOfWork Create(IsolationLevel level, bool isFlush, string connection = null)
+        public IUnitOfWork Create(IsolationLevel level,  string connection = null)
         {
-            return new RavenDbUnitOfWork(sessionFactory.Open(connection), level, isFlush);
+            return new RavenDbUnitOfWork(sessionFactory.Open(connection), level);
         }
 
         #endregion

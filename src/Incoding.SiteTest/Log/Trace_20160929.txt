@@ -1,0 +1,2 @@
+Message by 9/29/2016 2:38:49 PM:Message StadAloneTransactionCommand execute at 0 milliseconds
+Message by 9/29/2016 2:39:27 PM:Message StadAloneTransactionCommand execute at 0 milliseconds
