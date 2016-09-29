@@ -155,6 +155,7 @@ namespace Incoding.MSpecContrib
             if (unitOfWork != null)
             {
                 unitOfWork.Flush();
+                unitOfWork.Commit();
                 unitOfWork.Dispose();
             }
         }
