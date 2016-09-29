@@ -69,13 +69,13 @@
 
         #endregion
 
-        It should_be_duplicate_property = () => Catch.Exception(() => new PersistenceSpecification<FakeEntity>(session)
+        It should_be_duplicate_property = () => Catch.Exception(() => new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(session)))
                 .CheckProperty(r => r.First, Pleasure.Generator.String())
                 .CheckProperty(r => r.First, Pleasure.Generator.String())
                 .VerifyMappingAndSchema())
                 .Should(exception => exception.Message.ShouldEqual("Duplicate fields:First"));
 
-        It should_be_can_not_ignore_and_check = () => Catch.Exception(() => new PersistenceSpecification<FakeEntity>(session)
+        It should_be_can_not_ignore_and_check = () => Catch.Exception(() => new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(session)))
                 .IgnoreBecauseCalculate(r => r.First)
                 .CheckProperty(r => r.First, Pleasure.Generator.String())
                 .VerifyMappingAndSchema())
@@ -84,7 +84,7 @@
         It should_be_with_entity = () => Catch.Exception(() =>
                                                          {
                                                              var fakeEntity = Pleasure.Generator.Invent<FakeEntity>();
-                                                             new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IRepository>(mock => mock.Setup(r => r.GetById<FakeEntity>(fakeEntity.Id)).Returns(fakeEntity)))
+                                                             new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(Pleasure.MockAsObject<IRepository>(mock1 => mock1.Setup(r => r.GetById<FakeEntity>(fakeEntity.Id)).Returns(fakeEntity)))))
                                                                      .VerifyMappingAndSchema(setting => setting.WithEntity(fakeEntity));
                                                          })
                 .ShouldBeNull();
@@ -93,7 +93,7 @@
                               {
                                   var repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.GetById<FakeEntity>(Pleasure.MockIt.IsAny<object>())).Returns(new FakeEntity()));
 
-                                  new PersistenceSpecification<FakeEntity>(repository.Object)
+                                  new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                           .IgnoreBecauseCalculate(r => r.First)
                                           .IgnoreBecauseCalculate(r => r.Last)
                                           .VerifyMappingAndSchema();
@@ -109,7 +109,7 @@
         It should_be_equal = () =>
                              {
                                  var repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.GetById<FakeEntity>(Pleasure.MockIt.IsAny<object>())).Returns(new FakeEntity()));
-                                 var ex = Catch.Exception(() => new PersistenceSpecification<FakeEntity>(repository.Object)
+                                 var ex = Catch.Exception(() => new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                          .VerifyMappingAndSchema());
                                  ex.Message.ShouldContain("First with First");
                                  ex.Message.ShouldContain("Last with Last");
@@ -118,7 +118,7 @@
         It should_be_null_get_by_id = () =>
                                       {
                                           var repository = Pleasure.Mock<IRepository>();
-                                          var ex = Catch.Exception(() => new PersistenceSpecification<FakeEntity>(repository.Object)
+                                          var ex = Catch.Exception(() => new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                                   .VerifyMappingAndSchema());
                                           ex.Message.ShouldEqual("Can't found entity FakeEntity by id ");
                                       };
@@ -127,7 +127,7 @@
                                          {
                                              var repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.GetById<FakeEntityWithOnlyGetProperty>(Pleasure.MockIt.IsAny<object>())).Returns(new FakeEntityWithOnlyGetProperty()));
 
-                                             new PersistenceSpecification<FakeEntityWithOnlyGetProperty>(repository.Object)
+                                             new PersistenceSpecification<FakeEntityWithOnlyGetProperty>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                                      .VerifyMappingAndSchema();
 
                                              Action<FakeEntityWithOnlyGetProperty> verify = entity => entity.First.ShouldBeTheSameString();
@@ -138,7 +138,7 @@
                                        {
                                            var repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.GetById<FakeEntity>(Pleasure.MockIt.IsAny<object>())).Returns(new FakeEntity()));
 
-                                           new PersistenceSpecification<FakeEntity>(repository.Object)
+                                           new PersistenceSpecification<FakeEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                                    .IgnoreBecauseCalculate(r => r.First)
                                                    .IgnoreBecauseCalculate(r => r.Last)
                                                    .VerifyMappingAndSchema();
@@ -156,7 +156,7 @@
                                              var db = new FakeChildEntity() { Middle = Pleasure.Generator.String() };
                                              var repository = Pleasure.Mock<IRepository>(mock => mock.Setup(r => r.GetById<FakeChildEntity>(Pleasure.MockIt.IsAny<object>())).Returns(db));
 
-                                             new PersistenceSpecification<FakeChildEntity>(repository.Object)
+                                             new PersistenceSpecification<FakeChildEntity>(Pleasure.MockAsObject<IUnitOfWork>(mock => mock.Setup(s => s.GetRepository()).Returns(repository.Object)))
                                                      .IgnoreBaseClass()
                                                      .CheckProperty(r => r.Middle, db.Middle)
                                                      .VerifyMappingAndSchema();

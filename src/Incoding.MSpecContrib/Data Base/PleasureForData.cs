@@ -50,7 +50,7 @@ namespace Incoding.MSpecContrib
         }
 
         
-        public static IRepository BuildMongoDbRepository(string url, bool reload = true)
+        public static IUnitOfWorkFactory BuildMongoDb(string url, bool reload = true)
         {
             var mongoUrl = new MongoUrl(url);
             var db = new MongoClient(mongoUrl).GetServer();
@@ -62,9 +62,8 @@ namespace Incoding.MSpecContrib
 
             if (!BsonClassMap.IsClassMapRegistered(typeof(IncEntityBase)))
                 BsonClassMap.RegisterClassMap<IncEntityBase>(map => map.UnmapProperty(r => r.Id));
-            var session = new MongoDatabaseDisposable(db.GetDatabase(mongoUrl.DatabaseName));
-
-            return new MongoDbRepository(session);
+            
+            return new MongoDbUnitOfWorkFactory(new MongoDbSessionFactory(url));
         }
 
         public static IUnitOfWorkFactory BuildNhibernateUnitOfWorkFactory(Func<FluentConfiguration> instanceBuilderConfigurationAction, bool reloadDb)
@@ -96,14 +95,10 @@ namespace Incoding.MSpecContrib
             ////ncrunch: no coverage end  
         }
 
-        public static IRepository BuildRavenDbRepository(DocumentStore document)
+        public static RavenDbUnitOfWorkFactory BuildRavenDb(DocumentStore document)
         {
-            var documentSession = document.Initialize().OpenSession();
-            document.Conventions.JsonContractResolver = new DefaultContractResolver(shareCache: true)
-                                                        {
-                                                                DefaultMembersSearchFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetField | BindingFlags.SetProperty, 
-                                                        };
-            return new RavenDbRepository(documentSession);
+            
+            return new RavenDbUnitOfWorkFactory(new RavenDbSessionFactory(document));
         }
 
         public static void StartEF(IncDbContext dbContext, bool reloadDb = true)

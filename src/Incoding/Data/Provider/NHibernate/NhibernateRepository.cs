@@ -59,7 +59,7 @@ namespace Incoding.Data
 
         public void Flush()
         {
-            session.Flush();
+            session.Flush();            
         }
 
         public void SaveOrUpdate<TEntity>(TEntity entity) where TEntity : class, IEntity, new()
@@ -118,6 +118,12 @@ namespace Incoding.Data
         public IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new()
         {
             return session.Query<TEntity>().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
+        }
+
+        
+        public void Clear()
+        {
+            this.session.Clear();
         }
 
         #endregion

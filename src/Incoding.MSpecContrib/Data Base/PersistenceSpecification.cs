@@ -20,16 +20,10 @@ namespace Incoding.MSpecContrib
     {
         #region Constructors
 
-        public PersistenceSpecification(IRepository repository = null)
+        public PersistenceSpecification(IUnitOfWork unitOfWork = null)
         {
-            if (repository != null)
-                this.repository = repository;
-            else
-            {
-                unitOfWork = PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
-                this.repository = unitOfWork.GetRepository();
-            }
-
+            this.unitOfWork = unitOfWork ?? PleasureForData.Factory.Value.Create(IsolationLevel.ReadUncommitted, true);
+            this.repository = this.unitOfWork.GetRepository();
             original = new TEntity();
             properties = new List<string>();
         }
@@ -138,9 +132,14 @@ namespace Incoding.MSpecContrib
 
             Repository.Save(original);
             Repository.Flush();
+            Repository.Clear();
+
+            unitOfWork.Flush();
+            unitOfWork.Commit();
 
             var id = original.TryGetValue("Id");
             var entityFromDb = Repository.GetById<TEntity>(id);
+
             if (entityFromDb == null)
                 throw new SpecificationException("Can't found entity {0} by id {1}".F(typeof(TEntity).Name, id));
 
@@ -152,12 +151,7 @@ namespace Incoding.MSpecContrib
                                                        dsl.SetMaxRecursionDeep(0); // set to 0 for a while to simplify checking properties
                                                    });
 
-            if (unitOfWork != null)
-            {
-                unitOfWork.Flush();
-                unitOfWork.Commit();
-                unitOfWork.Dispose();
-            }
+            unitOfWork.Dispose();
         }
 
         public PersistenceSpecification<TEntity> IgnoreBaseClass()

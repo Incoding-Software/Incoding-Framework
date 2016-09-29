@@ -29,7 +29,7 @@
 
         Because of = () => mockQuery.Execute();
 
-        It should_be_performance = () => { Pleasure.Do(i => mockQuery.Execute(), 1000).ShouldBeLessThan(20); };
+        It should_be_performance = () => { Pleasure.Do(i => mockQuery.Execute(), 1000).ShouldBeLessThan(25); };
 
         It should_be_result = () => mockQuery.ShouldBeIsResult(expected);
 

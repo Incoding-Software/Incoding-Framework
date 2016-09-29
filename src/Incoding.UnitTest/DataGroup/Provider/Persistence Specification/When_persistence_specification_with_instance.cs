@@ -22,18 +22,25 @@
                                                        .VerifyMappingAndSchema();
 
         It should_be_entity_framework = () =>
-                                            {
-                                                var dbContext = new IncDbContext("IncRealEFDb", typeof(DbEntity).Assembly);
-                                                dbContext.Configuration.ValidateOnSaveEnabled = false;
-                                                dbContext.Configuration.LazyLoadingEnabled = true;
+                                        {
+                                            var dbContext = new IncDbContext("IncRealEFDb", typeof(DbEntity).Assembly);
+                                            dbContext.Configuration.ValidateOnSaveEnabled = false;
+                                            dbContext.Configuration.LazyLoadingEnabled = true;
 
-                                                new PersistenceSpecification<DbEntity>(PleasureForData.BuildEFSessionFactory(dbContext).Create(IsolationLevel.ReadUncommitted, true).GetRepository())
-                                                        .CheckProperty(r => r.Value, Pleasure.Generator.String())
-                                                        .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
-                                                        .CheckProperty(r => r.Reference)
-                                                        .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
-                                                        .VerifyMappingAndSchema();
-                                            };
+                                            new PersistenceSpecification<DbEntity>(PleasureForData.BuildEFSessionFactory(dbContext).Create(IsolationLevel.ReadUncommitted, true))
+                                                    .CheckProperty(r => r.Value, Pleasure.Generator.String())
+                                                    .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
+                                                    .CheckProperty(r => r.Reference)
+                                                    .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
+                                                    .VerifyMappingAndSchema();
+                                        };
+
+        It should_be_mongo_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildMongoDb(ConfigurationManager.ConnectionStrings["IncRealMongoDb"].ConnectionString).Create(IsolationLevel.ReadCommitted, true))
+                                              .CheckProperty(r => r.Value, Pleasure.Generator.String())
+                                              .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
+                                              .CheckProperty(r => r.Reference)
+                                              .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
+                                              .VerifyMappingAndSchema();
 
         It should_be_nhibernate = () => new PersistenceSpecification<DbEntity>()
                                                 .CheckProperty(r => r.Value, Pleasure.Generator.String())
@@ -42,21 +49,15 @@
                                                 .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
                                                 .VerifyMappingAndSchema();
 
-        It should_be_nhibernate_without_mapping = () => new PersistenceSpecification<DbEntityWithoutMapping>()
-                                                                .VerifyMappingAndSchema();
+        It should_be_nhibernate_without_mapping = () => Catch.Exception(() => new PersistenceSpecification<DbEntityWithoutMapping>()
+                                                                                      .VerifyMappingAndSchema())
+                                                             .ShouldBeAssignableTo<InternalSpecificationException>();
 
-        It should_be_mongo_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildMongoDbRepository(ConfigurationManager.ConnectionStrings["IncRealMongoDb"].ConnectionString))
-                                              .CheckProperty(r => r.Value, Pleasure.Generator.String())
-                                              .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
-                                              .CheckProperty(r => r.Reference)
-                                              .CheckProperty(r => r.Items, Pleasure.ToList(Pleasure.Generator.Invent<DbEntityItem>()), (entity, itemEntity) => entity.AddItem(itemEntity))
-                                              .VerifyMappingAndSchema();
-
-        It should_be_raven_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildRavenDbRepository(new DocumentStore
-                                                                                                                        {
-                                                                                                                            Url = ConfigurationManager.ConnectionStrings["IncRealRavenDb"].ConnectionString,
-                                                                                                                                DefaultDatabase = "IncTest",
-                                                                                                                        }))
+        It should_be_raven_db = () => new PersistenceSpecification<DbEntity>(PleasureForData.BuildRavenDb(new DocumentStore
+                                                                                                          {
+                                                                                                                  Url = ConfigurationManager.ConnectionStrings["IncRealRavenDb"].ConnectionString,
+                                                                                                                  DefaultDatabase = "IncTest",
+                                                                                                          }).Create(IsolationLevel.ReadCommitted))
                                               .CheckProperty(r => r.Value, Pleasure.Generator.String())
                                               .CheckProperty(r => r.ValueNullable, Pleasure.Generator.PositiveNumber())
                                               .CheckProperty(r => r.Reference)

@@ -147,6 +147,11 @@
                     .Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteByIds<TEntity>(IEnumerable<object> ids) where TEntity : class, IEntity, new()
         {
             foreach (var id in ids)

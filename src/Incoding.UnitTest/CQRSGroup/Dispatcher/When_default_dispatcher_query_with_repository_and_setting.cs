@@ -44,7 +44,7 @@ namespace Incoding.UnitTest
 
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose(), Times.Once());
 
-        It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Once());
+        It should_be_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Never);
         
         It should_be_read_uncommitted = () => unitOfWorkFactory.Verify(r => r.Create(setting.IsolationLevel.GetValueOrDefault(), false, setting.Connection));
 

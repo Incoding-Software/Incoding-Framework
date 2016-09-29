@@ -105,6 +105,8 @@
             return session.Set<TEntity>().AsQueryable().Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
+        public void Clear() { }
+
         #endregion
     }
 }

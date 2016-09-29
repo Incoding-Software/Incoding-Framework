@@ -130,6 +130,11 @@ namespace Incoding.Data
         /// </returns>
         IncPaginatedResult<TEntity> Paginated<TEntity>(PaginatedSpecification paginatedSpecification, OrderSpecification<TEntity> orderSpecification = null, Specification<TEntity> whereSpecification = null, FetchSpecification<TEntity> fetchSpecification = null) where TEntity : class, IEntity, new();
 
+        /// <summary>
+        /// Completely clear the session. Evict all loaded instances and cancel all pending
+        /// </summary>
+        void Clear();
+
         #endregion
     }
 }

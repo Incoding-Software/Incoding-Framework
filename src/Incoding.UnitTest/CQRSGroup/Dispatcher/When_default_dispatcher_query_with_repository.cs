@@ -14,14 +14,6 @@ namespace Incoding.UnitTest
     [Subject(typeof(DefaultDispatcher))]
     public class When_default_dispatcher_query_with_repository : Context_default_dispatcher
     {
-        #region Establish value
-
-        static QueryWithRepository message;
-
-        static string result;
-
-        #endregion
-
         Establish establish = () =>
                               {
                                   message = Pleasure.Generator.Invent<QueryWithRepository>(dsl => dsl.GenerateTo(r => r.Setting));
@@ -31,15 +23,21 @@ namespace Incoding.UnitTest
                               };
 
         Because of = () => { result = dispatcher.Query(message); };
-        
 
         It should_be_disposable = () => unitOfWork.Verify(r => r.Dispose(), Times.Once());
 
-        It should_be_not_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Once());
-        
+        It should_be_not_flush = () => unitOfWork.Verify(r => r.Flush(), Times.Never);
+
         It should_be_read_uncommitted = () => unitOfWorkFactory.Verify(r => r.Create(message.Setting.IsolationLevel.GetValueOrDefault(), false, message.Setting.Connection));
 
         It should_be_result = () => result.ShouldBeTheSameString();
 
+        #region Establish value
+
+        static QueryWithRepository message;
+
+        static string result;
+
+        #endregion
     }
 }

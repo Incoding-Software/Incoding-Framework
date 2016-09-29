@@ -162,6 +162,11 @@
                     .Paginated(orderSpecification, whereSpecification, fetchSpecification, paginatedSpecification);
         }
 
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         MongoCollection<TEntity> GetCollection<TEntity>()
