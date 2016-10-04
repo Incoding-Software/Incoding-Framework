@@ -46,6 +46,16 @@ namespace Incoding.MvcContrib
             return new IncSelectList(s.Items);
         }
 
+        public static implicit operator IncSelectList(List<OptGroupVm> s)
+        {
+            return new IncSelectList(s.SelectMany(vm => vm.Items));
+        }
+
+        public static implicit operator IncSelectList(OptGroupVm[] s)
+        {
+            return new IncSelectList(s.SelectMany(vm => vm.Items));
+        }
+
         public static implicit operator IncSelectList(SelectList s)
         {
             return new IncSelectList(s);
