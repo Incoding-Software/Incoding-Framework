@@ -37,8 +37,12 @@ namespace Incoding.MvcContrib
             var spanAsLabel = new TagBuilder(HtmlTag.Span.ToStringLower());
             spanAsLabel.InnerHtml = this.Label.Name ?? value;
             var label = new TagBuilder(HtmlTag.Label.ToStringLower());
+            var icon = new TagBuilder(HtmlTag.I.ToStringLower());
+            if (!string.IsNullOrWhiteSpace(IconClass))
+                icon.AddCssClass(IconClass);
+
             label.InnerHtml = this.htmlHelper.RadioButtonFor(this.property, value, GetAttributes()).ToHtmlString()
-                              + new TagBuilder(HtmlTag.I.ToStringLower()).ToString(TagRenderMode.Normal)
+                              + icon.ToString(TagRenderMode.Normal)
                               + spanAsLabel.ToString(TagRenderMode.Normal);
             div.InnerHtml = label.ToString(TagRenderMode.Normal);
 
@@ -58,6 +62,8 @@ namespace Incoding.MvcContrib
         public object Value { get; set; }
 
         public IncLabelControl Label { get; protected set; }
+
+        public string IconClass { get; set; }
 
         public ModeOfRadio Mode { get; set; }
 
