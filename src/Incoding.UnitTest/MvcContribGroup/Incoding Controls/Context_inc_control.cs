@@ -24,6 +24,8 @@
 
             public FakeEnum EnumValue { get; set; }
 
+            public string[] StringArrays { get; set; }
+
             #endregion
         }
 

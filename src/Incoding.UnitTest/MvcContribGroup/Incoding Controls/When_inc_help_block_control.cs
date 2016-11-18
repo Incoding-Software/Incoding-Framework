@@ -21,11 +21,12 @@
                                   {
                                       control = new IncHelpBlockControl();
                                       control.Message = Pleasure.Generator.TheSameString();
+                                      control.AddClass(B.Col_xs_12);
                                   };
 
         Because of = () => { result = control.ToHtmlString(); };
 
         It should_be_render = () => result.ToString()
-                                          .ShouldEqual("<p class=\"help-block\">TheSameString</p>");
+                                          .ShouldEqual("<p class=\"help-block col-xs-12\">TheSameString</p>");
     }
 }

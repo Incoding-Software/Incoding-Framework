@@ -35,6 +35,17 @@
                                                 ((SelectList)list).Items.ShouldEqualWeak(vm.Items);
                                             };
 
+        It should_be_cast_to_opt_group_vm_as_list = () =>
+                                                    {
+                                                        var vm = new List<OptGroupVm>()
+                                                                 {
+                                                                         new OptGroupVm(Pleasure.Generator.String(), Pleasure.Generator.Invent<KeyValueVm[]>()),
+                                                                         new OptGroupVm(Pleasure.Generator.String(), Pleasure.Generator.Invent<KeyValueVm[]>()),
+                                                                 };
+                                                        IncSelectList list = vm;
+                                                        ((SelectList)list).Items.ShouldEqualWeak(vm.SelectMany(s => s.Items));
+                                                    };
+
         It should_be_cast_to_string = () =>
                                       {
                                           var url = Pleasure.Generator.Url();

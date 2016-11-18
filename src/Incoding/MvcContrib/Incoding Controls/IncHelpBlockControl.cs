@@ -21,6 +21,7 @@
                 return MvcHtmlString.Empty;
 
             var p = new TagBuilder(HtmlTag.P.ToStringLower());
+            p.MergeAttributes(this.attributes, true);
             p.AddCssClass("help-block");
             p.SetInnerText(Message);
             return new MvcHtmlString(p.ToString());
