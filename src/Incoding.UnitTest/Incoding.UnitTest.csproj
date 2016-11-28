@@ -374,6 +374,7 @@
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_checkbox_control_checked_by_attr.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_checkbox.cs" />
     <Compile Include="MvcContribGroup\Incoding Controls\When_inc_horizontal_control_v3_and_checkbox.cs" />
+    <Compile Include="MvcContribGroup\Incoding Controls\When_inc_radio_button_control_with_null_model.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Query\When_base_dispatcher_controller_query_to_file_with_null.cs" />
     <Compile Include="MvcContribGroup\MVD\Controller\Render\When_base_dispatcher_controller_render_enable_validate.cs" />
     <Compile Include="MvcContribGroup\MVD\Core\Currency.cs" />
@@ -794,7 +795,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_DetectChanges="True" BuildVersion_IncrementBeforeBuild="True" BuildVersion_BuildAction="Both" BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" BuildVersion_BuildAction="Both" BuildVersion_IncrementBeforeBuild="True" BuildVersion_DetectChanges="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
