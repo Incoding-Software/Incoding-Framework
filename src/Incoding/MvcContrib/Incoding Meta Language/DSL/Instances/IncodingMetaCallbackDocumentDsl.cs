@@ -40,6 +40,13 @@ namespace Incoding.MvcContrib
             return HistoryGo(1);
         }
 
+
+        public IExecutableSetting PushState(Selector rootOfRool, Selector url)
+        {
+            return this.plugIn.Registry(new ExecutableEvalMethod("PushState", new[] { rootOfRool,url }, "ExecutableHelper"));
+            
+        }
+
         public IExecutableSetting RedirectTo(Selector url)
         {
             return this.plugIn.Registry(new ExecutableEvalMethod("RedirectTo", new[] { url }, "ExecutableHelper"));

@@ -8,7 +8,7 @@
                               .Direct()
                               .OnSuccess(dsl =>
                                              {
-                                                 dsl.Utilities.Window.Alert("Test");
+                                                 dsl.Window.Alert("Test");
                                                  dsl.WithId(containerId).Core().Trigger.Incoding();
                                              })
                               .AsHtmlAttributes()))

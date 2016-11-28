@@ -15,19 +15,16 @@ namespace Incoding.UnitTest.MvcContribGroup
     public class When_incoding_meta_language_dsl_utilities
     {
         It should_be_break = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                           
                                            .OnSuccess(r => r.Self().Break.If(builder => builder.Eval("code")))
                                            .GetExecutable<ExecutableBreak>()
                                            .ShouldNotBeNull();
 
         It should_be_break_from_root = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                     
                                                      .OnSuccess(r => r.Break.If(builder => builder.Eval("code")))
                                                      .GetExecutable<ExecutableBreak>()
                                                      .ShouldNotBeNull();
 
         It should_be_call = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                          
                                           .OnSuccess(r => r.Self().Call("Func", "id"))
                                           .GetExecutable<ExecutableEvalMethod>()
                                           .ShouldEqualData(new Dictionary<string, object>
@@ -38,8 +35,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                            });
 
         It should_be_document_back = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                   
-                                                   .OnSuccess(r => r.Utilities.Document.Back())
+                                                   .OnSuccess(r => r.Document.Back())
                                                    .GetExecutable<ExecutableEvalMethod>()
                                                    .ShouldEqualData(new Dictionary<string, object>
                                                                     {
@@ -49,8 +45,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                     });
 
         It should_be_document_forward = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                      
-                                                      .OnSuccess(r => r.Utilities.Document.Forward())
+                                                      .OnSuccess(r => r.Document.Forward())
                                                       .GetExecutable<ExecutableEvalMethod>()
                                                       .ShouldEqualData(new Dictionary<string, object>
                                                                        {
@@ -60,8 +55,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                        });
 
         It should_be_document_history_go = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                         
-                                                         .OnSuccess(r => r.Utilities.Document.HistoryGo(5))
+                                                         .OnSuccess(r => r.Document.HistoryGo(5))
                                                          .GetExecutable<ExecutableEvalMethod>()
                                                          .ShouldEqualData(new Dictionary<string, object>
                                                                           {
@@ -81,16 +75,16 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                          });
 
         It should_be_document_set_title_jquery = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                        .OnSuccess(r => r.Document.Title("Id".ToId()))
-                                                        .GetExecutable<ExecutableEvalMethod>()
-                                                        .ShouldEqualData(new Dictionary<string, object>
-                                                                         {
-                                                                                 { "method", "setTitle" },
-                                                                                 { "args", new[] { "$('#Id')" } },
-                                                                                 { "context", "document" },
-                                                                         });
+                                                               .OnSuccess(r => r.Document.Title("Id".ToId()))
+                                                               .GetExecutable<ExecutableEvalMethod>()
+                                                               .ShouldEqualData(new Dictionary<string, object>
+                                                                                {
+                                                                                        { "method", "setTitle" },
+                                                                                        { "args", new[] { "$('#Id')" } },
+                                                                                        { "context", "document" },
+                                                                                });
 
-        It should_be_eval = () => new IncodingMetaLanguageDsl(JqueryBind.Click)                                          
+        It should_be_eval = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
                                           .OnSuccess(r => r.Self().Eval(Pleasure.Generator.TheSameString()))
                                           .GetExecutable<ExecutableEval>()
                                           .ShouldEqualData(new Dictionary<string, object>
@@ -98,9 +92,18 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                    { "code", Pleasure.Generator.TheSameString() }
                                                            });
 
+        It should_be_push_state = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
+                                                .OnSuccess(r => r.Document.PushState("root", Pleasure.Generator.TheSameString()))
+                                                .GetExecutable<ExecutableEvalMethod>()
+                                                .ShouldEqualData(new Dictionary<string, object>
+                                                                 {
+                                                                         { "method", "PushState" },
+                                                                         { "args", new[] { "root", "TheSameString" } },
+                                                                         { "context", "ExecutableHelper" },
+                                                                 });
+
         It should_be_redirect_to = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 
-                                                 .OnSuccess(r => r.Utilities.Document.RedirectTo(Pleasure.Generator.TheSameString()))
+                                                 .OnSuccess(r => r.Document.RedirectTo(Pleasure.Generator.TheSameString()))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {
@@ -110,8 +113,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                   });
 
         It should_be_redirect_to_self = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                      
-                                                      .OnSuccess(r => r.Utilities.Document.RedirectToSelf())
+                                                      .OnSuccess(r => r.Document.RedirectToSelf())
                                                       .GetExecutable<ExecutableEvalMethod>()
                                                       .ShouldEqualData(new Dictionary<string, object>
                                                                        {
@@ -121,8 +123,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                        });
 
         It should_be_reload = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                            
-                                            .OnSuccess(r => r.Utilities.Document.Reload())
+                                            .OnSuccess(r => r.Document.Reload())
                                             .GetExecutable<ExecutableEval>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                              {
@@ -130,8 +131,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                              });
 
         It should_be_reload_with_force = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                       
-                                                       .OnSuccess(r => r.Utilities.Document.Reload(true))
+                                                       .OnSuccess(r => r.Document.Reload(true))
                                                        .GetExecutable<ExecutableEval>()
                                                        .ShouldEqualData(new Dictionary<string, object>
                                                                         {
@@ -139,8 +139,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                         });
 
         It should_be_window_alert = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                  
-                                                  .OnSuccess(r => r.Utilities.Window.Alert("Title"))
+                                                  .OnSuccess(r => r.Window.Alert("Title"))
                                                   .GetExecutable<ExecutableEvalMethod>()
                                                   .ShouldEqualData(new Dictionary<string, object>
                                                                    {
@@ -150,8 +149,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                    });
 
         It should_be_window_alert_encode = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                         
-                                                         .OnSuccess(r => r.Utilities.Window.Alert("Title '"))
+                                                         .OnSuccess(r => r.Window.Alert("Title '"))
                                                          .GetExecutable<ExecutableEvalMethod>()
                                                          .ShouldEqualData(new Dictionary<string, object>
                                                                           {
@@ -161,8 +159,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                           });
 
         It should_be_window_alert_with_selector = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                                
-                                                                .OnSuccess(r => r.Utilities.Window.Alert(Selector.Jquery.Id("id")))
+                                                                .OnSuccess(r => r.Window.Alert(Selector.Jquery.Id("id")))
                                                                 .GetExecutable<ExecutableEvalMethod>()
                                                                 .ShouldEqualData(new Dictionary<string, object>
                                                                                  {
@@ -172,8 +169,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                                  });
 
         It should_be_window_clear_interval = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                           
-                                                           .OnSuccess(r => r.Utilities.Window.ClearInterval(Pleasure.Generator.TheSameString()))
+                                                           .OnSuccess(r => r.Window.ClearInterval(Pleasure.Generator.TheSameString()))
                                                            .GetExecutable<ExecutableEval>()
                                                            .ShouldEqualData(new Dictionary<string, object>
                                                                             {
@@ -181,8 +177,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                             });
 
         It should_be_window_console_log = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                        
-                                                        .OnSuccess(r => r.Utilities.Window.Console.Log(LogType.Fatal, Selector.Jquery.Class("test")))
+                                                        .OnSuccess(r => r.Window.Console.Log(LogType.Fatal, Selector.Jquery.Class("test")))
                                                         .GetExecutable<ExecutableEvalMethod>()
                                                         .ShouldEqualData(new Dictionary<string, object>
                                                                          {
@@ -192,8 +187,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                                                          });
 
         It should_be_window_open = () => new IncodingMetaLanguageDsl(JqueryBind.Click)
-                                                 
-                                                 .OnSuccess(r => r.Utilities.Window.Open(Pleasure.Generator.TheSameString(), "Title"))
+                                                 .OnSuccess(r => r.Window.Open(Pleasure.Generator.TheSameString(), "Title"))
                                                  .GetExecutable<ExecutableEvalMethod>()
                                                  .ShouldEqualData(new Dictionary<string, object>
                                                                   {

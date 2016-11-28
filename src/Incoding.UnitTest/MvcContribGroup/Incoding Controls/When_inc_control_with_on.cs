@@ -16,9 +16,9 @@
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
                                      .Hidden(control =>
                                                  {
-                                                     control.OnChange = dsl => dsl.Utilities.Window.Console.Log(LogType.Info, "OnChange");
-                                                     control.OnEvent = dsl => dsl.Utilities.Window.Console.Log(LogType.Info, "OnEvent");
-                                                     control.OnInit = dsl => dsl.Utilities.Window.Console.Log(LogType.Info, "OnInit");
+                                                     control.OnChange = dsl => dsl.Window.Console.Log(LogType.Info, "OnChange");
+                                                     control.OnEvent = dsl => dsl.Window.Console.Log(LogType.Info, "OnEvent");
+                                                     control.OnInit = dsl => dsl.Window.Console.Log(LogType.Info, "OnInit");
                                                  });
                          };
 

@@ -513,6 +513,10 @@ ExecutableHelper.IsNullOrEmpty = function (value) {
     return !hasOwnProperty;
 };
 
+ExecutableHelper.PushState = function (rootOfRool, url) {
+    history.pushState({}, 'Title', rootOfRool + "/" + url);
+};
+
 ExecutableHelper.RedirectTo = function(destentationUrl) {
     // decode url issue for special characters like % or /
     // fixed like here: https://github.com/medialize/URI.js/commit/fd8ee89a024698986ebef57393fcedbe22631616

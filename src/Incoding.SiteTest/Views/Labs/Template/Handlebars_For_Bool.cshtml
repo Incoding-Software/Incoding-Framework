@@ -7,7 +7,7 @@
                 @(Html.When(JqueryBind.Click)
                       .Do()
                       .Direct()
-                      .OnSuccess(dsl => dsl.Utilities.Window.Alert("Yes")
+                      .OnSuccess(dsl => dsl.Window.Alert("Yes")
                                            .If(builder => builder.Is(() => each.For(r => r.Is) == true.ToString())))
                       .AsHtmlAttributes()
                       .ToButton(each.For(r=>r.Value)))

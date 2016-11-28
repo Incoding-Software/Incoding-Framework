@@ -19,7 +19,7 @@
         Establish establish = () =>
                                   {
                                       control = new IncDropDownControl<FakeModel, string>(mockHtmlHelper.Original, model => model.Prop);
-                                      control.OnInit = dsl => dsl.Utilities.Window.Alert("Test");
+                                      control.OnInit = dsl => dsl.Window.Alert("Test");
                                   };
 
         Because of = () => { result = control.ToHtmlString(); };
