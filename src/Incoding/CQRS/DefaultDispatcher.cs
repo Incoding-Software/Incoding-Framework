@@ -95,6 +95,12 @@ namespace Incoding.CQRS
                 {
                     foreach (var part in groupMessage)
                     {
+                        if (isOuterCycle)
+                        {
+                            if (part.Setting.UID == Guid.Empty)
+                                part.Setting.UID = Guid.NewGuid();
+                            part.Setting.IsOuter = true;
+                        }
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         foreach (var interception in interceptions)
                             interception().OnBefore(part, null);

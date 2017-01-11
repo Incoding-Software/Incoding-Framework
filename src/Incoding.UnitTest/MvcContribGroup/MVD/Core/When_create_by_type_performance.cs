@@ -33,7 +33,7 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
         It should_be_time = () =>
                             {
                                 // plus 1000 for each Stub
-                                time.ShouldBeLessThan(300 + 1000 + 1000);
+                                time.ShouldBeLessThan(2300);
                             };
 
         public class UniqueNameClass { }
