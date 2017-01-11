@@ -31,7 +31,7 @@ namespace Incoding.CQRS
 
         #region Nested classes
 
-        public class UnitOfWorkCollection : Dictionary<MessageExecuteSetting, Lazy<IUnitOfWork>>, IDisposable
+        internal class UnitOfWorkCollection : Dictionary<MessageExecuteSetting, Lazy<IUnitOfWork>>, IDisposable
         {
             #region Disposable
 
