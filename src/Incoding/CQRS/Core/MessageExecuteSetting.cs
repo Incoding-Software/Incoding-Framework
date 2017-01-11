@@ -28,7 +28,7 @@
             DataBaseInstance = executeSetting.DataBaseInstance;
             Connection = executeSetting.Connection;
             IsolationLevel = executeSetting.IsolationLevel;
-            UID = UID;
+            UID = executeSetting.UID;
             //without IsOuter 
         }
 
