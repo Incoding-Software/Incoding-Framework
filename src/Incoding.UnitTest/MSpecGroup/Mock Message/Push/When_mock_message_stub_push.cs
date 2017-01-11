@@ -55,7 +55,7 @@ namespace Incoding.UnitTest.MSpecGroup
                                                  var mockMessage = MockCommand<Fake2MockMessage>
                                                          .When(input)
                                                          .StubPush(new Fake2MockMessage
-                                                                   {
+                                                                   { 
                                                                            Id = Pleasure.Generator.TheSameString()
                                                                    });
                                                  mockMessage.Execute();

@@ -10,11 +10,19 @@ namespace Incoding.CQRS
     using Incoding.Block.IoC;
     using Incoding.Data;
     using Incoding.Maybe;
+    using Incoding.MvcContrib.MVD;
 
     #endregion
 
     public class DefaultDispatcher : IDispatcher
     {
+        static readonly List<Func<IMessageInterception>> interceptions = new List<Func<IMessageInterception>>();
+
+        public static void SetInterception(Func<IMessageInterception> create)
+        {
+            interceptions.Add(create);
+        }
+
         #region Fields
 
         readonly UnitOfWorkCollection unitOfWorkCollection = new UnitOfWorkCollection();
@@ -88,7 +96,14 @@ namespace Incoding.CQRS
                     foreach (var part in groupMessage)
                     {
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
+                        foreach (var interception in interceptions)
+                            interception().OnBefore(part, null);
+
                         part.OnExecute(this, unitOfWork);
+
+                        foreach (var interception in interceptions)
+                            interception().OnAfter(part, null);
+
                         var isFlushInIteration = part is CommandBase;
                         if (unitOfWork.IsValueCreated && isFlushInIteration)
                             unitOfWork.Value.Flush();

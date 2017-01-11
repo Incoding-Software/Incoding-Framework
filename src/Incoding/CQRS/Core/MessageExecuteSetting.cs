@@ -4,7 +4,9 @@
 
     using System;
     using System.Data;
+    using System.Runtime.Serialization;
     using Incoding.Extensions;
+    using Incoding.Quality;
 
     #endregion
 
@@ -31,12 +33,15 @@
         #endregion
 
         #region Properties
-        
+
         public string DataBaseInstance { get; set; }
-        
+
         public string Connection { get; set; }
 
         public IsolationLevel? IsolationLevel { get; set; }
+
+        [IgnoreCompare("Design fixed"), IgnoreDataMember]
+        public Guid UID { get; set; }
 
         #endregion
 

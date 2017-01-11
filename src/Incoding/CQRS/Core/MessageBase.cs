@@ -31,11 +31,12 @@
         [IgnoreCompare("System"), JsonIgnore, IgnoreDataMember]
         protected MessageDispatcher Dispatcher { get { return messageDispatcher.Value; } }
 
-        
+
         #endregion
 
         #region IMessage<TResult> Members
 
+        
         [IgnoreCompare("Design fixed"), JsonIgnore, IgnoreDataMember]
         public virtual object Result { get; protected set; }
 
@@ -131,7 +132,7 @@
 
             public TQueryResult Query<TQueryResult>(QueryBase<TQueryResult> query, Action<MessageExecuteSetting> configuration = null)
             {
-                configuration.Do(action => action(outerSetting));
+                configuration.Do(action => action(outerSetting));                
                 return dispatcher.Query(query, outerSetting);
             }
 

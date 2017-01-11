@@ -18,21 +18,6 @@
     [Subject(typeof(NhibernateUnitOfWork)), Isolated]
     public class When_nhibernate_unit_of_work
     {
-        #region Establish value
-
-        static void Run(Action<NhibernateUnitOfWork, Mock<ISession>, Mock<ITransaction>> action, bool isFlush = true)
-        {
-            var transaction = Pleasure.Mock<ITransaction>();
-
-            var session = Pleasure.Mock<ISession>(mock => mock.Setup(r => r.BeginTransaction(IsolationLevel.RepeatableRead)).Returns(transaction.Object));
-
-            var nhibernateUnit = new NhibernateUnitOfWork(session.Object, IsolationLevel.RepeatableRead, isFlush);
-            session.Verify(r => r.BeginTransaction(IsolationLevel.RepeatableRead), Times.Once());
-            action(nhibernateUnit, session, transaction);
-        }
-
-        #endregion
-
         It should_be_dispose = () => Run((work, session, transaction) =>
                                          {
                                              work.Dispose();
@@ -54,22 +39,34 @@
                                                          work.TryGetValue("isWasFlush").ShouldEqual(true);
                                                      });
 
+        It should_be_flush = () => Run((work, session, transaction) =>
+                                       {
+                                           work.Flush();
+                                           session.Verify(r => r.Flush(), Times.Once());
+                                       });
+
         It should_be_flush_without_flush = () => Run((work, session, transaction) =>
                                                      {
                                                          work.Flush();
 
-                                                         session.Verify(r => r.Flush(), Times.Never());
-                                                         work.TryGetValue("isWasFlush").ShouldEqual(false);
+                                                         session.Verify(r => r.Flush(), Times.Never());                                                         
                                                      }, isFlush: false);
 
-        It should_be_flush = () => Run((work, session, transaction) =>
-                                       {
-                                           work.Flush();
-
-                                           session.Verify(r => r.Flush(), Times.Once());
-                                           work.TryGetValue("isWasFlush").ShouldEqual(true);
-                                       });
-
         It should_be_get_repository = () => Run((work, session, transaction) => work.GetRepository().ShouldBeAssignableTo<NhibernateRepository>());
+
+        #region Establish value
+
+        static void Run(Action<NhibernateUnitOfWork, Mock<ISession>, Mock<ITransaction>> action, bool isFlush = true)
+        {
+            var transaction = Pleasure.Mock<ITransaction>();
+
+            var session = Pleasure.Mock<ISession>(mock => mock.Setup(r => r.BeginTransaction(IsolationLevel.RepeatableRead)).Returns(transaction.Object));
+
+            var nhibernateUnit = new NhibernateUnitOfWork(session.Object, IsolationLevel.RepeatableRead, isFlush);
+            session.Verify(r => r.BeginTransaction(IsolationLevel.RepeatableRead), Times.Once());
+            action(nhibernateUnit, session, transaction);
+        }
+
+        #endregion
     }
 }

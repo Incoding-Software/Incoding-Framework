@@ -37,11 +37,14 @@
         protected override object ExecuteResult()
         {
             Guard.NotNull("Instance", "Instance query can't be null");
-
+            var uid = Guid.NewGuid();
             foreach (var interception in interceptions)
             {
                 foreach (var message in Instance.Parts)
+                {
+                    message.Setting.UID = uid;
                     interception().OnBefore(message, this.context);
+                }
             }
 
             new DefaultDispatcher().Push(Instance);
