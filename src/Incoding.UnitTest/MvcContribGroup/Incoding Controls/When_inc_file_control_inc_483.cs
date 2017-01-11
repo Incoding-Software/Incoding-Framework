@@ -23,7 +23,7 @@ namespace Incoding.UnitTest.MvcContribGroup
                                  .File(boxControl =>
                                        {
                                            boxControl.Value = Pleasure.Generator.TheSameString();
-                                           boxControl.OnChange = dsl => dsl.Utilities.Document.Reload();
+                                           boxControl.OnChange = dsl => dsl.Document.Reload();
                                        })
                                  .ToHtmlString();
                      };

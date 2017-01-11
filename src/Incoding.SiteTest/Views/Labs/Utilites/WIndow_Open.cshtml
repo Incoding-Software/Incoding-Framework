@@ -1,6 +1,6 @@
 ﻿        @(Html.When(JqueryBind.Click)
               .Do()
               .Direct()
-              .OnSuccess(dsl => dsl.Utilities.Window.Open("http://javascript.ru/window-open","Test"))
+              .OnSuccess(dsl => dsl.Window.Open("http://javascript.ru/window-open","Test"))
               .AsHtmlAttributes()
               .ToButton("Test"))

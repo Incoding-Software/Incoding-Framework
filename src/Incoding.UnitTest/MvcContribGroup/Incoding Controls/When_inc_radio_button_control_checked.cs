@@ -15,7 +15,10 @@
         Because of = () =>
                          {
                              result = new IncodingHtmlHelperFor<FakeModel, object>(mockHtmlHelper.Original, r => r.Prop)
-                                     .RadioButton(boxControl => { boxControl.Value = "Male"; });
+                                     .RadioButton(boxControl =>
+                                                  {
+                                                      boxControl.Value = "Male";
+                                                  });
                          };
 
         It should_be_render = () => result.ToString()

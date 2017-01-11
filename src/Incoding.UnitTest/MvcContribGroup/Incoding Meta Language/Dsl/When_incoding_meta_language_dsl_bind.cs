@@ -19,7 +19,7 @@
                                                                                                 .When(JqueryBind.Click)
                                                                                                 .Do()
                                                                                                 .Direct()
-                                                                                                .OnSuccess(r => r.Utilities.Window.Alert("message"))))
+                                                                                                .OnSuccess(r => r.Window.Alert("message"))))
                                             .GetExecutable<ExecutableBind>()
                                             .ShouldEqualData(new Dictionary<string, object>
                                                                  {

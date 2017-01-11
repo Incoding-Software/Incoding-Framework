@@ -7,10 +7,7 @@ namespace Incoding.MvcContrib
     #endregion
 
     public interface IIncodingMetaLanguageCallbackBodyDsl : IIncodingMetaLanguageWithDsl
-    {
-        [Obsolete("On next version Utitlites will be remove")]
-        IIncodingMetaLanguageUtilitiesDsl Utilities { get; }
-
+    {        
         IExecutableSetting Break { get; }
 
         IncodingMetaCallbackDocumentDsl Document { get; }

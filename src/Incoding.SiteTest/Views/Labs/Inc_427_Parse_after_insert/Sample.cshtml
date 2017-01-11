@@ -4,7 +4,7 @@
               .OnSuccess(dsl => dsl.Self().JQuery.Dom.Use(@<text>
                 @(Html.When(JqueryBind.Click)
                                                                      .Direct()
-                                                                     .OnSuccess(bodyDsl => bodyDsl.Utilities.Window.Alert("Test"))
+                                                                     .OnSuccess(bodyDsl => bodyDsl.Window.Alert("Test"))
                                                                      .AsHtmlAttributes()
                                                                      .ToButton("Test"))
             </text>).After())

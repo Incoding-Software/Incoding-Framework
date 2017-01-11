@@ -50,7 +50,8 @@ namespace Incoding.MvcContrib
                                             }
 
                                             var selected = ModelMetadata.FromLambdaExpression(property, htmlHelper.ViewData).Model;
-                                            dsl.Self().JQuery.Attr.Val(selected);
+                                            if (selected != null)
+                                                dsl.Self().JQuery.Attr.Val(selected);
 
                                             OnInit.Do(action => action(dsl));
                                             OnEvent.Do(action => action(dsl));
