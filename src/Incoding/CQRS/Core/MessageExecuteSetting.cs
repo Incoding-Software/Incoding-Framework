@@ -28,6 +28,8 @@
             DataBaseInstance = executeSetting.DataBaseInstance;
             Connection = executeSetting.Connection;
             IsolationLevel = executeSetting.IsolationLevel;
+            UID = UID;
+            //without IsOuter 
         }
 
         #endregion
@@ -39,7 +41,7 @@
         public string Connection { get; set; }
 
         public IsolationLevel? IsolationLevel { get; set; }
-        
+
         public bool IsOuter { get; set; }
 
         [IgnoreCompare("Design fixed"), IgnoreDataMember]

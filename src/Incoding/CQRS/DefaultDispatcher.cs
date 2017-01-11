@@ -97,8 +97,8 @@ namespace Incoding.CQRS
                     {
                         if (isOuterCycle)
                         {
-                            if (part.Setting.UID == Guid.Empty)
-                                part.Setting.UID = Guid.NewGuid();
+                            if(part.Setting.UID == Guid.Empty)
+                            part.Setting.UID = Guid.NewGuid();
                             part.Setting.IsOuter = true;
                         }
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);

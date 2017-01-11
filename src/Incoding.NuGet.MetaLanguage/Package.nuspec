@@ -3,12 +3,12 @@
 <package>
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>1.4.0.252</version>
+    <version>1.4.0.253</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
     <description>
-      Define behaviour of your Ajax dynamic pages with NO Javascript code.
+      Define behavior of your Ajax dynamic pages with NO Javascript code.
     </description>
     <releaseNotes>
       Template engine cache
