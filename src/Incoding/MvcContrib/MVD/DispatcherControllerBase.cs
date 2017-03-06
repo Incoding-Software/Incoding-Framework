@@ -37,10 +37,8 @@
             if (parameter.IsValidate && !ModelState.IsValid)
                 return IncodingResult.Error(ModelState);
 
-            return IncJson(dispatcher.Query(new MVDExecute(HttpContext)
-                                            {
-                                                    Instance = new CommandComposite((IMessage)query)
-                                            }));
+            var composite = new CommandComposite((IMessage)query);
+            return TryPush(commandComposite => dispatcher.Query(new MVDExecute(HttpContext) { Instance = composite }), composite, setting => setting.SuccessResult = () => IncodingResult.Success(composite.Parts[0].Result), isAjax: true);
         }
 
         public virtual ActionResult Render()
