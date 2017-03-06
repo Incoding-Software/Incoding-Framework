@@ -197,6 +197,7 @@
     <Compile Include="Controllers\JasmineController.cs" />
     <Compile Include="Controllers\LabsController.cs" />
     <Compile Include="Domain\AddAsSyncProductCommand.cs" />
+    <Compile Include="Domain\QueryThrowIncException.cs" />
     <Compile Include="Domain\SignUpAccountCommand.cs" />
     <Compile Include="Domain\SignUpAdvertiserCommand.cs" />
     <Compile Include="Domain\TestCommand.cs" />

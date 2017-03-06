@@ -94,18 +94,19 @@ namespace Incoding.MvcContrib
             return TryPush(commandComposite => dispatcher.Push(commandComposite), composite, action);
         }
 
-        protected ActionResult TryPush(Action<CommandComposite> push, CommandComposite composite, Action<IncTryPushSetting> action = null)
+        protected ActionResult TryPush(Action<CommandComposite> push, CommandComposite composite, Action<IncTryPushSetting> action = null, bool? isAjax = null)
         {
             var setting = new IncTryPushSetting();
             action.Do(r => r(setting));
 
             Func<ActionResult> defaultSuccess = () => View(composite.Parts[0]);
-            if (HttpContext.Request.IsAjaxRequest())
+            var isActualAjax = isAjax.GetValueOrDefault(HttpContext.Request.IsAjaxRequest());
+            if (isActualAjax)
                 defaultSuccess = () => IncodingResult.Success();
             var success = setting.SuccessResult ?? defaultSuccess;
 
             Func<IncWebException, ActionResult> defaultError = (ex) => View(composite.Parts[0]);
-            if (HttpContext.Request.IsAjaxRequest())
+            if (isActualAjax)
                 defaultError = (ex) => IncodingResult.Error(ModelState);
             var error = setting.ErrorResult ?? defaultError;
 
