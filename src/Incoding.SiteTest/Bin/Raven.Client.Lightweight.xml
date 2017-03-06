@@ -9,10 +9,16 @@
             Represents an replication operation to all destination servers of an item specified by ETag
             </summary>
             <param name="etag">ETag of an replicated item</param>
-            <param name="timeout">Optional timeout</param>
+            <param name="timeout">Optional timeout - by default, 30 seconds</param>
             <param name="database">The database from which to check, if null, the default database for the document store connection string</param>
             <param name="replicas">The min number of replicas that must have the value before we can return (or the number of destinations, if higher)</param>
             <returns>Task which will have the number of nodes that the caught up to the specified etag</returns>
+        </member>
+        <member name="T:Raven.Client.Indexes.RavenMethodAttribute">
+            <summary>
+            When applied to a custom extension method used in an index, RavenDB will translate
+            the invocation to a regular method call so it can be understood by the server.
+            </summary>
         </member>
         <member name="T:Raven.Client.Linq.RavenQueryInspector`1">
             <summary>
@@ -109,7 +115,7 @@
             The query session
             </summary>
         </member>
-        <member name="M:Raven.Client.Linq.RavenQueryInspector`1.#ctor(Raven.Client.Linq.IRavenQueryProvider,Raven.Client.RavenQueryStatistics,Raven.Client.RavenQueryHighlightings,System.String,System.Linq.Expressions.Expression,Raven.Client.Document.InMemoryDocumentSessionOperations,Raven.Client.Connection.IDatabaseCommands,Raven.Client.Connection.Async.IAsyncDatabaseCommands,System.Boolean)">
+        <member name="M:Raven.Client.Linq.RavenQueryInspector`1.Init(Raven.Client.Linq.IRavenQueryProvider,Raven.Client.RavenQueryStatistics,Raven.Client.RavenQueryHighlightings,System.String,System.Linq.Expressions.Expression,Raven.Client.Document.InMemoryDocumentSessionOperations,Raven.Client.Connection.IDatabaseCommands,Raven.Client.Connection.Async.IAsyncDatabaseCommands,System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:Raven.Client.Linq.RavenQueryInspector`1"/> class.
             </summary>
@@ -207,6 +213,11 @@
         <member name="M:Raven.Client.Indexes.AbstractCommonApiForIndexesAndTransformers.Recurse``2(``0,System.Func{``0,System.Collections.Generic.SortedSet{``1}})">
             <summary>
             Allows to use lambdas recursively
+            </summary>
+        </member>
+        <member name="M:Raven.Client.Indexes.AbstractCommonApiForIndexesAndTransformers.LoadAttachmentForIndexing(System.String)">
+            <summary>
+            Loads the specifed document during the indexing process
             </summary>
         </member>
         <member name="M:Raven.Client.Indexes.AbstractCommonApiForIndexesAndTransformers.LoadDocument``1(System.String)">
@@ -554,6 +565,13 @@
             <param name="key">The key.</param>
             <returns></returns>
         </member>
+        <member name="M:Raven.Client.Connection.Async.IAsyncDatabaseCommands.HeadAttachmentAsync(System.String)">
+            <summary>
+            Retrieves the attachment metadata with the specified key, not the actual attachmet
+            </summary>
+            <param name="key">The key.</param>
+            <returns></returns>
+        </member>
         <member name="M:Raven.Client.Connection.Async.IAsyncDatabaseCommands.DeleteAttachmentAsync(System.String,Raven.Abstractions.Data.Etag)">
             <summary>
             Deletes the attachment with the specified key asynchronously
@@ -657,7 +675,7 @@
             Get the indexing status
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.Async.IAsyncDatabaseCommands.StartsWithAsync(System.String,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Raven.Client.Connection.Async.IAsyncDatabaseCommands.StartsWithAsync(System.String,System.Int32,System.Int32,System.Boolean,System.String)">
             <summary>
             Get documents with id of a specific prefix
             </summary>
@@ -704,7 +722,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.#ctor(System.String,Raven.Client.Document.DocumentConvention,System.Net.ICredentials,Raven.Client.Connection.HttpJsonRequestFactory,System.Nullable{System.Guid},System.Func{System.String,Raven.Client.Connection.ReplicationInformer},System.String,Raven.Client.Listeners.IDocumentConflictListener[])">
+        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.#ctor(System.String,Raven.Client.Document.DocumentConvention,System.String,System.Net.ICredentials,Raven.Client.Connection.HttpJsonRequestFactory,System.Nullable{System.Guid},System.Func{System.String,Raven.Client.Connection.ReplicationInformer},System.String,Raven.Client.Listeners.IDocumentConflictListener[])">
             <summary>
             Initializes a new instance of the <see cref="T:Raven.Client.Connection.Async.AsyncServerClient"/> class.
             </summary>
@@ -770,16 +788,16 @@
             Puts the transformer definition for the specified name asynchronously
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectPutIndexAsync(System.String,Raven.Abstractions.Indexing.IndexDefinition,System.Boolean,System.String)">
+        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectPutIndexAsync(System.String,Raven.Abstractions.Indexing.IndexDefinition,System.Boolean,Raven.Client.Connection.OperationMetadata)">
             <summary>
             Puts the index definition for the specified name asynchronously with url
             </summary>
             <param name="name">The name.</param>
             <param name="indexDef">The index def.</param>
             <param name="overwrite">Should overwrite index</param>
-            <param name="operationUrl">The server's url</param>
+            <param name="operationMetadata">The server's url</param>
         </member>
-        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectPutTransformerAsync(System.String,Raven.Abstractions.Indexing.TransformerDefinition,System.String)">
+        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectPutTransformerAsync(System.String,Raven.Abstractions.Indexing.TransformerDefinition,Raven.Client.Connection.OperationMetadata)">
             <summary>
             Puts the transfromer definition for the specified name asynchronously with url
             </summary>
@@ -857,13 +875,13 @@
         </member>
         <member name="M:Raven.Client.Connection.Async.AsyncServerClient.ForDatabase(System.String)">
             <summary>
-            Create a new instance of <see cref="T:Raven.Client.Connection.IDatabaseCommands"/> that will interacts
+            Create a new instance of <see cref="T:Raven.Client.Connection.Async.IAsyncDatabaseCommands"/> that will interacts
             with the specified database
             </summary>
         </member>
         <member name="M:Raven.Client.Connection.Async.AsyncServerClient.ForSystemDatabase">
             <summary>
-            Create a new instance of <see cref="T:Raven.Client.Connection.IDatabaseCommands"/> that will interact
+            Create a new instance of <see cref="T:Raven.Client.Connection.Async.IAsyncDatabaseCommands"/> that will interact
             with the root database. Useful if the database has works against a tenant database.
             </summary>
         </member>
@@ -995,7 +1013,7 @@
             Force the database commands to read directly from the master, unless there has been a failover.
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectHeadAsync(System.String,System.String)">
+        <member name="M:Raven.Client.Connection.Async.AsyncServerClient.DirectHeadAsync(Raven.Client.Connection.OperationMetadata,System.String)">
             <summary>
             Do a direct HEAD request against the server for the specified document
             </summary>
@@ -1179,6 +1197,11 @@
              The aggressive cache duration
             </summary>
         </member>
+        <member name="P:Raven.Client.Connection.HttpJsonRequestFactory.RequestTimeout">
+            <summary>
+             Session timeout - Thread Local
+            </summary>
+        </member>
         <member name="P:Raven.Client.Connection.HttpJsonRequestFactory.DisableHttpCaching">
             <summary>
             Disable the HTTP caching
@@ -1198,7 +1221,7 @@
              Expose the set of operations by the RavenDB server
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.IDatabaseCommands.StartsWith(System.String,System.String,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Raven.Client.Connection.IDatabaseCommands.StartsWith(System.String,System.String,System.Int32,System.Int32,System.Boolean,System.String)">
             <summary>
             Retrieves documents for the specified key prefix
             </summary>
@@ -1381,7 +1404,7 @@
             of the number of items that might be returned.
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.IDatabaseCommands.StreamDocs(Raven.Abstractions.Data.Etag,System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.Connection.IDatabaseCommands.StreamDocs(Raven.Abstractions.Data.Etag,System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Streams the documents by etag OR starts with the prefix and match the matches
             Will return *all* results, regardless of the number of itmes that might be returned.
@@ -1653,11 +1676,15 @@
             </summary>
             <param name="name">The name.</param>
         </member>
-        <member name="M:Raven.Client.Connection.IDatabaseCommands.PrepareTransaction(System.String)">
+        <member name="M:Raven.Client.Connection.IDatabaseCommands.PrepareTransaction(System.String,System.Nullable{System.Guid},System.Byte[])">
             <summary>
             Prepares the transaction on the server.
             </summary>
-            <param name="txId">The tx id.</param>
+        </member>
+        <member name="M:Raven.Client.Connection.IDatabaseCommands.GetBuildNumber">
+            <summary>
+            Gets the build number
+            </summary>
         </member>
         <member name="P:Raven.Client.Connection.IDatabaseCommands.OperationsHeaders">
             <summary>
@@ -2013,7 +2040,7 @@
             Access the RavenDB operations using HTTP
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.#ctor(System.String,Raven.Client.Document.DocumentConvention,System.Net.ICredentials,System.Func{System.String,Raven.Client.Connection.ReplicationInformer},System.String,Raven.Client.Connection.HttpJsonRequestFactory,System.Nullable{System.Guid},Raven.Client.Listeners.IDocumentConflictListener[])">
+        <member name="M:Raven.Client.Connection.ServerClient.#ctor(System.String,Raven.Client.Document.DocumentConvention,System.String,System.Net.ICredentials,System.Func{System.String,Raven.Client.Connection.ReplicationInformer},System.String,Raven.Client.Connection.HttpJsonRequestFactory,System.Nullable{System.Guid},Raven.Client.Listeners.IDocumentConflictListener[])">
             <summary>
             Initializes a new instance of the <see cref="T:Raven.Client.Connection.ServerClient"/> class.
             </summary>
@@ -2025,7 +2052,7 @@
             <param name="key">The key.</param>
             <returns></returns>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.StartsWith(System.String,System.String,System.Int32,System.Int32,System.Boolean)">
+        <member name="M:Raven.Client.Connection.ServerClient.StartsWith(System.String,System.String,System.Int32,System.Int32,System.Boolean,System.String)">
             <summary>
             Gets documents for the specified key prefix
             </summary>
@@ -2046,11 +2073,11 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.DirectGet(System.String,System.String,System.String)">
+        <member name="M:Raven.Client.Connection.ServerClient.DirectGet(Raven.Client.Connection.OperationMetadata,System.String,System.String)">
             <summary>
             Perform a direct get for a document with the specified key on the specified server URL.
             </summary>
-            <param name="serverUrl">The server URL.</param>
+            <param name="operationMetadata">The metadata that contains URL and credentials to perform operation</param>
             <param name="key">The key.</param>
             <returns></returns>
         </member>
@@ -2188,7 +2215,7 @@
             of the number of items that might be returned.
             </summary>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.StreamDocs(Raven.Abstractions.Data.Etag,System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.Connection.ServerClient.StreamDocs(Raven.Abstractions.Data.Etag,System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Streams the documents by etag OR starts with the prefix and match the matches
             Will return *all* results, regardless of the number of itmes that might be returned.
@@ -2211,12 +2238,12 @@
             <param name="metadataOnly">Load just the document metadata</param>
             <returns></returns>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.DirectGet(System.String[],System.String,System.String[],System.String,System.Collections.Generic.Dictionary{System.String,Raven.Json.Linq.RavenJToken},System.Boolean)">
+        <member name="M:Raven.Client.Connection.ServerClient.DirectGet(System.String[],Raven.Client.Connection.OperationMetadata,System.String[],System.String,System.Collections.Generic.Dictionary{System.String,Raven.Json.Linq.RavenJToken},System.Boolean)">
             <summary>
             Perform a direct get for loading multiple ids in one request
             </summary>
             <param name="ids">The ids.</param>
-            <param name="operationUrl">The operation URL.</param>
+            <param name="operationMetadata">The operation URL.</param>
             <param name="includes">The includes.</param>
             <param name="transformer"></param>
             <param name="metadataOnly"></param>
@@ -2241,11 +2268,13 @@
             </summary>
             <param name="txId">The tx id.</param>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.PrepareTransaction(System.String)">
+        <member name="M:Raven.Client.Connection.ServerClient.PrepareTransaction(System.String,System.Nullable{System.Guid},System.Byte[])">
             <summary>
             Prepares the transaction on the server.
             </summary>
             <param name="txId">The tx id.</param>
+            <param name="resourceManagerId"></param>
+            <param name="recoveryInformation"></param>
         </member>
         <member name="M:Raven.Client.Connection.ServerClient.With(System.Net.ICredentials)">
             <summary>
@@ -2364,7 +2393,7 @@
             <param name="key">The key.</param>
             <returns></returns>
         </member>
-        <member name="M:Raven.Client.Connection.ServerClient.DirectHead(System.String,System.String)">
+        <member name="M:Raven.Client.Connection.ServerClient.DirectHead(Raven.Client.Connection.OperationMetadata,System.String)">
             <summary>
             Do a direct HEAD request against the server for the specified document
             </summary>
@@ -2843,6 +2872,13 @@
             </summary>
             <param name="preTag">Prefix tag.</param>
             <param name="postTag">Postfix tag.</param>
+        </member>
+        <member name="M:Raven.Client.IDocumentQueryCustomization.SetAllowMultipleIndexEntriesForSameDocumentToResultTransformer(System.Boolean)">
+            <summary>
+            If set to true, this property will send multiple index entries from the same document (assuming the index project them)
+            to the result transformer function. Otherwise, those entries will be consolidate an the transformer will be 
+            called just once for each document in the result set
+            </summary>
         </member>
         <member name="M:Raven.Client.IDocumentQueryCustomization.SetHighlighterTags(System.String[],System.String[])">
             <summary>
@@ -4488,6 +4524,13 @@
             Disables caching for query results.
             </summary>
         </member>
+        <member name="M:Raven.Client.IDocumentQueryBase`2.SetAllowMultipleIndexEntriesForSameDocumentToResultTransformer(System.Boolean)">
+            <summary>
+            If set to true, this property will send multiple index entries from the same document (assuming the index project them)
+            to the result transformer function. Otherwise, those entries will be consolidate an the transformer will be 
+            called just once for each document in the result set
+            </summary>
+        </member>
         <member name="M:Raven.Client.IDocumentQueryBase`2.SetResultTransformer(System.String)">
             <summary>
             Sets a transformer to use after executing a query
@@ -4547,6 +4590,12 @@
             <summary>
             Get the facets as per the specified facets with the given start and pageSize
             </summary>
+        </member>
+        <member name="M:Raven.Client.IAsyncDocumentQuery`1.SetQueryInputs(System.Collections.Generic.Dictionary{System.String,Raven.Json.Linq.RavenJToken})">
+            <summary>
+            Sets user defined inputs to the query
+            </summary>
+            <param name="queryInputs"></param>
         </member>
         <member name="P:Raven.Client.IAsyncDocumentQuery`1.QueryResultAsync">
             <summary>
@@ -5039,7 +5088,7 @@
             Provide statistics about the query, such as total count of matching records
             </summary>
         </member>
-        <member name="M:Raven.Client.Document.AsyncDocumentQuery`1.SetResultTransformer(System.String)">
+        <member name="M:Raven.Client.Document.AsyncDocumentQuery`1.Raven#Client#IDocumentQueryBase{T@Raven#Client#IAsyncDocumentQuery{T}}#SetResultTransformer(System.String)">
             <summary>
             Sets a transformer to use after executing a query
             </summary>
@@ -5407,6 +5456,15 @@
             This is mainly useful for internal use inside RavenDB, when we are executing
             queries that has been marked with WaitForNonStaleResults, we temporarily disable
             aggressive caching.
+            </remarks>
+        </member>
+        <member name="M:Raven.Client.IDocumentStore.SetRequestsTimeoutFor(System.TimeSpan)">
+            <summary>
+            Setup the WebRequest timeout for the session
+            </summary>
+            <param name="timeout">Specify the timeout duration</param>
+            <remarks>
+            Sets the timeout for the JsonRequest.  Scoped to the Current Thread.
             </remarks>
         </member>
         <member name="M:Raven.Client.IDocumentStore.Initialize">
@@ -5869,6 +5927,12 @@
             </summary>
             <param name="commands">The commands to be executed</param>
         </member>
+        <member name="M:Raven.Client.Document.InMemoryDocumentSessionOperations.ExplicitlyVersion(System.Object)">
+            <summary>
+            Version this entity when it is saved.  Use when Versioning bundle configured to ExcludeUnlessExplicit.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
         <member name="M:Raven.Client.Document.InMemoryDocumentSessionOperations.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -6116,6 +6180,12 @@
             </summary>
             <param name="commands">The commands to be executed</param>
         </member>
+        <member name="M:Raven.Client.IAdvancedDocumentSessionOperations.ExplicitlyVersion(System.Object)">
+            <summary>
+            Version this entity when it is saved.  Use when Versioning bundle configured to ExcludeUnlessExplicit.
+            </summary>
+            <param name="entity">The entity.</param>
+        </member>
         <member name="P:Raven.Client.IAdvancedDocumentSessionOperations.DocumentStore">
             <summary>
             The document store associated with this session
@@ -6175,7 +6245,7 @@
             Gets a value indicating whether any of the entities tracked by the session has changes.
             </summary>
         </member>
-        <member name="M:Raven.Client.IAsyncAdvancedSessionOperations.LoadStartingWithAsync``1(System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.IAsyncAdvancedSessionOperations.LoadStartingWithAsync``1(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Load documents with the specified key prefix
             </summary>
@@ -6277,6 +6347,12 @@
             Create a new query for <typeparam name="T"/>
             </summary>
         </member>
+        <member name="M:Raven.Client.Linq.IDocumentQueryGenerator.CreateRavenQueryInspector``1">
+            <summary>
+            Generates a query inspector
+            </summary>
+            <returns>RavenQueryInspector object</returns>
+        </member>
         <member name="P:Raven.Client.Linq.IDocumentQueryGenerator.Conventions">
             <summary>
             Gets the conventions associated with this query
@@ -6287,7 +6363,7 @@
             Initializes a new instance of the <see cref="T:Raven.Client.Document.Async.AsyncDocumentSession"/> class.
             </summary>
         </member>
-        <member name="M:Raven.Client.Document.Async.AsyncDocumentSession.LoadStartingWithAsync``1(System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.Document.Async.AsyncDocumentSession.LoadStartingWithAsync``1(System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Load documents with the specified key prefix
             </summary>
@@ -7007,7 +7083,7 @@
             Or whatever your conventions specify.
             </remarks>
         </member>
-        <member name="M:Raven.Client.Document.Batches.ILazySessionOperations.LoadStartingWith``1(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.Document.Batches.ILazySessionOperations.LoadStartingWith``1(System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Load documents with the specified key prefix
             </summary>
@@ -7376,7 +7452,7 @@
             needed to receive the notification and forcing to check for cached data.
             </summary>
         </member>
-        <member name="P:Raven.Client.Document.DocumentConvention.ShouldSaveChangesForceAggresiveCacheCheck">
+        <member name="P:Raven.Client.Document.DocumentConvention.ShouldSaveChangesForceAggressiveCacheCheck">
             <summary>
             Whatever or not RavenDB should in the aggressive cache mode should force the aggresive cache
             to check with the server after we called SaveChanges() on a non empty data set.
@@ -7454,16 +7530,26 @@
             Note that this option impact only queries, since we have Strong Consistency model for the documents
             </summary>
         </member>
-        <member name="F:Raven.Client.Document.ConsistencyOptions.MonotonicRead">
+        <member name="F:Raven.Client.Document.ConsistencyOptions.None">
             <summary>
             Ensures that after querying an index at time T, you will never see the results
             of the index at a time prior to T.
             This is ensured by the server, and require no action from the client
             </summary>
         </member>
-        <member name="F:Raven.Client.Document.ConsistencyOptions.QueryYourWrites">
+        <member name="F:Raven.Client.Document.ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite">
             <summary>
              After updating a documents, will only accept queries which already indexed the updated value.
+            </summary>
+        </member>
+        <member name="F:Raven.Client.Document.ConsistencyOptions.QueryYourWrites">
+            <summary>
+            Use AlwaysWaitForNonStaleResultsAsOfLastWrite, instead
+            </summary>
+        </member>
+        <member name="F:Raven.Client.Document.ConsistencyOptions.MonotonicRead">
+            <summary>
+            Use None, instead
             </summary>
         </member>
         <member name="T:Raven.Client.Document.DocumentQuery`1">
@@ -8235,7 +8321,7 @@
             </summary>
             <param name="txId">The tx id.</param>
         </member>
-        <member name="M:Raven.Client.ITransactionalDocumentSession.PrepareTransaction(System.String)">
+        <member name="M:Raven.Client.ITransactionalDocumentSession.PrepareTransaction(System.String,System.Nullable{System.Guid},System.Byte[])">
             <summary>
             Prepares the transaction on the server.
             </summary>
@@ -8262,7 +8348,7 @@
             </summary>
             <param name="entity">The entity.</param>
         </member>
-        <member name="M:Raven.Client.ISyncAdvancedSessionOperation.LoadStartingWith``1(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Raven.Client.ISyncAdvancedSessionOperation.LoadStartingWith``1(System.String,System.String,System.Int32,System.Int32,System.String)">
             <summary>
             Load documents with the specified key prefix
             </summary>
@@ -8714,6 +8800,15 @@
             Aggressive caching means that we will not check the server to see whatever the response
             we provide is current or not, but will serve the information directly from the local cache
             without touching the server.
+            </remarks>
+        </member>
+        <member name="M:Raven.Client.Document.DocumentStore.SetRequestsTimeoutFor(System.TimeSpan)">
+            <summary>
+            Setup the WebRequest timeout for the session
+            </summary>
+            <param name="timeout">Specify the timeout duration</param>
+            <remarks>
+            Sets the timeout for the JsonRequest.  Scoped to the Current Thread.
             </remarks>
         </member>
         <member name="M:Raven.Client.Document.DocumentStore.OpenAsyncSession">
@@ -9667,6 +9762,11 @@
             Register a field to be sorted
             </summary>
         </member>
+        <member name="M:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.Sort(System.String,Raven.Abstractions.Indexing.SortOptions)">
+            <summary>
+            Register a field to be sorted
+            </summary>
+        </member>
         <member name="M:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.Suggestion(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},Raven.Abstractions.Indexing.SuggestionOptions)">
             <summary>
             Register a field to be sorted
@@ -9693,6 +9793,11 @@
             </summary>
         </member>
         <member name="P:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.IndexSortOptions">
+            <summary>
+            Index sort options
+            </summary>
+        </member>
+        <member name="P:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.IndexSortOptionsStrings">
             <summary>
             Index sort options
             </summary>
@@ -9740,6 +9845,11 @@
         <member name="P:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.IndexesStrings">
             <summary>
             Indexing options
+            </summary>
+        </member>
+        <member name="P:Raven.Client.Indexes.AbstractGenericIndexCreationTask`1.DisableInMemoryIndexing">
+            <summary>
+            Prevent index from being kept in memory. Default: false
             </summary>
         </member>
         <member name="T:Raven.Client.Indexes.AbstractMultiMapIndexCreationTask`1">
@@ -10482,6 +10592,12 @@
             </summary>
             <value>The sort options.</value>
         </member>
+        <member name="P:Raven.Client.Indexes.IndexDefinitionBuilder`2.SortOptionsStrings">
+            <summary>
+            Gets or sets the sort options.
+            </summary>
+            <value>The sort options.</value>
+        </member>
         <member name="P:Raven.Client.Indexes.IndexDefinitionBuilder`2.Analyzers">
             <summary>
             Get os set the analyzers
@@ -10521,6 +10637,11 @@
             Gets or sets the spatial options
             </summary>
             <value>The spatial options.</value>
+        </member>
+        <member name="P:Raven.Client.Indexes.IndexDefinitionBuilder`2.DisableInMemoryIndexing">
+            <summary>
+            Prevent index from being kept in memory. Default: false
+            </summary>
         </member>
         <member name="T:Raven.Client.Indexes.IndexDefinitionBuilder`1">
             <summary>
@@ -11725,6 +11846,15 @@
             This is mainly useful for internal use inside RavenDB, when we are executing
             queries that has been marked with WaitForNonStaleResults, we temporarily disable
             aggressive caching.
+            </remarks>
+        </member>
+        <member name="M:Raven.Client.Shard.ShardedDocumentStore.SetRequestsTimeoutFor(System.TimeSpan)">
+            <summary>
+            Setup the WebRequest timeout for the session
+            </summary>
+            <param name="timeout">Specify the timeout duration</param>
+            <remarks>
+            Sets the timeout for the JsonRequest.  Scoped to the Current Thread.
             </remarks>
         </member>
         <member name="M:Raven.Client.Shard.ShardedDocumentStore.OpenSession">

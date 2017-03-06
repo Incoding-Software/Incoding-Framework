@@ -8850,6 +8850,17 @@
             Document was properly tested
             </summary>
         </member>
+        <member name="F:Raven.Abstractions.Data.PatchResult.Skipped">
+            <summary>
+            The document was not patched, because skipPatchIfEtagMismatch was set
+            and the etag did not match
+            </summary>
+        </member>
+        <member name="F:Raven.Abstractions.Data.PatchResult.NotModified">
+            <summary>
+            Neither document body not metadata was changed during patch operation
+            </summary>
+        </member>
         <member name="T:Raven.Abstractions.Data.PutResult">
             <summary>
             The result of a PUT operation
@@ -9018,6 +9029,13 @@
             <summary>
             If set to true, RavenDB won't execute the transform results function
             returning just the raw results instead
+            </summary>
+        </member>
+        <member name="P:Raven.Abstractions.Data.IndexQuery.AllowMultipleIndexEntriesForSameDocumentToResultTransformer">
+            <summary>
+            If set to true, this property will send multiple index entries from the same document (assuming the index project them)
+            to the result transformer function. Otherwise, those entries will be consolidate an the transformer will be 
+            called just once for each document in the result set
             </summary>
         </member>
         <member name="P:Raven.Abstractions.Data.IndexQuery.SkippedResults">
@@ -9399,6 +9417,15 @@
             <param name="message">The message.</param>
             <param name="inner">The inner.</param>
         </member>
+        <member name="M:Raven.Abstractions.Exceptions.ConcurrencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Raven.Abstractions.Exceptions.ConcurrencyException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
+        </member>
         <member name="P:Raven.Abstractions.Exceptions.ConcurrencyException.ExpectedETag">
             <summary>
             Gets or sets the expected E tag.
@@ -9462,7 +9489,7 @@
             Deserialize a <param name="self"/> to an instance of <typeparam name="T"/>
             </summary>
         </member>
-        <member name="M:Raven.Abstractions.Extensions.JsonExtensions.JsonDeserialization``1(Raven.Json.Linq.RavenJObject)">
+        <member name="M:Raven.Abstractions.Extensions.JsonExtensions.JsonDeserialization``1(Raven.Json.Linq.RavenJToken)">
             <summary>
             Deserialize a <param name="self"/> to an instance of<typeparam name="T"/>
             </summary>
@@ -9840,6 +9867,14 @@
             <param name="json">A <see cref="T:System.String"/> that contains JSON.</param>
             <returns>A <see cref="T:Raven.Json.Linq.RavenJToken"/> populated from the string that contains JSON.</returns>
         </member>
+        <member name="M:Raven.Json.Linq.RavenJToken.TryParse(System.String,Raven.Json.Linq.RavenJToken@)">
+            <summary>
+            Load a <see cref="T:Raven.Json.Linq.RavenJToken"/> from a string that contains JSON.
+            </summary>
+            <param name="json">A <see cref="T:System.String"/> that contains JSON.</param>
+            <param name="token">A <see cref="T:Raven.Json.Linq.RavenJToken"/> populated from the string that contains JSON.</param>
+            <returns>Returns true if parsing was succesful. False otherwise.</returns>
+        </member>
         <member name="M:Raven.Json.Linq.RavenJToken.Load(Raven.Imports.Newtonsoft.Json.JsonReader)">
             <summary>
             Creates a <see cref="T:Raven.Json.Linq.RavenJToken"/> from a <see cref="T:Raven.Imports.Newtonsoft.Json.JsonReader"/>.
@@ -9879,7 +9914,7 @@
             </param>
             <returns>The <see cref="T:Raven.Json.Linq.RavenJToken"/> that matches the object path or a null reference if no matching token is found.</returns>
         </member>
-        <member name="M:Raven.Json.Linq.RavenJToken.SelectToken(System.String,System.Boolean)">
+        <member name="M:Raven.Json.Linq.RavenJToken.SelectToken(System.String,System.Boolean,System.Boolean)">
             <summary>
             Selects the token that matches the object path.
             </summary>
@@ -9904,7 +9939,7 @@
             </param>
             <returns>The <see cref="T:Raven.Json.Linq.RavenJToken"/> that matches the object path or a null reference if no matching token is found.</returns>
         </member>
-        <member name="M:Raven.Json.Linq.RavenJToken.SelectToken(Raven.Json.Linq.RavenJPath,System.Boolean)">
+        <member name="M:Raven.Json.Linq.RavenJToken.SelectToken(Raven.Json.Linq.RavenJPath,System.Boolean,System.Boolean)">
             <summary>
             Selects the token that matches the object path.
             </summary>
@@ -10967,6 +11002,17 @@
             </summary>
             <value>The spatial options.</value>
         </member>
+        <member name="P:Raven.Abstractions.Indexing.IndexDefinition.InternalFieldsMapping">
+            <summary>
+            Internal map of field names to expressions generating them
+            Only relevant for auto indexes and only used internally
+            </summary>
+        </member>
+        <member name="P:Raven.Abstractions.Indexing.IndexDefinition.DisableInMemoryIndexing">
+            <summary>
+            Prevent index from being kept in memory. Default: false
+            </summary>
+        </member>
         <member name="P:Raven.Abstractions.Indexing.TransformerDefinition.TransformResults">
             <summary>
             Gets or sets the translator function
@@ -11083,6 +11129,15 @@
             <summary>
             Extensions for RavenJToken
             </summary>
+        </member>
+        <member name="M:Raven.Abstractions.Json.JTokenExtensions.SelectTokenWithRavenSyntaxReturningFlatStructure(Raven.Json.Linq.RavenJToken,System.String,System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="self"></param>
+            <param name="path"></param>
+            <param name="createSnapshots">Set to true if you want to modify selected objects</param>
+            <returns></returns>
         </member>
         <member name="T:Raven.Abstractions.Linq.DateTools">
             <summary> Provides support for converting dates to strings and vice-versa.
@@ -11573,6 +11628,11 @@
             Gets or sets the Source.
             </summary>
             <value>The Source.</value>
+        </member>
+        <member name="P:Raven.Abstractions.Smuggler.SmugglerOptions.MaxStepsForTransformScript">
+            <summary>
+            Maximum number of steps that transform script can have
+            </summary>
         </member>
         <member name="P:Raven.Abstractions.Smuggler.SmugglerOptions.BackupPath">
             <summary>

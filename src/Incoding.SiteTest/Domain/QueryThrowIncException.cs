@@ -1,7 +1,11 @@
 ﻿namespace Incoding.SiteTest.Domain
 {
-    public class QueryThrowIncException
+    using Incoding.CQRS;
+    public class QueryThrowIncException:QueryBase<string>
     {
-         
+        protected override string ExecuteResult()
+        {            
+            throw IncWebException.ForServer("Test");
+        }
     }
 }

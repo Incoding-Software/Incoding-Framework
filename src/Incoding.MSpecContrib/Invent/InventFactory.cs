@@ -15,13 +15,80 @@ namespace Incoding.MSpecContrib
     using Incoding.Extensions;
     using Incoding.Maybe;
     using Incoding.Quality;
-    using Machine.Specifications.Annotations;
- 
+
     #endregion
 
     public partial class InventFactory<T>
     {
         const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
+
+        void VerifyUniqueProperty(string property)
+        {
+            Action throwException = () => { throw new ArgumentException("Property should be unique in all dictionary", property); };
+
+            if (tunings.ContainsKey(property))
+                throwException();
+
+            if (ignoreProperties.Contains(property))
+                throwException();
+        }
+
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Positive false")]
+        object GenerateValueOrEmpty(Type propertyType, bool isEmpty)
+        {
+            object value = null;
+            bool isNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
+            propertyType = isNullable ? propertyType.GetGenericArguments()[0] : propertyType;
+
+            if (propertyType.IsEnum)
+                value = isEmpty ? 0 : Enum.Parse(propertyType, Pleasure.Generator.EnumAsInt(propertyType).ToString(), true);
+            else if (propertyType.IsAnyEquals(typeof(string), typeof(object)))
+                value = isEmpty ? string.Empty : Pleasure.Generator.String();
+            else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
+                    // ReSharper disable SimplifyConditionalTernaryExpression
+                value = isEmpty ? false : Pleasure.Generator.Bool();
+            // ReSharper restore SimplifyConditionalTernaryExpression
+            else if (propertyType.IsAnyEquals(typeof(int)))
+                value = isEmpty ? default(int) : Pleasure.Generator.PositiveNumber(1);
+            else if (propertyType.IsAnyEquals(typeof(long)))
+                value = isEmpty ? default(long) : (long)Pleasure.Generator.PositiveNumber(1);
+            else if (propertyType.IsAnyEquals(typeof(short)))
+                value = isEmpty ? default(short) : (short)Pleasure.Generator.PositiveNumber(1);
+            else if (propertyType.IsAnyEquals(typeof(float)))
+                value = isEmpty ? default(float) : Pleasure.Generator.PositiveFloating();
+            else if (propertyType.IsAnyEquals(typeof(decimal)))
+                value = isEmpty ? default(decimal) : Pleasure.Generator.PositiveDecimal();
+            else if (propertyType.IsAnyEquals(typeof(double)))
+                value = isEmpty ? default(double) : Pleasure.Generator.PositiveDouble();
+            else if (propertyType.IsAnyEquals(typeof(byte), typeof(sbyte)))
+                value = isEmpty ? default(byte) : (byte)Pleasure.Generator.PositiveNumber();
+            else if (propertyType == typeof(char))
+                value = isEmpty ? default(char) : Pleasure.Generator.String()[0];
+            else if (propertyType.IsAnyEquals(typeof(DateTime)))
+                value = isEmpty ? new DateTime() : Pleasure.Generator.DateTime();
+            else if (propertyType.IsAnyEquals(typeof(TimeSpan)))
+                value = isEmpty ? new TimeSpan() : Pleasure.Generator.TimeSpan();
+            else if (propertyType.IsAnyEquals(typeof(Stream), typeof(MemoryStream)))
+                value = isEmpty ? Pleasure.Generator.Stream(0) : Pleasure.Generator.Stream();
+            else if (propertyType == typeof(byte[]))
+                value = isEmpty ? Pleasure.ToArray<byte>() : Pleasure.Generator.Bytes();
+            else if (propertyType == typeof(Guid))
+                value = isEmpty ? Guid.Empty : Guid.NewGuid();
+            else if (propertyType == typeof(int[]))
+                value = isEmpty ? Pleasure.ToArray<int>() : Pleasure.ToArray(Pleasure.Generator.PositiveNumber(1));
+            else if (propertyType == typeof(string[]))
+                value = isEmpty ? Pleasure.ToArray<string>() : Pleasure.ToArray(Pleasure.Generator.String());
+            else if (propertyType.IsAnyEquals(typeof(HttpPostedFile), typeof(HttpPostedFileBase)))
+                value = isEmpty ? null : Pleasure.Generator.HttpPostedFile();
+            else if (propertyType == typeof(Dictionary<string, string>))
+                value = isEmpty ? new Dictionary<string, string>() : Pleasure.ToDynamicDictionary<string>(new { key = Pleasure.Generator.String() });
+            else if (propertyType == typeof(Dictionary<string, object>))
+                value = isEmpty ? new Dictionary<string, object>() : Pleasure.ToDynamicDictionary<string>(new { key = Pleasure.Generator.String() }).ToDictionary(r => r.Key, r => (object)r.Value);
+            else if (propertyType == typeof(SqlConnection))
+                value = new SqlConnection(@"Data Source={0};Database={1};Integrated Security=true;".F(Pleasure.Generator.String(length: 5), Pleasure.Generator.String(length: 5)));
+
+            return isNullable ? Activator.CreateInstance(typeof(Nullable<>).MakeGenericType(propertyType), value) : value;
+        }
 
         #region Fields
 
@@ -41,7 +108,6 @@ namespace Incoding.MSpecContrib
 
         public T CreateEmpty()
         {
-            
             var allSetProperties = typeof(T).GetProperties(bindingFlags).Where(r => r.CanWrite);
             var instance = Activator.CreateInstance<T>();
 
@@ -159,71 +225,5 @@ namespace Incoding.MSpecContrib
         }
 
         #endregion
-
-        void VerifyUniqueProperty(string property)
-        {
-            Action throwException = () => { throw new ArgumentException("Property should be unique in all dictionary", property); };
-
-            if (tunings.ContainsKey(property))
-                throwException();
-
-            if (ignoreProperties.Contains(property))
-                throwException();
-        }
-
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Positive false")]
-        object GenerateValueOrEmpty(Type propertyType, bool isEmpty)
-        {
-            object value = null;
-            bool isNullable = propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
-            propertyType = isNullable ? propertyType.GetGenericArguments()[0] : propertyType;
-
-            if (propertyType.IsEnum)
-                value = isEmpty ? 0 : Enum.Parse(propertyType, Pleasure.Generator.EnumAsInt(propertyType).ToString(), true);
-            else if (propertyType.IsAnyEquals(typeof(string), typeof(object)))
-                value = isEmpty ? string.Empty : Pleasure.Generator.String();
-            else if (propertyType == typeof(bool) || propertyType == typeof(bool?))
-                    // ReSharper disable SimplifyConditionalTernaryExpression
-                value = isEmpty ? false : Pleasure.Generator.Bool();                                                                                                    
-                    // ReSharper restore SimplifyConditionalTernaryExpression
-            else if (propertyType.IsAnyEquals(typeof(int)))
-                value = isEmpty ? default(int) : Pleasure.Generator.PositiveNumber(1);
-            else if (propertyType.IsAnyEquals(typeof(long)))
-                value = isEmpty ? default(long) : (long)Pleasure.Generator.PositiveNumber(1);
-            else if (propertyType.IsAnyEquals(typeof(float)))
-                value = isEmpty ? default(float) : Pleasure.Generator.PositiveFloating();
-            else if (propertyType.IsAnyEquals(typeof(decimal)))
-                value = isEmpty ? default(decimal) : Pleasure.Generator.PositiveDecimal();
-            else if (propertyType.IsAnyEquals(typeof(double)))
-                value = isEmpty ? default(double) : Pleasure.Generator.PositiveDouble();
-            else if (propertyType.IsAnyEquals(typeof(byte)))
-                value = isEmpty ? default(byte) : (byte)Pleasure.Generator.PositiveNumber();
-            else if (propertyType == typeof(char))
-                value = isEmpty ? default(char) : Pleasure.Generator.String()[0];
-            else if (propertyType.IsAnyEquals(typeof(DateTime)))
-                value = isEmpty ? new DateTime() : Pleasure.Generator.DateTime();
-            else if (propertyType.IsAnyEquals(typeof(TimeSpan)))
-                value = isEmpty ? new TimeSpan() : Pleasure.Generator.TimeSpan();
-            else if (propertyType.IsAnyEquals(typeof(Stream), typeof(MemoryStream)))
-                value = isEmpty ? Pleasure.Generator.Stream(0) : Pleasure.Generator.Stream();
-            else if (propertyType == typeof(byte[]))
-                value = isEmpty ? Pleasure.ToArray<byte>() : Pleasure.Generator.Bytes();
-            else if (propertyType == typeof(Guid))
-                value = isEmpty ? Guid.Empty : Guid.NewGuid();
-            else if (propertyType == typeof(int[]))
-                value = isEmpty ? Pleasure.ToArray<int>() : Pleasure.ToArray(Pleasure.Generator.PositiveNumber(1));
-            else if (propertyType == typeof(string[]))
-                value = isEmpty ? Pleasure.ToArray<string>() : Pleasure.ToArray(Pleasure.Generator.String());
-            else if (propertyType.IsAnyEquals(typeof(HttpPostedFile), typeof(HttpPostedFileBase)))
-                value = isEmpty ? null : Pleasure.Generator.HttpPostedFile();
-            else if (propertyType == typeof(Dictionary<string, string>))
-                value = isEmpty ? new Dictionary<string, string>() : Pleasure.ToDynamicDictionary<string>(new { key = Pleasure.Generator.String() });
-            else if (propertyType == typeof(Dictionary<string, object>))
-                value = isEmpty ? new Dictionary<string, object>() : Pleasure.ToDynamicDictionary<string>(new { key = Pleasure.Generator.String() }).ToDictionary(r => r.Key, r => (object)r.Value);
-            else if (propertyType == typeof(SqlConnection))
-                value = new SqlConnection(@"Data Source={0};Database={1};Integrated Security=true;".F(Pleasure.Generator.String(length: 5), Pleasure.Generator.String(length: 5)));
-
-            return isNullable ? Activator.CreateInstance(typeof(Nullable<>).MakeGenericType(propertyType), value) : value;
-        }
     }
 }

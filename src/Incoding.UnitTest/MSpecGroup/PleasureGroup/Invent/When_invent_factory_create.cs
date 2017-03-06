@@ -21,6 +21,13 @@ namespace Incoding.UnitTest.MSpecGroup
 
         It should_be_bytes = () => new InventFactory<FakeGenerateObject>().Create().ByteArray.ShouldNotBeEmpty();
 
+        It should_be_short = () => new InventFactory<short>().Create().ShouldBeGreaterThan(0);
+
+        It should_be_sbyte = () => new InventFactory<sbyte>().Create().ShouldBeGreaterThan(0);
+
+        
+        
+
         It should_be_callback = () =>
                                 {
                                     var inventFactory = new InventFactory<FakeGenerateObject>();
