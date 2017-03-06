@@ -103,12 +103,12 @@ namespace Incoding.CQRS
                         }
                         var unitOfWork = unitOfWorkCollection.AddOrGet(groupMessage.Key, isFlush);
                         foreach (var interception in interceptions)
-                            interception().OnBefore(part, null);
+                            interception().OnBefore(part);
 
                         part.OnExecute(this, unitOfWork);
 
                         foreach (var interception in interceptions)
-                            interception().OnAfter(part, null);
+                            interception().OnAfter(part);
 
                         var isFlushInIteration = part is CommandBase;
                         if (unitOfWork.IsValueCreated && isFlushInIteration)

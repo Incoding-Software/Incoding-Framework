@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>Incoding.Framework</id>
-    <version>1.4.0.254</version>
+    <version>1.4.0.255</version>
     <title>Incoding framework</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -27,9 +27,9 @@
     <copyright>Copyright  2013 - 2016</copyright>
     <dependencies>
       <group>
-        <dependency id="structuremap" version="3.1.6.186" />
-        <dependency id="FluentNHibernate" version="2.0.3.0" />
+        <dependency id="structuremap" version="4.4.2" />
         <dependency id="JetBrains.Annotations" version="9.2.0.0" />
+        <dependency id="FluentNHibernate" version="2.0.3.0" />        
         <dependency id="FluentValidation.MVC3-signed" version="5.0.0.3" />
       </group>
     </dependencies>

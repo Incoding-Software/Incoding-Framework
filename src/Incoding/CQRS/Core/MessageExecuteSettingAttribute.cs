@@ -13,7 +13,7 @@
 
         public MessageExecuteSettingAttribute()
         {
-            DataBaseInstance = string.Empty;
+            DataBaseInstance = string.Empty;            
         }
 
         #endregion

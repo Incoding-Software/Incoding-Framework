@@ -17,8 +17,9 @@
         Establish establish = () =>
                               {
                                   var command = Pleasure.Generator.Invent<ChangeDelayToSchedulerStatusCommand>(dsl => dsl.Tuning(s => s.Status, DelayOfStatus.Success));
-                                  recurrency = Pleasure.Generator.Invent<GetRecurrencyDateQuery>();
+
                                   var instance = Pleasure.Generator.Invent<ChangeDelayToSchedulerStatusCommand>();
+                                  DateTime? nextDt = Pleasure.Generator.DateTime();
                                   delay = Pleasure.MockStrict<DelayToScheduler>(mock =>
                                                                                 {
                                                                                     lastStartOn = Pleasure.Generator.DateTime();
@@ -26,12 +27,12 @@
                                                                                     mock.SetupGet(r => r.Priority).Returns(Pleasure.Generator.PositiveNumber());
                                                                                     mock.SetupSet(r => r.Status = command.Status);
                                                                                     mock.SetupSet(r => r.Description = command.Description);
-
                                                                                     mock.SetupGet(r => r.Recurrence).Returns(recurrency);
                                                                                     mock.SetupGet(r => r.UID).Returns(Guid.NewGuid().ToString);
-                                                                                    mock.SetupGet(r => r.Instance).Returns(instance);
                                                                                 });
-                                  DateTime? nextDt = Pleasure.Generator.DateTime();
+
+                                  recurrency = Pleasure.Generator.Invent<GetRecurrencyDateQuery>(dsl => dsl.Tuning(s => s.NowDate, lastStartOn));
+
                                   Action<ICompareFactoryDsl<AddDelayToSchedulerCommand, AddDelayToSchedulerCommand>> compare
                                           = dsl => dsl.ForwardToAction(r => r.Recurrency, schedulerCommand => schedulerCommand.Recurrency.ShouldEqualWeak(recurrency,
                                                                                                                                                           factoryDsl => factoryDsl.ForwardToValue(r => r.NowDate, null)
@@ -42,7 +43,7 @@
                                           .StubGetById(command.Id, delay.Object)
                                           .StubQuery(recurrency, nextDt)
                                           .StubPush(dsl => dsl.Tuning(r => r.UID, delay.Object.UID)
-                                                              .Tuning(r => r.Command, instance)
+                                                              .Tuning(r => r.Command, instance)                                                              
                                                               .Tuning(r => r.Priority, delay.Object.Priority), compare);
                               };
 

@@ -33,6 +33,7 @@
                                                                                                                                                                          {
                                                                                                                                                                                  Async = true
                                                                                                                                                                          })
+                                                                                                                                          .ForwardToAction(r => r.CreateDt, toScheduler => toScheduler.CreateDt.ShouldBeDate(DateTime.UtcNow))
                                                                                                                                           .ForwardToValue(r => r.UID, mockCommand.Original.UID)
                                                                                                                                           .ForwardToValue(r => r.Type, typeof(FakeCommand).AssemblyQualifiedName)
                                                                                                                                           .ForwardToValue(r => r.StartsOn, mockCommand.Original.Recurrency.StartDate.Value)
@@ -40,8 +41,7 @@
                                                                                                                                           .ForwardToValue(r => r.Priority, mockCommand.Original.Priority)
                                                                                                                                           .ForwardToValue(r => r.Command, command.ToJsonString())
                                                                                                                                           .ForwardToValue(r => r.Recurrence, mockCommand.Original.Recurrency)
-                                                                                                                                          .IgnoreBecauseNotUse(r => r.Description)
-                                                                                                                                          .IgnoreBecauseCalculate(r => r.Instance)));
+                                                                                                                                          .IgnoreBecauseNotUse(r => r.Description)));
 
         #region Fake classes
 

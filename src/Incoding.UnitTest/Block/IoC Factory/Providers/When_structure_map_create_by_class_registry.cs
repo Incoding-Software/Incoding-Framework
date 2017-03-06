@@ -7,6 +7,7 @@ namespace Incoding.UnitTest.Block
     using Incoding.Block.Logging;
     using Incoding.Utilities;
     using Machine.Specifications;
+    using StructureMap;
     using StructureMap.Configuration.DSL;
 
     #endregion

@@ -26,8 +26,7 @@ namespace Incoding.Block
 
         public DelayToScheduler()
         {
-            Id = Guid.NewGuid().ToString();
-            CreateDt = DateTime.UtcNow;
+            Id = Guid.NewGuid().ToString();           
         }
 
         #endregion
@@ -147,9 +146,7 @@ namespace Incoding.Block
 
         public virtual string Command { get; set; }
 
-        [IgnoreCompare("Auto"), JsonIgnore]
-        public virtual CommandBase Instance { get { return Command.DeserializeFromJson(System.Type.GetType(Type)) as CommandBase; } }
-
+        
         public virtual string Type { get; set; }
 
         public virtual int Priority { get; set; }

@@ -9,8 +9,8 @@ namespace Incoding.MvcContrib.MVD
 
     public interface IMessageInterception
     {
-        void OnBefore(IMessage message, HttpContextBase context);
+        void OnBefore(IMessage message);
 
-        void OnAfter(IMessage message, HttpContextBase context);
+        void OnAfter(IMessage message);
     }
 }

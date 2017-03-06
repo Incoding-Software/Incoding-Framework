@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>Incoding.MetaLanguage</id>
-    <version>1.4.0.254</version>
+    <version>1.4.0.255</version>
     <title>Incoding Meta Language</title>
     <authors>Vlad Kopachinsky</authors>
     <owners>Incoding software</owners>
@@ -25,7 +25,7 @@
     <dependencies>
       <group targetFramework="net40">
         <dependency id="WebActivator" />
-        <dependency id="Newtonsoft.Json" version="7.0.0.0" />
+        <dependency id="Newtonsoft.Json" version="9.0.1" />
         <dependency id="FluentNHibernate" version="2.0.3.0" />
         <dependency id="JetBrains.Annotations" version="9.2.0.0" />
         <dependency id="Microsoft.jQuery.Unobtrusive.Validation" />

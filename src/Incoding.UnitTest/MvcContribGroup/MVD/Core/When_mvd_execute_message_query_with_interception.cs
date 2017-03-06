@@ -21,8 +21,8 @@ namespace Incoding.UnitTest.MvcContribGroup.Core
                                   var fakeQuery = Pleasure.Generator.Invent<FakeQuery>();
                                   interception = Pleasure.MockStrict<IMessageInterception>(mock =>
                                                                                            {
-                                                                                               mock.Setup(r => r.OnBefore(Pleasure.MockIt.IsStrong(fakeQuery), Pleasure.MockIt.IsAny<HttpContextBase>()));
-                                                                                               mock.Setup(r => r.OnAfter(Pleasure.MockIt.IsStrong(fakeQuery), Pleasure.MockIt.IsAny<HttpContextBase>()));
+                                                                                               mock.Setup(r => r.OnBefore(Pleasure.MockIt.IsStrong(fakeQuery)));
+                                                                                               mock.Setup(r => r.OnAfter(Pleasure.MockIt.IsStrong(fakeQuery)));
                                                                                            });
                                   MVDExecute.SetInterception(() => interception.Object);
 

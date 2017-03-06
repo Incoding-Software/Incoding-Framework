@@ -84,11 +84,11 @@
 
             IncodingHtmlHelper.BootstrapVersion = BootstrapOfVersion.v3;
 
-            //IoCFactory.Instance.TryResolve<IDispatcher>().Push(new StartSchedulerCommand()
-            //                                                   {
-            //                                                           FetchSize = 10,
-            //                                                           Interval = 5.Seconds()
-            //                                                   });
+            IoCFactory.Instance.TryResolve<IDispatcher>().Push(new StartSchedulerCommand()
+            {
+                FetchSize = 10,
+                Interval = 5.Seconds()
+            });
         }
 
         #endregion
@@ -98,12 +98,12 @@
     {
         readonly Stopwatch time = new Stopwatch();
 
-        public void OnBefore(IMessage message, HttpContextBase context)
+        public void OnBefore(IMessage message)
         {
             this.time.Start();
         }
 
-        public void OnAfter(IMessage message, HttpContextBase context)
+        public void OnAfter(IMessage message)
         {
             this.time.Stop();
             var txt = "Message {0} execute at {1} milliseconds".F(message.GetType().Name, this.time.ElapsedMilliseconds);

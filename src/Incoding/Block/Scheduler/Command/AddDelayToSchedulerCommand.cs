@@ -3,24 +3,48 @@
     #region << Using >>
 
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using Incoding.CQRS;
     using Incoding.Extensions;
-    using Incoding.Quality;
-    using JetBrains.Annotations;
 
     #endregion
 
     public class AddDelayToSchedulerCommand : CommandBase
     {
+        protected override void Execute()
+        {
+            Recurrency = Recurrency ?? new GetRecurrencyDateQuery
+                                       {
+                                               Type = GetRecurrencyDateQuery.RepeatType.Once,
+                                       };
+            var type = Command.GetType();
+            var option = type.FirstOrDefaultAttribute<OptionOfDelayAttribute>() ?? new OptionOfDelayAttribute();
+            Repository.Save(new DelayToScheduler
+                            {
+                                    Command = Command.ToJsonString(),
+                                    CreateDt = DateTime.UtcNow,
+                                    Type = type.AssemblyQualifiedName,
+                                    UID = UID,
+                                    Priority = Priority,
+                                    Status = DelayOfStatus.New,
+                                    Recurrence = Recurrency,
+                                    StartsOn = Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow),
+                                    Option = new DelayToScheduler.OptionOfDelay()
+                                             {
+                                                     Async = option.Async,
+                                                     TimeOut = option.TimeOutOfMillisecond
+                                             }
+                            });
+        }
+
         #region Constructors
 
         public AddDelayToSchedulerCommand(DelayToScheduler delay)
         {
-            Command = delay.Instance;
+            var instance = (CommandBase)delay.Command.DeserializeFromJson(Type.GetType(delay.Type));
+            Command = instance;
             Priority = delay.Priority;
             UID = delay.UID;
-            Setting = delay.Instance.Setting;
+            Setting = instance.Setting;
         }
 
         public AddDelayToSchedulerCommand() { }
@@ -38,30 +62,5 @@
         public int Priority { get; set; }
 
         #endregion
-
-        protected override void Execute()
-        {
-            Recurrency = Recurrency ?? new GetRecurrencyDateQuery
-                                       {
-                                               Type = GetRecurrencyDateQuery.RepeatType.Once,                                               
-                                       };
-            var type = Command.GetType();
-            var option = type.FirstOrDefaultAttribute<OptionOfDelayAttribute>() ?? new OptionOfDelayAttribute();
-            Repository.Save(new DelayToScheduler
-                            {
-                                    Command = Command.ToJsonString(),
-                                    Type = type.AssemblyQualifiedName,
-                                    UID = UID,
-                                    Priority = Priority,
-                                    Status = DelayOfStatus.New,
-                                    Recurrence = Recurrency,
-                                    StartsOn = Recurrency.StartDate.GetValueOrDefault(DateTime.UtcNow),
-                                    Option = new DelayToScheduler.OptionOfDelay()
-                                             {
-                                                     Async = option.Async,
-                                                     TimeOut = option.TimeOutOfMillisecond
-                                             }
-                            });
-        }
     }
 }

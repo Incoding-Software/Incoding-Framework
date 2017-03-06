@@ -36,11 +36,11 @@
 
         protected override object ExecuteResult()
         {
-            Guard.NotNull("Instance", "Instance query can't be null");            
+            Guard.NotNull("Instance", "Instance query can't be null");
             foreach (var interception in interceptions)
             {
                 foreach (var message in Instance.Parts)
-                    interception().OnBefore(message, this.context);
+                    interception().OnBefore(message);
             }
 
             new DefaultDispatcher().Push(Instance);
@@ -48,7 +48,7 @@
             foreach (var interception in interceptions)
             {
                 foreach (var message in Instance.Parts)
-                    interception().OnAfter(message, this.context);
+                    interception().OnAfter(message);
             }
 
             return Instance.Parts.Count == 1 ? Instance.Parts[0].Result : Instance.Parts.Select(r => r.Result);

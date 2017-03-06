@@ -1,5 +1,7 @@
 ﻿namespace Incoding.Block
 {
+    #region << Using >>
+
     using System;
     using System.Diagnostics;
     using System.Threading;
@@ -7,6 +9,8 @@
     using Incoding.Block.Logging;
     using Incoding.CQRS;
     using Incoding.Extensions;
+
+    #endregion
 
     public class StartSchedulerCommand : CommandBase
     {
@@ -79,6 +83,11 @@
                                                            task.Wait(response.TimeOut);
                                                    }
                                                    isFirstTime = false;
+                                                   GetExpectedDelayToSchedulerQuery.LastDate = Dispatcher.New().Query(new GetExpectedDelayToSchedulerQuery.GetLastDateQuery()
+                                                                                                                      {
+                                                                                                                              Date = DateTime.UtcNow,
+                                                                                                                              Async = true
+                                                                                                                      });
                                                    Thread.Sleep(Interval);
                                                }
                                            }
