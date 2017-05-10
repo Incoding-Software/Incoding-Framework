@@ -95,7 +95,7 @@ namespace Incoding.MSpecContrib
             }
         }
 
-        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null, MessageExecuteSetting setting = null) where TCommand : CommandBase
+        public MockMessage<TMessage, TResult> StubPush<TCommand>(TCommand command, Action<ICompareFactoryDsl<TCommand, TCommand>> dsl = null, MessageExecuteSetting setting = null, object result = null) where TCommand : CommandBase
         {
             command.Setting = command.Setting ?? (setting ?? new MessageExecuteSetting());
             var type = typeof(TCommand);
@@ -122,6 +122,7 @@ namespace Incoding.MSpecContrib
                                                                                           dsl(factoryDsl);
                                                                                   });
                                            isAny = true;
+                                           s.SetValue("Result", result);
                                            if (this.stubsOfSuccess.ContainsKey(type))
                                                this.stubsOfSuccess[type]++;
                                            else

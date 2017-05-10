@@ -29,6 +29,22 @@ namespace Incoding.UnitTest.MSpecGroup
                                      mockMessage.Execute();
                                  };
 
+        It should_be_stub_push_with_result_provided = () =>
+                                 {
+                                     var input = Pleasure.Generator.Invent<FakeMockMessageWithResult>();
+                                     var result = Pleasure.Generator.String();
+                                     var mockMessage = MockCommand<FakeMockMessageWithResult>
+                                             .When(input)
+                                             .StubPush(new FakeMockMessageWithResult
+                                                       {
+                                                               Id = Pleasure.Generator.TheSameString()
+                                                       }, result: result
+                                                       )
+                                             .StubPush(new FakeMockMessage {Id = result});
+
+                                     mockMessage.Execute();
+                                 };
+
         It should_be_stub_push_double_same_command = () =>
                                                      {
                                                          var input = Pleasure.Generator.Invent<FakeMockMessageWithDoublePushSameCommand>();
@@ -97,6 +113,22 @@ namespace Incoding.UnitTest.MSpecGroup
             protected override void Execute()
             {
                 Dispatcher.Push(new FakeMockMessage { Id = Pleasure.Generator.TheSameString() });
+            }
+        }
+
+        class FakeMockMessageWithResult : CommandBase
+        {
+            #region Override
+
+            public string Id { get; set; }
+
+            #endregion
+
+            protected override void Execute()
+            {
+                var fakeMockMessageWithResult = new FakeMockMessageWithResult() { Id = Pleasure.Generator.TheSameString() };
+                Dispatcher.Push(fakeMockMessageWithResult);
+                Dispatcher.Push(new FakeMockMessage() { Id = (string)fakeMockMessageWithResult.Result });
             }
         }
 
